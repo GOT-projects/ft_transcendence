@@ -1,0 +1,21 @@
+{
+	"name": "nestjs",
+	"version": "1.0.0",
+	"description": "Our backend framework",
+	"private": true,
+	"keywords": [
+		"backend",
+		"ft_transcendence"
+	],
+	"author": "aartiges jmilhas rcuminal - 42lyon",
+	"dependencies": {
+		"typescript": "latest",
+		"@nestjs/cli": "latest",
+		"@nestjs/jwt": "latest"
+	},
+	"devDependencies": {
+		"@nestjs/cli": "latest",
+		"@nestjs/schematics": "latest",
+		"@nestjs/testing": "latest"
+	}
+}
