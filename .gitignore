@@ -1,0 +1,9 @@
+# Extern dir - tests - editor
+.DS_Store
+.vscode/
+.idea/
+.ccls
+.ccls-cache/
+_*/
+_*
+*.swp
