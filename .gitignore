@@ -7,3 +7,8 @@
 _*/
 _*
 *.swp
+
+node_modules/
+package-lock.json
+tsconfig.build.json
+dist/

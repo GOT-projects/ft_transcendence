@@ -21,7 +21,7 @@ services:
     # build
     image: postgres:latest
     env_file:
-      - ./srcs/docker/postgres/.env
+      - ./docker/postgres/.env
     # runtime
     expose:
       - "5432"
@@ -37,30 +37,35 @@ services:
     hostname: nestjs
     # build
     build:
-      context: ./srcs/docker/nesjs
+      context: ./docker/nestjs
       dockerfile: Dockerfile
     #runtime
-    expose: "3000"
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
     restart: always
     networks:
       - back
-      - model
+    volumes:
+      - ./backend/src:/usr/src/app/src
 
-
-  web:
-    # names
-    container_name: web
-    domainname: web
-    hostname: web
-    # build
-    build:
-      context: ./srcs/docker/web
-      dockerfile: Dockerfile
-    #runtime
-    expose: "80"
-    ports:
-      - "80:80"
-    restart: always
-    networks:
-      - model
-      - front
+#
+#  web:
+#    # names
+#    container_name: web
+#    domainname: web
+#    hostname: web
+#    # build
+#    build:
+#      context: ./srcs/docker/web
+#      dockerfile: Dockerfile
+#    #runtime
+#    expose: "80"
+#    ports:
+#      - "80:80"
+#    restart: always
+#    networks:
+#      - model
+#      - front
+#
