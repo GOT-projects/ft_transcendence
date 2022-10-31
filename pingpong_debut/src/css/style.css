@@ -1,0 +1,32 @@
+
+body {
+    background-color: cadetblue;
+    margin: 0;
+}
+
+section.main {
+    background-color: green;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+nav.title li {
+    color:aliceblue;
+    display: flex;
+    font-size: 300%;
+    font-style: oblique;
+}
+section.game {
+    background-color: green;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+}
+
+@media screen and (max-width: 600px){
+    section.game {
+        width: 90%;
+    }
+}
