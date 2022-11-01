@@ -6,11 +6,18 @@ FROM node:latest As development
 
 WORKDIR /usr/src/app
 
-COPY --chown=node:node conf/* ./
+COPY --chown=node:node  ./nest-cli.json ./
+COPY --chown=node:node  ./package.json  ./
+COPY --chown=node:node  ./test          ./test
+COPY --chown=node:node  ./tsconfig.json ./
+COPY --chown=node:node  ./.eslintrc.js  ./
+COPY --chown=node:node  ./.prettierrc   ./
 
 RUN npm i
 
 RUN mkdir dist
+
+VOLUME [ "/usr/src/app/src" ]
 
 CMD npm run start:dev
 

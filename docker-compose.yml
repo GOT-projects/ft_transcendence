@@ -4,11 +4,9 @@ version: '3.9'
 networks:
   back:
     name: backend
-  model:
-    name: model
   front:
     name: frontend
-    enable_ipv6: true
+#    enable_ipv6: true
 
 
 
@@ -21,7 +19,7 @@ services:
     # build
     image: postgres:latest
     env_file:
-      - ./docker/postgres/.env
+      - .env
     # runtime
     expose:
       - "5432"
@@ -36,10 +34,14 @@ services:
     domainname: nestjs
     hostname: nestjs
     # build
+    env_file:
+      - .env
     build:
-      context: ./docker/nestjs
+      context: ./backend
       dockerfile: Dockerfile
     #runtime
+    depends_on:
+      - postgres
     expose:
       - "3000"
     ports:
@@ -47,25 +49,28 @@ services:
     restart: always
     networks:
       - back
+      - front
     volumes:
       - ./backend/src:/usr/src/app/src
 
-#
-#  web:
-#    # names
-#    container_name: web
-#    domainname: web
-#    hostname: web
-#    # build
-#    build:
-#      context: ./srcs/docker/web
-#      dockerfile: Dockerfile
-#    #runtime
-#    expose: "80"
-#    ports:
-#      - "80:80"
-#    restart: always
-#    networks:
-#      - model
-#      - front
-#
+
+  web:
+    # names
+    container_name: web
+    domainname: web
+    hostname: web
+    # build
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    #runtime
+    depends_on:
+      - nestjs
+    ports:
+      - "80:80"
+    restart: always
+    networks:
+      - front
+    volumes:
+      - ./frontend/src:/usr/src/app/src
+      - ./frontend/public:/usr/src/app/public
