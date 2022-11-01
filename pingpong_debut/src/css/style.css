@@ -25,8 +25,3 @@ section.game {
 
 }
 
-@media screen and (max-width: 600px){
-    section.game {
-        width: 90%;
-    }
-}
