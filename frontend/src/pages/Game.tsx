@@ -1,19 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleHTMLAttributes } from 'react';
 import ReactDOM from 'react-dom';
-import {Helmet} from "react-helmet";
 
 
-function Welcom() {
-	return <h1>Bonjour</h1>;
-  }
 
 
 const Game = () => {
 	
 	return (
 		<div>
-			<Welcom somefunction={game} />
+			<li>lol
+			</li>
+			<script src="/pong.js" type="text/javascript"></script>
 		</div>
 
 	
