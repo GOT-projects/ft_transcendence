@@ -11,15 +11,17 @@
 
 [connexion db](https://www.npmjs.com/package/nestjs-pgpromise)
 
-## NestJs
+### NestJs
 
 [npm page](https://www.npmjs.com/~nestjscore)
+
+[doc](https://docs.nestjs.com/)
 
 ### Database
 
 [doc officiel](https://www.postgresql.org/docs/current/index.html)
 
-## Docker
+### Docker
 
 [docker ref](https://docs.docker.com/engine/reference/builder/)
 
