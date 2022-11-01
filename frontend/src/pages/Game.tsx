@@ -1,14 +1,25 @@
 import React, { useState } from 'react';
+import { StyleHTMLAttributes } from 'react';
+import ReactDOM from 'react-dom';
+import {Helmet} from "react-helmet";
+
+
+function Welcom() {
+	return <h1>Bonjour</h1>;
+  }
 
 
 const Game = () => {
 	
-	const [count, setCount] = useState(0); 
 	return (
 		<div>
-			<p>{count}</p>
+			<Welcom somefunction={game} />
 		</div>
+
+	
 	)
 }
 
 export default Game;
+
+  

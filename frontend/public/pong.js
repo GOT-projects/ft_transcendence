@@ -1,7 +1,5 @@
 
 
-'use strict';
-
 const canvas = document.getElementById("pong");
 
 
@@ -252,4 +250,3 @@ let loop = setInterval(game,1000/framePerSecond);
 //     canvas = document.getElementById('pong');
 //     draw();
 // });
-
