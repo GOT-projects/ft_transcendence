@@ -1,11 +1,18 @@
-
-
 'use strict';
 
-const canvas = document.getElementById("pong");
-
-
+const canvas = <HTMLCanvasElement> document.getElementById("pong");
 const ctx = canvas.getContext('2d');
+
+type User = {
+    name: string;
+    age: number;
+    x : number;
+    y : number;
+    width : number;
+    height : number;
+    score : number;
+    color : string;
+};
 
 
 // Ball object
@@ -19,15 +26,8 @@ const ball = {
     color : "WHITE"
 }
 
-// User Paddle
-const user = {
-    x : 0, // left side of canvas
-    y : (canvas.height - 100)/2, // -100 the height of paddle
-    width : 10,
-    height : 100,
-    score : 0,
-    color : "WHITE"
-}
+
+
 
 // COM Paddle
 const com = {
@@ -70,9 +70,7 @@ canvas.addEventListener("mousemove", getMousePos);
 function getMousePos(evt){
     let rect = canvas.getBoundingClientRect();
     
-    //console.log(evt.clientY);
-    if (evt.clientY - rect.top - user.height/2 >= 30 && evt.clientY - rect.top - user.height/2 <= canvas.height - user.height/2 - 30 - 50)
-        user.y = evt.clientY - rect.top - user.height/2;
+    user.y = evt.clientY - rect.top - user.height/2;
 }
 
 function resetBall(){
@@ -92,7 +90,7 @@ function drawNet(){
 
 function drawText(text,x,y){
     ctx.fillStyle = "#FFF";
-    ctx.font = "95px georgia";
+    ctx.font = "75px fantasy";
     ctx.fillText(text, x, y);
 }
 
@@ -117,11 +115,9 @@ function update(){
     // change the score of players, if the ball goes to the left "ball.x<0" computer win, else if "ball.x > canvas.width" the user win
     if( ball.x - ball.radius < 0 ){
         com.score++;
-
         resetBall();
     }else if( ball.x + ball.radius > canvas.width){
         user.score++;
-
         resetBall();
     }
     
