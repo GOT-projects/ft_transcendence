@@ -9,4 +9,7 @@ export const Colors = {
    	sideBar: "#fff4",
    	darkText: "#ACBAC7",
    	grey: "#9899A1",
+    cursorColor: "cyan",
+    hexagon: 'pink',
+    border: "#EEE037",
 }
