@@ -16,12 +16,17 @@ export const StyledContainer = styled.div`
     min-height: 100vh;
     position: relative;
     cursor: none;
+    @media screen and (max-width: 768px){
+        height: 100%;
+        width: 130vw;
+    }
 `;
 
 export const StyledGrid = styled.header`
     height: 100vh;
     background: #000;
 `;
+
 
 export const StyledHexaArea = styled.div<mousePos>`
     height: 100vh;
@@ -34,11 +39,13 @@ export const StyledHexaArea = styled.div<mousePos>`
         height: 100%;
         z-index: 1;
         background-size: 300px;
+        overflow: hidden;
+        @media screen and (max-width: 768px){
+            background-size: 200px;
+        }
     }
     &.light{
         position: absolute;
-        top: ${p => p.y};
-        left: ${p => p.x};
         transform: translate(-50%, -50%);
         width: 6em;
         height: 6em;
@@ -46,9 +53,18 @@ export const StyledHexaArea = styled.div<mousePos>`
         filter: blur(15px);
         background: linear-gradient(90deg, #335bf4 0%, #2ae9c9 100%);
         z-index: 0;
+        @media screen and (max-width: 768px){
+            display: none;
+        }
     }
 `;
 
-export const StyledHexa = styled.div`
-`;
+export const StyledHexaAreaLight = styled(StyledHexaArea).attrs<mousePos>(p => ({
+    style: {
+        top: p.y,
+        left: p.x,
+    },
+  }))<mousePos>`
+  `;
+
 

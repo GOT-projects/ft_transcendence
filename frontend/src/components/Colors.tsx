@@ -12,4 +12,9 @@ export const Colors = {
     cursorColor: "cyan",
     hexagon: 'pink',
     border: "#EEE037",
+    MenuActive: "#F2C744",
+    MenuDisable: "#D1D2D3",
+    HeaderColor: "#2C99DE",
+    Sep: "#348599",
+    Rank: "#238987",
 }

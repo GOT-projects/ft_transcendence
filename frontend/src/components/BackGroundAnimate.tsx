@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import {StyledHexaArea, StyledContainer, StyledGrid} from "./Styles/StyleBackGround"
+import {StyledHexaArea, StyledContainer, StyledGrid, StyledHexaAreaLight} from "./Styles/StyleBackGround"
 
 
 const BackgroundAnimate = () => {
@@ -15,7 +15,7 @@ const BackgroundAnimate = () => {
         <StyledContainer>
             <StyledGrid id="hex-grid">
                 <StyledHexaArea className='grid' x="0" y="0"/>
-                <StyledHexaArea className='light' x={sendX} y={sendY}/>
+                <StyledHexaAreaLight className='light' x={sendX} y={sendY}/>
             </StyledGrid>
         </StyledContainer>
 	)
