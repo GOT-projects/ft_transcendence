@@ -11,3 +11,10 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+section.game {
+  background-color: green;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
