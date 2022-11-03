@@ -22,6 +22,7 @@ export const StyledTile = styled.h1`
     font-family: 'Public Pixel';
     color: ${Colors.primary};
 `;
+
 export const StyledSep = styled.div`
     width: 100%;
     height: 3px;

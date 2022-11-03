@@ -59,6 +59,7 @@ interface Menu{
 
 export const StyleMenuHeader = styled(Link)<Menu>`
     color: ${props => props.colortext};
+	font-family: "Public Pixel"
     font-size: 20px; 
     text-decoration: none;
     list-style: none;
