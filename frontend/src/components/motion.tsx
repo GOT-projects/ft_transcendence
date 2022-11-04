@@ -11,6 +11,7 @@ const MotionRoutes = () => {
                <Route path="/" element={<Login/>}/>
                <Route path="/home" element={<Home/>}/>
                <Route path="/game" element={<Game/>}/>
+               <Route path="/contact" element={<Home/>}/>
                <Route path="/leaderboard" element={<Leadboard/>}/>
             </Routes>
          )

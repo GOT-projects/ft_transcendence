@@ -8,6 +8,9 @@ async function bootstrap() {
     new FastifyAdapter(),
     {abortOnError: false}
   );
+  app.enableCors({
+    credentials: false,
+  });
   app.useLogger(['log', 'error', 'warn', 'debug', 'verbose']); // TODO rm for prod
   await app.listen(3000, '0.0.0.0');
 }
