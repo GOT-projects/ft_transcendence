@@ -16,3 +16,8 @@ export const Severity = {
     info: "info",
     success: "success",
 }
+
+export const InfoServer = {
+	server: "http://localhost:3000",
+	client: window.location.hostname + ":" + process.env.PORT,
+}
