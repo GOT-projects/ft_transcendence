@@ -36,6 +36,7 @@ services:
     # build
     env_file:
       - .env
+      - api.env
     build:
       context: ./backend
       dockerfile: Dockerfile
