@@ -24,7 +24,7 @@ const Header= (props: any)=> {
                 <StyleMenuHeader colortext={colorHome} to='/'>Home</StyleMenuHeader>
                 <StyleMenuHeader colortext={colorGame}to="/game">Game</StyleMenuHeader>
                 <StyleMenuHeader colortext={colorLeadBoard} to='/leaderboard'>LeaderBoard</StyleMenuHeader>
-                <StyleMenuHeader colortext={colorChat} to='/chat'>Chat</StyleMenuHeader>
+                <StyleMenuHeader colortext={colorChat} to='/contact'>Chat</StyleMenuHeader>
             </StyleMenusHeader>
             <StyleNavToggler onClick={navMenu} className={active}>
                 <StyleNavTogglerIcon className={active}></StyleNavTogglerIcon>
