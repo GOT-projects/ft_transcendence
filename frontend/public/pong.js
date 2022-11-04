@@ -6,16 +6,16 @@ const canvas = document.getElementById("pong");
 const ctx = canvas.getContext('2d');
 
 
-// Ball object
-const ball = {
-    x : canvas.width/2,
-    y : canvas.height/2,
-    radius : 10,
-    velocityX : 5,
-    velocityY : 5,
-    speed : 7,
-    color : "WHITE"
-}
+// // Ball object
+// const ball = {
+//     x : canvas.width/2,
+//     y : canvas.height/2,
+//     radius : 10,
+//     velocityX : 5,
+//     velocityY : 5,
+//     speed : 7,
+//     color : "WHITE"
+// }
 
 // User Paddle
 const user = {
@@ -45,6 +45,8 @@ const net = {
     width : 2,
     color : "WHITE"
 }
+
+
 
 
 
@@ -112,7 +114,6 @@ function collision(b,p){
 
 function update(){
     
-    // change the score of players, if the ball goes to the left "ball.x<0" computer win, else if "ball.x > canvas.width" the user win
     if( ball.x - ball.radius < 0 ){
         com.score++;
 

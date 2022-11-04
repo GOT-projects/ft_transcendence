@@ -6,6 +6,7 @@ import BackgroundAnimate from '../components/BackGroundAnimate';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import {Colors} from "../components/Colors"
+import MousePadLeft from '../components/LeftPad';
 
 
 const Game = () => {
@@ -14,12 +15,11 @@ const Game = () => {
 
 	
 		<React.Fragment>
-			<BackgroundAnimate/>
+
             <Header colorHome={Colors.MenuDisable} colorGame={Colors.MenuActive} colorLeadBoard={Colors.MenuDisable} colorChat={Colors.MenuDisable}/>
-			<section className="game">
-				<canvas id="pong" width="1200" height="800"></canvas>
-				<Helmet> <script src="/pong.js" type="text/javascript"/></Helmet>
-			</section>
+
+					<MousePadLeft />
+
 			<Footer/>
 		</React.Fragment>
 	)
