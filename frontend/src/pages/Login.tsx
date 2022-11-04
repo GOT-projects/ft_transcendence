@@ -10,19 +10,20 @@ import Axios from "axios"
 
 
 const Login = () => {
-	Axios.defaults.withCredentials = true;
-	const [uid, setUid] = useState<string>('')
+    Axios.defaults.withCredentials = false;
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''})
-	Axios.get(InfoServer.server + '/auth/getUid', {}).then((response:any) => {
-		console.log(response);
-		// setUid(response.data.message);
+    const [Url, setUrl] = useState('')
+	Axios.post(InfoServer.server + '/auth/getUid', {
+        host: InfoServer.client,
+    }).then((response:any) => {
+		console.log(response.data);
+		setUrl(response.data);
 	})
     const handleLogin = () => {
         setNotify({isOpen: true, message:'Succes Poulet', type:'success'});
         console.log("press", notify)
     }
-	const Url = `https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-3d16e8a2e3d93b06015ea5d4fd4b1fa0e72d254b35d175c8beffca317e341af2&redirect_uri=${encodeURI(InfoServer.client)}response_type=code`
-
+    console.log(Url)
     const Contaite = () => {
 	    return (
             <StyledLogin>

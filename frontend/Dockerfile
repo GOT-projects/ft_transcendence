@@ -4,9 +4,8 @@ WORKDIR /usr/src/app
 
 COPY --chown=node:node package.json		./
 COPY --chown=node:node tsconfig.json	./
-COPY --chown=node:node .env				./
 
-RUN npm i
+RUN yarn install
 
 VOLUME [ "/usr/src/app/src" ]
 VOLUME [ "/usr/src/app/public" ]
