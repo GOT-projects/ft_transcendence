@@ -2,7 +2,6 @@ import {Snackbar} from "@material-ui/core"
 import {Alert} from "@material-ui/lab"
 import {NotifyInterUse} from "./interfaces"
 import React from "react";
-import {Colors} from "./Colors"
 
 export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
    const {notify, setNotify} = props;
@@ -18,11 +17,12 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
          onClose={handleClose}
          style={{position: 'absolute',   
                  zIndex: '99',   
-                 opacity: '0.9'
+                 opacity: '0.9',
+				 transition: '0.6s'
                  }}
          >
          <Alert severity={notify.type} onClose={handleClose} 
-                style={{transform: 'translateX(-100%)', borderRadius: '16px'}}>
+                style={{transform: 'translateX(-100%)', borderRadius: '16px', transition: '0.6s'}}>
             {notify.message}
          </Alert>
       </Snackbar>

@@ -13,7 +13,8 @@ const Login = () => {
 	Axios.defaults.withCredentials = true;
 	const [uid, setUid] = useState<string>('')
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''})
-	Axios.get(InfoServer.server + '/auth/getUid', {}).then((response:any) => {
+	Axios.get(InfoServer.server + '/auth/getUid', {
+	}).then((response:any) => {
 		console.log(response);
 		// setUid(response.data.message);
 	})
