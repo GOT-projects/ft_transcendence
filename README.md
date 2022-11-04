@@ -17,6 +17,12 @@
 
 [doc](https://docs.nestjs.com/)
 
+```
+npm i -g @nestjs/cli
+
+
+```
+
 ### Database
 
 [doc officiel](https://www.postgresql.org/docs/current/index.html)
