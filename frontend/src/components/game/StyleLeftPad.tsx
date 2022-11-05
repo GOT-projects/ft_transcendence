@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {Colors} from "../Colors"
+
 
 
 interface mousePos {
@@ -20,8 +20,8 @@ left: 50%;
 width: 100%;
 height: 100%;
 transform: translate(-50%, -50%);
-background: green;
-
+background-image: url(https://phoneky.co.uk/thumbs/wallpapers/p2ls/nature/45/a0f747ef12828091.jpg);
+background-size: cover;
 
 `;
 
@@ -30,13 +30,13 @@ export const StyledLeftPad1 = styled.div<mousePos>`
 	width:3%;
 	height:20%;
 	background-color: red;
-	top: ${p => p.y};
+	top: ;
 	transform: translate(0, -50%);
 	border-radius: 10px;
 `;
 
 export const StyledLeftPad2 = styled.div`
-	position: absolute;
+	position: relative;
 	width:3%;
 	height:20%;
 	background-color: red;
@@ -49,8 +49,26 @@ export const StyledBall = styled.div<ballPos>`
 	position: absolute;
 	width:30px;
 	height:30px;
-	background-color: red;
-	top: ${p => p.y};
-	left: ${p => p.x};
+	background-image: url(https://png.pngtree.com/element_our/20190601/ourlarge/pngtree-blue-red-glowing-round-ball-free-button-image_1370443.jpg);
+	background-position: 55% 45%;
+	background-size: 140%;
+	top: ;
+	left: ;
 	border-radius: 100%;
+
 `;
+
+export const StyledLeftPad1alias = styled(StyledLeftPad1).attrs<mousePos>(p => ({
+    style: {
+        top: p.y,
+    },
+  }))<mousePos>`
+  `;
+
+  export const StyledBallalias = styled(StyledBall).attrs<ballPos>(p => ({
+    style: {
+        top: p.y,
+        left: p.x,
+    },
+  }))<ballPos>`
+  `;

@@ -2689,6 +2689,11 @@
   "resolved" "https://registry.npmjs.org/async/-/async-3.2.4.tgz"
   "version" "3.2.4"
 
+"asyncinterval@^0.0.7":
+  "integrity" "sha512-DsnNFfk5qxEKxCeM9gfdN4b3TedbCnmDQH5keUFmGOAd9MMBY6CzdIkB/KfKjooG1Z9JAIexeIFgmuwz18Wo3Q=="
+  "resolved" "https://registry.npmjs.org/asyncinterval/-/asyncinterval-0.0.7.tgz"
+  "version" "0.0.7"
+
 "asynckit@^0.4.0":
   "integrity" "sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q=="
   "resolved" "https://registry.npmjs.org/asynckit/-/asynckit-0.4.0.tgz"
@@ -7561,6 +7566,11 @@
     "regenerator-runtime" "^0.13.9"
     "whatwg-fetch" "^3.6.2"
 
+"react-async@^10.0.1":
+  "integrity" "sha512-ORUz5ca0B57QgBIzEZM5SuhJ6xFjkvEEs0gylLNlWf06vuVcLZsjIw3wx58jJkZG38p+0nUAxRgFW2b7mnVZzA=="
+  "resolved" "https://registry.npmjs.org/react-async/-/react-async-10.0.1.tgz"
+  "version" "10.0.1"
+
 "react-dev-utils@^12.0.1":
   "integrity" "sha512-84Ivxmr17KjUupyqzFode6xKhjwuEJDROWKJy/BthkL7Wn6NJ8h4WE6k/exAv6ImS+0oZLRRW5j/aINMHyeGeQ=="
   "resolved" "https://registry.npmjs.org/react-dev-utils/-/react-dev-utils-12.0.1.tgz"
@@ -7729,7 +7739,7 @@
   "resolved" "https://registry.npmjs.org/react-side-effect/-/react-side-effect-2.1.2.tgz"
   "version" "2.1.2"
 
-"react@*", "react@^16.3.0 || ^17.0.0 || ^18.0.0", "react@^18.0.0", "react@^18.2.0", "react@>= 16", "react@>= 16.8.0", "react@>=0.14.0", "react@>=16.3.0", "react@>=16.8", "react@latest":
+"react@*", "react@^16.3.0 || ^17.0.0 || ^18.0.0", "react@^18.0.0", "react@^18.2.0", "react@>= 16", "react@>= 16.8.0", "react@>=0.14.0", "react@>=16.3.0", "react@>=16.3.1", "react@>=16.8", "react@latest":
   "integrity" "sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ=="
   "resolved" "https://registry.npmjs.org/react/-/react-18.2.0.tgz"
   "version" "18.2.0"
