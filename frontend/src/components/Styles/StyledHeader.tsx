@@ -32,7 +32,7 @@ export const StyleMenusHeader = styled.ul`
         top: 3rem;
         right: 0;
         width: 35%;
-        height: 13rem;
+        height: 15rem;
         padding: 5px;
         align-items: flex-start;
         border-left: 2px solid ${Colors.border};
@@ -59,8 +59,8 @@ interface Menu{
 
 export const StyleMenuHeader = styled(Link)<Menu>`
     color: ${props => props.colortext};
-	font-family: "Public Pixel"
-    font-size: 20px; 
+    font-family: 'Public Pixel', cursive;
+    font-size: 18px; 
     text-decoration: none;
     list-style: none;
     padding: 15px;
@@ -71,6 +71,33 @@ export const StyleMenuHeader = styled(Link)<Menu>`
         transform: translate(0, -10px);
         cursor: pointer;
     }
+`;
+
+export const StyleMenuHeaderProfil = styled(Link)`
+    color: ${Colors.MenuDisable};
+	font-family: "Public Pixel"
+    font-size: 20px; 
+    margin: 10px;
+    width: 20px;
+    height: 20px;
+    border: 2px solid;
+    border-radius: 50%;
+    background-color: grey;
+    text-decoration: none;
+    list-style: none;
+    padding: 15px;
+    transition: 0.8s;
+    &:hover{
+        transition: 0.8s;
+        color: ${Colors.grey};
+        transform: translate(3px, 0);
+        cursor: pointer;
+    }
+    @media screen and (max-width: 768px){
+        margin: 0;
+        padding: 10px;
+    }
+
 `;
 
 export const StyleNavToggler = styled.div`

@@ -4,7 +4,7 @@ import Header from "../components/Header"
 import {Colors} from "../components/Colors"
 import React from 'react'
 import { useState } from "react";
-import { StyledLead, StyledLeadTile, StyledSep, StyledTile, StyledLeadP } from "../components/Styles/StyledleaderBoard";
+import { StyledLead, StyledLeadTile, StyledSep, StyledTile, StyledLeadP, StyledLeadTileRank } from "../components/Styles/StyledleaderBoard";
 
 const LeaderBoard = () => {
     interface Ranks{
@@ -76,14 +76,14 @@ const LeaderBoard = () => {
             <StyledLead>
                 <StyledTile>LeaderBoard</StyledTile>
                 <StyledSep/>
-                <StyledLeadTile color={Colors.Sep}>
+                <StyledLeadTileRank color={Colors.Sep}>
                 <tr>
                     <StyledLeadP>Rank</StyledLeadP>
                     <StyledLeadP>Name</StyledLeadP>
                     <StyledLeadP>Wins</StyledLeadP>
                     <StyledLeadP>Loses</StyledLeadP>
                 </tr>
-                </StyledLeadTile>
+                </StyledLeadTileRank>
                 <>
                 {rank.map((rk: Ranks) => (
                     <StyledLeadTile color={Colors.Rank}>

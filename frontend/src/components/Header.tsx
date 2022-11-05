@@ -1,4 +1,4 @@
-import {StyledHeader, StyleMenusHeader ,StyleMenuHeader, StyleNavToggler, StyleNavTogglerIcon} from "./Styles/StyledHeader"
+import {StyledHeader, StyleMenusHeader ,StyleMenuHeader, StyleNavToggler, StyleNavTogglerIcon, StyleMenuHeaderProfil} from "./Styles/StyledHeader"
 import { useState, useEffect, useCallback } from "react";
 
 
@@ -24,7 +24,8 @@ const Header= (props: any)=> {
                 <StyleMenuHeader colortext={colorHome} to='/'>Home</StyleMenuHeader>
                 <StyleMenuHeader colortext={colorGame}to="/game">Game</StyleMenuHeader>
                 <StyleMenuHeader colortext={colorLeadBoard} to='/leaderboard'>LeaderBoard</StyleMenuHeader>
-                <StyleMenuHeader colortext={colorChat} to='/contact'>Chat</StyleMenuHeader>
+                <StyleMenuHeader colortext={colorChat} to='/chat'>Chat</StyleMenuHeader>
+                <StyleMenuHeaderProfil to='/profil'></StyleMenuHeaderProfil>
             </StyleMenusHeader>
             <StyleNavToggler onClick={navMenu} className={active}>
                 <StyleNavTogglerIcon className={active}></StyleNavTogglerIcon>

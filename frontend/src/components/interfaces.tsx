@@ -21,3 +21,17 @@ export const InfoServer = {
 	server: "http://localhost:3000",
 	client: window.location.hostname,
 }
+
+interface DataMesssage{
+    message: string,
+    from: string,
+}
+
+export interface UserListPrivate{
+    id: string,
+    user:string,
+    mute: boolean,
+    block: boolean,
+    active: boolean,
+    data:DataMesssage[],
+}
