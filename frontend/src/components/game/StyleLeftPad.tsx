@@ -20,8 +20,9 @@ left: 50%;
 width: 100%;
 height: 100%;
 transform: translate(-50%, -50%);
-background-image: url(https://phoneky.co.uk/thumbs/wallpapers/p2ls/nature/45/a0f747ef12828091.jpg);
+background-image: url(https://ns328286.ip-37-187-113.eu/ew/wallpapers/800x480/10602_800x480.jpg);
 background-size: cover;
+opacity: 92%;
 
 `;
 
@@ -33,6 +34,10 @@ export const StyledLeftPad1 = styled.div<mousePos>`
 	top: ;
 	transform: translate(0, -50%);
 	border-radius: 10px;
+	background-image: url(https://i.pinimg.com/474x/70/86/62/70866228da01302bce6afc9106e676b0.jpg);
+	background-position: center;
+	background-size: 1500%;
+	z-index: 1;
 `;
 
 export const StyledLeftPad2 = styled.div`
@@ -43,9 +48,10 @@ export const StyledLeftPad2 = styled.div`
 	top: 50%;
 	left: 97%;
 	border-radius: 10px;
-`;
-
-export const StyledBall = styled.div<ballPos>`
+	z-index: 1;
+	`;
+	
+	export const StyledBall = styled.div<ballPos>`
 	position: absolute;
 	width:30px;
 	height:30px;
@@ -55,7 +61,9 @@ export const StyledBall = styled.div<ballPos>`
 	top: ;
 	left: ;
 	border-radius: 100%;
-
+	z-index: 1;
+	opacity: 100%;
+	filter: brightness(75%);
 `;
 
 export const StyledLeftPad1alias = styled(StyledLeftPad1).attrs<mousePos>(p => ({

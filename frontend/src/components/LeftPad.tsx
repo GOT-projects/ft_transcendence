@@ -11,23 +11,24 @@ import {StyledHexaArea, StyledContainer, StyledGrid, StyledHexaAreaLight} from "
 
 async function useInterval(callback: any, delay: number) {
 	const savedCallback: any = useRef();
-  
+	
 	// Remember the latest callback.
 	useEffect(() => {
-	  savedCallback.current = callback;
+		savedCallback.current = callback;
 	}, [callback]);
-  
+	
 	// Set up the interval.
 	useEffect(() => {
-	  function tick() {
-		  if (savedCallback.current)
+		function tick() {
+			if (savedCallback.current)
 			savedCallback.current();
-	  }
-	  if (delay !== null) {
-		let id = setInterval(tick, delay);
-		return () => clearInterval(id);
-	  }
+		}
+		if (delay !== null) {
+			let id = setInterval(tick, delay);
+			return () => clearInterval(id);
+		}
 	}, [delay]);
+		
   }
 
 
@@ -82,6 +83,7 @@ async function update(ball: ball, setBall:any){
 }
 
 
+
 const MousePadLeft = () => {
 	
 	const [ball, setBall] = useState({
@@ -106,7 +108,7 @@ const MousePadLeft = () => {
 		setCount(count + 1);
 		
 		
-	}, 1);
+	}, 5);
 	useInterval(() => {
 		
 		document.addEventListener("mousemove", (e) => {
@@ -114,7 +116,7 @@ const MousePadLeft = () => {
 	
 		});
 
-	}, 0.5);
+	}, 50);
 	var table = document.querySelector(".Table");
 	var p1 = document.querySelector(".leftpad");
 	
