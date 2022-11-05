@@ -7,15 +7,13 @@ import {Notification} from "../components/Notify"
 import {InfoServer, NotifyInter, NotifyInterUse} from "../components/interfaces"
 import Axios from "axios"
 
-
-
 const Login = () => {
     Axios.defaults.withCredentials = false;
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''})
     const [Url, setUrl] = useState('')
 	Axios.post(InfoServer.server + '/auth/getUid', {
-        host: InfoServer.client,
-    }).then((response:any) => {
+	    host: InfoServer.client,
+	}).then((response:any) => {
 		console.log(response.data);
 		setUrl(response.data);
 	})
@@ -23,13 +21,11 @@ const Login = () => {
         setNotify({isOpen: true, message:'Succes Poulet', type:'success'});
         console.log("press", notify)
     }
-    console.log(Url)
     const Contaite = () => {
 	    return (
             <StyledLogin>
 			    <StyledLoginLogo height="200px" width="410px" img={Logo}/>			   
-                <StyledLoginButton to={Url}>Login Intra</StyledLoginButton>
-                <button onClick={handleLogin}>click test</button>
+                <StyledLoginButton href={Url}>Login Intra</StyledLoginButton>
                 <Footer/>
             </StyledLogin>
 	    )
