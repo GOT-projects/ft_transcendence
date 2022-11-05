@@ -3,6 +3,7 @@ import Login from "../pages/Login"
 import Home from "../pages/Home"
 import Game from "../pages/Game"
 import Leadboard from "../pages/leaderBoard"
+import Waiting from "../pages/Waiting"
 
 const MotionRoutes = () => {
          const location = useLocation();
@@ -12,6 +13,7 @@ const MotionRoutes = () => {
                <Route path="/home" element={<Home/>}/>
                <Route path="/game" element={<Game/>}/>
                <Route path="/contact" element={<Home/>}/>
+               <Route path="/waiting" element={<Waiting/>}/>
                <Route path="/leaderboard" element={<Leadboard/>}/>
             </Routes>
          )
