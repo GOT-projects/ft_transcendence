@@ -14,7 +14,7 @@ export class AuthController {
         if (!host)
             throw new HttpException('Need hostname of client', HttpStatus.BAD_REQUEST);
         const params: string = `?client_id=${encodeURIComponent('' + process.env.API_UID)}\
-&redirect_uri=${encodeURIComponent('http://' + host + ':' + process.env.PORT)}\
+&redirect_uri=${encodeURIComponent('http://' + host + ':' + process.env.PORT + '/waiting')}\
 &response_type=code`;
         return `https://api.intra.42.fr/oauth/authorize${params}`;
     }
