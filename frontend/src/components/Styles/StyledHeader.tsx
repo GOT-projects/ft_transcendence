@@ -75,7 +75,6 @@ export const StyleMenuHeader = styled(Link)<Menu>`
 
 export const StyleMenuHeaderProfil = styled(Link)`
     color: ${Colors.MenuDisable};
-	font-family: "Public Pixel"
     font-size: 20px; 
     margin: 10px;
     width: 20px;

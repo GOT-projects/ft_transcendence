@@ -107,24 +107,19 @@ export const StyledChatWindow = styled.div`
     height: 90%;
 `;
 
-export const StyledChatReveive = styled.div`
+export const StyledChatPlace = styled.div`
     display:flex;
     margin: 10px;
     max-width: 45%;
     justify-content: flex-end;
     border-radius: 20px;
-    background-color: blue;
-
-`;
-
-export const StyledChatSend = styled.div`
-    display:flex;
-    margin: 10px;
-    max-width: 45%;
-    justify-content: flex-end;
-    border-radius: 20px;
-    background-color: red;
-    transform: translateX(110%)
+    &.receive{
+        background-color: blue;
+    }
+    &.send{
+        background-color: red;
+        transform: translateX(110%)
+    }
 `;
 
 export const StyledChatText = styled.div`

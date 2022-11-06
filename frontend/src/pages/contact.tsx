@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState } from 'react';
 import BackgroundAnimate from '../components/BackGroundAnimate';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import {Colors} from "../components/Colors"
-import { StyledChat, StyledChatInput, StyledChatPrivAvatar, StyledChatPrive, StyledChatPrivName, StyledChatReveive, StyledChatSend, StyledChatSendDiv, StyledChatSep, StyledChatSettingButton, StyledChatSwith, StyledChatSwithButton, StyledChatText, StyledChatWindow, StyledContact, StyledContaite, StyledSender, StyledUser } from '../components/Styles/StyleChat';
+import { StyledChat, StyledChatInput, StyledChatPrivAvatar, StyledChatPrive, StyledChatPrivName, StyledChatPlace, StyledChatSendDiv, StyledChatSep, StyledChatSettingButton, StyledChatSwith, StyledChatSwithButton, StyledChatText, StyledChatWindow, StyledContact, StyledContaite, StyledSender, StyledUser } from '../components/Styles/StyleChat';
 import { AiFillSetting, AiOutlineSend } from 'react-icons/ai';
-import { UserListPrivate } from '../components/interfaces';
+import { UserListPrivate, DataMesssage } from '../components/interfaces';
 
 
 const Chat = () => {
+    const [selectUser, setSelectUser] = useState<DataMesssage[]>()
     const [chatUser, setChatUser] = useState<UserListPrivate[]>([
-    {id: "321739821", user: "waxdred", mute:false, block: false, active: true, data:[
+    {id: "321739821", user: "waxdred", mute:false, block: false, active: false, data:[
         {message: "salut", from: "pc"},
         {message: "ca va?", from: "pc"},
         {message: "super et toi?", from: "waxdred"},
@@ -18,10 +19,10 @@ const Chat = () => {
     ]},
     {id: "321739881", user: "rcuminal", mute:false, block: false, active: false, data:[]},
     {id: "321739891", user: "aartiges", mute:false, block: false, active: false, data:[
-        {message: "salut", from: "pc"},
-        {message: "ca va?", from: "pc"},
+        {message: "test", from: "pc"},
+        {message: "de merde", from: "pc"},
         {message: "super et toi?", from: "waxdred"},
-        {message: "quoi de neuf", from: "waxdred"},
+        {message: "je sais pas quoi dire", from: "waxdred"},
     ]}
     ]);
 
@@ -35,8 +36,17 @@ const Chat = () => {
                 return ls
             }
         });
+        getuserSelect();
         setChatUser(newArr);
     }
+
+    const getuserSelect = () => {
+        chatUser.map(ls => {
+            if (ls.active === true)
+                setSelectUser(ls.data);
+        })
+    }
+    console.log(selectUser)
 	
 	return (
 		<React.Fragment>
@@ -66,19 +76,20 @@ const Chat = () => {
 
                 <StyledChat>
                     <StyledChatWindow>
-                        <StyledChatSend>
-                            <StyledChatText> salut comment va tu?</StyledChatText>
-                        </StyledChatSend>
-                        <StyledChatReveive>
-                            <StyledChatText> Saltu a toi je sui nouveau ici tu peux m'aider stp </StyledChatText>
-                        </StyledChatReveive>
-                    </StyledChatWindow>
-                    <StyledChatSendDiv>
+                        <>
+                            {selectUser?.map((data:DataMesssage) => (
+                                    <StyledChatPlace className={data.from === "pc" ? "send" : "receive"}>
+                                        <StyledChatText>{data.message}</StyledChatText>
+                                    </StyledChatPlace>
+                            ))}
+                        </>
+                        <StyledChatSendDiv>
                         <StyledChatInput placeholder="Send message"/>
                         <StyledSender>
                             <AiOutlineSend size={30} color={Colors.primary}/>
                         </StyledSender>
                     </StyledChatSendDiv>
+                    </StyledChatWindow>
                 </StyledChat>
             </StyledContaite>
 

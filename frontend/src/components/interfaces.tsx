@@ -22,9 +22,9 @@ export const InfoServer = {
 	client: window.location.hostname,
 }
 
-interface DataMesssage{
-    message: string,
-    from: string,
+export interface DataMesssage{
+    message?: string,
+    from?: string,
 }
 
 export interface UserListPrivate{
@@ -33,5 +33,5 @@ export interface UserListPrivate{
     mute: boolean,
     block: boolean,
     active: boolean,
-    data:DataMesssage[],
+    data?:DataMesssage[],
 }
