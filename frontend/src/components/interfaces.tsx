@@ -23,6 +23,7 @@ export const InfoServer = {
 }
 
 export interface DataMesssage{
+    id?:string;
     message?: string,
     from?: string,
 }

@@ -87,6 +87,10 @@ export const StyledChatSettingButton = styled.button`
     }
 `;
 
+export const StyledChatTextArea = styled.div`
+    overflow: scroll;
+`;
+
 export const StyledChat = styled.div`
     position: relative;
     width: 65%;
