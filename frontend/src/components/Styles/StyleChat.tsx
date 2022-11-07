@@ -8,7 +8,7 @@ interface BgColor{
 export const StyledContaite = styled.div`
     position: absolute;
     display: flex;
-    align-items: center;
+    align-items: space-around;
     z-index: 10;
     top: 50%;
     left: 50%;
@@ -21,14 +21,18 @@ export const StyledContaite = styled.div`
     background-color: ${Colors.dark1};
     opacity: 0.6;
     cursor: pointer;
+    @media screen and (max-width: 768px){
+        height: 76%;
+    }
 `;
 export const StyledContact = styled.div`
-    width: 30%;
-    height: 98%;
-    margin: 15px;
+    width: 40%;
+    height: 104%;
     display: flex;
+    margin: 0;
+    padding: 0;
+    align-items: space-around;
     flex-direction: column;
-    border-radius: 10px 0 0 10px;
     background-color: ${Colors.ChatMenu};
     border: 2px solid ${Colors.ChatMenuButton};
 `;
@@ -43,10 +47,16 @@ export const StyledChatSwith = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-around;
+    margin-top: 15px;
     height: 4rem;
     border-radius: 10px 0 0 0;
-    background-color: ${Colors.light};
-    background-color: ${Colors.ChatMenu}
+    background-color: ${Colors.ChatMenu};
+    @media screen and (max-width: 768px){
+        margin: 10px;
+        height: 7rem;
+        flex-direction: column;
+        align-items: center;
+    }
 `;
 
 export const StyledChatPrive = styled.div`
@@ -59,10 +69,28 @@ export const StyledChatPrive = styled.div`
     overflow: scroll;
 `;
 
+export const DisplayPrive = styled.div`
+    &.prive{
+        display: block;
+    }
+    &.channel{
+        display: none;
+    }
+`;
+
+export const DisplayChannel = styled.div`
+    &.prive{
+        display: none;
+    }
+    &.channel{
+        display: block;
+    }
+`;
 export const StyledChatSwithButton = styled.button`
     width: 120px;
     height: 30px;
     border-radius: 20px;
+    margin-top: 10px;
     border: 0;
     color: ${Colors.ChatMenuButtonText};
     background-color: ${Colors.ChatMenuButton};
@@ -71,6 +99,10 @@ export const StyledChatSwithButton = styled.button`
     &:hover{
         background-color: ${Colors.ChatMenuButtonHover};
         transition: 0.4s;
+    }
+    @media screen and (max-width: 768px){
+        width: 90%;
+        font-size: 8px;
     }
 `;
 
@@ -85,6 +117,12 @@ export const StyledChatSettingButton = styled.button`
         background-color: ${Colors.ChatMenuButtonHover};
         transition: 0.4s;
     }
+    @media screen and (max-width: 768px){
+        background-color: transparent;
+        &:hover{
+            background-color: transparent;
+        }
+    }
 `;
 
 export const StyledChatTextArea = styled.div`
@@ -93,12 +131,18 @@ export const StyledChatTextArea = styled.div`
 
 export const StyledChat = styled.div`
     position: relative;
-    width: 65%;
-    height: 98%;
-    margin: 10px;
-    border-radius: 0px 10px 10px 0;
-    border: 2px solid ${Colors.border};
+    display: flex;
+    flex-direction: column;
+    width: 67%;
+    margin: 0;
+    height: 103%;
+    margin-left: 10px;
+    padding: 0px;
     background-color: ${Colors.ChatMenu};
+    @media screen and (max-width: 768px){
+        margin: 6px;
+        width: 70%;
+    }
 `;
 
 export const StyledChatWindow = styled.div`
@@ -109,47 +153,76 @@ export const StyledChatWindow = styled.div`
     margin: 10px;
     width: 96%;
     height: 90%;
+    @media screen and (max-width: 768px){
+        width: 90%;
+        height: 80%;
+    }   
 `;
 
 export const StyledChatPlace = styled.div`
     display:flex;
     margin: 10px;
     max-width: 45%;
-    justify-content: flex-end;
+    height: auto;
     border-radius: 20px;
+    overflow-wrap: anywhere;
+    hyphens: auto;
     &.receive{
+        justify-content: flex-start;
         background-color: blue;
+        text-align: left;
     }
     &.send{
+        justify-content: flex-end;
         background-color: red;
         transform: translateX(110%)
     }
+    @media screen and (max-width: 768px){
+        transform: translateX(0%)
+        max-width: 90%;
+        color: ${Colors.primary};
+    }
 `;
 
-export const StyledChatText = styled.div`
+export const StyledChatText = styled.p`
     margin: 10px;
-    font-size:18px; 
+    font-size:14px; 
+    font-family: "Public Pixel";
     color: ${Colors.primary}
+    @media screen and (max-width: 768px){
+        margin: 10px;
+        font-size:8px; 
+        font-family: "Public Pixel";
+    }
 `;
 
-export const StyledChatSendDiv = styled.div`
+export const StyledChatSendDiv = styled.form`
     display: flex;
     justify-content: space-around;
     align-items: center;
     width: 96%;
-    height: 6%;
     margin: 10px;
     border-radius: 10px;
+    &.deactive{
+        display: none;
+    }
+    @media screen and (max-width: 768px){
+        width: 90%;
+        
+    }
 `;
-export const StyledChatInput = styled.input`
+export const StyledChatInput = styled.textarea`
     position: relative;
+    font-family: "Public Pixel";
     padding: 6px;
-    width: 80%;
-    height: 100%;
-    font-size: 20px;
+    width: 100%;
+    font-size: 14px;
     height: auto;
     margin: 10px;
     border-radius: 10px;
+    @media screen and (max-width: 768px){
+        font-size: 8px;
+    }
 `;
 
 export const StyledSender = styled.button`
@@ -177,12 +250,17 @@ export const StyledUser = styled.button<BgColor>`
     border-radius: 0;
     border: 0;
     align-items: center;
+    justify-content: space-between;
     background-color: ${p => p.color};
     justify-content: space-around;
     transition: 0.4s;
     &:hover{
         background-color: ${Colors.ChatMenuButton};
         transition: 0.4s;
+    }
+    @media screen and (max-width: 768px){
+        margin: 6px;
+        font-size: 8px;
     }
 `;
 
@@ -193,6 +271,9 @@ export const StyledChatPrivAvatar = styled.div`
     height: 50px;
     background-color: red;
     border-radius: 50%;
+    @media screen and (max-width: 768px){
+        display: none;
+    }
 `;
 
 export const StyledChatPrivName = styled.p`
