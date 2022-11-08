@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyledLeftPad, StyledLeftPad1alias, StyledLeftPad2, StyledBall, StyledBallalias } from './game/StyleLeftPad';
+import { StyledLeftPad, StyledLeftPad1alias, StyledLeftPad2, StyledBall, StyledBallalias, StyledRightPadalias } from './game/StyleLeftPad';
 import {User} from "./game/User"
 import {StyledCursor} from "./Styles/StyleMouse"
 import Async from "react-async"
@@ -52,6 +52,7 @@ async function useInterval(callback: any, delay: number) {
     	speed : number,
 		maph : number,
 		mapw : number,
+		ballh : number,
 	};
 
 function resetBall(ball: ball, width: number, height: number){
@@ -75,7 +76,7 @@ async function update(ball: ball, setBall:any){
 	if(newBall.y - newBall.radius + 15 < 64 || newBall.y + newBall.radius > ball.maph - 40 - 15){
 		newBall.velocityY = -newBall.velocityY;
     }
-	if(newBall.x - newBall.radius + 15 < 0 || newBall.x + newBall.radius + 47 > ball.mapw){
+	if(newBall.x - newBall.radius + 15 - 40 < 0 || newBall.x + newBall.radius * 2 > ball.mapw - 40){
 		newBall.velocityX = -newBall.velocityX;
     }
 	
@@ -95,8 +96,10 @@ const MousePadLeft = () => {
 		speed : 7,
 		maph : 0,
 		mapw : 0,
+		ballh : 0,
 	});
-
+	
+	var sendYright: string = "";
 	let	tmp: number;
 	var mouseY;
 	
@@ -126,6 +129,7 @@ const MousePadLeft = () => {
 		var rect1 = p1.getBoundingClientRect();
 		ball.mapw = rect.width;
 		ball.maph = rect.height;
+		ball.ballh = rect1.height;
 		
 		
 		if (y > rect.height - 40 - rect1.height / 2){
@@ -163,6 +167,18 @@ const MousePadLeft = () => {
 		Y += 10;
 		const sendX = X.toString() + "px";
 		const sendY = Y.toString() + "px";
+		if (Y <  ball.maph - ball.ballh / 2 - 40 && Y > 64 + ball.ballh / 2){
+			Y -= ball.ballh / 2;
+			sendYright = Y.toString() + "px";}
+		else if (Y >=  ball.maph - ball.ballh / 2 - 40 ){
+			Y = ball.maph - ball.ballh - 40;
+			sendYright = Y.toString() + "px";
+		}
+		else {
+			Y = 64;
+			sendYright = Y.toString() + "px";
+
+		}
 		return (
 			<StyledLeftPad className="Table">
 			
@@ -170,7 +186,7 @@ const MousePadLeft = () => {
 				<StyledHexaArea className='grid' x="0" y="0"/>
 				<StyledHexaAreaLight className='light' x={sendX} y={sendY}/>
 				<StyledLeftPad1alias className="leftpad" y={mouseY+"px"}></StyledLeftPad1alias>
-				<StyledLeftPad2 className="rightpad"></StyledLeftPad2>
+				<StyledRightPadalias className="rightpad" y={sendYright}></StyledRightPadalias>
 				<StyledBallalias className="ball"  x={ball.x.toString()+"px"} y={ball.y.toString()+"px"}></StyledBallalias>
 	
 		</StyledLeftPad>

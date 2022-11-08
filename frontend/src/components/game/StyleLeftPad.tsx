@@ -28,7 +28,7 @@ opacity: 92%;
 
 export const StyledLeftPad1 = styled.div<mousePos>`
 	position: absolute;
-	width:3%;
+	width:40px;
 	height:20%;
 	background-color: red;
 	top: ;
@@ -40,12 +40,12 @@ export const StyledLeftPad1 = styled.div<mousePos>`
 	z-index: 1;
 `;
 
-export const StyledLeftPad2 = styled.div`
+export const StyledLeftPad2 = styled.div<mousePos>`
 	position: relative;
-	width:3%;
+	width:40px;
 	height:20%;
 	background-color: red;
-	top: 50%;
+	top: ;
 	left: 97%;
 	border-radius: 10px;
 	z-index: 1;
@@ -67,6 +67,13 @@ export const StyledLeftPad2 = styled.div`
 `;
 
 export const StyledLeftPad1alias = styled(StyledLeftPad1).attrs<mousePos>(p => ({
+    style: {
+        top: p.y,
+    },
+  }))<mousePos>`
+  `;
+
+  export const StyledRightPadalias = styled(StyledLeftPad2).attrs<mousePos>(p => ({
     style: {
         top: p.y,
     },
