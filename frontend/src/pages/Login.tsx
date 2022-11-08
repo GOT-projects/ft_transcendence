@@ -11,9 +11,7 @@ const Login = () => {
     Axios.defaults.withCredentials = false;
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''})
     const [Url, setUrl] = useState('')
-	Axios.post(InfoServer.server + '/auth/getUid', {
-	    host: InfoServer.client,
-	}).then((response:any) => {
+	Axios.get(InfoServer.server + '/auth/getIntraUrl',).then((response:any) => {
 		console.log(response.data);
 		setUrl(response.data);
 	})

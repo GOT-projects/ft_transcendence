@@ -14,7 +14,7 @@ const Login = () => {
 	const url = window.location.href;
 	let params = (new URL(url)).searchParams;
 	console.log(params.get("code"));
-	Axios.post(InfoServer.server + '/auth/intra', {
+	Axios.post(InfoServer.server + '/auth/connect_intra', {
 	    code: params.get("code"),
 	}).then((response:any) => {
 		console.log(response.data);

@@ -1,22 +1,34 @@
-import { Body, Controller, Get, Headers, HostParam, HttpException, HttpStatus, Param, Post, Query, Request, Res, ResponseDecoratorOptions } from '@nestjs/common';
-import { createSecretKey } from 'crypto';
-import { CreateUserDto } from 'src/dtos/users/CreateUser.dto';
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { UsersService } from './users.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
 export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
 
-    constructor(private usersService: UsersService) {}
+  @Post('new')
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.create(createUserDto);
+  }
 
-    @Get()
-    getUsers() {
+  @Get()
+  findAll() {
+    return this.usersService.findAll();
+  }
 
-    }
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.usersService.findOne(+id);
+  }
 
-    @Post()
-    async createUser(@Body() createUserDto: CreateUserDto, @Res() response: Response) {
-        if (!createUserDto || !createUserDto.username)
-            throw new HttpException("No username gave", HttpStatus.BAD_REQUEST);
-        await this.usersService.createUser(createUserDto, response);
-    }
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.update(+id, updateUserDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.usersService.remove(+id);
+  }
 }
