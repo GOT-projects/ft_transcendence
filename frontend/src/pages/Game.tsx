@@ -15,7 +15,7 @@ const Game = () => {
 
 	
 		<React.Fragment>
-
+			<BackgroundAnimate/>
             <Header colorHome={Colors.MenuDisable} colorGame={Colors.MenuActive} colorLeadBoard={Colors.MenuDisable} colorChat={Colors.MenuDisable}/>
 
 					<MousePadLeft />

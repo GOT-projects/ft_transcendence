@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import {Colors} from "../Colors"
+
 
 
 
@@ -17,12 +19,15 @@ position: absolute;
 z-index: 10;
 top: 50%;
 left: 50%;
-width: 100%;
-height: 100%;
+width: 90%;
+height: 60%;
 transform: translate(-50%, -50%);
 background-image: url(https://ns328286.ip-37-187-113.eu/ew/wallpapers/800x480/10602_800x480.jpg);
 background-size: cover;
+overflow: hidden;
 opacity: 92%;
+border: 3px solid ${Colors.border};
+border-radius: 20px;
 
 `;
 

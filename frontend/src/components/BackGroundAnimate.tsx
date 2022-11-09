@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import {StyledHexaArea, StyledContainer, StyledGrid, StyledHexaAreaLight} from "./Styles/StyleBackGround"
 
-
 const BackgroundAnimate = () => {
     const [x, setX] = useState(0);
     const [y, setY] = useState(0);

@@ -6,6 +6,7 @@ import Async from "react-async"
 import { useAsync } from "react-async"
 import styled from 'styled-components';
 import {StyledHexaArea, StyledContainer, StyledGrid, StyledHexaAreaLight} from "./Styles/StyleBackGround"
+import BackgroundAnimate from "../components/BackGroundAnimate";
 
 
 
@@ -180,6 +181,7 @@ const MousePadLeft = () => {
 
 		}
 		return (
+			<React.Fragment>
 			<StyledLeftPad className="Table">
 			
 				
@@ -190,6 +192,9 @@ const MousePadLeft = () => {
 				<StyledBallalias className="ball"  x={ball.x.toString()+"px"} y={ball.y.toString()+"px"}></StyledBallalias>
 	
 		</StyledLeftPad>
+         
+        </React.Fragment>
+		
 	)
 }
 
