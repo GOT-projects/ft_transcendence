@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import {Colors} from "../Colors"
-import {Link} from 'react-router-dom'
+// import {Link} from 'react-router-dom'
 
 interface BgColor{
     color:string;
@@ -94,7 +94,7 @@ export const StyledMenuDiv = styled.div`
     height: 3px;
     border-radius: 2px;
     &.ActiveMenu{
-        background-color: ${Colors.MenuActive}
+background-color: ${Colors.MenuActive}
     }
     &.UnActiveMenu{
         background-color: ${Colors.MenuDisable}
@@ -363,6 +363,9 @@ export const StyledChatPrivAvatar = styled.div`
 
 export const StyledChatPrivName = styled.p`
     margin: 10px;
+	width: 200px;
+	text-align: left;
     font-family: 'Public Pixel', cursive;
+	overflow: hidden;
     color: ${Colors.ChatMenuButtonText}
 `;

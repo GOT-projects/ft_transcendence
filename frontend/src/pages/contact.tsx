@@ -1,9 +1,12 @@
-import React, {useEffect, useState } from 'react';
+import { StyledChat, StyledChatInput, StyledChatPrivAvatar, StyledChatPrive, StyledChatPrivName, StyledChatPlace, 
+			StyledChatSendDiv, StyledChatSep, StyledChatSettingButton, StyledChatSwith, StyledChatSwithButton, StyledChatText, 
+			StyledChatWindow, StyledContact, StyledContaite, StyledSender, StyledUser, StyledChatTextArea, StyledMenuNav, StyledMenuDiv, 
+			StyledMenuSwitch, StyledAddInput, StyledAddInputdiv, StyledAddInputdivButton } from '../components/Styles/StyleChat';
+import React, {useState } from 'react';
 import BackgroundAnimate from '../components/BackGroundAnimate';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import {Colors} from "../components/Colors"
-import { StyledChat, StyledChatInput, StyledChatPrivAvatar, StyledChatPrive, StyledChatPrivName, StyledChatPlace, StyledChatSendDiv, StyledChatSep, StyledChatSettingButton, StyledChatSwith, StyledChatSwithButton, StyledChatText, StyledChatWindow, StyledContact, StyledContaite, StyledSender, StyledUser, StyledChatTextArea, StyledMenuNav, StyledMenuDiv, StyledMenuSwitch, StyledAddInput, StyledAddInputdiv, StyledAddInputdivButton, StyledAddInputdivAdd } from '../components/Styles/StyleChat';
 import { AiFillSetting, AiOutlineSend } from 'react-icons/ai';
 import { GrAddCircle } from 'react-icons/gr';
 import { UserListPrivate, DataMesssage } from '../components/interfaces';
@@ -109,16 +112,19 @@ const Chat = () => {
                         <StyledMenuDiv className={navActive}></StyledMenuDiv>
                         <StyledMenuDiv className={navActive}></StyledMenuDiv>
                     </StyledMenuNav>
-                    <StyledChatSwithButton color={chatSwitch === "private" ? Colors.ChatMenuButtonHover : "transparent"} onClick={() => setChatSwitch("private")}>Private</StyledChatSwithButton>
-                    <StyledChatSwithButton color={chatSwitch === "channel" ? Colors.ChatMenuButtonHover : "transparent"} onClick={() => setChatSwitch("channel")}>Channel</StyledChatSwithButton>
+                    <StyledChatSwithButton color={chatSwitch === "private" ? Colors.ChatMenuButtonHover : "transparent"} 
+									onClick={() => setChatSwitch("private")}>Private</StyledChatSwithButton>
+                    <StyledChatSwithButton color={chatSwitch === "channel" ? Colors.ChatMenuButtonHover : "transparent"}
+									onClick={() => setChatSwitch("channel")}>Channel</StyledChatSwithButton>
                 </StyledMenuSwitch>
                 <StyledContact className={navActive}>
                     <StyledChatSwith> 
-                        <StyledChatSwithButton color={chatSwitch === "private" ? Colors.ChatMenuButtonHover : "transparent"} onClick={() => setChatSwitch("private")}>Private</StyledChatSwithButton>
-                        <StyledChatSwithButton color={chatSwitch === "channel" ? Colors.ChatMenuButtonHover : "transparent"} onClick={() => setChatSwitch("channel")}>Channel</StyledChatSwithButton>
+                        <StyledChatSwithButton color={chatSwitch === "private" ? Colors.ChatMenuButtonHover : "transparent"}
+									onClick={() => setChatSwitch("private")}>Private</StyledChatSwithButton>
+                        <StyledChatSwithButton color={chatSwitch === "channel" ? Colors.ChatMenuButtonHover : "transparent"} 
+									onClick={() => setChatSwitch("channel")}>Channel</StyledChatSwithButton>
                     </StyledChatSwith>
                     <StyledChatSep/>
-                    <StyledChatPrive className={navActive}>
                     {chatSwitch === "private" ?
                     <StyledAddInputdiv>
                         <StyledAddInput type="text" value={inputContact} placeholder='Add contact' onChange={(e) => handChange(e, setInputContact, inputContact)}
@@ -126,7 +132,7 @@ const Chat = () => {
                                                                                                     if (e.key === 'Enter'){
                                                                                                         addContact();
                                                                                                     }}}/>
-                        <StyledAddInputdivButton onClick={() => addContact}>
+                        <StyledAddInputdivButton onClick={() => addContact()}>
                             <GrAddCircle size={"40px"}/>
                         </StyledAddInputdivButton>
                     </StyledAddInputdiv> :
@@ -136,11 +142,12 @@ const Chat = () => {
                                                                                                     if (e.key === 'Enter'){
                                                                                                         addChannel();
                                                                                                     }}}/>
-                        <StyledAddInputdivButton onClick={() => addChannel}>
+                        <StyledAddInputdivButton onClick={() => addChannel()}>
                             <GrAddCircle size={"40px"}/>
                         </StyledAddInputdivButton>
                     </StyledAddInputdiv>
                     }
+                    <StyledChatPrive className={navActive}>
                 <>
                     {chatSwitch === "private" ? chatUser.map((user:UserListPrivate) =>(
                         <StyledUser key={user.id} color={user.active ? Colors.ChatMenuButton : Colors.ChatMenu} onClick={() => handleUserSelector(user.user)}>

@@ -4,7 +4,7 @@ import Logo from "../assets/Logo.png"
 import Footer from "../components/Footer";
 import React, { useState } from 'react'
 import {Notification} from "../components/Notify"
-import {InfoServer, NotifyInter, NotifyInterUse} from "../components/interfaces"
+import {InfoServer, NotifyInter} from "../components/interfaces"
 import Axios from "axios"
 
 const Login = () => {
@@ -18,14 +18,14 @@ const Login = () => {
 		setUrl(response.data);
 	})
     const handleLogin = () => {
-        setNotify({isOpen: true, message:'Succes Poulet', type:'success'});
+        setNotify({isOpen: true, message:'', type:'success'});
         console.log("press", notify)
     }
     const Contaite = () => {
 	    return (
             <StyledLogin>
 			    <StyledLoginLogo height="200px" width="410px" img={Logo}/>			   
-                <StyledLoginButton href={Url}>Login Intra</StyledLoginButton>
+                <StyledLoginButton href={Url} onClick={() => handleLogin()}>Login Intra</StyledLoginButton>
                 <Footer/>
             </StyledLogin>
 	    )

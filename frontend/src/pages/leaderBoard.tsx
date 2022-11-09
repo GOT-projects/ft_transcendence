@@ -13,7 +13,7 @@ const LeaderBoard = () => {
         wins:number,
         lose:number,
     }
-    const [rank, setRank] = useState<Ranks[]>([
+    const [rank] = useState<Ranks[]>([
       {rank: 1, name: "test1", wins: 302, lose: 102},
       {rank: 2, name: "robert paul", wins: 302, lose: 102},
       {rank: 3, name: "henri jean", wins: 302, lose: 102},

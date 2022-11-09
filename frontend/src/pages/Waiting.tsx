@@ -1,10 +1,9 @@
 
-import React, { useState } from 'react'
+import React from 'react'
 import BackgroundAnimate from "../components/BackGroundAnimate";
 import Footer from "../components/Footer";
-import {InfoServer, NotifyInter, NotifyInterUse} from "../components/interfaces"
+import {InfoServer} from "../components/interfaces"
 import Axios from "axios"
-import { useSearchParams } from 'react-router-dom';
 
 
 
