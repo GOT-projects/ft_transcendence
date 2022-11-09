@@ -1,4 +1,5 @@
 import {Routes, Route, useLocation} from 'react-router-dom'
+
 import Login from "../pages/Login"
 import Game from "../pages/Game"
 import Leadboard from "../pages/leaderBoard"

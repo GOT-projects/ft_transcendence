@@ -62,6 +62,9 @@ export const StyledHexaArea = styled.div<mousePos>`
         @media screen and (max-width: 768px){
             display: none;
         }
+        &.game{
+            display: none;
+        }
     }
 `;
 
