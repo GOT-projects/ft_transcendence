@@ -3,6 +3,8 @@ import {StyledHexaArea, StyledContainer, StyledGrid, StyledHexaAreaLight} from "
 
 
 const BackgroundAnimate = () => {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
     const [x, setX] = useState(0);
     const [y, setY] = useState(0);
     document.addEventListener("mousemove", (e) => {
@@ -11,11 +13,13 @@ const BackgroundAnimate = () => {
     });
     const sendX = x.toString() + "px";
     const sendY = y.toString() + "px";
+    const sendW = w.toString() + "px";
+    const sendH = h.toString() + "px";
 	return (
-        <StyledContainer>
+        <StyledContainer w={sendW} h={sendH}>
             <StyledGrid id="hex-grid">
-                <StyledHexaArea className='grid' x="0" y="0"/>
-                <StyledHexaAreaLight className='light' x={sendX} y={sendY}/>
+                <StyledHexaArea className='grid' x="0" y="0" w={sendW} h={sendH}/>
+                <StyledHexaAreaLight className='light' x={sendX} y={sendY} w={sendW} h={sendH}/>
             </StyledGrid>
         </StyledContainer>
 	)

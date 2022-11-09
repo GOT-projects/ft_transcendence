@@ -5,6 +5,7 @@ import {Link} from 'react-router-dom'
 interface BgColor{
     color:string;
 }
+
 export const StyledContaite = styled.div`
     position: absolute;
     display: flex;
@@ -22,9 +23,84 @@ export const StyledContaite = styled.div`
     opacity: 0.6;
     cursor: pointer;
     @media screen and (max-width: 768px){
-        height: 76%;
+        display: block;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        top: 4rem;
+        left: 0;
+        transform: translate(0, 0);
+        border: none;
+        border-radius: 0;
+        background-color: transparent;
     }
 `;
+
+export const StyledAddInput = styled.input`
+    margin: 20px;
+    width: 70%;
+    height: 30px;
+    font-size: 18px;
+    border-radius: 10px;
+`;
+
+export const StyledAddInputdiv = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+`;
+
+export const StyledAddInputdivAdd = styled.div`
+    width: 20px;
+    height: 2px;
+    background-color: pink;
+`;
+
+export const StyledAddInputdivButton = styled.div`
+    margin: 10px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: ${Colors.ChatMenuButton};
+    &:hover{
+        background-color: ${Colors.ChatMenuButtonHover};
+    }
+`;
+
+export const StyledMenuSwitch = styled.div`
+    display: none;
+    @media screen and (max-width: 768px){
+        display: flex;
+        align-items: center;
+    }
+`;
+
+export const StyledMenuNav = styled.div`
+    display: none;
+    @media screen and (max-width: 768px){
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin: 10px;
+        width: 100%;
+        height: 10%;
+    }
+`;
+
+export const StyledMenuDiv = styled.div`
+    margin: 6px;
+    width: 40px;
+    height: 3px;
+    border-radius: 2px;
+    &.ActiveMenu{
+        background-color: ${Colors.MenuActive}
+    }
+    &.UnActiveMenu{
+        background-color: ${Colors.MenuDisable}
+    }
+`;
+
 export const StyledContact = styled.div`
     width: 40%;
     height: 104%;
@@ -35,6 +111,16 @@ export const StyledContact = styled.div`
     flex-direction: column;
     background-color: ${Colors.ChatMenu};
     border: 2px solid ${Colors.ChatMenuButton};
+    @media screen and (max-width: 768px){
+        &.UnActiveMenu{
+            display: none;
+         }
+         &.ActiveMenu{
+            display: flex;
+            width: 100%;
+            height: 100%;
+         }
+    }
 `;
 export const StyledChatSep = styled.div`
     width: 100%;
@@ -52,10 +138,7 @@ export const StyledChatSwith = styled.div`
     border-radius: 10px 0 0 0;
     background-color: ${Colors.ChatMenu};
     @media screen and (max-width: 768px){
-        margin: 10px;
-        height: 7rem;
-        flex-direction: column;
-        align-items: center;
+        display: none;
     }
 `;
 
@@ -67,6 +150,11 @@ export const StyledChatPrive = styled.div`
     height: 90%;
     width: 100%;
     overflow: scroll;
+    @media screen and (max-width: 768px){
+        display: block;
+        height: 90%;
+        width: 100%;
+    }
 `;
 
 export const DisplayPrive = styled.div`
@@ -86,14 +174,14 @@ export const DisplayChannel = styled.div`
         display: block;
     }
 `;
-export const StyledChatSwithButton = styled.button`
+export const StyledChatSwithButton = styled.button<BgColor>`
     width: 120px;
     height: 30px;
     border-radius: 20px;
     margin-top: 10px;
     border: 0;
     color: ${Colors.ChatMenuButtonText};
-    background-color: ${Colors.ChatMenuButton};
+    background-color: ${p => p.color};
     font-family: 'Public Pixel', cursive;
     transition: 0.4s;
     &:hover{
@@ -101,7 +189,8 @@ export const StyledChatSwithButton = styled.button`
         transition: 0.4s;
     }
     @media screen and (max-width: 768px){
-        width: 90%;
+        width: 40%;
+        margin: 8px;
         font-size: 8px;
     }
 `;
@@ -135,13 +224,14 @@ export const StyledChat = styled.div`
     flex-direction: column;
     width: 67%;
     margin: 0;
-    height: 103%;
+    height: 100%;
     margin-left: 10px;
     padding: 0px;
     background-color: ${Colors.ChatMenu};
     @media screen and (max-width: 768px){
-        margin: 6px;
-        width: 70%;
+        width: 100%;
+        height: calc(100% - 6rem - 50px);
+        margin: 0;
     }
 `;
 
@@ -151,12 +241,8 @@ export const StyledChatWindow = styled.div`
     justify-content: flex-end;
     flex-direction: column;
     margin: 10px;
-    width: 96%;
-    height: 90%;
-    @media screen and (max-width: 768px){
-        width: 90%;
-        height: 80%;
-    }   
+    width: 100%;
+    height: 100%;
 `;
 
 export const StyledChatPlace = styled.div`
@@ -218,14 +304,16 @@ export const StyledChatInput = styled.textarea`
     width: 100%;
     font-size: 14px;
     height: auto;
-    margin: 10px;
+    margin-bottom: 40px;
     border-radius: 10px;
     @media screen and (max-width: 768px){
+        margin-bottom: 20px;
         font-size: 8px;
     }
 `;
 
 export const StyledSender = styled.button`
+    margin-bottom: 10px;
     background-color: transparent;
     background-repeat: no-repeat;
     width: 50px;
@@ -260,7 +348,7 @@ export const StyledUser = styled.button<BgColor>`
     }
     @media screen and (max-width: 768px){
         margin: 6px;
-        font-size: 8px;
+        font-size: 16px;
     }
 `;
 
@@ -271,9 +359,6 @@ export const StyledChatPrivAvatar = styled.div`
     height: 50px;
     background-color: red;
     border-radius: 50%;
-    @media screen and (max-width: 768px){
-        display: none;
-    }
 `;
 
 export const StyledChatPrivName = styled.p`
