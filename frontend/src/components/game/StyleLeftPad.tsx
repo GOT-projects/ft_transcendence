@@ -32,26 +32,27 @@ border-radius: 20px;
 `;
 
 export const StyledLeftPad1 = styled.div<mousePos>`
+position: absolute;
+width:40px;
+height:20%;
+background-color: red;
+top: ;
+transform: translate(0, -50%);
+border-radius: 10px;
+background-image: url(https://i.pinimg.com/474x/70/86/62/70866228da01302bce6afc9106e676b0.jpg);
+background-position: center;
+background-size: 1500%;
+z-index: 1;
+
+`;
+
+export const StyledLeftPad2 = styled.div<mousePos>`
 	position: absolute;
 	width:40px;
 	height:20%;
 	background-color: red;
 	top: ;
-	transform: translate(0, -50%);
-	border-radius: 10px;
-	background-image: url(https://i.pinimg.com/474x/70/86/62/70866228da01302bce6afc9106e676b0.jpg);
-	background-position: center;
-	background-size: 1500%;
-	z-index: 1;
-`;
-
-export const StyledLeftPad2 = styled.div<mousePos>`
-	position: relative;
-	width:40px;
-	height:20%;
-	background-color: red;
-	top: ;
-	left: 97%;
+	right: 0px;
 	border-radius: 10px;
 	z-index: 1;
 	`;
