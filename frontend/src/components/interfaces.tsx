@@ -1,4 +1,3 @@
-
 export interface NotifyInter{
     isOpen:boolean, 
     message: string,
@@ -36,3 +35,7 @@ export interface UserListPrivate{
     active: boolean,
     data?:DataMesssage[],
 }
+
+export interface PageName{
+	name:string,
+} 

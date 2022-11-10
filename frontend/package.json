@@ -53,9 +53,7 @@
     ]
   },
   "devDependencies": {
-    "@types/react-scroll-to-bottom": "^4.2.0",
     "@types/styled-components": "^5.1.26",
-    "react-scroll-to-bottom": "^4.2.0",
     "@types/react-helmet": "^6.1.5"
   }
 }

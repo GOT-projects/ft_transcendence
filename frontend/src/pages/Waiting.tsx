@@ -20,7 +20,7 @@ const Login = () => {
 	})
 	return (
         <React.Fragment>
-            <BackgroundAnimate/>
+            <BackgroundAnimate name="waiting"/>
             <Footer/>
         </React.Fragment>
 	)

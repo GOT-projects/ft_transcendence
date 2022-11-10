@@ -10,11 +10,14 @@ import {Colors} from "../components/Colors"
 import { AiFillSetting, AiOutlineSend } from 'react-icons/ai';
 import { GrAddCircle } from 'react-icons/gr';
 import { UserListPrivate, DataMesssage } from '../components/interfaces';
+import {InfoServer, NotifyInter} from "../components/interfaces"
+import {Notification} from "../components/Notify"
 import { v4 as uuid } from 'uuid';
 
 
 
 const Chat = () => {
+    const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''})
     const [navActive, setNavActive] = useState("UnActiveMenu");
     const [chatSwitch, setChatSwitch] = useState<string>('private');
     const endRef = React.useRef<HTMLInputElement>(null);
@@ -84,26 +87,23 @@ const Chat = () => {
             setNavActive("UnActiveMenu");
         } else setNavActive("ActiveMenu");
     }
-    // useEffect(() => {
-    //     if (endRef.current) {
-    //         endRef.current.scrollIntoView();
-    //     }
-    // }, [chatUser, selectUser, inputChat])
-    //
+
     const addContact = () =>{
         //TODO check contact before add
         const add = {id: uuid(), user: inputContact, mute:false, block: false, active: false, data:[]}
         setChatUser(chatUser => [...chatUser, add])
+        setNotify({isOpen: true, message: 'User ' + inputContact + ' is add', type:'success'});
         setInputContact('')
     }
 	
     const addChannel = () =>{
         //TODO check contact before add
+        setNotify({isOpen: true, message: 'Channel ' + inputChannel + ' is add', type:'success'});
         setInputChannel('')
     }
 	return (
 		<React.Fragment>
-			<BackgroundAnimate/>
+			<BackgroundAnimate name="contact"/>
             <Header colorHome={Colors.MenuDisable} colorGame={Colors.MenuDisable} colorLeadBoard={Colors.MenuDisable} colorChat={Colors.MenuActive}/>
             <StyledContaite>
                 <StyledMenuSwitch>
@@ -153,9 +153,6 @@ const Chat = () => {
                         <StyledUser key={user.id} color={user.active ? Colors.ChatMenuButton : Colors.ChatMenu} onClick={() => handleUserSelector(user.user)}>
                             <StyledChatPrivAvatar/>
                         <StyledChatPrivName key={user.id}>{user.user}</StyledChatPrivName>
-                        <StyledChatSettingButton >
-                            <AiFillSetting className='setting' size={15} color={Colors.ChatMenuButtonText}/>
-                        </StyledChatSettingButton>
                         </StyledUser>
                     )) : ""}
                 </>
@@ -196,6 +193,7 @@ const Chat = () => {
                     </StyledChatWindow>
                 </StyledChat>
             </StyledContaite>
+            <Notification notify={notify} setNotify={setNotify}/>
 			<Footer/>
 		</React.Fragment>
 	)

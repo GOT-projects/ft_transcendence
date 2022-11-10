@@ -17,10 +17,11 @@ const Login = () => {
 		console.log(response.data);
 		setUrl(response.data);
 	})
+
     const handleLogin = () => {
         setNotify({isOpen: true, message:'', type:'success'});
-        console.log("press", notify)
     }
+
     const Contaite = () => {
 	    return (
             <StyledLogin>
@@ -32,7 +33,7 @@ const Login = () => {
 }
 	return (
         <React.Fragment>
-            <BackgroundAnimate/>
+            <BackgroundAnimate name="login"/>
             <Contaite></Contaite>
             <Footer/>
             <Notification notify={notify} setNotify={setNotify}/>

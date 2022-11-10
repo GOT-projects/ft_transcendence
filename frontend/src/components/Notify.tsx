@@ -12,11 +12,11 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
    return(
       <Snackbar
          open={notify.isOpen}
-         autoHideDuration={3000}
+         autoHideDuration={6000}
          anchorOrigin={{vertical: 'top', horizontal: 'right'}}
          onClose={handleClose}
          style={{position: 'absolute',   
-                 zIndex: '99',   
+                 zIndex: '100',   
                  opacity: '0.9',
 				 transition: '0.6s'
                  }}

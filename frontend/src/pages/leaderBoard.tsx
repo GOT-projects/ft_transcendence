@@ -71,7 +71,7 @@ const LeaderBoard = () => {
    ]);
 	return (
         <React.Fragment>
-            <BackgroundAnimate/>
+            <BackgroundAnimate name="LeaderBoard"/>
             <Header colorHome={Colors.MenuDisable} colorGame={Colors.MenuDisable} colorLeadBoard={Colors.MenuActive} colorChat={Colors.MenuDisable}/>
             <StyledLead>
                 <StyledTile>LeaderBoard</StyledTile>

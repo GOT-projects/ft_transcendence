@@ -88,6 +88,10 @@ async function update(ball: ball, setBall:any){
 
 const MousePadLeft = () => {
 	
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const sendW = w.toString() + "px";
+    const sendH = h.toString() + "px";
 	const [ball, setBall] = useState({
 		x : 100,
 		y : 100,
@@ -183,10 +187,8 @@ const MousePadLeft = () => {
 		return (
 			<React.Fragment>
 			<StyledLeftPad className="Table">
-			
-				
-				<StyledHexaArea className='grid' x="0" y="0"/>
-				<StyledHexaAreaLight className='light' x={sendX} y={sendY}/>
+                <StyledHexaArea className='grid' x="0" y="0" w={sendW} h={sendH}/>
+				<StyledHexaAreaLight className='light' x={sendX} y={sendY} w={sendW} h={sendH}/>
 				<StyledLeftPad1alias className="leftpad" y={mouseY+"px"}></StyledLeftPad1alias>
 				<StyledRightPadalias className="rightpad" y={sendYright}></StyledRightPadalias>
 				<StyledBallalias className="ball"  x={ball.x.toString()+"px"} y={ball.y.toString()+"px"}></StyledBallalias>
