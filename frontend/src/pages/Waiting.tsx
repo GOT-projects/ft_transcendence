@@ -9,15 +9,20 @@ import { useSearchParams } from 'react-router-dom';
 
 
 
-const Login = () => {
+const Waiting = () => {
     Axios.defaults.withCredentials = false;
 	const url = window.location.href;
 	let params = (new URL(url)).searchParams;
-	console.log(params.get("code"));
+	//console.log(params.get("code"));
 	Axios.post(InfoServer.server + '/auth/connect_intra', {
+		withCredentials: true,
 	    code: params.get("code"),
 	}).then((response:any) => {
-		console.log(response.data);
+		if(response.status == 200){
+			//cookieClient.save('cookie-name', response.data, {path:'/'})
+		}
+		console.log(response);
+		console.log('lol');
 	})
 	return (
         <React.Fragment>
@@ -27,5 +32,5 @@ const Login = () => {
 	)
 }
 
-export default Login;
+export default Waiting;
 

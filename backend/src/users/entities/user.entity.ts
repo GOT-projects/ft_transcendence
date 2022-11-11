@@ -9,7 +9,6 @@ export class User {
     @Column( {unique: true} )
     idIntra: number;
 
-    @Length(2, 15)
     @Column( {unique: true} )
     login: string;
 

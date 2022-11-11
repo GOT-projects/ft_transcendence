@@ -72,7 +72,7 @@ export class UsersService {
       const user = await this.userRepository.findOneBy({ idIntra, });
       if (!user)
         return await this.create(createUserDto);
-      return await this.update(user.id, createUserDto);
+      return user;
     } catch (error) {
       throw new HttpException(error.message, error.status);
     }
