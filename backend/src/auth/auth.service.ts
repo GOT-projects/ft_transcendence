@@ -14,7 +14,7 @@ export class AuthService {
 		private readonly jwtService: JwtService,
     ) {}
 
-    async connect_intra(req: Request, res: Response, code: string) {
+    async connect_intra(req: Request, code: string) {
         // Get token
         const data = {
 			code: code,
@@ -54,13 +54,11 @@ export class AuthService {
 			// Create JWT
 			const jwt: string = await this.jwtService.signAsync({
 				userId: user.id,
+				ttl: Math.ceil(Date.now() / 1000) + parseInt(`${ process.env.JWT_TTL }`),
 			});
-			/*res.status(200);
-			res.cookie('token', jwt);*/
-			return user; 
+			return jwt;
 		} catch (error) {
 			throw new HttpException(error.message + ' PS: cookie token', error.status);
 		}
-		return { logged: 'false' }; 
     }
 }

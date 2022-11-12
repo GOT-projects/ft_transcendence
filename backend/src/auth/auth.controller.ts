@@ -11,11 +11,10 @@ export class AuthController {
 	) {}
 
     @Post('connect_intra')
-    async connect_intra(@Req() req: Request, @Res() res: Response, @Body('code') code: string) {
+    async connect_intra(@Req() req: Request, @Body('code') code: string) {
 		if (!code)
 			throw new HttpException('empty code', HttpStatus.BAD_REQUEST);
-        return await this.authService.connect_intra(req, res, code);
-		return 'lol'
+        return await this.authService.connect_intra(req, code);
     }
 
     @Get('getIntraUrl')

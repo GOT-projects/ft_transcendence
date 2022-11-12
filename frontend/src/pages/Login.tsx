@@ -27,7 +27,7 @@ const Login = () => {
                 <Footer/>
             </StyledLogin>
 	    )
-}
+    }
 	return (
         <React.Fragment>
             <BackgroundAnimate/>

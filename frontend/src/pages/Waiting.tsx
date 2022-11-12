@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 import {InfoServer, NotifyInter, NotifyInterUse} from "../components/interfaces"
 import Axios from "axios"
 import { useSearchParams } from 'react-router-dom';
+import { Cookies } from 'react-cookie';
 
 
 
@@ -14,16 +15,17 @@ const Waiting = () => {
 	const url = window.location.href;
 	let params = (new URL(url)).searchParams;
 	//console.log(params.get("code"));
-	Axios.post(InfoServer.server + '/auth/connect_intra', {
-		withCredentials: true,
-	    code: params.get("code"),
-	}).then((response:any) => {
-		if(response.status == 200){
-			//cookieClient.save('cookie-name', response.data, {path:'/'})
+	Axios.post(InfoServer.server + '/auth/connect_intra',
+		{ code: params.get("code") }
+	).then((response:any) => {
+		if(response.status == 201){
+			// create cookie with JWT
+			const cookie = new Cookies();
+			cookie.set('jwt', response.data);
+			// Redirect on home page
+			window.location.href = '/';
 		}
-		console.log(response);
-		console.log('lol');
-	})
+	});
 	return (
         <React.Fragment>
             <BackgroundAnimate/>
