@@ -10,3 +10,5 @@ const AuthGuard = ({children}:any) => {
     return children;
 };
 
+export default AuthGuard;
+
