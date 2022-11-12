@@ -5,6 +5,7 @@ import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
+import { Tokens } from './types';
 
 @Injectable()
 export class AuthService {
@@ -14,8 +15,32 @@ export class AuthService {
 		private readonly jwtService: JwtService,
     ) {}
 
-    async connect_intra(req: Request, code: string) {
-        // Get token
+    async getToken(userId: number){
+        const [at, rt] = await Promise.all([
+            //access token
+            this.jwtService.signAsync({
+                userId,
+            },{
+                //time in second
+                secret: process.env.JWT_TTL,
+                expiresIn:60 * 15,
+            }),
+            //refresh token
+            this.jwtService.signAsync({
+                userId,
+            },{
+                //time in second
+                secret: process.env.JWT_TTL,
+                expiresIn:60 * 15 * 24,
+            })
+        ])
+        return ({
+            access_token: at,
+            refresh: rt,
+        })
+    }
+
+    async connect_intra(req: Request, code: string): Promise<Tokens> {
         const data = {
 			code: code,
 			client_id: '' + process.env.API_UID,
@@ -50,15 +75,16 @@ export class AuthService {
 		try {
 			// Update database
 			const user: User = await this.usersService.add_or_update(createUserDto.idIntra, createUserDto);
-			//console.log(user);
-			// Create JWT
-			const jwt: string = await this.jwtService.signAsync({
-				userId: user.id,
-				ttl: Math.ceil(Date.now() / 1000) + parseInt(`${ process.env.JWT_TTL }`),
-			});
-			return jwt;
+
+            //Create JWT in header with Pass Startegy
+            const tokens = await this.getToken(user.id); 
+            console.log("token gen: ", tokens);
+            return tokens;
 		} catch (error) {
 			throw new HttpException(error.message + ' PS: cookie token', error.status);
 		}
+    }
+    async logout(userId:number){
+        //database remome token access
     }
 }

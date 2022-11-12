@@ -6,15 +6,22 @@ import React, { useState } from 'react'
 import {Notification} from "../components/Notify"
 import {InfoServer, NotifyInter, NotifyInterUse} from "../components/interfaces"
 import Axios from "axios"
+import { accountService } from "../services/account.service";
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-    Axios.defaults.withCredentials = false;
+    let navigate = useNavigate();
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''})
     const [Url, setUrl] = useState('')
-	Axios.get(InfoServer.server + '/auth/getIntraUrl',).then((response:any) => {
-		console.log(response.data);
-		setUrl(response.data);
-	})
+    if (accountService.isLogged() === true){
+        navigate("/game");
+    }else{
+        Axios.defaults.withCredentials = false;
+	    Axios.get(InfoServer.server + '/auth/getIntraUrl',).then((response:any) => {
+	    	setUrl(response.data);
+	    })
+    }
+
     const handleLogin = () => {
         setNotify({isOpen: true, message:'Succes Poulet', type:'success'});
         console.log("press", notify)

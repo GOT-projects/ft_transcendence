@@ -1,29 +1,26 @@
-
 import React, { useState } from 'react'
 import BackgroundAnimate from "../components/BackGroundAnimate";
 import Footer from "../components/Footer";
-import {InfoServer, NotifyInter, NotifyInterUse} from "../components/interfaces"
+import {InfoServer} from "../components/interfaces"
 import Axios from "axios"
-import { useSearchParams } from 'react-router-dom';
-import { Cookies } from 'react-cookie';
-
-
-
+import { accountService } from '../services/account.service';
+import { useNavigate } from 'react-router-dom';
 
 const Waiting = () => {
+    let navigate = useNavigate();
     Axios.defaults.withCredentials = false;
 	const url = window.location.href;
 	let params = (new URL(url)).searchParams;
-	//console.log(params.get("code"));
 	Axios.post(InfoServer.server + '/auth/connect_intra',
 		{ code: params.get("code") }
 	).then((response:any) => {
-		if(response.status == 201){
-			// create cookie with JWT
-			const cookie = new Cookies();
-			cookie.set('jwt', response.data);
-			// Redirect on home page
-			window.location.href = '/';
+		if(response.status === 201){
+            console.log(response.data)
+            accountService.saveToken(response.data.access_token);
+            if (accountService.isLogged() == false){
+                console.log("Service waiting ok access to game")
+                navigate("/game"); 
+            }
 		}
 	});
 	return (
