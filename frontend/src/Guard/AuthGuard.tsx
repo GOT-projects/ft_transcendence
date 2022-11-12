@@ -3,11 +3,10 @@ import { accountService } from "../services/account.service";
 
 const AuthGuard = ({children}:any) => {
     let access = accountService.isLogged();
+    console.log("AuthGuard: ", access);
     if (access === false){
-        console.log("false authGuard")
         return <Navigate to="/"/>
     }
-        console.log("truee authGuard")
     return children;
 };
 

@@ -4,28 +4,27 @@ import Logo from "../assets/Logo.png"
 import Footer from "../components/Footer";
 import React, { useState } from 'react'
 import {Notification} from "../components/Notify"
-import {InfoServer, NotifyInter, NotifyInterUse} from "../components/interfaces"
+import {InfoServer, NotifyInter} from "../components/interfaces"
 import Axios from "axios"
 import { accountService } from "../services/account.service";
-import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-    let navigate = useNavigate();
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''})
     const [Url, setUrl] = useState('')
     if (accountService.isLogged() === true){
-        navigate("/game");
+        console.log("you are log")
+        window.location.href = '/game';
     }else{
         Axios.defaults.withCredentials = false;
-	    Axios.get(InfoServer.server + '/auth/getIntraUrl',).then((response:any) => {
-	    	setUrl(response.data);
-	    })
+        try{
+	        Axios.get(InfoServer.server + '/auth/getIntraUrl',).then((response:any) => {
+	        	setUrl(response.data);
+	        })
+        }catch(e){
+            console.log(e);
+        }
     }
 
-    const handleLogin = () => {
-        setNotify({isOpen: true, message:'Succes Poulet', type:'success'});
-        console.log("press", notify)
-    }
     const Contaite = () => {
 	    return (
             <StyledLogin>

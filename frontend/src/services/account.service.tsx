@@ -9,6 +9,12 @@ let saveAccess = (token: string) => {
     localStorage.setItem('access', token)
 }
 
+let removeAccess= () => {
+    console.log("remove accces token");
+    localStorage.removeItem('access')
+}
+
+
 let removeToken= () => {
     localStorage.removeItem('token')
 }
@@ -18,6 +24,7 @@ let isLogged = () => {
     Axios.defaults.withCredentials = false;
     let token = localStorage.getItem('token')
     if (!!token){
+        console.log("Check access token")
         try {
 	        Axios.get(InfoServer.server + '/auth/access', {
                 headers: { Authorization: "Bearer " + token }}).then((response: any) => {
@@ -29,13 +36,15 @@ let isLogged = () => {
                 })
         } catch (e) {
             console.log(e);
+            return access;
         }
         let auth = localStorage.getItem('access');
         if (!!auth){
             if (auth === "true")
                 access = true;
-            localStorage.removeItem('access')
+            removeAccess();
         }
+        console.log("clear access token")
     }
     return access;
 }
