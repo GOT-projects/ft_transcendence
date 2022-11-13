@@ -16,6 +16,7 @@
     "asyncinterval": "^0.0.7",
     "react": "latest",
     "react-async": "^10.0.1",
+    "react-cookie": "^4.1.1",
     "react-dom": "latest",
     "react-helmet": "^6.1.0",
     "react-hexagon": "^1.1.3",

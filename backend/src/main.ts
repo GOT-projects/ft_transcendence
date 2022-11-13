@@ -1,17 +1,21 @@
+import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
+import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
-    new FastifyAdapter(),
-    {abortOnError: false}
-  );
+  const logger = new Logger('main.ts - server');
+  const app = await NestFactory.create(AppModule);
   app.enableCors({
     credentials: false,
+    origin: '*',
+    
   });
+  app.use(cookieParser());
   app.useLogger(['log', 'error', 'warn', 'debug', 'verbose']); // TODO rm for prod
-  await app.listen(3000, '0.0.0.0');
+  const port: number = (process.env.PORT_SERVER ? parseInt(process.env.PORT_SERVER) : 3000);
+  await app.listen(port);
+  logger.log(`Server start on port ${port}`);
 }
+
 bootstrap();

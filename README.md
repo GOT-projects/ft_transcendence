@@ -17,6 +17,8 @@
 
 [doc](https://docs.nestjs.com/)
 
+[yt](https://www.youtube.com/channel/UCcE2YngHoargpdjIzkCNY2Q/videos)
+
 ```
 npm i -g @nestjs/cli
 

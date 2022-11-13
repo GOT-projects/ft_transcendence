@@ -6,31 +6,34 @@ import React, { useState } from 'react'
 import {Notification} from "../components/Notify"
 import {InfoServer, NotifyInter} from "../components/interfaces"
 import Axios from "axios"
+import { accountService } from "../services/account.service";
 
 const Login = () => {
-    Axios.defaults.withCredentials = false;
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''})
     const [Url, setUrl] = useState('')
-	Axios.post(InfoServer.server + '/auth/getUid', {
-	    host: InfoServer.client,
-	}).then((response:any) => {
-		console.log(response.data);
-		setUrl(response.data);
-	})
-
-    const handleLogin = () => {
-        setNotify({isOpen: true, message:'', type:'success'});
+    if (accountService.isLogged() === true){
+        console.log("you are log")
+        window.location.href = '/game';
+    }else{
+        Axios.defaults.withCredentials = false;
+        try{
+	        Axios.get(InfoServer.server + '/auth/getIntraUrl',).then((response:any) => {
+	        	setUrl(response.data);
+	        })
+        }catch(e){
+            console.log(e);
+        }
     }
 
     const Contaite = () => {
 	    return (
             <StyledLogin>
 			    <StyledLoginLogo height="200px" width="410px" img={Logo}/>			   
-                <StyledLoginButton href={Url} onClick={() => handleLogin()}>Login Intra</StyledLoginButton>
+                <StyledLoginButton href={Url} >Login Intra</StyledLoginButton>
                 <Footer/>
             </StyledLogin>
 	    )
-}
+    }
 	return (
         <React.Fragment>
             <BackgroundAnimate name="login"/>
