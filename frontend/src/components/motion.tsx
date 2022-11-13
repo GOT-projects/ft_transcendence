@@ -18,9 +18,9 @@ const MotionRoutes = () => {
                         <Game/>
                     </AuthGuard>
                     }/>
-               <Route path="/contact" element={
+               <Route path="/chat" element={
                     <AuthGuard>
-                        <Game/>
+                        <Chat/>
                     </AuthGuard>
                     }/>
                <Route path="/leaderboard" element={

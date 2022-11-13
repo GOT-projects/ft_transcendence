@@ -10,13 +10,13 @@ let saveAccess = (token: string) => {
 }
 
 let removeAccess= () => {
-    console.log("remove accces token");
     localStorage.removeItem('access')
 }
 
 
 let removeToken= () => {
     localStorage.removeItem('token')
+    window.location.href = '/';
 }
 
 let isLogged = () => {
