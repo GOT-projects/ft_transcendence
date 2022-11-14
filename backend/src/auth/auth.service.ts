@@ -1,11 +1,10 @@
 import axios from 'axios';
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { Tokens } from './types';
 
 @Injectable()
 export class AuthService {
@@ -15,32 +14,8 @@ export class AuthService {
 		private readonly jwtService: JwtService,
     ) {}
 
-    async getToken(userId: number){
-        const [at, rt] = await Promise.all([
-            //access token
-            this.jwtService.signAsync({
-                userId,
-            },{
-                //time in second
-                secret: process.env.JWT_TTL,
-                expiresIn:60 * 15,
-            }),
-            //refresh token
-            this.jwtService.signAsync({
-                userId,
-            },{
-                //time in second
-                secret: process.env.JWT_TTL,
-                expiresIn:60 * 15 * 24,
-            })
-        ])
-        return ({
-            access_token: at,
-            refresh: rt,
-        })
-    }
-
-    async connect_intra(req: Request, code: string): Promise<Tokens> {
+    async connect_intra(req: Request, res: Response,code: string) {
+        // Get token
         const data = {
 			code: code,
 			client_id: '' + process.env.API_UID,
@@ -75,16 +50,16 @@ export class AuthService {
 		try {
 			// Update database
 			const user: User = await this.usersService.add_or_update(createUserDto.idIntra, createUserDto);
-
-            //Create JWT in header with Pass Startegy
-            const tokens = await this.getToken(user.id); 
-            console.log("token gen: ", tokens);
-            return tokens;
+			//console.log(user);
+			// Create JWT
+			const jwt: string = await this.jwtService.signAsync({
+				userId: user.id,
+			});
+            console.info("Jwt gen: ", jwt);
+			res.header('Authorization', `Bearer ${ jwt }`);
+			res.send({access_token: jwt});
 		} catch (error) {
-			throw new HttpException(error.message + ' PS: cookie token', error.status);
+			throw new HttpException(error.message + ' PS: jwt', error.status);
 		}
-    }
-    async logout(userId:number){
-        //database remome token access
     }
 }

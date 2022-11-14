@@ -1,8 +1,11 @@
 import Axios from "axios"
 import {InfoServer } from "../components/interfaces"
+import { useCookies } from 'react-cookie'
+
 
 let saveToken = (token: string) => {
-    localStorage.setItem('token', token)
+    document.cookie = `token_access: ${token}; expires= ; path=/`;
+    localStorage.setItem('token_access', token)
 }
 
 let saveAccess = (token: string) => {
@@ -15,14 +18,16 @@ let removeAccess= () => {
 
 
 let removeToken= () => {
-    localStorage.removeItem('token')
+    document.cookie = `toekn_access=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    localStorage.removeItem('token_access')
     window.location.href = '/';
 }
 
 let isLogged = () => {
     var access = false;
     Axios.defaults.withCredentials = false;
-    let token = localStorage.getItem('token')
+    let token = localStorage.getItem('token_access')
+    console.log(document.cookie);
     if (!!token){
         console.log("Check access token")
         try {

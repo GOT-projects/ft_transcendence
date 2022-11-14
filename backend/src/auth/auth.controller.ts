@@ -1,23 +1,23 @@
-import { Body, Controller, Get, HttpCode, HttpException, HttpStatus, Inject, Injectable, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Inject, Injectable, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
 import { stringify } from 'querystring';
-import {Tokens} from "./types";
-import { AuthGuard } from '@nestjs/passport';
+import { JWTGuard } from './guards/jwt.guard';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('auth')
 export class AuthController {
 
     constructor(
 		private readonly authService: AuthService,
+		private readonly jwtService: JwtService,
 	) {}
 
     @Post('connect_intra')
-    //add Promise for return Token struct
-    async connect_intra(@Req() req: Request, @Body('code') code: string):Promise<Tokens> {
+    async connect_intra(@Req() req: Request, @Res() res: Response, @Body('code') code: string) {
 		if (!code)
 			throw new HttpException('empty code', HttpStatus.BAD_REQUEST);
-        return await this.authService.connect_intra(req, code);
+        return await this.authService.connect_intra(req, res, code);
     }
 
     @Get('getIntraUrl')
@@ -29,18 +29,20 @@ export class AuthController {
         })
         return `https://api.intra.42.fr/oauth/authorize?${params}`;
     }
-    @UseGuards(AuthGuard('jwt'))
+
+    @Get('get')
+    async get(@Res() res: Response) {
+        const jwt: string = await this.jwtService.signAsync({
+            userId: 5555,
+        });
+        res.header('Authorization', `Bearer ${ jwt }`);
+        res.send();
+        return ;//jwt;
+    }
+
+    @UseGuards(JWTGuard)
     @Get('access')
-    @HttpCode(HttpStatus.OK)
-    access(){
+    access() {
+        return 'lol';
     }
-
-    @UseGuards(AuthGuard('jwt'))
-    @Post('logout')
-    @HttpCode(HttpStatus.OK)
-    logout(@Req() req : any){
-        const user= 190;
-        return this.authService.logout(user);
-    }
-
 }
