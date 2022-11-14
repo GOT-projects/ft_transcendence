@@ -102,6 +102,7 @@ const MousePadLeft = () => {
 		maph : 0,
 		mapw : 0,
 		ballh : 0,
+        rotate: 90,
 	});
 	
 	var sendYright: string = "";
@@ -139,24 +140,20 @@ const MousePadLeft = () => {
 		
 		if (y > rect.height - 40 - rect1.height / 2){
 			tmp = rect.height - 40 - rect1.height / 2;
+            ball.rotate = ball.rotate + 0.2;
+            if (ball.rotate >= 360)
+                ball.rotate = 0;
 			mouseY = tmp.toString();
 		}
 		else if (y < 64 + rect1.height / 2){
+            ball.rotate = ball.rotate - 2;
+            if (ball.rotate >= 360)
+                ball.rotate = 0;
 			tmp = 64 + rect1.height / 2;
 			mouseY = tmp.toString();
 		}
 		else
 		mouseY = y.toString();
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 	}
 	else{
 		console.log("bug");}
@@ -167,15 +164,19 @@ const MousePadLeft = () => {
 		//let loop = setInterval(update,1000/framePerSecond);
 		var X: number  = ball.x;
     	var Y: number = ball.y;
+    	var Rot: number = ball.rotate;
 		
 		X += 10;
 		Y += 10;
 		const sendX = X.toString() + "px";
 		const sendY = Y.toString() + "px";
+		const sendRot = "rotate(" + Rot.toString() + "deg)";
 		if (Y <  ball.maph - ball.ballh / 2 - 40 && Y > 64 + ball.ballh / 2){
+            ball.rotate += 2;
 			Y -= ball.ballh / 2;
 			sendYright = Y.toString() + "px";}
 		else if (Y >=  ball.maph - ball.ballh / 2 - 40 ){
+            ball.rotate -= 2;
 			Y = ball.maph - ball.ballh - 40;
 			sendYright = Y.toString() + "px";
 		}
@@ -185,16 +186,14 @@ const MousePadLeft = () => {
 
 		}
 		return (
-			<React.Fragment>
+		<React.Fragment>
 			<StyledLeftPad className="Table">
                 <StyledHexaArea className='grid' x="0" y="0" w={sendW} h={sendH}/>
 				<StyledHexaAreaLight className='light' x={sendX} y={sendY} w={sendW} h={sendH}/>
 				<StyledLeftPad1alias className="leftpad" y={mouseY+"px"}></StyledLeftPad1alias>
 				<StyledRightPadalias className="rightpad" y={sendYright}></StyledRightPadalias>
-				<StyledBallalias className="ball"  x={ball.x.toString()+"px"} y={ball.y.toString()+"px"}></StyledBallalias>
-	
-		</StyledLeftPad>
-         
+				<StyledBallalias className="ball"  x={ball.x.toString()+"px"} y={ball.y.toString()+"px"} rot={sendRot}></StyledBallalias>
+		    </StyledLeftPad>
         </React.Fragment>
 		
 	)

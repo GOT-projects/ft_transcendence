@@ -12,9 +12,10 @@ export const StyledLead = styled.div`
     transform: translate(-50%, -50%);
     overflow: scroll;
     border: 2px solid ${Colors.border};
-    border-radius: 2%;
-    background-color: ${Colors.dark1};
-    opacity: 0.6;
+    border-radius: 20px;
+    background-image: url(https://ns328286.ip-37-187-113.eu/ew/wallpapers/800x480/10602_800x480.jpg);
+    background-size: cover;
+    opacity: 0.7;
 `;
 
 export const StyledTile = styled.h1`

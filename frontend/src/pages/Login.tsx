@@ -4,25 +4,22 @@ import Logo from "../assets/Logo.png"
 import Footer from "../components/Footer";
 import React, { useState } from 'react'
 import {Notification} from "../components/Notify"
-import {InfoServer, NotifyInter} from "../components/interfaces"
-import Axios from "axios"
+import {NotifyInter} from "../components/interfaces"
 import { accountService } from "../services/account.service";
+import { apiGet } from "../api/get";
 
 const Login = () => {
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''})
     const [Url, setUrl] = useState('')
     if (accountService.isLogged() === true){
-        console.log("you are log")
         window.location.href = '/game';
     }else{
-        Axios.defaults.withCredentials = false;
-        try{
-	        Axios.get(InfoServer.server + '/auth/getIntraUrl',).then((response:any) => {
-	        	setUrl(response.data);
-	        })
-        }catch(e){
+        const responce = apiGet.getIntraUrl();
+        responce.then((rep) => {
+            setUrl(rep.data);
+        }).catch((e) => {
             console.log(e);
-        }
+        })
     }
 
     const Contaite = () => {

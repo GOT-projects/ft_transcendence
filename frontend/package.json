@@ -24,6 +24,7 @@
     "react-router-dom": "^6.4.2",
     "react-scripts": "latest",
     "socket.io": "^4.5.3",
+    "socket.io-client": "^4.5.3",
     "styled-components": "^5.3.6",
     "typescript": "latest",
     "uuidv4": "^6.2.13",

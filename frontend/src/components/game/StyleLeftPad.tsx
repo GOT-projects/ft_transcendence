@@ -11,6 +11,7 @@ interface mousePos {
 interface ballPos {
 	x: string;
 	y: string;
+    rot: string;
 }
 
 export const StyledLeftPad = styled.div`
@@ -28,7 +29,6 @@ overflow: hidden;
 opacity: 92%;
 border: 3px solid ${Colors.border};
 border-radius: 20px;
-
 `;
 
 export const StyledLeftPad1 = styled.div<mousePos>`
@@ -89,6 +89,7 @@ export const StyledLeftPad1alias = styled(StyledLeftPad1).attrs<mousePos>(p => (
     style: {
         top: p.y,
         left: p.x,
+        transform: p.rot,
     },
   }))<ballPos>`
   `;
