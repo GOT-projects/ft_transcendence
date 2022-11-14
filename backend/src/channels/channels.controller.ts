@@ -7,7 +7,7 @@ import { UpdateChannelDto } from './dto/update-channel.dto';
 export class ChannelsController {
   constructor(private readonly channelsService: ChannelsService) {}
 
-  @Post()
+  @Post('new')
   create(@Body() createChannelDto: CreateChannelDto) {
     return this.channelsService.create(createChannelDto);
   }

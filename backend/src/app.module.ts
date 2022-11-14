@@ -5,6 +5,10 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ChannelsModule } from './channels/channels.module';
+import { MessagesModule } from './messages/messages.module';
+import { GameModule } from './game/game.module';
+import { RelUserChannelModule } from './rel_user_channel/rel_user_channel.module';
+import { RelUsersModule } from './rel_users/rel_users.module';
 
 @Module({
   imports: [
@@ -20,6 +24,10 @@ import { ChannelsModule } from './channels/channels.module';
     AuthModule,
     UsersModule,
     ChannelsModule,
+    MessagesModule,
+    GameModule,
+    RelUserChannelModule,
+    RelUsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -49,7 +49,7 @@ export class AuthService {
 		// TODO 2FA
 		try {
 			// Update database
-			const user: User = await this.usersService.add_or_update(createUserDto.idIntra, createUserDto);
+			const user: User = await this.usersService.add_or_return(createUserDto.idIntra, createUserDto);
 			//console.log(user);
 			// Create JWT
 			const jwt: string = await this.jwtService.signAsync({

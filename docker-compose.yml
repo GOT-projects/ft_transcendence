@@ -53,7 +53,7 @@ services:
     expose:
       - "3000"
     ports:
-      - "3000:3000"
+      - 3000:3000
     restart: always
     networks:
       - back
@@ -85,3 +85,16 @@ services:
     volumes:
       - ./frontend/src:/usr/src/app/src
       - ./frontend/public:/usr/src/app/public
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container
+    restart: always
+    ports:
+      - "80:80"
+    networks:
+      - back
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@local.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_CONSOLE_LOG_LEVEL: 10

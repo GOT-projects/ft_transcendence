@@ -6,12 +6,5 @@ import { CreateChannelDto } from './create-channel.dto';
 export class UpdateChannelDto extends PartialType(CreateChannelDto) {
 
     id!: number;
-
-    @Length(1, 42)
-    name!: string;
-
-    status!: channelStatus;
-
-    password?: string;
-
+    
 }

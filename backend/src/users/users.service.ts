@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -10,7 +10,7 @@ export class UsersService {
 
   constructor( @InjectRepository(User) private userRepository: Repository<User>, ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto): Promise<User> {
     const newUser = this.userRepository.create(createUserDto);
     try {
       await this.userRepository.save(newUser);  
@@ -20,7 +20,7 @@ export class UsersService {
     return newUser;
   }
 
-  async findAll() {
+  async findAll(): Promise<User[]> {
     try {
       return await this.userRepository.find();
     } catch (error) {
@@ -28,7 +28,7 @@ export class UsersService {
     }
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<User | null> {
     if (!id) {
       throw new HttpException('Need id', HttpStatus.BAD_REQUEST);
     }
@@ -41,7 +41,7 @@ export class UsersService {
     }
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<UpdateResult> {
     if (!id || !updateUserDto)
       throw new HttpException('Need id and information of user', HttpStatus.BAD_REQUEST);
     try {
@@ -51,7 +51,7 @@ export class UsersService {
     }
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<DeleteResult> {
     if (!id) {
       throw new HttpException('Need id', HttpStatus.BAD_REQUEST);
     }
@@ -67,7 +67,7 @@ export class UsersService {
   /**
    * Add a user to the database if not exist, else UPDATE the user
    */
-  async add_or_update(idIntra: number, createUserDto: CreateUserDto) {
+  async add_or_return(idIntra: number, createUserDto: CreateUserDto) : Promise<User> {
     try {
       const user = await this.userRepository.findOneBy({ idIntra, });
       if (!user)
