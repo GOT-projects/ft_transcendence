@@ -20,10 +20,11 @@ const Waiting = () => {
 	).then((response:any) => {
 		if(response.status == 201){
 			// create cookie with JWT
-			const cookie = new Cookies();
-			cookie.set('jwt', response.data);
+			/*const cookie = new Cookies();
+			cookie.set('jwt', response.data);*/
+			console.log(response);
 			// Redirect on home page
-			window.location.href = '/';
+			//window.location.href = '/';
 		}
 	});
 	return (

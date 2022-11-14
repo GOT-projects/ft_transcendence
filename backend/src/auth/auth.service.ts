@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { User } from 'src/users/entities/user.entity';
@@ -14,7 +14,7 @@ export class AuthService {
 		private readonly jwtService: JwtService,
     ) {}
 
-    async connect_intra(req: Request, code: string) {
+    async connect_intra(req: Request, res: Response,code: string) {
         // Get token
         const data = {
 			code: code,
@@ -54,11 +54,11 @@ export class AuthService {
 			// Create JWT
 			const jwt: string = await this.jwtService.signAsync({
 				userId: user.id,
-				ttl: Math.ceil(Date.now() / 1000) + parseInt(`${ process.env.JWT_TTL }`),
 			});
-			return jwt;
+			res.header('Authorization', `Bearer ${ jwt }`);
+			res.send();
 		} catch (error) {
-			throw new HttpException(error.message + ' PS: cookie token', error.status);
+			throw new HttpException(error.message + ' PS: jwt', error.status);
 		}
     }
 }
