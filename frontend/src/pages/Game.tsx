@@ -1,7 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { StyleHTMLAttributes } from 'react';
-import ReactDOM from 'react-dom';
-import {Helmet} from "react-helmet";
+import React from 'react';
 import BackgroundAnimate from '../components/BackGroundAnimate';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
@@ -15,7 +12,7 @@ const Game = () => {
 
 	
 		<React.Fragment>
-			<BackgroundAnimate/>
+			<BackgroundAnimate name="game"/>
             <Header colorHome={Colors.MenuDisable} colorGame={Colors.MenuActive} colorLeadBoard={Colors.MenuDisable} colorChat={Colors.MenuDisable}/>
 
 					<MousePadLeft />

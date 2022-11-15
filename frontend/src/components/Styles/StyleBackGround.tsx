@@ -6,25 +6,31 @@ import Background from "../../assets/grid.png"
 interface mousePos{
     x:string;
     y:string;
+    w:string;
+    h:string;
 }
 
-export const StyledContainer = styled.div`
+interface wSize{
+    w:string;
+    h:string;
+}
+export const StyledContainer = styled.div<wSize>`
     background: #2b2b2b;
     display: flex;
     justity-content: center;
     align-items: center;
-    min-height: 100vh;
+    width: ${p => p.w};
+    height: ${p => p.h};
     position: relative;
     cursor: none;
-    @media screen and (max-width: 768px){
-        height: 100%;
-        width: 130vw;
-    }
+    overflow: hidden;
 `;
 
 export const StyledGrid = styled.header`
-    height: 100vh;
     background: #000;
+    @media screen and (max-width: 768px){
+        height: 80vh;
+    }
 `;
 
 
@@ -35,8 +41,8 @@ export const StyledHexaArea = styled.div<mousePos>`
         top: 0;
         left: 0;
         background: url(${Background}) repeat;
-        width: 100%;
-        height: 100%;
+        width: ${p => p.w};
+        height: ${p => p.h};
         z-index: 1;
         background-size: 300px;
         overflow: hidden;

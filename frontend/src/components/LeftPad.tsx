@@ -87,6 +87,7 @@ const MousePadLeft = () => {
 		mapw : 0,
 		maptop : 0,
 		ballh : 0,
+        rotate: 90,
 	});
 	
 	var sendYright: string = "";

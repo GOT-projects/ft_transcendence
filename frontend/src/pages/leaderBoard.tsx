@@ -4,7 +4,7 @@ import Header from "../components/Header"
 import {Colors} from "../components/Colors"
 import React from 'react'
 import { useState } from "react";
-import { StyledLead, StyledLeadTile, StyledSep, StyledTile, StyledLeadP } from "../components/Styles/StyledleaderBoard";
+import { StyledLead, StyledLeadTile, StyledSep, StyledTile, StyledLeadP, StyledLeadTileRank } from "../components/Styles/StyledleaderBoard";
 
 const LeaderBoard = () => {
     interface Ranks{
@@ -13,7 +13,7 @@ const LeaderBoard = () => {
         wins:number,
         lose:number,
     }
-    const [rank, setRank] = useState<Ranks[]>([
+    const [rank] = useState<Ranks[]>([
       {rank: 1, name: "test1", wins: 302, lose: 102},
       {rank: 2, name: "robert paul", wins: 302, lose: 102},
       {rank: 3, name: "henri jean", wins: 302, lose: 102},
@@ -71,19 +71,19 @@ const LeaderBoard = () => {
    ]);
 	return (
         <React.Fragment>
-            <BackgroundAnimate/>
+            <BackgroundAnimate name="LeaderBoard"/>
             <Header colorHome={Colors.MenuDisable} colorGame={Colors.MenuDisable} colorLeadBoard={Colors.MenuActive} colorChat={Colors.MenuDisable}/>
             <StyledLead>
                 <StyledTile>LeaderBoard</StyledTile>
                 <StyledSep/>
-                <StyledLeadTile color={Colors.Sep}>
+                <StyledLeadTileRank color={Colors.Sep}>
                 <tr>
                     <StyledLeadP>Rank</StyledLeadP>
                     <StyledLeadP>Name</StyledLeadP>
                     <StyledLeadP>Wins</StyledLeadP>
                     <StyledLeadP>Loses</StyledLeadP>
                 </tr>
-                </StyledLeadTile>
+                </StyledLeadTileRank>
                 <>
                 {rank.map((rk: Ranks) => (
                     <StyledLeadTile color={Colors.Rank}>
