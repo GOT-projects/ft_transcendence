@@ -8,7 +8,7 @@ const getIntraUrl = async () => {
 
 const getAccess = async (token: string) => {
 	Axios.defaults.withCredentials = false;
-	Axios.get(InfoServer.server + '/auth/access', {
+	return Axios.get(InfoServer.server + '/auth/access', {
         headers: { Authorization: "Bearer " + token }})
 }
 
