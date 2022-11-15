@@ -41,7 +41,7 @@ export class AuthController {
     }
 
     @UseGuards(JWTGuard)
-    @Post('access')
+    @Get('access')
     access() {
         return 'lol';
     }

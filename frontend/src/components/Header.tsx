@@ -1,6 +1,7 @@
-import {StyledHeader, StyleMenusHeader ,StyleMenuHeader, StyleNavToggler, StyleNavTogglerIcon} from "./Styles/StyledHeader"
+import {StyledHeader, StyleMenusHeader ,StyleMenuHeader, StyleNavToggler, StyleNavTogglerIcon, StyleMenuHeaderProfil, StyleMenuHeaderLoggout} from "./Styles/StyledHeader"
 import { useState, useEffect, useCallback } from "react";
-
+import { accountService } from "../services/account.service";
+import { HiLogout  } from 'react-icons/hi';
 
 const Header= (props: any)=> {
     const [active, setActive] = useState("UnActiveMenu");
@@ -24,7 +25,11 @@ const Header= (props: any)=> {
                 <StyleMenuHeader colortext={colorHome} to='/'>Home</StyleMenuHeader>
                 <StyleMenuHeader colortext={colorGame}to="/game">Game</StyleMenuHeader>
                 <StyleMenuHeader colortext={colorLeadBoard} to='/leaderboard'>LeaderBoard</StyleMenuHeader>
-                <StyleMenuHeader colortext={colorChat} to='/contact'>Chat</StyleMenuHeader>
+                <StyleMenuHeader colortext={colorChat} to='/chat'>Chat</StyleMenuHeader>
+                <StyleMenuHeaderLoggout onClick={accountService.removeToken}>
+                    <HiLogout size={"30px"}/>
+                </StyleMenuHeaderLoggout>
+                <StyleMenuHeaderProfil to='/profil'></StyleMenuHeaderProfil>
             </StyleMenusHeader>
             <StyleNavToggler onClick={navMenu} className={active}>
                 <StyleNavTogglerIcon className={active}></StyleNavTogglerIcon>

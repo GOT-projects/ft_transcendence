@@ -55,8 +55,9 @@ export class AuthService {
 			const jwt: string = await this.jwtService.signAsync({
 				userId: user.id,
 			});
+            console.info("Jwt gen: ", jwt);
 			res.header('Authorization', `Bearer ${ jwt }`);
-			res.send();
+			res.send({access_token: jwt});
 		} catch (error) {
 			throw new HttpException(error.message + ' PS: jwt', error.status);
 		}

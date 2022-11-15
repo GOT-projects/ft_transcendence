@@ -7,9 +7,8 @@ async function bootstrap() {
   const logger = new Logger('main.ts - server');
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    credentials: false,
-    origin: '*',
-    
+    credentials: true,
+    origin: 'http://localhost:7778',
   });
   app.use(cookieParser());
   app.useLogger(['log', 'error', 'warn', 'debug', 'verbose']); // TODO rm for prod

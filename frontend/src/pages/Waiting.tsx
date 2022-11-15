@@ -1,19 +1,13 @@
-
-import React, { useState } from 'react'
+import React from 'react'
 import BackgroundAnimate from "../components/BackGroundAnimate";
 import Footer from "../components/Footer";
-import {InfoServer, NotifyInter, NotifyInterUse} from "../components/interfaces"
-import Axios from "axios"
-import { useSearchParams } from 'react-router-dom';
-import { Cookies } from 'react-cookie';
-
-
-
+import { accountService } from '../services/account.service';
+import { apiPost } from '../api/post';
 
 const Waiting = () => {
-    Axios.defaults.withCredentials = false;
 	const url = window.location.href;
 	let params = (new URL(url)).searchParams;
+<<<<<<< HEAD
 	//console.log(params.get("code"));
 	Axios.post(InfoServer.server + '/auth/connect_intra',
 		{ code: params.get("code") }
@@ -27,9 +21,27 @@ const Waiting = () => {
 			//window.location.href = '/';
 		}
 	});
+=======
+    const code = params.get("code");
+    if (!!code){
+            console.log("start rersponde connect")
+            const response = apiPost.PostConnectIntra(code);
+	        response.then((response:any) => {
+	        	if(response.status === 201){
+                    accountService.saveToken(response.data.access_token);
+                    window.location.href = '/game';
+	        	}
+	        }).catch((e) =>{
+                console.log(e);
+            });
+    }else{
+        window.location.href = '/';
+    }
+
+>>>>>>> jo
 	return (
         <React.Fragment>
-            <BackgroundAnimate/>
+            <BackgroundAnimate name="waiting"/>
             <Footer/>
         </React.Fragment>
 	)

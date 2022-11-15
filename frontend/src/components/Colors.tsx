@@ -17,4 +17,8 @@ export const Colors = {
     HeaderColor: "#2C99DE",
     Sep: "#348599",
     Rank: "#238987",
+    ChatMenu: "#202225",
+    ChatMenuButton: "#36393F",
+    ChatMenuButtonHover: "#7196FF",
+    ChatMenuButtonText: "#DCDDDE",
 }

@@ -6,9 +6,29 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+   -ms-overflow-style: none; /* for Internet Explorer, Edge */
+  scrollbar-width: none; /* for Firefox */
+  overflow-y: scroll;
+  min-width: 700px;
+  min-height: 600px;
+  overflow: hidden; /* Hide scrollbars */
 }
 
+body::-webkit-scrollbar {
+  display: none; /* for Chrome, Safari, and Opera */
+}
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* make scrollbar transparent */
+}
 code {
   font-family: 'Public Pixel', source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+section.game {
+  background-color: green;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
 }

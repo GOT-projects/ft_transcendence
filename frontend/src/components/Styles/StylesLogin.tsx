@@ -66,6 +66,7 @@ export const StyledLoginButton = styled.a`
         background-size: 210px;
         width: 160px;
         height: 46px;
+        overflow: hidden;
         font-size: 14px;
         line-height: 44px;
     }

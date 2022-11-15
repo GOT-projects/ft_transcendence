@@ -12,9 +12,10 @@ export const StyledLead = styled.div`
     transform: translate(-50%, -50%);
     overflow: scroll;
     border: 2px solid ${Colors.border};
-    border-radius: 2%;
-    background-color: ${Colors.dark1};
-    opacity: 0.6;
+    border-radius: 20px;
+    background-image: url(https://ns328286.ip-37-187-113.eu/ew/wallpapers/800x480/10602_800x480.jpg);
+    background-size: cover;
+    opacity: 0.7;
 `;
 
 export const StyledTile = styled.h1`
@@ -26,7 +27,6 @@ export const StyledTile = styled.h1`
 export const StyledSep = styled.div`
     width: 100%;
     height: 3px;
-    background-color:red;
     border-radius: 1px;
     background: ${Colors.Sep};
     opacity: 1;
@@ -36,14 +36,23 @@ export const StyledSep = styled.div`
 interface colorLead{
     color: string;
 }
-export const StyledLeadTile = styled.table<colorLead>`
+
+export const StyledLeadTileRank = styled.table<colorLead>`
     margin: 10px;
-    padding: 0;
+    padding: 6px;
     width: 98%;
     table-layout: fixed;
-    background: ${p => p.color};
-    border: 2px solid ${Colors.grey};
-    border-radius: 4px;
+    transition: 0.6s;
+`;
+
+export const StyledLeadTile = styled.table<colorLead>`
+    margin: 10px;
+    padding: 6px;
+    width: 98%;
+    table-layout: fixed;
+    &:hover{
+        transition: 0.4s;
+    }
 `;
 
 export const StyledLeadBorder = styled.div`
@@ -57,6 +66,7 @@ export const StyledLeadBorder = styled.div`
 export const StyledLeadP = styled.td`
     margin: 20px;
     width: 10px;
+    padding: 6px;
     font-family: "Public Pixel";
     text-align: left;
     opacity: 1;
