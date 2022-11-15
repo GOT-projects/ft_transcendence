@@ -98,3 +98,4 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@local.com
       PGADMIN_DEFAULT_PASSWORD: admin
       PGADMIN_CONFIG_CONSOLE_LOG_LEVEL: 10
+      DEBUG: 'False'
