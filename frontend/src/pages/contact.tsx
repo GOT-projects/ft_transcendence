@@ -2,22 +2,21 @@ import { StyledChat, StyledChatInput, StyledChatPrivAvatar, StyledChatPrive, Sty
 			StyledChatSendDiv, StyledChatSep, StyledChatSettingButton, StyledChatSwith, StyledChatSwithButton, StyledChatText, 
 			StyledChatWindow, StyledContact, StyledContaite, StyledSender, StyledUser, StyledChatTextArea, StyledMenuNav, StyledMenuDiv, 
 			StyledMenuSwitch, StyledAddInput, StyledAddInputdiv, StyledAddInputdivButton } from '../components/Styles/StyleChat';
-import React, {useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import BackgroundAnimate from '../components/BackGroundAnimate';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import {Colors} from "../components/Colors"
 import { AiFillSetting, AiOutlineSend } from 'react-icons/ai';
 import { GrAddCircle } from 'react-icons/gr';
-import { UserListPrivate, DataMesssage } from '../components/interfaces';
+import { UserListPrivate, DataMesssage, SocketClient } from '../components/interfaces';
 import {InfoServer, NotifyInter} from "../components/interfaces"
 import {Notification} from "../components/Notify"
 import { v4 as uuid } from 'uuid';
-
-
+import { io } from 'socket.io-client';
 
 const Chat = () => {
-    const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''})
+    const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
     const [navActive, setNavActive] = useState("UnActiveMenu");
     const [chatSwitch, setChatSwitch] = useState<string>('private');
     const endRef = React.useRef<HTMLInputElement>(null);
@@ -42,6 +41,7 @@ const Chat = () => {
     ]}
     ]);
 
+    SocketClient.socket.on('connect', () => console.log("Connected to server"))
     function handChange(event: any, setInput: any, input: string){
         if (input === "" && event.target.value ==="\n")
             return;
@@ -78,6 +78,8 @@ const Chat = () => {
         }
         let newMessage = selectUser;
         newMessage?.push({id: uuid(), message: inputChat, from: "pc"})
+        console.log("emit to server")
+        SocketClient.socket.emit('message', newMessage);
         setSelectUser(newMessage)
         setInputChat("");
     }
