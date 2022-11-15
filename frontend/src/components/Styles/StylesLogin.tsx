@@ -44,7 +44,7 @@ export const StyledLoginLogo = styled.div<PropsLogo>`
         background-size: 210px;
     }
 `;
-export const StyledLoginButton = styled(Link)`
+export const StyledLoginButton = styled.a`
     width: 380px;
     height: 86px;
     font-size: 28px;
