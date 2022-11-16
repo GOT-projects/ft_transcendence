@@ -18,6 +18,7 @@ import { Server} from 'socket.io'
                     this.users.set(socket.request.headers.id, socket.id);
                     console.log("add user to list")
                 }
+                console.log(this.users)
             })
         }
 
@@ -26,11 +27,11 @@ import { Server} from 'socket.io'
         onNewMessage(@MessageBody() body: any){
             console.log(body)
             console.log(body.sendto)
-            console.log(this.users[body.sendto]);
+            console.log(this.users.get(body.sendto));
             console.log(body.msg)
             //emit the message to every socket connect
             //for emit to 1 socket can use to(socker id).emit()
-            this.server.to(this.users[body.sendto]).emit('onMessage', {
+            this.server.to(this.users.get(body.sendto)).emit('onMessage', {
                 msg: 'newMessage', 
                 content: body.msg,
                 })
@@ -40,7 +41,7 @@ import { Server} from 'socket.io'
         handleDisconnect(client: any){
             console.log("disconnection: ", client.id, this.users)
             for (let [key, value] of this.users.entries()) {
-                conole.log("value for", key, value, client.id)
+                console.log("value for", key, value, client.id)
                     if (value === client.id)
                         this.users.delete(key);
             }
