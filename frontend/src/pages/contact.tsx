@@ -41,7 +41,6 @@ const Chat = () => {
     ]}
     ]);
 
-    SocketClient.socket.on('connect', () => console.log("Connected to server"))
     function handChange(event: any, setInput: any, input: string){
         if (input === "" && event.target.value ==="\n")
             return;
@@ -79,6 +78,7 @@ const Chat = () => {
         let newMessage = selectUser;
         newMessage?.push({id: uuid(), message: inputChat, from: "pc"})
         console.log("emit to server")
+        SocketClient.socket.emit('addUser', "jonathan");
         SocketClient.socket.emit('message', newMessage);
         setSelectUser(newMessage)
         setInputChat("");
