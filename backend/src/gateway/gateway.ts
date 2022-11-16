@@ -40,7 +40,7 @@ import { Server} from 'socket.io'
         handleDisconnect(client: any){
             console.log("disconnection: ", client.id, this.users)
             for (let [key, value] of this.users.entries()) {
-                console.log("value for", key, value, client.id)
+                conole.log("value for", key, value, client.id)
                     if (value === client.id)
                         this.users.delete(key);
             }
