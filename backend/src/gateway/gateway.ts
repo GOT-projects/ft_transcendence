@@ -1,5 +1,5 @@
 import { OnModuleInit } from "@nestjs/common";
-import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
 import { Socket } from "dgram";
 import { Server} from 'socket.io'
 
@@ -8,7 +8,7 @@ import { Server} from 'socket.io'
     export class Gateway implements OnModuleInit{
         @WebSocketServer()
         server: Server;
-        users:any = new Map<string, string>();
+        users: Map<string, string> = new Map<string, string>();
         onModuleInit() {
             //get id of socket when is connect
             this.server.on('connection', (socket) => {
@@ -24,17 +24,22 @@ import { Server} from 'socket.io'
 
         //receive message
         @SubscribeMessage('newMessage')
-        onNewMessage(@MessageBody() body: any){
-            console.log(body)
-            console.log(body.sendto)
+        onNewMessage(@ConnectedSocket() client: Socket, @MessageBody() body: any){
+            console.log(body);
+            console.log(body.sendto);
             console.log(this.users.get(body.sendto));
-            console.log(body.msg)
+            console.log(body.msg);
             //emit the message to every socket connect
             //for emit to 1 socket can use to(socker id).emit()
-            this.server.to(this.users.get(body.sendto)).emit('onMessage', {
+            const tmp = this.users.get(body.sendto);
+            console.log('tmp', tmp);
+            if (!tmp)
+                return ;//throw new WsException('Unauthorized');*/
+            console.log('shit');
+            this.server.to(tmp).emit('onMessage', {
                 msg: 'newMessage', 
                 content: body.msg,
-                })
+            });
         }
 
         //disconnection client

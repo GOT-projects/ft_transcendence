@@ -49,7 +49,7 @@ export class AuthService {
 		// TODO 2FA
 		try {
 			// Update database
-			const user: User = await this.usersService.add_or_return(createUserDto.idIntra, createUserDto);
+			const user: User = await this.usersService.add_or_return(createUserDto.login, createUserDto);
 			//console.log(user);
 			// Create JWT
 			const jwt: string = await this.jwtService.signAsync({
@@ -57,7 +57,32 @@ export class AuthService {
 			});
             console.info("Jwt gen: ", jwt);
 			res.header('Authorization', `Bearer ${ jwt }`);
-			res.send({access_token: jwt});
+			res.send({access_token: jwt, user});
+		} catch (error) {
+			throw new HttpException(error.message + ' PS: jwt', error.status);
+		}
+    }
+
+	async invite(res: Response,login: string) {
+        
+		const createUserDto: CreateUserDto = {
+			idIntra: undefined,
+			login: login,
+			username: login,
+			urlImg: 'https://docs.nestjs.com/assets/logo-small.svg',
+			wallet: -1,
+		}
+		try {
+			// Update database
+			const user: User = await this.usersService.add_or_return(createUserDto.login, createUserDto);
+			//console.log(user);
+			// Create JWT
+			const jwt: string = await this.jwtService.signAsync({
+				userId: user.id,
+			});
+            console.info("Jwt gen: ", jwt);
+			res.header('Authorization', `Bearer ${ jwt }`);
+			res.send({access_token: jwt, user});
 		} catch (error) {
 			throw new HttpException(error.message + ' PS: jwt', error.status);
 		}

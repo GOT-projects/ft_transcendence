@@ -10,8 +10,8 @@ export class User {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @Column( {unique: true} )
-    idIntra!: number;
+    @Column( {unique: true, nullable: true} )
+    idIntra?: number;
 
     @Column( {unique: true} )
     login!: string;

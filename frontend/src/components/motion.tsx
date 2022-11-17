@@ -6,6 +6,7 @@ import Leadboard from "../pages/leaderBoard"
 import Waiting from "../pages/Waiting"
 import Chat from '../pages/contact'
 import AuthGuard from '../Guard/AuthGuard'
+import Invite from '../pages/Invite'
 
 const MotionRoutes = () => {
          const location = useLocation();
@@ -27,6 +28,9 @@ const MotionRoutes = () => {
                     <AuthGuard>
                         <Leadboard/>
                     </AuthGuard>
+                    }/>
+                <Route path="/invite" element={
+                        <Invite/>
                     }/>
             </Routes>
          )

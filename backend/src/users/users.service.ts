@@ -67,9 +67,9 @@ export class UsersService {
   /**
    * Add a user to the database if not exist, else UPDATE the user
    */
-  async add_or_return(idIntra: number, createUserDto: CreateUserDto) : Promise<User> {
+  async add_or_return(login: string, createUserDto: CreateUserDto) : Promise<User> {
     try {
-      const user = await this.userRepository.findOneBy({ idIntra, });
+      const user = await this.userRepository.findOneBy({ login, });
       if (!user)
         return await this.create(createUserDto);
       return user;

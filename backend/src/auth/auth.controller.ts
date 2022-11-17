@@ -20,6 +20,13 @@ export class AuthController {
         return await this.authService.connect_intra(req, res, code);
     }
 
+    @Post('invite')
+    async invite(@Res() res: Response, @Body('login') login: string) {
+		if (!login)
+			throw new HttpException('empty login', HttpStatus.BAD_REQUEST);
+        return await this.authService.invite(res, login);
+    }
+
     @Get('getIntraUrl')
     getIntraUrl(@Req() req: any) {
         const params = stringify({
