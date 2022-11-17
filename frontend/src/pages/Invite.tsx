@@ -5,7 +5,7 @@ import BackgroundAnimate from "../components/BackGroundAnimate";
 import { Colors } from "../components/Colors";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
-import { InfoServer } from "../components/interfaces";
+import { InfoServer, UsersId } from "../components/interfaces";
 import { StyledChatInput } from "../components/Styles/StyleChat";
 import { accountService } from "../services/account.service";
 
@@ -13,6 +13,7 @@ import { accountService } from "../services/account.service";
 
 
 const Invite = () => {
+    const [infoUser, setInfoUser] = useState<UsersId>();
     const [inputChat, setInputChat] = useState("");
     function handChange(event: any, setInput: any, input: string){
         if (input === "" && event.target.value ==="\n")
@@ -33,7 +34,9 @@ const Invite = () => {
             const response = PostConnectInvite(inputChat);
 	        response.then((response:any) => {
 	        	if(response.status === 201){
+                    console.log(response.data);
                     accountService.saveToken(response.data.access_token);
+                    setInfoUser(accountService.getInfoUser(response.data.user));
                     window.location.href = '/game';
 	        	}
 	        }).catch((e) =>{

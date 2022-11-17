@@ -4,7 +4,12 @@ import { Socket } from "dgram";
 import { Server} from 'socket.io'
 
 //can add cors in param of WebSocketGateway and change port to
-@WebSocketGateway()
+@WebSocketGateway({
+    cors: {
+        credentials: false,
+        origin: "*"
+    }
+})
     export class Gateway implements OnModuleInit{
         @WebSocketServer()
         server: Server;
@@ -14,7 +19,7 @@ import { Server} from 'socket.io'
             this.server.on('connection', (socket) => {
                 //add in header from client id: <value>
                 console.log(socket.request.headers.id, "\nConnected")
-                if (socket.request.headers.id && typeof socket.request.headers.id === 'string' ){
+                if (socket.request.headers.id && typeof socket.request.headers.id === 'string' && socket.request.headers.id !== "null"){
                     this.users.set(socket.request.headers.id, socket.id);
                     console.log("add user to list")
                 }
@@ -25,10 +30,7 @@ import { Server} from 'socket.io'
         //receive message
         @SubscribeMessage('newMessage')
         onNewMessage(@ConnectedSocket() client: Socket, @MessageBody() body: any){
-            console.log(body);
-            console.log(body.sendto);
-            console.log(this.users.get(body.sendto));
-            console.log(body.msg);
+            console.log(this.users);
             //emit the message to every socket connect
             //for emit to 1 socket can use to(socker id).emit()
             const tmp = this.users.get(body.sendto);
@@ -37,8 +39,8 @@ import { Server} from 'socket.io'
                 return ;//throw new WsException('Unauthorized');*/
             console.log('shit');
             this.server.to(tmp).emit('onMessage', {
-                msg: 'newMessage', 
-                content: body.msg,
+                from: body.from,
+                msg: body.msg, 
             });
         }
 

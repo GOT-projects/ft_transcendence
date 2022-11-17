@@ -1,5 +1,3 @@
-import { io } from 'socket.io-client';
-
 export interface NotifyInter{
     isOpen:boolean, 
     message: string,
@@ -20,7 +18,7 @@ export const Severity = {
 
 export const InfoServer = {
 	HttpServer:"http://" +  window.location.hostname + ":3000",
-	SocketServer:"http://" +  window.location.hostname + ":3001",
+	SocketServer:"http://" +  window.location.hostname + ":3000",
 	server: window.location.hostname + ":3000",
 	client: window.location.hostname,
 }
@@ -50,6 +48,15 @@ export interface ServerToClientEvents {
   withAck: (d: string, callback: (e: number) => void) => void;
 }
 
+export interface UsersId{
+    id: number,
+    idIntra: number | null,
+    login: string,
+    urlImg: string,
+    username: string,
+    wallet: number,
+}
+
 export interface ClientToServerEvents {
   hello: () => void;
 }
@@ -61,8 +68,4 @@ export interface InterServerEvents {
 export interface SocketData {
   name: string;
   age: number;
-}
-
-export const SocketClient = {
-    socket: io("http://localhost:3000"),
 }

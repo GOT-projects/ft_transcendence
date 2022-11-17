@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { HttpException, Injectable, Res } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { User } from 'src/users/entities/user.entity';

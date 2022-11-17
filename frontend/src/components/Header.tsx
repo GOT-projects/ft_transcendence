@@ -4,6 +4,7 @@ import { accountService } from "../services/account.service";
 import { HiLogout  } from 'react-icons/hi';
 
 const Header= (props: any)=> {
+    const profileImg = accountService.getUrlImg();
     const [active, setActive] = useState("UnActiveMenu");
     const {colorHome, colorGame, colorLeadBoard, colorChat} = props;
     const handleScroll = useCallback(() => {
@@ -29,7 +30,7 @@ const Header= (props: any)=> {
                 <StyleMenuHeaderLoggout onClick={accountService.removeToken}>
                     <HiLogout size={"30px"}/>
                 </StyleMenuHeaderLoggout>
-                <StyleMenuHeaderProfil to='/profil'></StyleMenuHeaderProfil>
+                <StyleMenuHeaderProfil to='/profil' profil={profileImg}></StyleMenuHeaderProfil>
             </StyleMenusHeader>
             <StyleNavToggler onClick={navMenu} className={active}>
                 <StyleNavTogglerIcon className={active}></StyleNavTogglerIcon>
