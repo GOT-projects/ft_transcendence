@@ -1,5 +1,5 @@
 import { User } from "src/users/entities/user.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { gameStatus } from "../game.types";
 
 @Entity()
@@ -38,10 +38,18 @@ export class Game {
     @Column()
     sockUser2!: string;
 
+    @Column()
+    user1Id!: number;
+
+    @Column()
+    user2Id!: number;
+
     @ManyToOne(() => User, (user) => user.gamesPlayer1)
+    @JoinColumn({ name: 'user1Id' })
     user1!: User;
 
     @ManyToOne(() => User, (user) => user.gamesPlayer2)
+    @JoinColumn({ name: 'user2Id' })
     user2!: User;
 
     @Column({

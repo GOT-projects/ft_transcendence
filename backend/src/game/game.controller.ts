@@ -3,20 +3,27 @@ import { GameService } from './game.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
 
-@Controller('game')
+@Controller('games')
 export class GameController {
   constructor(private readonly gameService: GameService) {}
 
+  
+  @Get()
+  async findAll() {
+    return await this.gameService.leaderboard();
+  }
+  
+  @Get('user/:id')
+  async findUsersParty(@Param('id') id: string) {
+    return await this.gameService.findUsersParty(+id);
+  }
+
+  /*
   @Post()
   create(@Body() createGameDto: CreateGameDto) {
     return this.gameService.create(createGameDto);
   }
-
-  @Get()
-  findAll() {
-    return this.gameService.findAll();
-  }
-
+  
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.gameService.findOne(+id);
@@ -31,4 +38,5 @@ export class GameController {
   remove(@Param('id') id: string) {
     return this.gameService.remove(+id);
   }
+  */
 }
