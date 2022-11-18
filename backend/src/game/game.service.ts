@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 import { CreateGameDto } from './dto/create-game.dto';
@@ -21,14 +22,27 @@ export class GameService {
       const games =  await this.gameRepository.findBy({ status: gameStatus.FINISH });
       let ret: any = [];
       let i = 0;
+      let users: User[] = [];
       for (const element of games) {
-        let user1 = await this.userService.findOne(element.user1Id);
-        let user2 = await this.userService.findOne(element.user2Id);
+        if (!(users[element.user1Id])) {
+          let tmp = await this.userService.findOne(element.user1Id);
+          if (tmp)
+            users[element.user1Id] = tmp;
+          else
+            return ;
+        }
+        if (!(users[element.user2Id])) {
+          let tmp = await this.userService.findOne(element.user2Id);
+          if (tmp)
+            users[element.user2Id] = tmp;
+          else
+            return ;
+        }
         ret.push({
           points1: element.points1,
           points2: element.points2,
-          user1: user1,
-          user2: user2
+          user1: users[element.user1Id],
+          user2: users[element.user2Id]
         });
       };
       return ret;
@@ -44,15 +58,28 @@ export class GameService {
       });
       let ret: any = [];
       let i = 0;
+      let users: User[] = [];
       for (const element of games) {
         if (element.user1Id === id || element.user2Id === id) {
-          let user1 = await this.userService.findOne(element.user1Id);
-          let user2 = await this.userService.findOne(element.user2Id);
+          if (!(users[element.user1Id])) {
+            let tmp = await this.userService.findOne(element.user1Id);
+            if (tmp)
+              users[element.user1Id] = tmp;
+            else
+              return ;
+          }
+          if (!(users[element.user2Id])) {
+            let tmp = await this.userService.findOne(element.user2Id);
+            if (tmp)
+              users[element.user2Id] = tmp;
+            else
+              return ;
+          }
           ret.push({
             points1: element.points1,
             points2: element.points2,
-            user1: user1,
-            user2: user2
+            user1: users[element.user1Id],
+            user2: users[element.user2Id]
           });
         }
       };
