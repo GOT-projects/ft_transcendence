@@ -16,7 +16,6 @@ import { v4 as uuid } from 'uuid';
 import { SocketContext, useSocket } from '../socket/socketPovider';
 import { Socket } from 'socket.io-client';
 import { addEmitHelper } from 'typescript';
-import { unstable_renderSubtreeIntoContainer } from 'react-dom';
 
 const Chat = () => {
     const socket = useContext(SocketContext);
@@ -112,16 +111,14 @@ const Chat = () => {
         setSelectUser(newMessage)
         setInputChat("");
     }
-    const insertMsg = (user:string, addmsg:DataMesssage)=>{
-        let dataUser:DataMesssage[]|undefined;
+    const insertMsg(user:string){
+        let dataUser:UserListPrivate;
         chatUser.map(ls => {
             if (ls.user === user)
                 dataUser = ls.data;
         })
-        if (dataUser !== undefined){
-            let newMessage = dataUser;
-            newMessage?.push(addmsg);
-        }
+        dataUser
+        
     }
 
     const navMenu = () => {
@@ -166,7 +163,6 @@ const Chat = () => {
                     chatUser[i].data?.push(addmsg);
                 }else if(i + 1 === chatUser.length && chatUser[i].user !== addmsg.from && typeof addmsg.from === "string"){
                     addContactUser(addmsg.from);
-                    insertMsg(addmsg.from, addmsg);
                 }
             }
             })

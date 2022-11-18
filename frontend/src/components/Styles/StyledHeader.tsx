@@ -162,7 +162,12 @@ export const StyleMenuHeaderLoggout = styled.div`
         cursor: pointer;
     }
 `;
-export const StyleMenuHeaderProfil = styled(Link)`
+
+interface ProfilUrl{
+    profil?: string | null;
+}
+
+export const StyleMenuHeaderProfil = styled(Link)<ProfilUrl>`
     color: ${Colors.MenuDisable};
     font-size: 20px; 
     margin: 10px;
@@ -170,7 +175,9 @@ export const StyleMenuHeaderProfil = styled(Link)`
     height: 20px;
     border: 2px solid;
     border-radius: 50%;
-    background-color: grey;
+    background: url(${p => p.profil}) no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
     text-decoration: none;
     list-style: none;
     padding: 15px;
