@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { StyledLeftPad, StyledLeftPad1alias, StyledLeftPad2, StyledBall, StyledBallalias, StyledRightPadalias } from './game/StyleLeftPad';
 import {User} from "./game/User"
 import {StyledCursor} from "./Styles/StyleMouse"
@@ -7,28 +7,122 @@ import { useAsync } from "react-async"
 import styled from 'styled-components';
 import {StyledHexaArea, StyledContainer, StyledGrid, StyledHexaAreaLight} from "./Styles/StyleBackGround"
 import BackgroundAnimate from "../components/BackGroundAnimate";
-import socketio from 'socket.io';
+import socketio, { Server } from 'socket.io';
 import { io } from "socket.io-client";
+import { Request, Response } from 'express';
+import { SocketContext, useSocket } from '../socket/socketProvider';
+import { InfoServer } from './interfaces';
+
+var socket = io(InfoServer.SocketServer);
+
+  async function useInterval(callback: any, delay: number) {
+	const savedCallback: any = useRef();
+	
+	// Remember the latest callback.
+	useEffect(() => {
+		savedCallback.current = callback;
+	}, [callback]);
+	
+	// Set up the interval.
+	useEffect(() => {
+		function tick() {
+			if (savedCallback.current)
+			savedCallback.current();
+		}
+		if (delay !== null) {
+			let id = setInterval(tick, delay);
+			return () => clearInterval(id);
+		}
+	}, [delay]);
+}
+
 
 
 const MousePadLeft = () => {
 	
+	
+	const [y, setY] = useState(0);   // pos mouse
+	var mouseY;
+	var ballY;
+	var rectable;		// pour listen uniquement sur le jeu
+	var rectpad;
+	var rectball;
+	var tmp = 0;		// ntm js
+	var tmp2 = 0
+	var pos_prct: number = 0;
+
+	//	test socket
+	//const socket = useContext(SocketContext);
 
 
 
+	var table = document.getElementById('Table');
+	var p1 = document.getElementById("leftpad");
+	var baballe = document.getElementById("ball");
+	if(table && p1 && baballe) {
+
+		table.addEventListener("mousemove", (e) => {
+			setY(e.pageY );
+		});
+		rectable = table.getBoundingClientRect();
+		rectpad = p1.getBoundingClientRect();
+		rectball = baballe.getBoundingClientRect();
+
+		tmp = y;
+		tmp -= rectable.top;
+		// pos en %
+		pos_prct = tmp / rectable.height * 100;
+
+
+		if (tmp < rectpad.height)
+			tmp = rectpad.height;
+		if (tmp > rectable.height - rectpad.height)
+			tmp = rectable.height - rectpad.height;
+
+
+
+	}
+	mouseY = tmp.toString();
+	ballY  = tmp2.toString(); 
+
+
+
+
+	
+	
+	useInterval(() => {
+		socket.emit ('player move', {msg: "lol"});
+	}, 5000);
+
+
+    // io  = require('socket.io').listen(app)
+
+
+	
+	// useInterval(() => {
+	// 	var socket = io.connect('http://localhost:3000');
+	// 	socket.emit("info",  {
+	// 		pos: pos_prct,
+	// 	});
+		
+	// }, 50);
+
+
+	// socket.on("update 2nd player");
+	// socket.on("update ball");
 
 	return (
 		<React.Fragment>
-		<StyledLeftPad className="Table">
-			<StyledHexaArea className='grid' x="0" y="0" w="0" h="0"/>
-			<StyledHexaAreaLight className='light' x="0px" y="0px" w="0px" h="0px"/>
-			<StyledLeftPad1alias className="leftpad" y="0px"></StyledLeftPad1alias>
-			<StyledRightPadalias className="rightpad" y="0px"></StyledRightPadalias>
-			<StyledBallalias className="ball"  x="0px" y="0px" rot="0px"></StyledBallalias>
-		</StyledLeftPad>
-	</React.Fragment>	
+			<StyledLeftPad id="Table">
+				<StyledHexaArea className='grid' x="0" y="0" w="0" h="0"/>
+				<StyledHexaAreaLight className='light' x="0px" y="0px" w="0px" h="0px"/>
+				<StyledLeftPad1alias id="leftpad" y={mouseY+"px"}></StyledLeftPad1alias>
+				<StyledRightPadalias className="rightpad" y="0px"></StyledRightPadalias>
+				<StyledBallalias id="ball"  x="0px" y={ballY+"px"} rot="0px"></StyledBallalias>
+			</StyledLeftPad>
+		</React.Fragment>	
 		)
-	}
+ }
 export default MousePadLeft;
 
 //40 64

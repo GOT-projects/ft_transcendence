@@ -33,7 +33,7 @@ border-radius: 20px;
 
 export const StyledLeftPad1 = styled.div<mousePos>`
 position: absolute;
-width:40px;
+width:2%;
 height:20%;
 background-color: red;
 top: ;
@@ -48,7 +48,7 @@ z-index: 1;
 
 export const StyledLeftPad2 = styled.div<mousePos>`
 	position: absolute;
-	width:40px;
+	width:2%;
 	height:20%;
 	background-color: red;
 	top: ;
@@ -59,8 +59,8 @@ export const StyledLeftPad2 = styled.div<mousePos>`
 	
 	export const StyledBall = styled.div<ballPos>`
 	position: absolute;
-	width:30px;
-	height:30px;
+	height: 5vh;
+	width: 5vh;
 	background-image: url(https://png.pngtree.com/element_our/20190601/ourlarge/pngtree-blue-red-glowing-round-ball-free-button-image_1370443.jpg);
 	background-position: 55% 45%;
 	background-size: 140%;
