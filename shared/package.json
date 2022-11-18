@@ -1,0 +1,19 @@
+{
+  "name": "shared",
+  "version": "1.0.0",
+  "description": "type of transcendence 42",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/waxdred/type_transcendence_package.git"
+  },
+  "author": "@rcuminal @aartigues @jmilhas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/waxdred/type_transcendence_package/issues"
+  },
+  "homepage": "https://github.com/waxdred/type_transcendence_package#readme"
+}
