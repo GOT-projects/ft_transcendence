@@ -47,7 +47,7 @@ const Invite = () => {
         /*<React.Fragment>
             <BackgroundAnimate name="login"/>
             <Header colorHome={Colors.MenuDisable} colorGame={Colors.MenuActive} colorLeadBoard={Colors.MenuDisable} colorChat={Colors.MenuDisable}/>*/
-            <StyledChatInput style={{backgroundColor:"black"}} name='login' placeholder="What's ur login" onChange={(e) => handChange(e, setInputChat, inputChat)} 
+            <StyledChatInput style={{backgroundColor:"black", color:"green"}} name='login' placeholder="What's ur login" onChange={(e) => handChange(e, setInputChat, inputChat)} 
                                                                                 onKeyDown={(e) => {
                                                                                     if (e.key === 'Enter' && !e.shiftKey){
                                                                                         send();
