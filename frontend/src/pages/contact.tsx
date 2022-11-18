@@ -166,9 +166,11 @@ const Chat = () => {
                     chatUser[i].data?.push(addmsg);
                 }else if(i + 1 === chatUser.length && chatUser[i].user !== addmsg.from && typeof addmsg.from === "string"){
                     addContactUser(addmsg.from);
-                    insertMsg(addmsg.from, addmsg);
+                    chatUser[i +  1].data?.push(addmsg);
                 }
             }
+            const newdata = chatUser;
+            setChatUser(newdata);
             })
     },[socket, chatUser])
 	return (

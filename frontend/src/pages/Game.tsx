@@ -7,10 +7,7 @@ import MousePadLeft from '../components/LeftPad';
 
 
 const Game = () => {
-	
 	return (
-
-	
 		<React.Fragment>
 			<BackgroundAnimate name="game"/>
             <Header colorHome={Colors.MenuDisable} colorGame={Colors.MenuActive} colorLeadBoard={Colors.MenuDisable} colorChat={Colors.MenuDisable}/>
