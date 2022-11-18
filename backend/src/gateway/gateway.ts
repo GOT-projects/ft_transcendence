@@ -55,3 +55,16 @@ import { Server} from 'socket.io'
             console.log(this.users);
         }
     }
+
+
+            // @SubscribeMessage('updatePlayer')
+        // onNewUpdate(@MessageBody() body: any){
+        //     let tmp:string = stringify(body);
+        //     tmp = tmp.substring(tmp.indexOf("from") + 5, tmp.length);
+        //     console.log("tmp = ", tmp);
+       
+        //     this.server.to(tmp).emit('onUpdate', {
+        //         from: body.from,
+        //         msg: body.msg, 
+        //     });
+        // }

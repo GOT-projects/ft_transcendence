@@ -10,12 +10,13 @@ import BackgroundAnimate from "../components/BackGroundAnimate";
 import socketio, { Server } from 'socket.io';
 import { io } from "socket.io-client";
 import { Request, Response } from 'express';
-import { SocketContext, useSocket } from '../socket/socketProvider';
+import { SocketContext, useSocket } from '../socket/socketPovider';
 import { InfoServer } from './interfaces';
+import { on } from 'stream';
 
-var socket = io(InfoServer.SocketServer);
+//var socket = io(InfoServer.SocketServer);
 
-  async function useInterval(callback: any, delay: number) {
+async function useInterval(callback: any, delay: number) {
 	const savedCallback: any = useRef();
 	
 	// Remember the latest callback.
@@ -41,6 +42,12 @@ var socket = io(InfoServer.SocketServer);
 const MousePadLeft = () => {
 	
 	
+	
+	const [count, setCount] = useState(0);
+	const [tmp3, setTmp] = useState(0);
+	// socket.on('onUpdate', (e) => {
+	// 	setTmp(e);
+	// })
 	const [y, setY] = useState(0);   // pos mouse
 	var mouseY;
 	var ballY;
@@ -50,53 +57,57 @@ const MousePadLeft = () => {
 	var tmp = 0;		// ntm js
 	var tmp2 = 0
 	var pos_prct: number = 0;
-
+	
 	//	test socket
 	//const socket = useContext(SocketContext);
-
-
-
+	
+	
+	
 	var table = document.getElementById('Table');
 	var p1 = document.getElementById("leftpad");
 	var baballe = document.getElementById("ball");
 	if(table && p1 && baballe) {
-
+		
 		table.addEventListener("mousemove", (e) => {
 			setY(e.pageY );
 		});
 		rectable = table.getBoundingClientRect();
 		rectpad = p1.getBoundingClientRect();
 		rectball = baballe.getBoundingClientRect();
-
+		
 		tmp = y;
 		tmp -= rectable.top;
 		// pos en %
 		pos_prct = tmp / rectable.height * 100;
-
-
+		
+		
 		if (tmp < rectpad.height)
-			tmp = rectpad.height;
+		tmp = rectpad.height;
 		if (tmp > rectable.height - rectpad.height)
-			tmp = rectable.height - rectpad.height;
-
-
-
+		tmp = rectable.height - rectpad.height;
+		
+		
+		
 	}
 	mouseY = tmp.toString();
 	ballY  = tmp2.toString(); 
 
-
-
-
 	
 	
 	useInterval(() => {
-		socket.emit ('player move', {msg: "lol"});
-	}, 5000);
-
-
+		// socket.on("connect", () => {
+		// 	console.log(socket.connected); // true
+		//   });
+	//	socket.emit('updatePlayer', { msg: "lol ca marche pas", from: 'rcuminal' });
+		// socket.off('onUpdate');
+		// socket.off('disconnect');
+		console.log(tmp3);
+		setCount(count + 1);
+	}, 1000);
+	
+	
     // io  = require('socket.io').listen(app)
-
+	
 
 	
 	// useInterval(() => {
