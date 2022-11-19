@@ -172,11 +172,16 @@ const Chat = () => {
             const newdata = chatUser;
             setChatUser(newdata);
             })
-    },[socket, chatUser])
+    },[socket])
 	return (
 		<React.Fragment>
 			<BackgroundAnimate name="contact"/>
-            <Header colorHome={Colors.MenuDisable} colorGame={Colors.MenuDisable} colorLeadBoard={Colors.MenuDisable} colorChat={Colors.MenuActive}/>
+            <Header colorHome={Colors.MenuDisable} 
+                    colorGame={Colors.MenuDisable} 
+                    colorLeadBoard={Colors.MenuDisable} 
+                    colorChat={Colors.MenuActive}
+                    notify={notify}
+                    setNotify={setNotify}/>
             <StyledContaite>
                 <StyledMenuSwitch>
                     <StyledMenuNav className={navActive} onClick={navMenu}>
