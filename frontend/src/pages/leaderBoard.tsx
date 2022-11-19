@@ -5,7 +5,7 @@ import {Colors} from "../components/Colors"
 import React from 'react'
 import { useState } from "react";
 import { StyledLead, StyledLeadTile, StyledSep, StyledTile, StyledLeadP, StyledLeadTileRank } from "../components/Styles/StyledleaderBoard";
-import {NotifyInter} from "../components/interfaces"
+import {InfoServer, NotifyInter} from "../components/interfaces"
 
 const LeaderBoard = () => {
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});

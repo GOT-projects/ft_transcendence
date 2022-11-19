@@ -63,8 +63,20 @@ export const StyleMenuHeaderNotity = styled.div<Notif>`
     align-items: center;
     color: ${props => props.colorIcon}; 
     border-radius: 50%;
+    @media screen and (max-width: 768px){
+        display: none;
+    }
 `
 
+export const StyleMenuHeaderNotityResp = styled.div<Notif>`
+    display: flex;
+    align-items: center;
+    color: ${props => props.colorIcon}; 
+    border-radius: 50%;
+    @media screen and (min-width: 768px){
+        display: none;
+    }
+`
 interface Menu{
     colortext: string;
     text: string;
@@ -78,6 +90,8 @@ export const StyleMenuHeader = styled(Link)<Menu>`
     list-style: none;
     padding: 15px;
     transition: 0.8s;
+
+    @media screen and (min-width: 768px){
     &:after {
         --slice-0: inset(50% 50% 50% 50%);
         --slice-1: inset(80% -6px 0 0);
@@ -149,6 +163,7 @@ export const StyleMenuHeader = styled(Link)<Menu>`
         transform: translate(0);
       }
     }
+    }
 `;
 
 export const StyleMenuHeaderLoggout = styled.div`
@@ -193,18 +208,49 @@ export const StyleMenuHeaderProfil = styled.button<ProfilUrl>`
         cursor: pointer;
     }
     @media screen and (max-width: 768px){
-        margin: 0;
-        padding: 10px;
+        display: none;
     }
 
 `;
 
+export const StyleMenuHeaderProfilResp = styled.button<ProfilUrl>`
+    color: ${Colors.MenuDisable};
+    font-size: 20px; 
+    margin: 10px;
+    width: 20px;
+    height: 20px;
+    border: 2px solid;
+    border-radius: 50%;
+    background: url(${p => p.profil}) no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
+    text-decoration: none;
+    list-style: none;
+    padding: 15px;
+    transition: 0.8s;
+    &:hover{
+        transition: 0.8s;
+        color: ${Colors.grey};
+        transform: translate(3px, 0);
+        cursor: pointer;
+    }
+    @media screen and (min-width: 768px){
+        display: none;
+    }
+
+`;
 export const StyleNavToggler = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     justify-content: center;
     margin: 8px;
+`;
+export const StyleNav = styled.div`
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 2rem;
 `;
 
 export const StyleNavTogglerIcon = styled.div`

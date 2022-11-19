@@ -1,4 +1,4 @@
-import {StyledHeader, StyleMenusHeader ,StyleMenuHeader, StyleNavToggler, StyleNavTogglerIcon, StyleMenuHeaderProfil, StyleMenuHeaderLoggout, StyleMenuHeaderNotity} from "./Styles/StyledHeader"
+import {StyledHeader, StyleMenusHeader ,StyleMenuHeader, StyleNavToggler, StyleNavTogglerIcon, StyleMenuHeaderProfil, StyleMenuHeaderLoggout, StyleMenuHeaderNotity, StyleNav, StyleMenuHeaderNotityResp, StyleMenuHeaderProfilResp} from "./Styles/StyledHeader"
 import {Dispatch, FunctionComponent, useState, useEffect, useCallback } from "react";
 import { accountService } from "../services/account.service";
 import { IoIosNotifications, IoMdNotificationsOff } from 'react-icons/io';
@@ -33,12 +33,17 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
     const navMenu = () => {
         if (active === "ActiveMenu") {
             setActive("UnActiveMenu");
-        } else setActive("ActiveMenu");
+        } else {
+            setActive("ActiveMenu");
+            setNotifMenu(false);
+            setProfileMenu(false);
+        }
     }
     const handleMenuProfil = () => {
         if (profileMenu === true){
             setProfileMenu(false);
         }else if (profileMenu === false){
+            setActive("UnActiveMenu");
             setProfileMenu(true);
             setNotifMenu(false);
         }
@@ -47,6 +52,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
         if (notifMenu === true){
             setNotifMenu(false);
         }else if (notifMenu === false){
+            setActive("UnActiveMenu");
             setNotifMenu(true);
             setProfileMenu(false);
         }
@@ -65,11 +71,19 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                 {profileMenu ? <ProfileMenu notify={props.notify} setNotify={props.setNotify}/> : <></>}
                 {notifMenu ? <PopupNotifUser notify={props.notify} setNotify={props.setNotify} setNotif={setNotif}/> : <></>}
                 </StyleMenusHeader>
-            <StyleNavToggler onClick={navMenu} className={active}>
-                <StyleNavTogglerIcon className={active}></StyleNavTogglerIcon>
-                <StyleNavTogglerIcon className={active}></StyleNavTogglerIcon>
-                <StyleNavTogglerIcon className={active}></StyleNavTogglerIcon>
-            </StyleNavToggler>
+            <StyleNav>
+                <StyleMenuHeaderNotityResp colorIcon={notif ? Colors.NotifActive : Colors.NotifUnactive}>
+                    {notif ? <IoIosNotifications size={"22px"} onClick={handleMenuNotif}/> : <IoMdNotificationsOff size={"22px"}/>}
+                </StyleMenuHeaderNotityResp>
+                <StyleMenuHeaderProfilResp onClick={handleMenuProfil} profil={profileImg}/>        
+                <StyleNavToggler onClick={navMenu} className={active}>
+                    <StyleNavTogglerIcon className={active}></StyleNavTogglerIcon>
+                    <StyleNavTogglerIcon className={active}></StyleNavTogglerIcon>
+                    <StyleNavTogglerIcon className={active}></StyleNavTogglerIcon>
+                </StyleNavToggler>
+                {profileMenu ? <ProfileMenu notify={props.notify} setNotify={props.setNotify}/> : <></>}
+                {notifMenu ? <PopupNotifUser notify={props.notify} setNotify={props.setNotify} setNotif={setNotif}/> : <></>}
+            </StyleNav>
         </StyledHeader>
 	)
 }
