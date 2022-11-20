@@ -45,7 +45,7 @@ const MousePadLeft = () => {
 	const [count, setCount] = useState(0);
 	const [tmp3, setTmp] = useState(0);
 	//const socket = useContext(SocketContext);
-	
+	let sizeofball: number = 0;
 	const [y, setY] = useState(0);   // pos mouse
 	var mouseY;
 	var ballY;
@@ -77,17 +77,20 @@ const MousePadLeft = () => {
 		// pos en %
 		pos_prct = tmp / rectable.height * 100;
 		
+		sizeofball = rectpad.height/3;
 		
-		if (tmp < rectpad.height)
-		tmp = rectpad.height;
+		if (tmp < rectpad.height){
+			tmp = rectpad.height;
+		}
 		if (tmp > rectable.height - rectpad.height)
-		tmp = rectable.height - rectpad.height;
+			tmp = rectable.height - rectpad.height;
 		
 		
 		
 	}
 	mouseY = tmp.toString();
 	ballY  = tmp2.toString(); 
+
 
 	
 	// socket.on('onUpdate', (e) => {
@@ -129,7 +132,7 @@ const MousePadLeft = () => {
 				<StyledHexaAreaLight className='light' x="0px" y="0px" w="0px" h="0px"/>
 				<StyledLeftPad1alias id="leftpad" y={mouseY+"px"}></StyledLeftPad1alias>
 				<StyledRightPadalias className="rightpad" y="0px"></StyledRightPadalias>
-				<StyledBallalias id="ball"  x="0px" y={ballY+"px"} rot="0px"></StyledBallalias>
+				<StyledBallalias id="ball"  x="0px" y={ballY+"px"} rot="0px" size={sizeofball.toString()+"px"}></StyledBallalias>
 			</StyledLeftPad>
 		</React.Fragment>	
 		)
