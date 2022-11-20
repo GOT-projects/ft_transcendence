@@ -238,11 +238,11 @@ const Chat = () => {
                 <StyledChat>
                     <StyledChatWindow>
                         <StyledChatTextArea>
-                            {selectUser?.map((data:DataMesssage) => (
+                            {/* {selectUser?.map((data:DataMesssage) => (
                                     <StyledChatPlace key={data.id} className={data.from === localStorage.getItem("login") ? "send" : "receive"}>
                                         <StyledChatText>{data.message}</StyledChatText>
                                     </StyledChatPlace>
-                            ))}
+                            ))} */}
                             <div className='field' ref={endRef}/>
                         </StyledChatTextArea>
                         <StyledChatSendDiv className={selectUser ? "active" : "deactive"}>

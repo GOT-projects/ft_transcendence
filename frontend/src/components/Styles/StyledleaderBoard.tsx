@@ -2,6 +2,18 @@ import styled from 'styled-components';
 import {Colors} from "../Colors"
 import {Link} from 'react-router-dom'
 
+
+export const Button = styled.button`
+postion: absolute;
+  background-color: black;
+  color: white;
+  font-size: 20px;
+  padding: 10px 60px;
+  border-radius: 5px;
+  margin: 10px 0px;
+  cursor: pointer;
+`;
+
 export const StyledLead = styled.div`
     position: absolute;
     z-index: 10;

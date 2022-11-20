@@ -32,34 +32,35 @@ border-radius: 20px;
 `;
 
 export const StyledLeftPad1 = styled.div<mousePos>`
-	position: absolute;
-	width:40px;
-	height:20%;
-	background-color: red;
-	top: ;
-	transform: translate(0, -50%);
-	border-radius: 10px;
-	background-image: url(https://i.pinimg.com/474x/70/86/62/70866228da01302bce6afc9106e676b0.jpg);
-	background-position: center;
-	background-size: 1500%;
-	z-index: 1;
+position: absolute;
+width:2%;
+height:20%;
+background-color: red;
+top: ;
+transform: translate(0, -50%);
+border-radius: 10px;
+background-image: url(https://i.pinimg.com/474x/70/86/62/70866228da01302bce6afc9106e676b0.jpg);
+background-position: center;
+background-size: 1500%;
+z-index: 1;
+
 `;
 
 export const StyledLeftPad2 = styled.div<mousePos>`
-	position: relative;
-	width:40px;
+	position: absolute;
+	width:2%;
 	height:20%;
 	background-color: red;
 	top: ;
-	left: 97%;
+	right: 0px;
 	border-radius: 10px;
 	z-index: 1;
 	`;
 	
 	export const StyledBall = styled.div<ballPos>`
 	position: absolute;
-	width:30px;
-	height:30px;
+	height: 5vh;
+	width: 5vh;
 	background-image: url(https://png.pngtree.com/element_our/20190601/ourlarge/pngtree-blue-red-glowing-round-ball-free-button-image_1370443.jpg);
 	background-position: 55% 45%;
 	background-size: 140%;

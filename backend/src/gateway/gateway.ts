@@ -43,6 +43,19 @@ import { Server, Socket } from 'socket.io'
             });
         }
 
+        @SubscribeMessage('updatePlayer')
+    onNewUpdate(@MessageBody() body: any){
+        // let tmp:string = stringify(body);
+        // tmp = tmp.substring(tmp.indexOf("from") + 5, tmp.length);
+        const tmp = this.users.get(body.from);
+        if (tmp){
+
+            this.server.to(tmp).emit('onUpdate', {
+                from: body.from,
+                msg: body.msg, 
+            });
+        }
+    }
         //disconnection client
         handleDisconnect(client: any){
             console.log("disconnection: ", client.id, this.users)
@@ -54,3 +67,4 @@ import { Server, Socket } from 'socket.io'
             console.log(this.users);
         }
     }
+
