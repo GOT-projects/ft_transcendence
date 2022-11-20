@@ -33,8 +33,9 @@ export class AppService {
         }
     }
 
-    async profilLogin(login: string) {
+    async profilLogin(jwt: GOT.Token, login: string) {
         try {
+            await this.jwtService.verifyAsync(jwt);
             let ret = new GOT.HistoryParties();
             const tmpUser: User | null = await this.userService.findLogin(login);
             if (tmpUser === null)
