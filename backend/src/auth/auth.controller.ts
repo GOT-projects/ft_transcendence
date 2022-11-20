@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Inject, Injectable, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
 import { stringify } from 'querystring';
@@ -27,26 +27,11 @@ export class AuthController {
         return await this.authService.invite(res, login);
     }
 
-    @Get('getIntraUrl')
-    getIntraUrl(@Req() req: any) {
-        const params = stringify({
-            client_id: process.env.API_UID,
-            redirect_uri: `${ req.protocol }://${ req.hostname }:${process.env.PORT}/waiting`,
-            response_type: 'code',
-        })
-        return `https://api.intra.42.fr/oauth/authorize?${params}`;
+    @Get('get_intra_url')
+    getIntraUrl(@Req() req: Request): string {
+        return this.authService.getIntraUrl(req);
     }
-
-    @Get('get')
-    async get(@Res() res: Response) {
-        const jwt: string = await this.jwtService.signAsync({
-            userId: 5555,
-        });
-        res.header('Authorization', `Bearer ${ jwt }`);
-        res.send();
-        return ;//jwt;
-    }
-
+    
     @UseGuards(JWTGuard)
     @Get('access')
     access() {

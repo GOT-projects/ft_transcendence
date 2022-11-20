@@ -1,0 +1,23 @@
+###################
+# BUILD FOR LOCAL DEVELOPMENT
+###################
+
+FROM node:latest As development
+
+WORKDIR /usr/src/app
+
+COPY --chown=node:node  ./backend/nest-cli.json ./
+COPY --chown=node:node  ./backend/package.json  ./
+COPY --chown=node:node  ./backend/tsconfig.json ./
+COPY --chown=node:node  ./backend/.eslintrc.js  ./
+COPY --chown=node:node  ./backend/.prettierrc   ./
+
+RUN npm i
+
+COPY --chown=node:node ./shared ./shared
+
+RUN mkdir dist
+
+VOLUME [ "/usr/src/app/src" ]
+
+CMD npm run start:dev
