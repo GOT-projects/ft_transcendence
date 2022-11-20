@@ -21,7 +21,7 @@ export class AppController {
     @Get('/profil/:login')
     async profilLogin(@Req() req: Request, @Param('login') login: string) {
         if (!req?.headers?.authorization || !login)
-            throw new HttpException('No authorization header', HttpStatus.BAD_REQUEST);
+            throw new HttpException('No authorization header or no login', HttpStatus.BAD_REQUEST);
         const jwt = req.headers.authorization.split(' ')[1];
         return await this.appService.profilLogin(jwt, login);
     }
