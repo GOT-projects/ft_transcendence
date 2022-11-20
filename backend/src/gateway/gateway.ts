@@ -1,7 +1,6 @@
 import { OnModuleInit } from "@nestjs/common";
 import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
-import { Socket } from "dgram";
-import { Server} from 'socket.io'
+import { Server, Socket } from 'socket.io'
 
 //can add cors in param of WebSocketGateway and change port to
 @WebSocketGateway({

@@ -4,9 +4,11 @@ import Header from "../components/Header"
 import {Colors} from "../components/Colors"
 import React from 'react'
 import { useState } from "react";
-import { StyledLead, StyledLeadTile, StyledSep, StyledTile, StyledLeadP, StyledLeadTileRank, Button } from "../components/Styles/StyledleaderBoard";
-import { ResultType } from "@remix-run/router/dist/utils";
+import { StyledLead, StyledLeadTile, StyledSep, StyledTile, StyledLeadP, StyledLeadTileRank } from "../components/Styles/StyledleaderBoard";
+import {InfoServer, NotifyInter} from "../components/interfaces"
+import {Notification} from "../components/Notify"
 import { v4 as uuid } from 'uuid';
+
 
 const LeaderBoard = () => {
 	interface Ranks{
@@ -15,62 +17,21 @@ const LeaderBoard = () => {
 		wins:number,
 		lose:number,
 		games:string[],
-	}
-	const [rank] = useState<Ranks[]>([
-	  {rank: 1, name: "test1", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 2, name: "robert paul", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 3, name: "henri jean", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 4, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 5, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 6, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 7, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 8, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 9, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 10, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 11, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 12, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 13, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 14, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 15, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 16, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 17, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 18, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 19, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 20, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 21, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 22, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 23, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 24, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 25, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 26, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 27, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 28, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 29, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 30, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 31, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 32, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 33, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 34, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 35, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 36, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 37, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 38, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 39, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 40, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 41, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 42, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 43, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 44, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 45, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 46, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 47, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 48, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 49, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 50, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 51, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 52, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 53, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
-	  {rank: 54, name: "test4", wins: 302, lose: 102, games:["0-2", "1-0"]},
+}
+
+const LeaderBoard = () => {
+    const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
+    interface Ranks{
+        id: string,
+        rank:number,
+        name:string,
+        wins:number,
+        lose:number,
+    }
+    const [rank] = useState<Ranks[]>([
+      {id:uuid(), rank: 1, name: "test1", wins: 302, lose: 102},
+      {id:uuid(), rank: 2, name: "test2", wins: 302, lose: 102},
+
    ]);
    const [clickedButton, setClickedButton] = useState('');
 
@@ -87,6 +48,7 @@ const LeaderBoard = () => {
 // 		);
 //    }
 	return (
+
 		<React.Fragment>
 			<BackgroundAnimate name="LeaderBoard"/>
 			<Header colorHome={Colors.MenuDisable} colorGame={Colors.MenuDisable} colorLeadBoard={Colors.MenuActive} colorChat={Colors.MenuDisable}/>
@@ -149,6 +111,45 @@ const LeaderBoard = () => {
 			</StyledLead>
 			<Footer/>
 		</React.Fragment>
+{/*
+        <React.Fragment>
+            <BackgroundAnimate name="LeaderBoard"/>
+            <Header colorHome={Colors.MenuDisable} 
+                    colorGame={Colors.MenuDisable} 
+                    colorLeadBoard={Colors.MenuActive} 
+                    colorChat={Colors.MenuDisable}
+                    notify={notify}
+                    setNotify={setNotify}/>
+            <StyledLead>
+                <StyledTile>LeaderBoard</StyledTile>
+                <StyledSep/>
+                <StyledLeadTileRank color={Colors.Sep}>
+                <thead>
+                    <tr>
+                        <StyledLeadP>Rank</StyledLeadP>
+                        <StyledLeadP>Name</StyledLeadP>
+                        <StyledLeadP>Wins</StyledLeadP>
+                        <StyledLeadP>Loses</StyledLeadP>
+                    </tr>
+                </thead>
+                </StyledLeadTileRank>
+                {rank.map((rk: Ranks) => (
+                    <StyledLeadTile color={Colors.Rank} key={rk.id}>
+                        <thead>
+                            <tr>
+                                <StyledLeadP>{rk.rank}</StyledLeadP>
+                                <StyledLeadP>{rk.name}</StyledLeadP>
+                                <StyledLeadP>{rk.wins}</StyledLeadP>
+                                <StyledLeadP>{rk.lose}</StyledLeadP>
+                            </tr>
+                        </thead>
+                    </StyledLeadTile>
+                ))}
+            </StyledLead>
+            <Notification notify={notify} setNotify={setNotify}/>
+            <Footer/>
+        </React.Fragment>
+*/}
 	)
 }
 

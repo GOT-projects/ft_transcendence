@@ -13,12 +13,12 @@ import { UserListPrivate, DataMesssage } from '../components/interfaces';
 import {NotifyInter} from "../components/interfaces"
 import {Notification} from "../components/Notify"
 import { v4 as uuid } from 'uuid';
-import { SocketContext, useSocket } from '../socket/socketPovider';
+// import { SocketContext, useSocket } from '../socket/socketPovider';
 import { Socket } from 'socket.io-client';
-import { addEmitHelper } from 'typescript';
-import { unstable_renderSubtreeIntoContainer } from 'react-dom';
 
 const Chat = () => {
+	const url = window.location.href;
+	let params = (new URL(url)).searchParams;
     const socket = useContext(SocketContext);
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
     const [navActive, setNavActive] = useState("UnActiveMenu");
@@ -45,6 +45,18 @@ const Chat = () => {
     ]}
     ]);
 
+    //open chat user when is select by friendList
+    if (!!params.get("code")){
+        const username = params.get("code")
+        chatUser.map((user) => {
+            if (user.user === username){
+                user.active = true;
+            }else{
+                user.active = false;
+            }
+        })
+    }
+
     function handChange(event: any, setInput: any, input: string){
         if (input === "" && event.target.value ==="\n")
             return;
@@ -53,7 +65,6 @@ const Chat = () => {
 
     const getUserMsg = () =>{
         let user = chatUser.map(ls => {
-            console.log("mapping user active:", ls.active, ls.user)
             if (ls.active === true){
                 return ls.user;
             }
@@ -100,12 +111,6 @@ const Chat = () => {
             message: inputChat,
             from: localStorage.getItem("login") + "",
         }
-        socket.emit('newMessage', {
-            id: addmsg.id, 
-            sendto: activeUser,
-            msg: inputChat,
-            from: addmsg.from
-        })
         console.log("Message Emit")
         let newMessage = selectUser;
         newMessage?.push(addmsg)
@@ -132,6 +137,10 @@ const Chat = () => {
 
     const addContact = () =>{
         //TODO check contact before add
+        
+        if (inputContact === " " || inputContact === "\n" || inputContact === ""){
+            return;
+        }
         const add = {id: uuid(), user: inputContact, mute:false, block: false, active: false, data:[]}
         setChatUser(chatUser => [...chatUser, add])
         setNotify({isOpen: true, message: 'User ' + inputContact + ' is add', type:'success'});
@@ -147,34 +156,21 @@ const Chat = () => {
     }
     const addChannel = () =>{
         //TODO check contact before add
+        if (inputChannel === " " || inputChannel === "\n" || inputChannel === ""){
+            return;
+        }
         setNotify({isOpen: true, message: 'Channel ' + inputChannel + ' is add', type:'success'});
         setInputChannel('')
     }
-    //Need useEffect for not get multi render 
-    //and don't forget to add [socket] like that refresh online if socket are use
-    useEffect(() =>{
-        socket.on('onMessage', (data) =>{
-            console.log("Hey i receive msg", data);
-            const addmsg:DataMesssage = {
-                id: uuid(),
-                message: data.msg,
-                from: data.from,}
-            for (let i = 0; i < chatUser.length; i++){
-                console.log("chatUser", chatUser.length)
-                if (chatUser[i].user === addmsg.from){
-                    console.log("user exitst add message")
-                    chatUser[i].data?.push(addmsg);
-                }else if(i + 1 === chatUser.length && chatUser[i].user !== addmsg.from && typeof addmsg.from === "string"){
-                    addContactUser(addmsg.from);
-                    insertMsg(addmsg.from, addmsg);
-                }
-            }
-            })
-    },[socket, chatUser])
 	return (
 		<React.Fragment>
 			<BackgroundAnimate name="contact"/>
-            <Header colorHome={Colors.MenuDisable} colorGame={Colors.MenuDisable} colorLeadBoard={Colors.MenuDisable} colorChat={Colors.MenuActive}/>
+            <Header colorHome={Colors.MenuDisable} 
+                    colorGame={Colors.MenuDisable} 
+                    colorLeadBoard={Colors.MenuDisable} 
+                    colorChat={Colors.MenuActive}
+                    notify={notify}
+                    setNotify={setNotify}/>
             <StyledContaite>
                 <StyledMenuSwitch>
                     <StyledMenuNav className={navActive} onClick={navMenu}>

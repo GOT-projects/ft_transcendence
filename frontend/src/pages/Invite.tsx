@@ -30,24 +30,22 @@ const Invite = () => {
             setInputChat("");
             return;
         }
-            console.log("start rersponde connect")
-            const response = PostConnectInvite(inputChat);
-	        response.then((response:any) => {
-	        	if(response.status === 201){
-                    console.log(response.data);
-                    accountService.saveToken(response.data.access_token);
-                    setInfoUser(accountService.getInfoUser(response.data.user));
-                    window.location.href = '/game';
-	        	}
-	        }).catch((e) =>{
-                console.log(e);
-            });
+        const response = PostConnectInvite(inputChat);
+	    response.then((response:any) => {
+	    	if(response.status === 201){
+                accountService.saveToken(response.data.access_token);
+                setInfoUser(accountService.getInfoUser(response.data.user));
+                window.location.href = '/game';
+	    	}
+	    }).catch((e) =>{
+            console.log(e);
+        });
     }
     return (
         /*<React.Fragment>
             <BackgroundAnimate name="login"/>
             <Header colorHome={Colors.MenuDisable} colorGame={Colors.MenuActive} colorLeadBoard={Colors.MenuDisable} colorChat={Colors.MenuDisable}/>*/
-            <StyledChatInput style={{backgroundColor:"black"}} name='login' placeholder="What's ur login" onChange={(e) => handChange(e, setInputChat, inputChat)} 
+            <StyledChatInput style={{backgroundColor:"black", color:"green"}} name='login' placeholder="What's ur login" onChange={(e) => handChange(e, setInputChat, inputChat)} 
                                                                                 onKeyDown={(e) => {
                                                                                     if (e.key === 'Enter' && !e.shiftKey){
                                                                                         send();
