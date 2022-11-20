@@ -2,6 +2,7 @@
 import styled from 'styled-components';
 import {Colors} from "../Colors"
 import {Link} from 'react-router-dom'
+import IconFriend from "../../assets/LogoFriend.png"
 
 export const StyledHeader = styled.div`
     position: absolute;
@@ -61,10 +62,16 @@ interface Notif{
 export const StyleMenuHeaderNotity = styled.div<Notif>`
     display: flex;
     align-items: center;
+    margin: 4px;
     color: ${props => props.colorIcon}; 
     border-radius: 50%;
+    transition: 0.4s;
     @media screen and (max-width: 768px){
         display: none;
+    }
+    &:hover{
+        transform: translateY(-4px);
+        transition: 0.4s;
     }
 `
 
@@ -73,8 +80,13 @@ export const StyleMenuHeaderNotityResp = styled.div<Notif>`
     align-items: center;
     color: ${props => props.colorIcon}; 
     border-radius: 50%;
+    transition: 0.4s;
     @media screen and (min-width: 768px){
         display: none;
+    }
+    &:hover{
+        transform: translateY(-4px);
+        transition: 0.4s;
     }
 `
 interface Menu{
@@ -211,6 +223,36 @@ export const StyleMenuHeaderProfil = styled.button<ProfilUrl>`
         display: none;
     }
 
+`;
+
+export const StyleHeaderUserList = styled.div`
+    width: 25px;
+    height: 25px;
+    background: url(${IconFriend}) no-repeat;
+    background-size: 100% 100%;
+    transition: 0.4s;
+    &:hover{
+        transform: translateY(-4px);
+        transition: 0.4s;
+    }
+    @media screen and (max-width: 768px){
+        display: none;
+    }
+`;
+
+export const StyleHeaderUserListResp = styled.div`
+    width: 25px;
+    height: 25px;
+    background: url(${IconFriend}) no-repeat;
+    background-size: 100% 100%;
+    transition: 0.4s;
+    &:hover{
+        transform: translateY(-4px);
+        transition: 0.4s;
+    }
+    @media screen and (min-width: 768px){
+        display: none;
+    }
 `;
 
 export const StyleMenuHeaderProfilResp = styled.button<ProfilUrl>`

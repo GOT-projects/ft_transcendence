@@ -5,6 +5,7 @@ import Header from '../components/Header';
 import {Colors} from "../components/Colors"
 import MousePadLeft from '../components/LeftPad';
 import {NotifyInter} from "../components/interfaces"
+import {Notification} from "../components/Notify"
 
 
 const Game = () => {
@@ -19,12 +20,11 @@ const Game = () => {
                     notify={notify}
                     setNotify={setNotify}/>
 					<MousePadLeft />
-
+            <Notification notify={notify} setNotify={setNotify}/>
 			<Footer/>
 		</React.Fragment>
 	)
 }
-
 export default Game;
 
   

@@ -1,6 +1,4 @@
-import { lighten } from '@material-ui/core';
-import {Dispatch, SetStateAction, FunctionComponent, useState} from 'react';
-import { v4 as uuid } from 'uuid';
+import {Dispatch, SetStateAction, FunctionComponent} from 'react';
 import {NotifyInter} from "../../components/interfaces"
 import { StyledMenuNotif, StyledMenuNotifButton, StyledMenuNotifButtonHover, StyledMenuNotifContentUser, StyledMenuNotifholder, StyledMenuNotifUser } from '../Styles/StyleNotifUser';
 import {RiUserAddFill} from 'react-icons/ri';
@@ -11,10 +9,6 @@ interface IProps {
    setNotify: Dispatch<any>;
 }
 
-interface IList{
-    id: string;
-    user: string;
-}
 const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
     const handleAdd = () =>{
         props.setNotify({isOpen: true, message: 'Add friend', type:'success'});

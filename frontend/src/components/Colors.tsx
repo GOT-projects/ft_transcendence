@@ -23,4 +23,5 @@ export const Colors = {
     ChatMenuButtonText: "#DCDDDE",
     NotifActive: "#F83101",
     NotifUnactive: "#262626",
+    HeaderColors: "#2c99de",
 }

@@ -37,7 +37,6 @@ let getInfoUser = (data: UsersId) => {
 
 let getUrlImg = () => {
     let ret = localStorage.getItem("urlImg")
-    console.log(ret);
     if (ret === null)
         return ("");
     return ret;
@@ -55,7 +54,6 @@ let isLogged = () => {
     var access = false;
     Axios.defaults.withCredentials = false;
     let token = localStorage.getItem('token_access')
-    console.log(document.cookie);
     if (!!token){
         try {
 			const response = apiGet.getAccess(token);
@@ -76,7 +74,6 @@ let isLogged = () => {
                 access = true;
             removeAccess();
         }
-        console.log("clear access token")
     }
     return access;
 }

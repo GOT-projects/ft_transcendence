@@ -6,17 +6,21 @@ import React from 'react'
 import { useState } from "react";
 import { StyledLead, StyledLeadTile, StyledSep, StyledTile, StyledLeadP, StyledLeadTileRank } from "../components/Styles/StyledleaderBoard";
 import {InfoServer, NotifyInter} from "../components/interfaces"
+import {Notification} from "../components/Notify"
+import { v4 as uuid } from 'uuid';
 
 const LeaderBoard = () => {
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
     interface Ranks{
+        id: string,
         rank:number,
         name:string,
         wins:number,
         lose:number,
     }
     const [rank] = useState<Ranks[]>([
-      {rank: 1, name: "test1", wins: 302, lose: 102},
+      {id:uuid(), rank: 1, name: "test1", wins: 302, lose: 102},
+      {id:uuid(), rank: 2, name: "test2", wins: 302, lose: 102},
    ]);
 	return (
         <React.Fragment>
@@ -31,26 +35,29 @@ const LeaderBoard = () => {
                 <StyledTile>LeaderBoard</StyledTile>
                 <StyledSep/>
                 <StyledLeadTileRank color={Colors.Sep}>
-                <tr>
-                    <StyledLeadP>Rank</StyledLeadP>
-                    <StyledLeadP>Name</StyledLeadP>
-                    <StyledLeadP>Wins</StyledLeadP>
-                    <StyledLeadP>Loses</StyledLeadP>
-                </tr>
+                <thead>
+                    <tr>
+                        <StyledLeadP>Rank</StyledLeadP>
+                        <StyledLeadP>Name</StyledLeadP>
+                        <StyledLeadP>Wins</StyledLeadP>
+                        <StyledLeadP>Loses</StyledLeadP>
+                    </tr>
+                </thead>
                 </StyledLeadTileRank>
-                <>
                 {rank.map((rk: Ranks) => (
-                    <StyledLeadTile color={Colors.Rank}>
-                        <tr>
-                        <StyledLeadP>{rk.rank}</StyledLeadP>
-                        <StyledLeadP>{rk.name}</StyledLeadP>
-                        <StyledLeadP>{rk.wins}</StyledLeadP>
-                        <StyledLeadP>{rk.lose}</StyledLeadP>
-                        </tr>
+                    <StyledLeadTile color={Colors.Rank} key={rk.id}>
+                        <thead>
+                            <tr>
+                                <StyledLeadP>{rk.rank}</StyledLeadP>
+                                <StyledLeadP>{rk.name}</StyledLeadP>
+                                <StyledLeadP>{rk.wins}</StyledLeadP>
+                                <StyledLeadP>{rk.lose}</StyledLeadP>
+                            </tr>
+                        </thead>
                     </StyledLeadTile>
                 ))}
-                </>
             </StyledLead>
+            <Notification notify={notify} setNotify={setNotify}/>
             <Footer/>
         </React.Fragment>
 	)

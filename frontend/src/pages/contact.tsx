@@ -15,8 +15,6 @@ import {Notification} from "../components/Notify"
 import { v4 as uuid } from 'uuid';
 import { SocketContext, useSocket } from '../socket/socketPovider';
 import { Socket } from 'socket.io-client';
-import { addEmitHelper } from 'typescript';
-import { unstable_renderSubtreeIntoContainer } from 'react-dom';
 
 const Chat = () => {
     const socket = useContext(SocketContext);
@@ -53,7 +51,6 @@ const Chat = () => {
 
     const getUserMsg = () =>{
         let user = chatUser.map(ls => {
-            console.log("mapping user active:", ls.active, ls.user)
             if (ls.active === true){
                 return ls.user;
             }
@@ -154,7 +151,6 @@ const Chat = () => {
     //and don't forget to add [socket] like that refresh online if socket are use
     useEffect(() =>{
         socket.on('onMessage', (data) =>{
-            console.log("Hey i receive msg", data);
             const addmsg:DataMesssage = {
                 id: uuid(),
                 message: data.msg,
@@ -162,7 +158,6 @@ const Chat = () => {
             for (let i = 0; i < chatUser.length; i++){
                 console.log("chatUser", chatUser.length)
                 if (chatUser[i].user === addmsg.from){
-                    console.log("user exitst add message")
                     chatUser[i].data?.push(addmsg);
                 }else if(i + 1 === chatUser.length && chatUser[i].user !== addmsg.from && typeof addmsg.from === "string"){
                     addContactUser(addmsg.from);

@@ -12,7 +12,7 @@ export const StyledMenuNotif = styled(motion.div)`
     right: 0;
     width: 200px;
     height: 236px;
-    background: #2c99de;
+    background: ${Colors.HeaderColors};
     transition: 0.4x;
     font-family: "Public Pixel";
     border-radius: 0 0 0 20px;
