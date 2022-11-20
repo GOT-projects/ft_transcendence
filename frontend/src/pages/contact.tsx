@@ -13,7 +13,7 @@ import { UserListPrivate, DataMesssage } from '../components/interfaces';
 import {NotifyInter} from "../components/interfaces"
 import {Notification} from "../components/Notify"
 import { v4 as uuid } from 'uuid';
-import { SocketContext, useSocket } from '../socket/socketPovider';
+// import { SocketContext, useSocket } from '../socket/socketPovider';
 import { Socket } from 'socket.io-client';
 
 const Chat = () => {
@@ -111,12 +111,6 @@ const Chat = () => {
             message: inputChat,
             from: localStorage.getItem("login") + "",
         }
-        socket.emit('newMessage', {
-            id: addmsg.id, 
-            sendto: activeUser,
-            msg: inputChat,
-            from: addmsg.from
-        })
         console.log("Message Emit")
         let newMessage = selectUser;
         newMessage?.push(addmsg)
@@ -168,27 +162,6 @@ const Chat = () => {
         setNotify({isOpen: true, message: 'Channel ' + inputChannel + ' is add', type:'success'});
         setInputChannel('')
     }
-    //Need useEffect for not get multi render 
-    //and don't forget to add [socket] like that refresh online if socket are use
-    useEffect(() =>{
-        socket.on('onMessage', (data) =>{
-            const addmsg:DataMesssage = {
-                id: uuid(),
-                message: data.msg,
-                from: data.from,}
-            for (let i = 0; i < chatUser.length; i++){
-                console.log("chatUser", chatUser.length)
-                if (chatUser[i].user === addmsg.from){
-                    chatUser[i].data?.push(addmsg);
-                }else if(i + 1 === chatUser.length && chatUser[i].user !== addmsg.from && typeof addmsg.from === "string"){
-                    addContactUser(addmsg.from);
-                    chatUser[i +  1].data?.push(addmsg);
-                }
-            }
-            const newdata = chatUser;
-            setChatUser(newdata);
-            })
-    },[socket])
 	return (
 		<React.Fragment>
 			<BackgroundAnimate name="contact"/>
