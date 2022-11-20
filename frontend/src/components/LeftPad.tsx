@@ -14,7 +14,7 @@ import { SocketContext, useSocket } from '../socket/socketPovider';
 import { InfoServer } from './interfaces';
 import { on } from 'stream';
 
-var socket = io(InfoServer.SocketServer);
+//var socket = io(InfoServer.SocketServer);
 
 async function useInterval(callback: any, delay: number) {
 	const savedCallback: any = useRef();
@@ -91,20 +91,20 @@ const MousePadLeft = () => {
 	ballY  = tmp2.toString(); 
 
 	
-	socket.on('onUpdate', (e) => {
-		setTmp(e);
-	})
+	// socket.on('onUpdate', (e) => {
+	// 	setTmp(e);
+	// })
 	
-	useInterval(() => {
-		// socket.on("connect", () => {
-		// 	console.log(socket.connected); // true
-		//   });
-		socket.emit('updatePlayer', { msg: "lol ca marche pas", from: 'rcuminal' });
-		// socket.off('onUpdate');
-		// socket.off('disconnect');
-		console.log(tmp3);
-		setCount(count + 1);
-	}, 1000);
+	// useInterval(() => {
+	// 	// socket.on("connect", () => {
+	// 	// 	console.log(socket.connected); // true
+	// 	//   });
+	// 	socket.emit('updatePlayer', { msg: "lol ca marche pas", from: 'rcuminal' });
+	// 	// socket.off('onUpdate');
+	// 	// socket.off('disconnect');
+	// 	console.log(tmp3);
+	// 	setCount(count + 1);
+	// }, 1000);
 	
 	
     // io  = require('socket.io').listen(app)
