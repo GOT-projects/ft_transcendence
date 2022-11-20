@@ -41,10 +41,19 @@ export class AppService {
             if (tmpUser === null)
                 throw new HttpException('No user', HttpStatus.BAD_REQUEST);
             const tmpStat = await this.gameService.getStatUser(tmpUser.id);
-            const tmpNotif = await this.gameService.getGamesOf(tmpUser.id);
+            const games = await this.gameService.getGamesOf(tmpUser.id);
+            let parties: GOT.Party[] = [];
+            games.forEach(async function(elem) {
+                parties.push({
+                    user1: await this.userService.findOne(elem.user1Id),
+                    user2: await this.userService.findOne(elem.user2Id),
+                    points1: elem.points1,
+                    points2: elem.points2
+                });
+            });
             ret.userInfos = tmpUser;
             ret.stat = tmpStat;
-            ret.parties = tmpNotif;
+            ret.parties = parties;
             return ret;
         } catch (error) {
             throw new HttpException(error.message, error.status);

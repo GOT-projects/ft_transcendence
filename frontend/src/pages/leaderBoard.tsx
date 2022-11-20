@@ -4,20 +4,12 @@ import Header from "../components/Header"
 import {Colors} from "../components/Colors"
 import React from 'react'
 import { useState } from "react";
-import { StyledLead, StyledLeadTile, StyledSep, StyledTile, StyledLeadP, StyledLeadTileRank } from "../components/Styles/StyledleaderBoard";
+import { StyledLead, StyledLeadTile, StyledSep, StyledTile, StyledLeadP, StyledLeadTileRank, Button } from "../components/Styles/StyledleaderBoard";
 import {InfoServer, NotifyInter} from "../components/interfaces"
 import {Notification} from "../components/Notify"
 import { v4 as uuid } from 'uuid';
 
 
-const LeaderBoard = () => {
-	interface Ranks{
-		rank:number,
-		name:string,
-		wins:number,
-		lose:number,
-		games:string[],
-}
 
 const LeaderBoard = () => {
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
@@ -27,10 +19,11 @@ const LeaderBoard = () => {
         name:string,
         wins:number,
         lose:number,
+        games:string[],
     }
     const [rank] = useState<Ranks[]>([
-      {id:uuid(), rank: 1, name: "test1", wins: 302, lose: 102},
-      {id:uuid(), rank: 2, name: "test2", wins: 302, lose: 102},
+      {id:uuid(), rank: 1, name: "test1", wins: 302, lose: 102, games: ["2-0", "5-2"]},
+      {id:uuid(), rank: 2, name: "test2", wins: 302, lose: 102, games: ["2-1", "5-2"]},
 
    ]);
    const [clickedButton, setClickedButton] = useState('');
@@ -51,7 +44,12 @@ const LeaderBoard = () => {
 
 		<React.Fragment>
 			<BackgroundAnimate name="LeaderBoard"/>
-			<Header colorHome={Colors.MenuDisable} colorGame={Colors.MenuDisable} colorLeadBoard={Colors.MenuActive} colorChat={Colors.MenuDisable}/>
+			<Header colorHome={Colors.MenuDisable} 
+                    colorGame={Colors.MenuDisable} 
+                    colorLeadBoard={Colors.MenuActive} 
+                    colorChat={Colors.MenuDisable}
+                    notify={notify}
+                    setNotify={setNotify}/>
 			<StyledLead>
 				<StyledTile>LeaderBoard</StyledTile>
 				<StyledSep/>
@@ -72,19 +70,9 @@ const LeaderBoard = () => {
 							
 						
 							<Button onClick={buttonHandler} className="button" name={rk.name}>{rk.name}
-							{/* employees.forEach((employee, index) => {
-    results.push(
-      <div key={index}>
-        <h2>name: {employee.name}</h2>
-        <h2>country: {employee.country}</h2>
-
-        <hr />
-      </div>,
-    );
-  }); */}
 							</Button>
 								{clickedButton === rk.name
-								? <tr >{rk.games?.map((game) => (
+								? <tr >{rk.games?.map((game: string) => (
 									<p key={uuid()}>{game}</p>
 								))}</tr>: <></>
 								}
@@ -111,7 +99,9 @@ const LeaderBoard = () => {
 			</StyledLead>
 			<Footer/>
 		</React.Fragment>
-{/*
+	)
+}
+/*
         <React.Fragment>
             <BackgroundAnimate name="LeaderBoard"/>
             <Header colorHome={Colors.MenuDisable} 
@@ -149,9 +139,7 @@ const LeaderBoard = () => {
             <Notification notify={notify} setNotify={setNotify}/>
             <Footer/>
         </React.Fragment>
-*/}
-	)
-}
+*/
 
 export default LeaderBoard;
 

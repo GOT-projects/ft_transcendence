@@ -10,7 +10,6 @@ import BackgroundAnimate from "../components/BackGroundAnimate";
 import socketio, { Server } from 'socket.io';
 import { io } from "socket.io-client";
 import { Request, Response } from 'express';
-import { SocketContext, useSocket } from '../socket/socketPovider';
 import { InfoServer } from './interfaces';
 import { on } from 'stream';
 

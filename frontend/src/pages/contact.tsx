@@ -19,7 +19,7 @@ import { Socket } from 'socket.io-client';
 const Chat = () => {
 	const url = window.location.href;
 	let params = (new URL(url)).searchParams;
-    const socket = useContext(SocketContext);
+    //const socket = useContext(SocketContext);
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
     const [navActive, setNavActive] = useState("UnActiveMenu");
     const [chatSwitch, setChatSwitch] = useState<string>('private');
