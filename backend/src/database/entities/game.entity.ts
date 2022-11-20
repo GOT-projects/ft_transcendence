@@ -1,6 +1,6 @@
-import { User } from "src/users/entities/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { gameStatus } from "../game.types";
+import { gameStatus } from "../types/game.types";
+import { User } from "./user.entity";
 
 @Entity()
 export class Game {

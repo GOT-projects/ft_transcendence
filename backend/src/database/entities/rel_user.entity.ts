@@ -1,6 +1,6 @@
-import { User } from "src/users/entities/user.entity";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { UserUserStatus } from "../user_user.types";
+import { UserUserStatus } from "../types/user_user.types";
+import { User } from "./user.entity";
 
 @Entity()
 export class RelUser {

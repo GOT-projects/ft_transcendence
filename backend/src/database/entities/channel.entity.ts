@@ -1,7 +1,7 @@
-import { Message } from "src/messages/entities/message.entity";
-import { RelUserChannel } from "src/rel_user_channel/entities/rel_user_channel.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { channelStatus } from "../channels.types";
+import { channelStatus } from "../types/channels.types";
+import { Message } from "./message.entity";
+import { RelUserChannel } from "./rel_user_channel.entity";
 
 @Entity()
 export class Channel {

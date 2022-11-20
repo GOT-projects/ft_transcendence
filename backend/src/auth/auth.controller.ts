@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Inject, Injectable, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
 import { stringify } from 'querystring';

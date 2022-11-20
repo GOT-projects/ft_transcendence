@@ -1,8 +1,7 @@
-import { channel } from "diagnostics_channel";
-import { Channel } from "src/channels/entities/channel.entity";
-import { User } from "src/users/entities/user.entity";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { UserChannelStatus } from "../user_channel.types";
+import { UserChannelStatus } from "../types/user_channel.types";
+import { Channel } from "./channel.entity";
+import { User } from "./user.entity";
 
 @Entity()
 export class RelUserChannel {

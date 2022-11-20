@@ -1,11 +1,11 @@
-import { Logger, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { UsersModule } from 'src/users/users.module';
-import { jwtModule } from 'src/jwt.module';
+import { jwtModule } from 'src/auth/jwt.module';
+import { DatabaseModule } from 'src/database/database.module';
 
 @Module({
-  imports: [UsersModule, jwtModule],
+  imports: [DatabaseModule, jwtModule],
   providers: [AuthService],
   controllers: [AuthController],
 })

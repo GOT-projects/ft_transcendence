@@ -1,10 +1,10 @@
 
-namespace GOT {
-    
+/*export namespace GOT {
+    */
     // Utils
 
     // TODO add 2FA stat
-    interface User {
+    export interface User {
         id: number;
         idIntra?: number;
         login: string;
@@ -13,13 +13,13 @@ namespace GOT {
         wallet: number;
     }
 
-    enum ProfileStatus {
+    export enum ProfileStatus {
         offline,
         online,
         inGame
     }
 
-    interface Friend extends User {
+    export interface Friend extends User {
         status: ProfileStatus;
     }
 
@@ -27,19 +27,19 @@ namespace GOT {
     type Token = string;
 
     
-    interface StatUser {
+    export interface StatUser {
         victory: number;
         defeat: number;
         rank: number;
     }
 
-    interface ProfileLeaderBoard {
+    export interface ProfileLeaderBoard {
         userInfos: User;
         stat: StatUser;
         inGame: number | undefined; // id de la game ou pas visualiser
     }
 
-    interface Party {
+    export interface Party {
         user1: User;
         user2: User;
         points1: number;
@@ -47,13 +47,13 @@ namespace GOT {
     }
 
     // API POST /auth/connect_intra
-    interface Login {
+    export interface Login {
         token: Token;
         userInfos: User;
     }
 
     // API GET /profil (déroulant)
-    interface Profile {
+    export interface Profile {
         userInfos: User;
         stat: StatUser;
         notif: User[];  // user en attente
@@ -71,7 +71,7 @@ namespace GOT {
     // return Friend (l'ami ajouter ou changer)
 
     // WS /get_profile_friend -- validation de la notif [notif]
-    interface NotifChoice {
+    export interface NotifChoice {
         user: User;
         accept: boolean;
     }
@@ -81,14 +81,14 @@ namespace GOT {
 
 
     // WS /set_leaderboard [leaderboard]
-    interface LeaderBoard {
+    export interface LeaderBoard {
         users: ProfileLeaderBoard[];
     }
 
     // API /profil/:login
-    interface HistoryParties {
+    export interface HistoryParties {
         userInfos: User;
         stat: StatUser;
         parties: Party[];
     }
-}
+//}

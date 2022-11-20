@@ -1,16 +1,14 @@
 import axios from 'axios';
 import { HttpException, Injectable } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { User } from 'src/users/entities/user.entity';
-import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
+import { User } from 'src/database/entities/user.entity';
 
 @Injectable()
 export class AuthService {
 
     constructor (
-        private readonly usersService: UsersService,
+        //private readonly usersService: UsersService,
 		private readonly jwtService: JwtService,
     ) {}
 
@@ -39,7 +37,7 @@ export class AuthService {
 		} catch (error) {
 			throw new HttpException(error.message + ' PS: INTRA info', error.response.status);
 		}
-		const createUserDto: CreateUserDto = {
+		/*const createUserDto: CreateUserDto = {
 			idIntra: request.data.id,
 			login: request.data.login,
 			username: request.data.login,
@@ -60,12 +58,12 @@ export class AuthService {
 			res.send({access_token: jwt, user});
 		} catch (error) {
 			throw new HttpException(error.message + ' PS: jwt', error.status);
-		}
+		}*/
     }
 
 	async invite(res: Response,login: string) {
         
-		const createUserDto: CreateUserDto = {
+		/*const createUserDto: CreateUserDto = {
 			idIntra: undefined,
 			login: login,
 			username: login,
@@ -85,6 +83,6 @@ export class AuthService {
 			res.send({access_token: jwt, user});
 		} catch (error) {
 			throw new HttpException(error.message + ' PS: jwt', error.status);
-		}
+		}*/
     }
 }
