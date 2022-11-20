@@ -3,10 +3,15 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { GOT } from "shared/types";
 import { Repository } from "typeorm";
 import { Game } from "../entities/game.entity";
+import { Rank } from "../types/game.types";
+import { UserService } from "./user.service";
 
 @Injectable()
 export class GameService {
-    constructor( @InjectRepository(Game) private gameRepository: Repository<Game>, ) {}
+    constructor(
+        @InjectRepository(Game) private gameRepository: Repository<Game>,
+        private readonly userService: UserService,
+    ) {}
 
     async getGamesOf(userId: number) {
         return await this.gameRepository.find({
@@ -23,30 +28,44 @@ export class GameService {
 
     async getRanks() {
         const allGames = await this.getAll();
-        let ranks: number[] = [];
+        let ranks: Rank[] = new Array();
         allGames.forEach( (game) => {
             if (game.points1 > game.points2) {
-                if (ranks[game.user1Id] === undefined)
-                    ranks.splice(game.user1Id, 0, 1);
+                if (ranks.find(o => o.id === game.user1Id) === undefined)
+                    ranks.push({id: game.user1Id, val: 1})
                 else
-                    ranks[game.user1Id]++;
+                    ranks.find((o, i) => {
+                        if (o.id === game.user1Id) {
+                            ranks[i] = {id: o.id, val: o.val + 1};
+                            return true;
+                        }
+                    });
             } else {
-                if (ranks[game.user2Id] === undefined)
-                    ranks.splice(game.user2Id, 0, 1);
+                if (ranks.find(o => o.id === game.user2Id) === undefined)
+                    ranks.push({id: game.user2Id, val: 1})
                 else
-                    ranks[game.user2Id]++;
+                    ranks.find((o, i) => {
+                        if (o.id === game.user2Id) {
+                            ranks[i] = {id: o.id, val: o.val + 1};
+                            return true;
+                        }
+                    });
             }
         });
-        return ranks;
+        return ranks.sort(function(a,b) {
+            return a.val - b.val;
+        });
     }
 
     async getStatUser(userId: number) {
         const games = await this.getGamesOf(userId);
+        const ranks = await this.getRanks();
+        const max = await this.userService.countAll();
         let stats = new GOT.StatUser();
         stats.defeat = 0;
-        stats.rank = ((await this.getRanks())[userId]);
-        if (stats.rank === undefined) stats.rank = 999999;
         stats.victory = 0;
+        stats.rank = -1;
+        ranks.find((o, i) => {if (o.id === userId) {stats.rank = i + 1; return true}});
         if (games !== null) {
             games.forEach( (game) => {
                 if (game.user1Id === userId) {

@@ -25,6 +25,14 @@ export class UserService {
           throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
         }
       }
+
+      async countAll() {
+        try {
+          return await this.userRepository.count();
+        } catch (error) {
+          throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+        }
+      }
     
       async findOne(id: number): Promise<User | null> {
         if (!id) {
