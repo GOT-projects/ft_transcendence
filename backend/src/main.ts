@@ -2,6 +2,18 @@ import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
+/*
+import { GOT } from 'shared/types';
+class A implements GOT.User {
+  id: number;
+  idIntra?: number;
+  login: string;
+  username: string;
+  urlImg: string;
+  wallet: number;
+}
+*/
+
 async function bootstrap() {
   const logger = new Logger('main.ts - server');
   const app = await NestFactory.create(AppModule);

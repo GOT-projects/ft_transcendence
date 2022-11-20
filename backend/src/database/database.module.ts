@@ -1,5 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Channel } from './entities/channel.entity';
+import { Game } from './entities/game.entity';
+import { Message } from './entities/message.entity';
+import { RelUser } from './entities/rel_user.entity';
+import { RelUserChannel } from './entities/rel_user_channel.entity';
+import { User } from './entities/user.entity';
+import { UserService } from './services/user.service';
 
 @Module({
 	imports: [
@@ -12,9 +19,19 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 			autoLoadEntities: true,
 			synchronize: true, // TODO rm for prod
 		}),
+		TypeOrmModule.forFeature([
+			User,
+			Channel,
+			Game,
+			Message,
+			RelUser,
+			RelUserChannel
+		]),
 	  ],
 	  controllers: [],
-	  providers: [],
-	  exports: [],
+	  providers: [
+		  UserService
+	  ],
+	  exports: [UserService],
 })
 export class DatabaseModule {};

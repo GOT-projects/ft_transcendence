@@ -64,8 +64,8 @@ services:
     hostname: web
     # build
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: ./
+      dockerfile: Dockerfile_frontend
     #runtime
     environment:
       - PORT=${PORT}
