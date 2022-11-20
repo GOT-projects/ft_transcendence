@@ -27,7 +27,13 @@ const PopupListFriends:FunctionComponent<IProps> = (props:IProps) => {
         {id: uuid(), name: "test", img: accountService.getUrlImg(), status:"online", inGame: false},
         {id: uuid(), name: "Robert", img: accountService.getUrlImg(), status:"offline", inGame: true},
         {id: uuid(), name: "Jean", img: accountService.getUrlImg(), status:"offline", inGame: false},
+        {id: uuid(), name: "aartiges", img: accountService.getUrlImg(), status:"offline", inGame: false},
+        {id: uuid(), name: "rcuminal", img: accountService.getUrlImg(), status:"offline", inGame: false},
     ])
+
+    const handleGotoMsg = (user:string) =>{
+        window.location.href = '/chat?code=' + user;
+    }
     return (
         <StyledMenuFriend
             initial={{x: 300}}
@@ -36,7 +42,7 @@ const PopupListFriends:FunctionComponent<IProps> = (props:IProps) => {
             exit={{x: 300, opacity: 0}}>
             <StyledMenuFriendContente>
             {friends?.map((friend) => (
-                    <StyleMenuFriendUser key={friend.id}>
+                    <StyleMenuFriendUser key={friend.id} onClick={ () => handleGotoMsg(friend.name)}>
                         <StatusProfile img={accountService.getUrlImg()} status={friend.status}></StatusProfile>
                         <p>{friend.name}</p>
                     </StyleMenuFriendUser>

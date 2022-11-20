@@ -11,7 +11,7 @@ export const StyledMenuNotif = styled(motion.div)`
     top: 3.6rem;
     right: 0;
     width: 200px;
-    height: 236px;
+    height: 250px;
     background: ${Colors.HeaderColors};
     transition: 0.4x;
     font-family: "Public Pixel";
@@ -40,7 +40,7 @@ export const StyledMenuNotifButtonHover = styled.div`
         color: ${Colors.primary};
     }
 `
-export const StyledMenuNotifContentUser = styled.p`
+export const StyledMenuNotifContentUser = styled.div`
     width: 120px;
     overflow: hidden;
 `

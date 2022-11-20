@@ -7,7 +7,7 @@ export const StyledMenuFriend = styled(motion.div)`
     top: 3.6rem;
     right: 0;
     width: 300px;
-    height: 100vh;
+    height: calc(100vh - 4rem - 40px);
     background: #2c99de;
     transition: 0.4x;
     font-family: "Public Pixel";

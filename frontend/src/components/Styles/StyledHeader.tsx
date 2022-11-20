@@ -228,6 +228,7 @@ export const StyleMenuHeaderProfil = styled.button<ProfilUrl>`
 export const StyleHeaderUserList = styled.div`
     width: 25px;
     height: 25px;
+    margin: 10px;
     background: url(${IconFriend}) no-repeat;
     background-size: 100% 100%;
     transition: 0.4s;

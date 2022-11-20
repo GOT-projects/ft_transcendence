@@ -17,6 +17,8 @@ import { SocketContext, useSocket } from '../socket/socketPovider';
 import { Socket } from 'socket.io-client';
 
 const Chat = () => {
+	const url = window.location.href;
+	let params = (new URL(url)).searchParams;
     const socket = useContext(SocketContext);
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
     const [navActive, setNavActive] = useState("UnActiveMenu");
@@ -42,6 +44,18 @@ const Chat = () => {
         {id: uuid(), message: "super et toi?", from: "waxdred"},
     ]}
     ]);
+
+    //open chat user when is select by friendList
+    if (!!params.get("code")){
+        const username = params.get("code")
+        chatUser.map((user) => {
+            if (user.user === username){
+                user.active = true;
+            }else{
+                user.active = false;
+            }
+        })
+    }
 
     function handChange(event: any, setInput: any, input: string){
         if (input === "" && event.target.value ==="\n")
@@ -129,6 +143,10 @@ const Chat = () => {
 
     const addContact = () =>{
         //TODO check contact before add
+        
+        if (inputContact === " " || inputContact === "\n" || inputContact === ""){
+            return;
+        }
         const add = {id: uuid(), user: inputContact, mute:false, block: false, active: false, data:[]}
         setChatUser(chatUser => [...chatUser, add])
         setNotify({isOpen: true, message: 'User ' + inputContact + ' is add', type:'success'});
@@ -144,6 +162,9 @@ const Chat = () => {
     }
     const addChannel = () =>{
         //TODO check contact before add
+        if (inputChannel === " " || inputChannel === "\n" || inputChannel === ""){
+            return;
+        }
         setNotify({isOpen: true, message: 'Channel ' + inputChannel + ' is add', type:'success'});
         setInputChannel('')
     }
