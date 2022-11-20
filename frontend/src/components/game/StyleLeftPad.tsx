@@ -12,6 +12,7 @@ interface ballPos {
 	x: string;
 	y: string;
     rot: string;
+	size: string;
 }
 
 export const StyledLeftPad = styled.div`
@@ -91,6 +92,8 @@ export const StyledLeftPad1alias = styled(StyledLeftPad1).attrs<mousePos>(p => (
         top: p.y,
         left: p.x,
         transform: p.rot,
+		height: p.size,
+		width: p.size,
     },
   }))<ballPos>`
   `;
