@@ -1,11 +1,12 @@
 import axios from 'axios';
-import { HttpException, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { Request, Response } from "express";
 import { stringify } from "querystring";
 import { UserService } from "src/database/services/user.service";
 import { CreateUserDto } from 'src/database/dtos/user.dto';
 import { User } from 'src/database/entities/user.entity';
+import { GOT } from 'shared/types';
 
 @Injectable()
 export class AuthService {
@@ -78,10 +79,16 @@ export class AuthService {
 			// Create JWT
 			const jwt: string = await this.jwtService.signAsync({
 				userId: user.id,
+				userLogin: user.login,
 			});
-            console.info("Jwt gen: ", jwt);
+			let ret: GOT.Login = new GOT.Login();
+			ret.access_token = jwt,
+			ret.user =  user;
+			if (!(ret instanceof GOT.Login))
+				throw new HttpException('Problem of type: Connect auth', HttpStatus.CONFLICT);
+            console.info("Jwt gen: ", ret);
 			res.header('Authorization', `Bearer ${ jwt }`);
-			res.send({access_token: jwt, user});
+			res.send(ret);
 		} catch (error) {
 			throw new HttpException(error.message + ' PS: jwt', error.status);
 		}

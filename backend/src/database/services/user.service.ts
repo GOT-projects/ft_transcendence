@@ -38,6 +38,33 @@ export class UserService {
           throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
         }
       }
+
+      async findUnique(id: number, login: string): Promise<User | null> {
+        if (!id || !login) {
+          throw new HttpException('Need id', HttpStatus.BAD_REQUEST);
+        }
+        try {
+          return await this.userRepository.findOneBy({
+            id,
+            login
+          });
+        } catch (error) {
+          throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+        }
+      }
+
+      async findLogin(login: string): Promise<User | null> {
+        if (!login) {
+          throw new HttpException('Need id', HttpStatus.BAD_REQUEST);
+        }
+        try {
+          return await this.userRepository.findOneBy({
+            login
+          });
+        } catch (error) {
+          throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+        }
+      }
     
       async update(id: number, updateUserDto: UpdateUserDto): Promise<UpdateResult> {
         if (!id || !updateUserDto)

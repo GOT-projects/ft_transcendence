@@ -6,6 +6,8 @@ import { Message } from './entities/message.entity';
 import { RelUser } from './entities/rel_user.entity';
 import { RelUserChannel } from './entities/rel_user_channel.entity';
 import { User } from './entities/user.entity';
+import { GameService } from './services/game.service';
+import { RelUserService } from './services/rel_user.service';
 import { UserService } from './services/user.service';
 
 @Module({
@@ -27,11 +29,17 @@ import { UserService } from './services/user.service';
 			RelUser,
 			RelUserChannel
 		]),
+	],
+	controllers: [],
+	providers: [
+		UserService,
+		GameService,
+		RelUserService
 	  ],
-	  controllers: [],
-	  providers: [
-		  UserService
-	  ],
-	  exports: [UserService],
+	exports: [
+		UserService,
+		GameService,
+		RelUserService
+	],
 })
 export class DatabaseModule {};

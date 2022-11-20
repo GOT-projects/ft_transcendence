@@ -25,7 +25,6 @@ export class JWTGuard implements CanActivate {
         const jwt = auth[1];
         try {
             const data = await this.jwtService.verifyAsync(jwt);
-            console.log(data);
         } catch (error) {
             throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
         }

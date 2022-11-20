@@ -10,7 +10,7 @@ export namespace GOT {
     /**
      * Information of a user
      */
-    export interface User {
+    export class User {
         id: number;
         idIntra?: number;
         login: string;
@@ -32,7 +32,7 @@ export namespace GOT {
     /**
      * Information for friends (information of user + his status)
      */
-    export interface Friend extends User {
+    export class Friend extends User {
         status: ProfileStatus;
     }
 
@@ -44,7 +44,7 @@ export namespace GOT {
     /**
      * Information of a user about games
      */
-    export interface StatUser {
+    export class StatUser {
         victory: number;
         defeat: number;
         rank: number;
@@ -53,7 +53,7 @@ export namespace GOT {
     /**
      * Information of 1 game
      */
-    export interface Party {
+    export class Party {
         user1: User;
         user2: User;
         points1: number;
@@ -63,7 +63,7 @@ export namespace GOT {
     /**
      * All information of a user for leaderboard
      */
-    export interface ProfileLeaderBoard {
+    export class ProfileLeaderBoard {
         userInfos: User;
         stat: StatUser;
         inGame: number | undefined; // id de la game ou pas visualiser
@@ -79,9 +79,9 @@ export namespace GOT {
      * Route: POST /auth/connect_intra
      * Front: NaN
      */
-    export interface Login {
-        token: Token;
-        userInfos: User;
+    export class Login {
+        access_token: Token;
+        user: User;
     }
     
     /**
@@ -90,7 +90,7 @@ export namespace GOT {
      * Route: Get /profil
      * Front: Header (Profil)
      */
-    export interface Profile {
+    export class Profile {
         userInfos: User;
         stat: StatUser;
         notif: User[];  // users waiting responce to be friend
@@ -102,7 +102,7 @@ export namespace GOT {
      * Route: GET /profil/:login
      * Front: UserProfil (leaderboard)
      */
-    export interface HistoryParties {
+    export class HistoryParties {
         userInfos: User;
         stat: StatUser;
         parties: Party[];
@@ -160,7 +160,7 @@ export namespace GOT {
      *  WS: /get_leaderboard
      * Front: Leaderboard
      */
-    export interface LeaderBoard {
+    export class LeaderBoard {
         users: ProfileLeaderBoard[];
     }
 
@@ -174,7 +174,7 @@ export namespace GOT {
      *  WS: /set_new_friend
      * Front: Notification
      */
-    export interface NotifChoice {
+    export class NotifChoice {
         user: User;
         accept: boolean;
     }

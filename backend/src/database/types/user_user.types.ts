@@ -1,4 +1,5 @@
 export enum UserUserStatus {
     FRIEND = 'FRIEND',
-    BAN = 'BAN'
+    WAITING = 'WAITING'
+    //BAN = 'BAN'
 }

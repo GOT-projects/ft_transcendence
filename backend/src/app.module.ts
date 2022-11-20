@@ -1,15 +1,19 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { jwtModule } from 'src/auth/jwt.module';
 import { AppController } from './app.controller';
+import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
     DatabaseModule,
-    AuthModule
+    AuthModule,
+    jwtModule
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [
+    AppService
+  ],
 })
 export class AppModule {}
