@@ -47,6 +47,7 @@ export const StyledLoginLogo = styled.div<PropsLogo>`
 export const StyledLoginButton = styled.a`
     width: 380px;
     height: 86px;
+    margin-top: 20px; 
     font-size: 28px;
     font-family: 'Public Pixel', cursive;
     background: linear-gradient(45deg, transparent 5%, ${Colors.dark1} 5%);

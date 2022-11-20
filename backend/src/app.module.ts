@@ -9,6 +9,7 @@ import { MessagesModule } from './messages/messages.module';
 import { GameModule } from './game/game.module';
 import { RelUserChannelModule } from './rel_user_channel/rel_user_channel.module';
 import { RelUsersModule } from './rel_users/rel_users.module';
+import { GatewayModule } from './gateway/gateway.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { RelUsersModule } from './rel_users/rel_users.module';
       autoLoadEntities: true,
       synchronize: true, // TODO rm for prod
     }),
+    GatewayModule,
     AuthModule,
     UsersModule,
     ChannelsModule,

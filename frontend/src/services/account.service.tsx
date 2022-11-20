@@ -1,5 +1,6 @@
 import Axios from "axios"
 import { apiGet } from "../api/get";
+import { UsersId } from "../components/interfaces";
 
 
 let saveToken = (token: string) => {
@@ -15,10 +16,37 @@ let removeAccess= () => {
     localStorage.removeItem('access')
 }
 
+let removeUser= () => {
+    localStorage.removeItem('login')
+    localStorage.removeItem('urlImg')
+    localStorage.removeItem('access')
+}
+let getInfoUser = (data: UsersId) => {
+    let infoUser:UsersId = {
+        id: data.id,
+        idIntra: data.idIntra,
+        login: data.login,
+        urlImg: data.urlImg,
+        username: data.username,
+        wallet: data.wallet,
+    };
+    localStorage.setItem("login", infoUser.login);
+    localStorage.setItem("urlImg", infoUser.urlImg);
+    return  infoUser;
+}
+
+let getUrlImg = () => {
+    let ret = localStorage.getItem("urlImg")
+    if (ret === null)
+        return ("");
+    return ret;
+}
+
 
 let removeToken= () => {
     document.cookie = `token_access=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
     localStorage.removeItem('token_access')
+    removeUser();
     window.location.href = '/';
 }
 
@@ -26,7 +54,6 @@ let isLogged = () => {
     var access = false;
     Axios.defaults.withCredentials = false;
     let token = localStorage.getItem('token_access')
-    console.log(document.cookie);
     if (!!token){
         try {
 			const response = apiGet.getAccess(token);
@@ -47,11 +74,10 @@ let isLogged = () => {
                 access = true;
             removeAccess();
         }
-        console.log("clear access token")
     }
     return access;
 }
 
 export const accountService = {
-    saveToken, removeToken, isLogged
+    saveToken, removeToken, isLogged, getInfoUser, getUrlImg
 }

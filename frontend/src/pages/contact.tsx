@@ -2,7 +2,7 @@ import { StyledChat, StyledChatInput, StyledChatPrivAvatar, StyledChatPrive, Sty
 			StyledChatSendDiv, StyledChatSep, StyledChatSettingButton, StyledChatSwith, StyledChatSwithButton, StyledChatText, 
 			StyledChatWindow, StyledContact, StyledContaite, StyledSender, StyledUser, StyledChatTextArea, StyledMenuNav, StyledMenuDiv, 
 			StyledMenuSwitch, StyledAddInput, StyledAddInputdiv, StyledAddInputdivButton } from '../components/Styles/StyleChat';
-import React, {useState } from 'react';
+import React, {useContext, useEffect, useState } from 'react';
 import BackgroundAnimate from '../components/BackGroundAnimate';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
@@ -10,14 +10,17 @@ import {Colors} from "../components/Colors"
 import { AiFillSetting, AiOutlineSend } from 'react-icons/ai';
 import { GrAddCircle } from 'react-icons/gr';
 import { UserListPrivate, DataMesssage } from '../components/interfaces';
-import {InfoServer, NotifyInter} from "../components/interfaces"
+import {NotifyInter} from "../components/interfaces"
 import {Notification} from "../components/Notify"
 import { v4 as uuid } from 'uuid';
-
-
+// import { SocketContext, useSocket } from '../socket/socketPovider';
+import { Socket } from 'socket.io-client';
 
 const Chat = () => {
-    const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''})
+	const url = window.location.href;
+	let params = (new URL(url)).searchParams;
+    const socket = useContext(SocketContext);
+    const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
     const [navActive, setNavActive] = useState("UnActiveMenu");
     const [chatSwitch, setChatSwitch] = useState<string>('private');
     const endRef = React.useRef<HTMLInputElement>(null);
@@ -42,11 +45,37 @@ const Chat = () => {
     ]}
     ]);
 
+    //open chat user when is select by friendList
+    if (!!params.get("code")){
+        const username = params.get("code")
+        chatUser.map((user) => {
+            if (user.user === username){
+                user.active = true;
+            }else{
+                user.active = false;
+            }
+        })
+    }
+
     function handChange(event: any, setInput: any, input: string){
         if (input === "" && event.target.value ==="\n")
             return;
 		setInput(event.target.value);
 	}	
+
+    const getUserMsg = () =>{
+        let user = chatUser.map(ls => {
+            if (ls.active === true){
+                return ls.user;
+            }
+        })
+        user = user.filter(function( element ) {
+            return element !== undefined;
+        });
+        if (user.length === 1)
+            return user[0];
+        return null;
+    }
 
     const handleUserSelector = (user: string) => {
         const newArr = chatUser.map(ls => {
@@ -76,10 +105,28 @@ const Chat = () => {
             setInputChat("");
             return;
         }
+        const activeUser = getUserMsg();
+        const addmsg:DataMesssage = {
+            id: uuid(),
+            message: inputChat,
+            from: localStorage.getItem("login") + "",
+        }
+        console.log("Message Emit")
         let newMessage = selectUser;
-        newMessage?.push({id: uuid(), message: inputChat, from: "pc"})
+        newMessage?.push(addmsg)
         setSelectUser(newMessage)
         setInputChat("");
+    }
+    const insertMsg = (user:string, addmsg:DataMesssage)=>{
+        let dataUser:DataMesssage[]|undefined;
+        chatUser.map(ls => {
+            if (ls.user === user)
+                dataUser = ls.data;
+        })
+        if (dataUser !== undefined){
+            let newMessage = dataUser;
+            newMessage?.push(addmsg);
+        }
     }
 
     const navMenu = () => {
@@ -90,21 +137,40 @@ const Chat = () => {
 
     const addContact = () =>{
         //TODO check contact before add
+        
+        if (inputContact === " " || inputContact === "\n" || inputContact === ""){
+            return;
+        }
         const add = {id: uuid(), user: inputContact, mute:false, block: false, active: false, data:[]}
         setChatUser(chatUser => [...chatUser, add])
         setNotify({isOpen: true, message: 'User ' + inputContact + ' is add', type:'success'});
         setInputContact('')
     }
 	
+    const addContactUser = (user:string) =>{
+        //TODO check contact before add
+        const add = {id: uuid(), user: user, mute:false, block: false, active: false, data:[]}
+        setChatUser(chatUser => [...chatUser, add])
+        setNotify({isOpen: true, message: 'You get New message from ' + user, type:'info'});
+        setInputContact('')
+    }
     const addChannel = () =>{
         //TODO check contact before add
+        if (inputChannel === " " || inputChannel === "\n" || inputChannel === ""){
+            return;
+        }
         setNotify({isOpen: true, message: 'Channel ' + inputChannel + ' is add', type:'success'});
         setInputChannel('')
     }
 	return (
 		<React.Fragment>
 			<BackgroundAnimate name="contact"/>
-            <Header colorHome={Colors.MenuDisable} colorGame={Colors.MenuDisable} colorLeadBoard={Colors.MenuDisable} colorChat={Colors.MenuActive}/>
+            <Header colorHome={Colors.MenuDisable} 
+                    colorGame={Colors.MenuDisable} 
+                    colorLeadBoard={Colors.MenuDisable} 
+                    colorChat={Colors.MenuActive}
+                    notify={notify}
+                    setNotify={setNotify}/>
             <StyledContaite>
                 <StyledMenuSwitch>
                     <StyledMenuNav className={navActive} onClick={navMenu}>
@@ -172,11 +238,11 @@ const Chat = () => {
                 <StyledChat>
                     <StyledChatWindow>
                         <StyledChatTextArea>
-                            {selectUser?.map((data:DataMesssage) => (
-                                    <StyledChatPlace key={data.id} className={data.from === "pc" ? "send" : "receive"}>
+                            {/* {selectUser?.map((data:DataMesssage) => (
+                                    <StyledChatPlace key={data.id} className={data.from === localStorage.getItem("login") ? "send" : "receive"}>
                                         <StyledChatText>{data.message}</StyledChatText>
                                     </StyledChatPlace>
-                            ))}
+                            ))} */}
                             <div className='field' ref={endRef}/>
                         </StyledChatTextArea>
                         <StyledChatSendDiv className={selectUser ? "active" : "deactive"}>

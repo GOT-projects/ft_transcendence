@@ -22,7 +22,7 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
                  }}
          >
          <Alert severity={notify.type} onClose={handleClose} 
-                style={{transform: 'translateX(-100%)', borderRadius: '16px', transition: '0.6s'}}>
+                style={{transform: 'translateX(0)', borderRadius: '16px', transition: '0.6s'}}>
             {notify.message}
          </Alert>
       </Snackbar>

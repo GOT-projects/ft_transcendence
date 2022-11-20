@@ -8,6 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
     credentials: false,
+
     // origin: `http://z2r3p6.42lyon.fr:${ process.env.PORT }`,
   });
   app.use(cookieParser());

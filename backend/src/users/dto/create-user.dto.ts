@@ -1,5 +1,5 @@
 export class CreateUserDto {
-    idIntra!: number;
+    idIntra?: number;
     login!: string;
     username!: string;
     urlImg!: string;
