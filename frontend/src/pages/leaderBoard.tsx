@@ -6,6 +6,7 @@ import React from 'react'
 import { useState } from "react";
 import { StyledLead, StyledLeadTile, StyledSep, StyledTile, StyledLeadP, StyledLeadTileRank, Button } from "../components/Styles/StyledleaderBoard";
 import { ResultType } from "@remix-run/router/dist/utils";
+import { v4 as uuid } from 'uuid';
 
 const LeaderBoard = () => {
 	interface Ranks{
@@ -102,7 +103,7 @@ const LeaderBoard = () => {
 				</StyledLeadTileRank>
 				<>
 				{rank.map((rk: Ranks) => (
-					<StyledLeadTile color={Colors.Rank}>
+					<StyledLeadTile color={Colors.Rank} key={uuid()}>
 						<tr>
 						<StyledLeadP>{rk.rank}</StyledLeadP>
 						<StyledLeadP>
@@ -121,13 +122,11 @@ const LeaderBoard = () => {
   }); */}
 							</Button>
 								{clickedButton === rk.name
-								? `"${clickedButton}" \nscore: ${rk.games.forEach((ga: string, index: number) => 
-										(<li>
-											{ga.toString()}
-										</li>)
-										
-									)}`
-								: ""}
+								? <tr >{rk.games?.map((game) => (
+									<p key={uuid()}>{game}</p>
+								))}</tr>: <></>
+								}
+ 
 							{/* </Button>
 							<li>
 								{clickedButton === rk.name
