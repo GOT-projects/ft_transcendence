@@ -33,4 +33,12 @@ export class AppController {
         const jwt = req.headers.authorization.split(' ')[1];
         return await this.appService.changeUsername(jwt, username);
     }
+    
+    @Get('allLeaderBoard')
+    async allLeaderBoard(@Req() req: Request, @Body('username') username: string) {
+        if (!req?.headers?.authorization || !username)
+            throw new HttpException('No authorization header or no username', HttpStatus.BAD_REQUEST);
+        const jwt = req.headers.authorization.split(' ')[1];
+        return await this.appService.allLeaderBoard(jwt);
+    }
 }

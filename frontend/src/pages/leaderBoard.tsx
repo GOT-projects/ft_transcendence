@@ -9,30 +9,26 @@ import {InfoServer, NotifyInter} from "../components/interfaces"
 import {Notification} from "../components/Notify"
 import { v4 as uuid } from 'uuid';
 import { apiGet } from "../api/get";
+import { GOT } from "../types";
 
-
-
-
-
-const LeaderBoard = () => {
-    
-    const [tmppp, setTmpp] = useState<any>();
-
-    function test(user: string): boolean {
+function test(user: string, setTmpp: any): boolean {
     const responce = apiGet.getHistoric(localStorage.getItem("token_access") + "", user);
         responce.then((rep) => {
-        //console.log(rep);
-        
+        console.log(rep);
+        rep.data.parties[0] = {user1: "jmilhas", user2: "rcuminal", points1:45, points2:150}; //test
+        rep.data.parties[1] = {user1: "jmilhas", user2: "rcuminal", points1:45, points2:150}; //test
         setTmpp(rep.data.parties);
-    })
-    if (tmppp !== undefined){
-        tmppp.set({user1: "jo", user2: "romain", points1:45, points2:150});
-    }
+    }).catch(() => {setTmpp(); return false})
     return true
 }
 
 
+const LeaderBoard = () => {
+    
+    const [tmppp, setTmpp] = useState<GOT.Party[]>();
+
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
+
     interface Ranks{
         id: string,
         rank:number,
@@ -43,19 +39,20 @@ const LeaderBoard = () => {
     }
 
     const [rank] = useState<Ranks[]>([
-        {id:uuid(), rank: 1, name: "test1", wins: 302, lose: 102, games: ["2-0", "5-2"]},
+        {id:uuid(), rank: 1, name: "rcuminal", wins: 302, lose: 102, games: ["2-0", "5-2"]},
         {id:uuid(), rank: 2, name: "test2", wins: 302, lose: 102, games: ["2-1", "5-2"]},
-
     ]);
 
     const [clickedButton, setClickedButton] = useState('');
+
 	const buttonHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         const button: HTMLButtonElement = event.currentTarget;
-        setClickedButton(button.name);
+        if (test(button.name, setTmpp))
+            setClickedButton(button.name);
 	};
 
-
+// TESTER 'ALLLEADERBOARD'
 	return (
 
 		<React.Fragment>
@@ -85,10 +82,11 @@ const LeaderBoard = () => {
 						<StyledLeadP>
 							<Button onClick={buttonHandler} className="button" name={rk.name}>{rk.name}
 							</Button>
-                                {clickedButton === rk.name && test("rcuminal")
-                                    ? <tr >{tmppp?.map((game: string) => (
+                                {clickedButton === rk.name 
+                                
+                                    ? <tr >{ tmppp?.map((game: GOT.Party) => (
                                         <p key={uuid()}>
-                                            {game}
+                                            {game.user1 + " " + game.points1} - {game.points2 + " " + game.user2}
                                         </p>))}
                                     </tr>
                                     : <></>

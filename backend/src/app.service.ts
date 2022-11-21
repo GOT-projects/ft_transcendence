@@ -16,6 +16,21 @@ export class AppService {
         private readonly relUserService: RelUserService,
     ) {}
 
+    async allLeaderBoard(jwt: GOT.Token) {
+        try {
+            const data: jwtContent = await this.jwtService.verifyAsync(jwt);
+            const tmpUser: User[] = await this.userService.findAll();
+            const tmpStat = await this.gameService.getStatUser(data.userId);
+            const tmpNotif = await this.relUserService.getUsersWaiting(data.userId);
+            if (tmpUser === null)
+                throw new HttpException('No user', HttpStatus.BAD_REQUEST)
+            return tmpUser
+        } catch (error) {
+            throw new HttpException(error.message, error.status);
+        }
+    }
+
+
     async profil(jwt: GOT.Token) {
         try {
             const data: jwtContent = await this.jwtService.verifyAsync(jwt);
