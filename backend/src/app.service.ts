@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+import { Response } from "express";
 import { GOT } from "shared/types";
 import { UpdateUserDto } from "./database/dtos/user.dto";
 import { User } from "./database/entities/user.entity";
@@ -73,6 +74,32 @@ export class AppService {
             dto.username = username;
             const ret = this.userService.update(user.id, dto);
             return ret;
+        } catch (error) {
+            throw new HttpException(error.message, error.status);
+        }
+    }
+
+    async changeProfilImage(jwt: GOT.Token, file: Express.Multer.File) {
+        try {
+            const data: jwtContent = await this.jwtService.verifyAsync(jwt);
+            let user = await this.userService.findUnique(data.userId, data.userLogin);
+            if (!user)
+                throw new HttpException('Unauthorized User not found', HttpStatus.UNAUTHORIZED);
+            file.filename = user.login;
+            return file;
+        } catch (error) {
+            throw new HttpException(error.message, error.status);
+        }
+    }
+
+    
+    async getProfilImage(jwt: GOT.Token, file: string, res: Response) {
+        try {
+            const data: jwtContent = await this.jwtService.verifyAsync(jwt);
+            let user = await this.userService.findUnique(data.userId, data.userLogin);
+            if (!user)
+                throw new HttpException('Unauthorized User not found', HttpStatus.UNAUTHORIZED);
+            return res.sendFile(file, { root: './dest' });
         } catch (error) {
             throw new HttpException(error.message, error.status);
         }

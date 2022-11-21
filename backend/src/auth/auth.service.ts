@@ -85,6 +85,7 @@ export class AuthService {
 				access_token: jwt,
 				user:  user
 			};
+			console.log(jwt);
 			res.header('Authorization', `Bearer ${ jwt }`);
 			res.send(ret);
 		} catch (error) {

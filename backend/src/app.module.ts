@@ -4,12 +4,14 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
+import { multerModule } from './ressources';
 
 @Module({
   imports: [
     DatabaseModule,
     AuthModule,
-    jwtModule
+    jwtModule,
+    multerModule
   ],
   controllers: [AppController],
   providers: [
