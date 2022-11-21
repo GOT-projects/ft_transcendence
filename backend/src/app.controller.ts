@@ -4,7 +4,7 @@ import { AppService } from "./app.service";
 import { JWTGuard } from "./auth/guards/jwt.guard";
 
 @Controller()
-@UseGuards(JWTGuard)
+//@UseGuards(JWTGuard)
 export class AppController {
     constructor(
         private readonly appService: AppService,

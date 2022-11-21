@@ -12,7 +12,18 @@ const getAccess = async (token: string) => {
         headers: { Authorization: "Bearer " + token }})
 }
 
+const getProfil = async (token: string, user:string) => {
+	Axios.defaults.withCredentials = false;
+	return Axios.get(InfoServer.HttpServer + '/profil', {
+        headers: { Authorization: "Bearer " + token }})
+}
+
+const getHistoric = async (token: string, user:string) => {
+	Axios.defaults.withCredentials = false;
+	return Axios.get(InfoServer.HttpServer + '/profil/' + user, {
+        headers: { Authorization: "Bearer " + token }})
+}
 
 export const apiGet = {
-	getIntraUrl, getAccess
+	getIntraUrl, getAccess, getProfil, getHistoric
 }

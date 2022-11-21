@@ -12,8 +12,29 @@ import { io } from "socket.io-client";
 import { Request, Response } from 'express';
 import { InfoServer } from './interfaces';
 import { on } from 'stream';
+import { apiGet } from "../api/get";
+import { TiArrowMaximiseOutline } from 'react-icons/ti';
+import { accountService } from '../services/account.service';
+import { ResultType } from '@remix-run/router/dist/utils';
+
+// function delay(milliseconds : number) {
+//     return new Promise(resolve => setTimeout( resolve, milliseconds));
+// }
+// ( async() => { 
+//     console.log('Starting, will sleep for 5 secs now');
+//     await delay(5000);
+//     console.log('Normal code execution continues now');
+// })();
 
 //var socket = io(InfoServer.SocketServer);
+
+
+
+
+const responce = apiGet.getProfil(localStorage.getItem("token_access") + "", "rcuminal");
+responce.then((rep) => {
+//	console.log(rep);
+})
 
 async function useInterval(callback: any, delay: number) {
 	const savedCallback: any = useRef();
@@ -39,38 +60,56 @@ async function useInterval(callback: any, delay: number) {
 
 
 const MousePadLeft = () => {
-	
-	
-	
+
+	type test = {
+		table : HTMLElement | null,
+		p1 : HTMLElement | null,
+		baballe: HTMLElement | null
+	};
+
 	const [count, setCount] = useState(0);
 	const [tmp3, setTmp] = useState(0);
-	//const socket = useContext(SocketContext);
-	let sizeofball: number = 0;
 	const [y, setY] = useState(0);   // pos mouse
+
+
+	//const socket = useContext(SocketContext);
+
+	let sizeofball: number = 0;
+	var pos_prct: number = 0;
 	var mouseY;
 	var ballY;
 	var rectable;		// pour listen uniquement sur le jeu
 	var rectpad;
 	var rectball;
-	var tmp = 0;		// ntm js
-	var tmp2 = 0
-	var pos_prct: number = 0;
-	
-	//	test socket
-	
-	
-	
-	var table = document.getElementById('Table');
-	var p1 = document.getElementById("leftpad");
-	var baballe = document.getElementById("ball");
-	if(table && p1 && baballe) {
+	var tmp = 100;		// ntm js
+	var tmp2 = 0;
+	var table: any;
+	const demarre = () => {
+		return new Promise((resolve, reject) => {
+		var result: test = {table: null,  p1: null, baballe: null};
+
+
+		result.table = document.getElementById('Table');
+		result.baballe = document.getElementById('ball');
+		result.p1 = document.getElementById('leftpad');
 		
-		table.addEventListener("mousemove", (e) => {
+		if(result.table && result.p1 && result.baballe)
+			resolve(result);
+		else
+			reject();
+
+		})
+	}
+
+		demarre().then((result: any) => {
+			console.log(result);
+		table = result.table;
+		table.addEventListener("mousemove", (e: any) => {
 			setY(e.pageY );
 		});
 		rectable = table.getBoundingClientRect();
-		rectpad = p1.getBoundingClientRect();
-		rectball = baballe.getBoundingClientRect();
+		rectpad = result.p1.getBoundingClientRect();
+		rectball = result.baballe.getBoundingClientRect();
 		
 		tmp = y;
 		tmp -= rectable.top;
@@ -84,12 +123,36 @@ const MousePadLeft = () => {
 		}
 		if (tmp > rectable.height - rectpad.height)
 			tmp = rectable.height - rectpad.height;
+	})
+
+
+	// if(table && p1 && baballe) {
+		
+	// 	table.addEventListener("mousemove", (e) => {
+	// 		setY(e.pageY );
+	// 	});
+	// 	rectable = table.getBoundingClientRect();
+	// 	rectpad = p1.getBoundingClientRect();
+	// 	rectball = baballe.getBoundingClientRect();
+		
+	// 	tmp = y;
+	// 	tmp -= rectable.top;
+	// 	// pos en %
+	// 	pos_prct = tmp / rectable.height * 100;
+		
+	// 	sizeofball = rectpad.height/3;
+		
+	// 	if (tmp < rectpad.height){
+	// 		tmp = rectpad.height;
+	// 	}
+	// 	if (tmp > rectable.height - rectpad.height)
+	// 		tmp = rectable.height - rectpad.height;
 		
 		
 		
-	}
-	mouseY = tmp.toString();
-	ballY  = tmp2.toString(); 
+	// }
+	// mouseY = tmp.toString();
+	// ballY  = tmp2.toString(); 
 
 
 	

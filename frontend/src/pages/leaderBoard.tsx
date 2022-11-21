@@ -8,10 +8,30 @@ import { StyledLead, StyledLeadTile, StyledSep, StyledTile, StyledLeadP, StyledL
 import {InfoServer, NotifyInter} from "../components/interfaces"
 import {Notification} from "../components/Notify"
 import { v4 as uuid } from 'uuid';
+import { apiGet } from "../api/get";
+
+
 
 
 
 const LeaderBoard = () => {
+    
+    const [tmppp, setTmpp] = useState<any>();
+
+    function test(user: string): boolean {
+    const responce = apiGet.getHistoric(localStorage.getItem("token_access") + "", user);
+        responce.then((rep) => {
+        //console.log(rep);
+        
+        setTmpp(rep.data.parties);
+    })
+    if (tmppp !== undefined){
+        tmppp.set({user1: "jo", user2: "romain", points1:45, points2:150});
+    }
+    return true
+}
+
+
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
     interface Ranks{
         id: string,
@@ -21,25 +41,21 @@ const LeaderBoard = () => {
         lose:number,
         games:string[],
     }
+
     const [rank] = useState<Ranks[]>([
-      {id:uuid(), rank: 1, name: "test1", wins: 302, lose: 102, games: ["2-0", "5-2"]},
-      {id:uuid(), rank: 2, name: "test2", wins: 302, lose: 102, games: ["2-1", "5-2"]},
+        {id:uuid(), rank: 1, name: "test1", wins: 302, lose: 102, games: ["2-0", "5-2"]},
+        {id:uuid(), rank: 2, name: "test2", wins: 302, lose: 102, games: ["2-1", "5-2"]},
 
-   ]);
-   const [clickedButton, setClickedButton] = useState('');
+    ]);
 
+    const [clickedButton, setClickedButton] = useState('');
 	const buttonHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-
-    const button: HTMLButtonElement = event.currentTarget;
-    setClickedButton(button.name);
+        event.preventDefault();
+        const button: HTMLButtonElement = event.currentTarget;
+        setClickedButton(button.name);
 	};
 
-//    const showprofil = () => {
-// 		return (
-			
-// 		);
-//    }
+
 	return (
 
 		<React.Fragment>
@@ -67,34 +83,29 @@ const LeaderBoard = () => {
 						<tr>
 						<StyledLeadP>{rk.rank}</StyledLeadP>
 						<StyledLeadP>
-							
-						
 							<Button onClick={buttonHandler} className="button" name={rk.name}>{rk.name}
 							</Button>
-								{clickedButton === rk.name
-								? <tr >{rk.games?.map((game: string) => (
-									<p key={uuid()}>{game}</p>
-								))}</tr>: <></>
+                                {clickedButton === rk.name && test("rcuminal")
+                                    ? <tr >{tmppp?.map((game: string) => (
+                                        <p key={uuid()}>
+                                            {game}
+                                        </p>))}
+                                    </tr>
+                                    : <></>
 								}
- 
-							{/* </Button>
-							<li>
-								{clickedButton === rk.name
-								? `"${clickedButton}" \nscore: ${rk.games}`
-								: ""}
-							</li> */}
-    					
+                                {/* {clickedButton === rk.name
+                                ? <tr >{rk.games?.map((game: string) => (
+									<p key={uuid()}>
+                                        {game}
+                                    </p>))}
+                                </tr>
+                                : <></>
+								} */}
 						</StyledLeadP>
-						
 						<StyledLeadP>{rk.wins}</StyledLeadP>
 						<StyledLeadP>{rk.lose}</StyledLeadP>
 						</tr>
-					</StyledLeadTile>
-					// <StyleProfildupersonnage to={"/profil" + userenquestion} user={userenquestion} ></StyleProfildupersonnage>
-				)
-				)
-
-				}
+					</StyledLeadTile>))}
 				</>
 			</StyledLead>
 			<Footer/>
