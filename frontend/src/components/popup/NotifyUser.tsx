@@ -4,21 +4,15 @@ import { StyledMenuNotif, StyledMenuNotifButton, StyledMenuNotifButtonHover, Sty
 import {RiUserAddFill} from 'react-icons/ri';
 import {TiUserDelete} from 'react-icons/ti';
 import { v4 as uuid } from 'uuid';
+import { GOT } from '../../shared/types';
 interface IProps {
    setNotif: Dispatch<SetStateAction<boolean>>;
    notify: NotifyInter;
    setNotify: Dispatch<any>;
+   addFriend: GOT.User[] | undefined;
 }
 
 const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
-    const [waitingUser, setWaitingUser] = useState([
-        {id: uuid(), name: "bernard"},
-        {id: uuid(), name: "albert"},
-        {id: uuid(), name: "paul"},
-        {id: uuid(), name: "jean"},
-        {id: uuid(), name: "theo"},
-        {id: uuid(), name: "rip"},
-    ])
     const handleAdd = () =>{
         props.setNotify({isOpen: true, message: 'Add friend', type:'success'});
     }
@@ -31,13 +25,12 @@ const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
             animate={{x:0}}
             transition={{duration: 1}}
             exit={{x: 300, opacity: 0}}>
-                {waitingUser?.map((user) => (
-                    <StyledMenuNotifholder key={user.id}>
+                {props.addFriend?.map((user:GOT.User) => (
+                    <StyledMenuNotifholder key={uuid()}>
                         <div>
                         <StyledMenuNotifContentUser>
-                            <StyledMenuNotifUser>{user.name}</StyledMenuNotifUser>
+                            <StyledMenuNotifUser>{user.username}</StyledMenuNotifUser>
                         </StyledMenuNotifContentUser>
-
                         </div>
                         <StyledMenuNotifButton>
                             <StyledMenuNotifButtonHover>

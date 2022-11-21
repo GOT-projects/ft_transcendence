@@ -6,10 +6,15 @@ import {Colors} from "../components/Colors"
 import MousePadLeft from '../components/LeftPad';
 import {NotifyInter} from "../components/interfaces"
 import {Notification} from "../components/Notify"
+import { GOT } from '../shared/types';
+import { apiSet } from '../api/get';
 
 
 const Game = () => {
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
+    const [profile, setProfil] = useState<GOT.Profile>();
+
+    apiSet.setProfil(profile, setProfil);
 	return (
 		<React.Fragment>
 			<BackgroundAnimate name="game"/>
@@ -18,8 +23,10 @@ const Game = () => {
                     colorLeadBoard={Colors.MenuDisable} 
                     colorChat={Colors.MenuDisable}
                     notify={notify}
-                    setNotify={setNotify}/>
-					<MousePadLeft />
+                    setNotify={setNotify}
+                    profile={profile}
+                    />
+					<MousePadLeft/>
             <Notification notify={notify} setNotify={setNotify}/>
 			<Footer/>
 		</React.Fragment>

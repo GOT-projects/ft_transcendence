@@ -7,14 +7,16 @@ import {NotifyInter} from "../components/interfaces"
 import { Colors } from "./Colors";
 import PopupNotifUser from "./popup/NotifyUser";
 import PopupListFriends from "./popup/FriendLst";
+import { GOT } from '../../../shared/types';
 
 interface IProps {
-   notify: NotifyInter;
-   setNotify: Dispatch<any>;
-   colorHome:string;
-   colorGame:string;
-   colorLeadBoard:string;
-   colorChat:string;
+    notify: NotifyInter;
+    setNotify: Dispatch<any>;
+    colorHome:string;
+    colorGame:string;
+    colorLeadBoard:string;
+    colorChat:string;
+    profile: GOT.Profile | undefined;
 }
 
 const Header:FunctionComponent<IProps> = (props:IProps)=> {
@@ -22,9 +24,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
     const [friendList, setFriendList] = useState(false);
     const [notifMenu, setNotifMenu] = useState(false);
     const [profileMenu, setProfileMenu] = useState(false);
-    const [notif, setNotif] = useState(true);
-
-    const profileImg = accountService.getUrlImg();
+    const [notif, setNotif] = useState(false);
     //respond menu
     const [active, setActive] = useState("UnActiveMenu");
 
@@ -39,7 +39,6 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
     useEffect(() => {
         window.addEventListener("scroll", handleScroll)
     }, [handleScroll])
-
     const navMenu = () => {
         if (active === "ActiveMenu") {
             setActive("UnActiveMenu");
@@ -80,6 +79,9 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
             setFriendList(false);
         }
     }
+    if (props.profile?.notif.length !== undefined && props.profile.notif.length > 0){
+        setNotif(true);
+    }
 	return (
         <StyledHeader>
             <StyleMenusHeader className={active}>
@@ -91,23 +93,23 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                     {notif ? <IoIosNotifications size={"22px"} onClick={handleMenuNotif}/> : <IoMdNotificationsOff size={"22px"}/>}
                 </StyleMenuHeaderNotity>
                 <StyleHeaderUserList onClick={handleFriendList}/>
-                <StyleMenuHeaderProfil onClick={handleMenuProfil} profil={profileImg}/>        
+                <StyleMenuHeaderProfil onClick={handleMenuProfil} profil={localStorage.getItem("urlImg")}/>        
                 {profileMenu ? <ProfileMenu notify={props.notify} setNotify={props.setNotify}/> : <></>}
-                {notifMenu ? <PopupNotifUser notify={props.notify} setNotify={props.setNotify} setNotif={setNotif}/> : <></>}
+                {notifMenu ? <PopupNotifUser notify={props.notify} setNotify={props.setNotify} setNotif={setNotif} addFriend={props.profile?.notif}/> : <></>}
                 </StyleMenusHeader>
             <StyleNav>
                 <StyleMenuHeaderNotityResp colorIcon={notif ? Colors.NotifActive : Colors.NotifUnactive}>
                     {notif ? <IoIosNotifications size={"22px"} onClick={handleMenuNotif}/> : <IoMdNotificationsOff size={"22px"}/>}
                 </StyleMenuHeaderNotityResp>
                 <StyleHeaderUserListResp onClick={handleFriendList}/>
-                <StyleMenuHeaderProfilResp onClick={handleMenuProfil} profil={profileImg}/>        
+                <StyleMenuHeaderProfilResp onClick={handleMenuProfil} profil={localStorage.getItem("urlImg")}/>        
                 <StyleNavToggler onClick={navMenu} className={active}>
                     <StyleNavTogglerIcon className={active}></StyleNavTogglerIcon>
                     <StyleNavTogglerIcon className={active}></StyleNavTogglerIcon>
                     <StyleNavTogglerIcon className={active}></StyleNavTogglerIcon>
                 </StyleNavToggler>
                 {profileMenu ? <ProfileMenu notify={props.notify} setNotify={props.setNotify}/> : <></>}
-                {notifMenu ? <PopupNotifUser notify={props.notify} setNotify={props.setNotify} setNotif={setNotif}/> : <></>}
+                {notifMenu ? <PopupNotifUser notify={props.notify} setNotify={props.setNotify} setNotif={setNotif} addFriend={props.profile?.notif}/> : <></>}
                 {friendList ? <PopupListFriends setFriendList={setFriendList}/> : <></>}
             </StyleNav>
         </StyledHeader>

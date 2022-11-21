@@ -15,8 +15,11 @@ import {Notification} from "../components/Notify"
 import { v4 as uuid } from 'uuid';
 // import { SocketContext, useSocket } from '../socket/socketPovider';
 import { Socket } from 'socket.io-client';
+import { GOT } from '../shared/types';
+import { apiGet, apiSet } from '../api/get';
 
 const Chat = () => {
+    const [profile, setProfile] = useState<GOT.Profile>();
 	const url = window.location.href;
 	let params = (new URL(url)).searchParams;
     //const socket = useContext(SocketContext);
@@ -44,6 +47,7 @@ const Chat = () => {
         {id: uuid(), message: "super et toi?", from: "waxdred"},
     ]}
     ]);
+    apiSet.setProfil(profile, setProfile)
 
     //open chat user when is select by friendList
     if (!!params.get("code")){
@@ -170,7 +174,9 @@ const Chat = () => {
                     colorLeadBoard={Colors.MenuDisable} 
                     colorChat={Colors.MenuActive}
                     notify={notify}
-                    setNotify={setNotify}/>
+                    setNotify={setNotify}
+                    profile={profile}
+                    />
             <StyledContaite>
                 <StyledMenuSwitch>
                     <StyledMenuNav className={navActive} onClick={navMenu}>

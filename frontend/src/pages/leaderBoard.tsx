@@ -8,10 +8,13 @@ import { StyledLead, StyledLeadTile, StyledSep, StyledTile, StyledLeadP, StyledL
 import {InfoServer, NotifyInter} from "../components/interfaces"
 import {Notification} from "../components/Notify"
 import { v4 as uuid } from 'uuid';
+import { apiSet } from "../api/get";
+import { GOT } from '../shared/types';
 
 
 
 const LeaderBoard = () => {
+    const [profile, setProfile] = useState<GOT.Profile>();
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
     interface Ranks{
         id: string,
@@ -27,6 +30,7 @@ const LeaderBoard = () => {
 
    ]);
    const [clickedButton, setClickedButton] = useState('');
+    apiSet.setProfil(profile, setProfile);
 
 	const buttonHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -35,11 +39,6 @@ const LeaderBoard = () => {
     setClickedButton(button.name);
 	};
 
-//    const showprofil = () => {
-// 		return (
-			
-// 		);
-//    }
 	return (
 
 		<React.Fragment>
@@ -49,7 +48,9 @@ const LeaderBoard = () => {
                     colorLeadBoard={Colors.MenuActive} 
                     colorChat={Colors.MenuDisable}
                     notify={notify}
-                    setNotify={setNotify}/>
+                    setNotify={setNotify}
+                    profile={profile}
+                    />
 			<StyledLead>
 				<StyledTile>LeaderBoard</StyledTile>
 				<StyledSep/>
