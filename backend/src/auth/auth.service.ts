@@ -81,12 +81,10 @@ export class AuthService {
 				userId: user.id,
 				userLogin: user.login,
 			});
-			let ret: GOT.Login = new GOT.Login();
-			ret.access_token = jwt,
-			ret.user =  user;
-			if (!(ret instanceof GOT.Login))
-				throw new HttpException('Problem of type: Connect auth', HttpStatus.CONFLICT);
-            console.info("Jwt gen: ", ret);
+			const ret: GOT.Login = {
+				access_token: jwt,
+				user:  user
+			};
 			res.header('Authorization', `Bearer ${ jwt }`);
 			res.send(ret);
 		} catch (error) {

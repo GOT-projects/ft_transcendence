@@ -56,6 +56,7 @@ services:
       - front
     volumes:
       - ./backend/src:/usr/src/app/src
+      - ./shared:/usr/src/app/shared
 
   web:
     # names
@@ -77,8 +78,9 @@ services:
     networks:
       - front
     volumes:
-      - ./frontend/src:/usr/src/app/src
-      - ./frontend/public:/usr/src/app/public
+      - ./frontend/src:/usr/src/app/frontend/src
+      - ./frontend/public:/usr/src/app/frontend/public
+      - ./shared:/usr/src/app/shared
 
   # pgadmin:
   #   image: dpage/pgadmin4

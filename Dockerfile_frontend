@@ -1,16 +1,15 @@
 FROM node:latest
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src/app/frontend
 
 COPY --chown=node:node ./frontend/package.json	./
 COPY --chown=node:node ./frontend/tsconfig.json	./
 
 RUN yarn install
 
-VOLUME [ "/usr/src/app/src" ]
-VOLUME [ "/usr/src/app/public" ]
-
-COPY --chown=node:node ./shared ./shared
+VOLUME [ "/usr/src/app/frontend/src" ]
+VOLUME [ "/usr/src/app/frontend/public" ]
+VOLUME [ "/usr/src/app/shared" ]
 
 EXPOSE 80
 

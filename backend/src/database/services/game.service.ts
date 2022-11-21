@@ -61,10 +61,11 @@ export class GameService {
         const games = await this.getGamesOf(userId);
         const ranks = await this.getRanks();
         const max = await this.userService.countAll();
-        let stats = new GOT.StatUser();
-        stats.defeat = 0;
-        stats.victory = 0;
-        stats.rank = -1;
+        let stats: GOT.StatUser = {
+            defeat: 0,
+            victory: 0,
+            rank: -1
+        };
         ranks.find((o, i) => {if (o.id === userId) {stats.rank = i + 1; return true}});
         if (games !== null) {
             games.forEach( (game) => {

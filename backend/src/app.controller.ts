@@ -1,4 +1,4 @@
-import { Controller, Get, HttpException, HttpStatus, Param, Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Req, UseGuards } from "@nestjs/common";
 import { Request } from "express";
 import { AppService } from "./app.service";
 import { JWTGuard } from "./auth/guards/jwt.guard";
@@ -10,7 +10,7 @@ export class AppController {
         private readonly appService: AppService,
     ) {}
 
-    @Get('/profil')
+    @Get('profil')
     async profil(@Req() req: Request) {
         if (!req?.headers?.authorization)
             throw new HttpException('No authorization header', HttpStatus.BAD_REQUEST);
@@ -18,11 +18,19 @@ export class AppController {
         return await this.appService.profil(jwt);
     }
 
-    @Get('/profil/:login')
+    @Get('profil/:login')
     async profilLogin(@Req() req: Request, @Param('login') login: string) {
         if (!req?.headers?.authorization || !login)
             throw new HttpException('No authorization header or no login', HttpStatus.BAD_REQUEST);
         const jwt = req.headers.authorization.split(' ')[1];
         return await this.appService.profilLogin(jwt, login);
+    }
+
+    @Get('change_username')
+    async changeUsername(@Req() req: Request, @Body('username') username: string) {
+        if (!req?.headers?.authorization || !username)
+            throw new HttpException('No authorization header or no username', HttpStatus.BAD_REQUEST);
+        const jwt = req.headers.authorization.split(' ')[1];
+        return await this.appService.changeUsername(jwt, username);
     }
 }

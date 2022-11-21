@@ -14,10 +14,9 @@ COPY --chown=node:node  ./backend/.prettierrc   ./
 
 RUN npm i
 
-COPY --chown=node:node ./shared ./shared
-
 RUN mkdir dist
 
+VOLUME [ "/usr/src/app/shared" ]
 VOLUME [ "/usr/src/app/src" ]
 
 CMD npm run start:dev
