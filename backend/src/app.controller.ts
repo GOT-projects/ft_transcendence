@@ -1,11 +1,11 @@
-import { Body, Controller, Get, HttpException, HttpStatus, MaxFileSizeValidator, Param, ParseFilePipe, Post, Req, Res, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Get, HttpException, HttpStatus, MaxFileSizeValidator, Param, ParseFilePipe, Patch, Post, Put, Req, Res, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Request, Response } from "express";
 import { AppService } from "./app.service";
 import { JWTGuard } from "./auth/guards/jwt.guard";
 
 @Controller()
-//@UseGuards(JWTGuard)
+@UseGuards(JWTGuard)
 export class AppController {
     constructor(
         private readonly appService: AppService,
@@ -27,7 +27,15 @@ export class AppController {
         return await this.appService.profilLogin(jwt, login);
     }
 
-    @Get('change_username')
+    @Get('leaderboard')
+    async leaderboard(@Req() req: Request) {
+        if (!req?.headers?.authorization)
+            throw new HttpException('No authorization header', HttpStatus.BAD_REQUEST);
+        const jwt = req.headers.authorization.split(' ')[1];
+        return await this.appService.leaderboard(jwt);
+    }
+
+    @Patch('change_username')
     async changeUsername(@Req() req: Request, @Body('username') username: string) {
         if (!req?.headers?.authorization || !username)
             throw new HttpException('No authorization header or no username', HttpStatus.BAD_REQUEST);
@@ -35,7 +43,7 @@ export class AppController {
         return await this.appService.changeUsername(jwt, username);
     }
 
-    @Post('change_image')
+    @Put('change_image')
     @UseInterceptors(FileInterceptor('file'))
     async changeProfileImage(@Req() req: Request, @UploadedFile(
         new ParseFilePipe({

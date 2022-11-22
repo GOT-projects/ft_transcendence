@@ -21,18 +21,18 @@ export class AppService {
         try {
             const data: jwtContent = await this.jwtService.verifyAsync(jwt);
             const tmpUser: User | null = await this.userService.findUnique(data.userId, data.userLogin);
-            const tmpStat = await this.gameService.getStatUser(data.userId);
-            const tmpNotif = await this.relUserService.getUsersWaiting(data.userId);
+            const tmpStat = this.gameService.getStatUser(data.userId);
+            const tmpNotif = this.relUserService.getUsersWaiting(data.userId);
             if (tmpUser === null)
-                throw new HttpException('No user', HttpStatus.BAD_REQUEST)
+                return null;
             const ret: GOT.Profile = {
                 userInfos: tmpUser,
-                stat: tmpStat,
-                notif: tmpNotif
+                stat: await tmpStat,
+                notif: await tmpNotif
             }
             return ret;
         } catch (error) {
-            throw new HttpException(error.message, error.status);
+            return null;
         }
     }
 
@@ -57,6 +57,51 @@ export class AppService {
                 userInfos: tmpUser,
                 stat: tmpStat,
                 parties: parties
+            }
+            return ret;
+        } catch (error) {
+            throw new HttpException(error.message, error.status);
+        }
+    }
+
+    async leaderboard(jwt: GOT.Token) {
+        try {
+            await this.jwtService.verifyAsync(jwt);
+            const ranks = await this.gameService.getRanks();
+            let users = await this.userService.findAll();
+            let ret: GOT.LeaderBoard = [];
+            for (let i = 0; i < ranks.length; i++) {
+                const rank = ranks[i];
+                for (let j = 0; j < users.length; j++) {
+                    const user = users[j];
+                    if (user.id === rank.id) {
+                        const games = await this.gameService.getInGamesOf(user.id);
+                        ret.push({
+                            userInfos: user,
+                            stat: {
+                                victory: rank.val,
+                                defeat: rank.lose,
+                                rank: i + 1
+                            },
+                            inGame: (games[0] ? games[0].id : undefined)
+                        });
+                        users.splice(j, 1);
+                        break;
+                    }
+                }
+            }
+            let i = ret.length + 1;
+            for (let j = 0; j < users.length; j++) {
+                const user = users[j];
+                ret.push({
+                    userInfos: user,
+                    stat: {
+                        victory: 0,
+                        defeat: 0,
+                        rank: i++
+                    },
+                    inGame: undefined
+                });
             }
             return ret;
         } catch (error) {
@@ -99,7 +144,7 @@ export class AppService {
             let user = await this.userService.findUnique(data.userId, data.userLogin);
             if (!user)
                 throw new HttpException('Unauthorized User not found', HttpStatus.UNAUTHORIZED);
-            return res.sendFile(file, { root: './dest' });
+            return res.sendFile(file, { root: './images' });
         } catch (error) {
             throw new HttpException(error.message, error.status);
         }

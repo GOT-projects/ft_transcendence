@@ -4,7 +4,7 @@ import { MulterModule } from "@nestjs/platform-express";
 export const multerModule = MulterModule.registerAsync({
     imports: [ConfigModule], 
     useFactory: async (configService: ConfigService) => ({
-        dest: './dest'
+        dest: './images'
       }),
       inject: [ConfigService],
 });

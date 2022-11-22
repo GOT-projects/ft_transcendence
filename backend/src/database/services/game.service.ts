@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { GOT } from "shared/types";
 import { Repository } from "typeorm";
 import { Game } from "../entities/game.entity";
-import { Rank } from "../types/game.types";
+import { gameStatus, Rank } from "../types/game.types";
 import { UserService } from "./user.service";
 
 @Injectable()
@@ -18,6 +18,15 @@ export class GameService {
             where: [
                 { user1Id: userId },
                 { user2Id: userId }
+            ]
+        });
+    }
+
+    async getInGamesOf(userId: number) {
+        return await this.gameRepository.find({
+            where: [
+                { user1Id: userId , status: gameStatus.IN_PROGRESS},
+                { user2Id: userId , status: gameStatus.IN_PROGRESS}
             ]
         });
     }
@@ -71,7 +80,7 @@ export class GameService {
             }
         });
         return ranks.sort(function(a,b) {
-            return a.val - b.val;
+            return (a.val - a.lose) - (b.val - b.lose);
         });
     }
 
