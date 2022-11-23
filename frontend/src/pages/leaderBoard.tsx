@@ -15,8 +15,7 @@ function test(user: string, setTmpp: any): boolean {
     const responce = apiGet.getHistoric(localStorage.getItem("token_access") + "", user);
         responce.then((rep) => {
         console.log(rep);
-        rep.data.parties[0] = {user1: "jmilhas", user2: "rcuminal", points1:45, points2:150}; //test
-        rep.data.parties[1] = {user1: "jmilhas", user2: "rcuminal", points1:45, points2:150}; //test
+
         setTmpp(rep.data.parties);
     }).catch(() => {setTmpp(); return false})
     return true

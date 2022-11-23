@@ -13,7 +13,7 @@ import { UserListPrivate, DataMesssage } from '../components/interfaces';
 import {NotifyInter} from "../components/interfaces"
 import {Notification} from "../components/Notify"
 import { v4 as uuid } from 'uuid';
-// import { SocketContext, useSocket } from '../socket/socketPovider';
+ import { SocketContext, useSocket } from '../socket/socketPovider';
 import { Socket } from 'socket.io-client';
 
 const Chat = () => {

@@ -16,6 +16,7 @@ import { apiGet } from "../api/get";
 import { TiArrowMaximiseOutline } from 'react-icons/ti';
 import { accountService } from '../services/account.service';
 import { ResultType } from '@remix-run/router/dist/utils';
+import { SocketContext, useSocket } from '../socket/socketPovider';
 
 // function delay(milliseconds : number) {
 //     return new Promise(resolve => setTimeout( resolve, milliseconds));
@@ -26,7 +27,7 @@ import { ResultType } from '@remix-run/router/dist/utils';
 //     console.log('Normal code execution continues now');
 // })();
 
-//var socket = io(InfoServer.SocketServer);
+
 
 
 
@@ -58,58 +59,44 @@ async function useInterval(callback: any, delay: number) {
 }
 
 
-
 const MousePadLeft = () => {
-
-	type test = {
-		table : HTMLElement | null,
-		p1 : HTMLElement | null,
-		baballe: HTMLElement | null
-	};
+	const socket = useContext(SocketContext);
+	
+	//var socket = io(InfoServer.SocketServer);
+	// type test = {
+	// 	table : HTMLElement | null,
+	// 	p1 : HTMLElement | null,
+	// 	baballe: HTMLElement | null
+	// };
 
 	const [count, setCount] = useState(0);
 	const [tmp3, setTmp] = useState(0);
 	const [y, setY] = useState(0);   // pos mouse
 
 
-	//const socket = useContext(SocketContext);
 
 	let sizeofball: number = 0;
 	var pos_prct: number = 0;
-	var mouseY;
-	var ballY;
+	var mouseY: string;
+	var ballY: string;
 	var rectable;		// pour listen uniquement sur le jeu
 	var rectpad;
 	var rectball;
 	var tmp = 100;		// ntm js
 	var tmp2 = 0;
-	var table: any;
-	const demarre = () => {
-		return new Promise((resolve, reject) => {
-		var result: test = {table: null,  p1: null, baballe: null};
 
 
-		result.table = document.getElementById('Table');
-		result.baballe = document.getElementById('ball');
-		result.p1 = document.getElementById('leftpad');
+	var table = document.getElementById(".Table");
+	var p1 = document.querySelector(".leftpad");
+	var baballe = document.querySelector(".ball");
+	if(table && p1 && baballe) {
 		
-		if(result.table && result.p1 && result.baballe)
-			resolve(result);
-		else
-			reject();
-
-		})
-	}
-
-		demarre().then((result: any) => {
-			console.log(result);
-		table = result.table;
-		table.addEventListener("mousemove", (e: any) => {
+		table.addEventListener("mousemove", (e) => {
 			setY(e.pageY );
 		});
 		rectable = table.getBoundingClientRect();
-		rectpad = result.p1.getBoundingClientRect();
-		rectball = result.baballe.getBoundingClientRect();
+		rectpad = p1.getBoundingClientRect();
+		rectball = baballe.getBoundingClientRect();
 		
 		tmp = y;
 		tmp -= rectable.top;
@@ -123,8 +110,94 @@ const MousePadLeft = () => {
 		}
 		if (tmp > rectable.height - rectpad.height)
 			tmp = rectable.height - rectpad.height;
-	})
+		
+		
+		
+	}
+	mouseY = tmp.toString();
+	ballY  = tmp2.toString(); 
 
+
+
+	console.log("==>" + y.toString());
+	
+	socket.on('onUpdate', (e) => {
+		console.log(e);
+		setTmp(e);
+	})
+	
+	useInterval(() => {
+		// socket.on("connect", () => {
+		// 	console.log(socket.connected); // true
+		// });
+		socket.emit('updatePlayer', { msg: "lol ca marche pas", from: 'rcuminal' });
+		// socket.off('onUpdate');
+		// socket.off('disconnect');
+		console.log(tmp3);
+		setCount(count + 1);
+	}, 1000);
+	
+	
+	
+
+	
+
+
+
+	// table = document.getElementById('Table');
+	
+	// if (table){
+	// 	table.addEventListener("mousemove", (e: any) => {
+	// 		setY(e.pageY );
+	// 	});
+	// }
+
+
+
+
+
+	// const demarre = () => {
+	// 	return new Promise((resolve, reject) => {
+	// 	var result: test = {table: null,  p1: null, baballe: null};
+
+
+	// 	result.table = document.getElementById('Table');
+	// 	result.baballe = document.getElementById('ball');
+	// 	result.p1 = document.getElementById('leftpad');
+	// 	console.log(result);
+	// 	if(result.table && result.p1 && result.baballe)
+	// 		resolve(result);
+	// 	else
+	// 		reject();
+
+	// 	})
+	// }
+
+	// 	demarre().then((result: any) => {
+	// 	table = result.table;
+	// 	table.addEventListener("mousemove", (e: any) => {
+	// 		setY(e.pageY );
+	// 	});
+	// 	rectable = table.getBoundingClientRect();
+	// 	rectpad = result.p1.getBoundingClientRect();
+	// 	rectball = result.baballe.getBoundingClientRect();
+		
+	// 	tmp = y;
+	// 	tmp -= rectable.top;
+	// 	// pos en %
+	// 	pos_prct = tmp / rectable.height * 100;
+		
+	// 	sizeofball = rectpad.height/3;
+		
+	// 	if (tmp < rectpad.height){
+	// 		tmp = rectpad.height;
+	// 	}
+	// 	if (tmp > rectable.height - rectpad.height)
+	// 		tmp = rectable.height - rectpad.height;
+	// }
+	// )
+
+	//demarre();
 
 	// if(table && p1 && baballe) {
 		
@@ -158,14 +231,14 @@ const MousePadLeft = () => {
 
 	
 	// socket.on('onUpdate', (e) => {
-	// 	setTmp(e);
+	// 	setTmp(e.msg);
 	// })
 	
 	// useInterval(() => {
-	// 	// socket.on("connect", () => {
-	// 	// 	console.log(socket.connected); // true
-	// 	//   });
 	// 	socket.emit('updatePlayer', { msg: "lol ca marche pas", from: 'rcuminal' });
+	// 	socket.on("connect", () => {
+	// 		console.log(socket.connected); // true
+	// 	  });
 	// 	// socket.off('onUpdate');
 	// 	// socket.off('disconnect');
 	// 	console.log(tmp3);
@@ -173,17 +246,17 @@ const MousePadLeft = () => {
 	// }, 1000);
 	
 	
-    // io  = require('socket.io').listen(app)
+//    io  = require('socket.io').listen(app)
 	
 
 	
-	// useInterval(() => {
-	// 	var socket = io.connect('http://localhost:3000');
-	// 	socket.emit("info",  {
-	// 		pos: pos_prct,
-	// 	});
+// 	useInterval(() => {
+// 		var socket = io.connect('http://localhost:3000');
+// 		socket.emit("info",  {
+// 			pos: pos_prct,
+// 		});
 		
-	// }, 50);
+// 	}, 50);
 
 
 	// socket.on("update 2nd player");
