@@ -11,38 +11,6 @@ export class AppController {
         private readonly appService: AppService,
     ) {}
 
-    @Get('profil')
-    async profil(@Req() req: Request) {
-        if (!req?.headers?.authorization)
-            throw new HttpException('No authorization header', HttpStatus.BAD_REQUEST);
-        const jwt = req.headers.authorization.split(' ')[1];
-        return await this.appService.profil(jwt);
-    }
-
-    @Get('profil/:login')
-    async profilLogin(@Req() req: Request, @Param('login') login: string) {
-        if (!req?.headers?.authorization || !login)
-            throw new HttpException('No authorization header or no login', HttpStatus.BAD_REQUEST);
-        const jwt = req.headers.authorization.split(' ')[1];
-        return await this.appService.profilLogin(jwt, login);
-    }
-
-    @Get('leaderboard')
-    async leaderboard(@Req() req: Request) {
-        if (!req?.headers?.authorization)
-            throw new HttpException('No authorization header', HttpStatus.BAD_REQUEST);
-        const jwt = req.headers.authorization.split(' ')[1];
-        return await this.appService.leaderboard(jwt);
-    }
-
-    @Patch('change_username')
-    async changeUsername(@Req() req: Request, @Body('username') username: string) {
-        if (!req?.headers?.authorization || !username)
-            throw new HttpException('No authorization header or no username', HttpStatus.BAD_REQUEST);
-        const jwt = req.headers.authorization.split(' ')[1];
-        return await this.appService.changeUsername(jwt, username);
-    }
-
     @Put('change_image')
     @UseInterceptors(FileInterceptor('file'))
     async changeProfileImage(@Req() req: Request, @UploadedFile(
