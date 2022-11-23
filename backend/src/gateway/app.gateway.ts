@@ -146,6 +146,15 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
     }
 
     async handleConnection(client: Socket, ...args: any[]) {
+        const auth = await this.connectUser(client);
+        if (!auth)
+            return ;
+        const login: string | undefined = this.getUser(client);
+        if (login === undefined)
+            this.users.set(auth.userLogin, [client.id]);
+        else {
+            this.users.get(auth.userLogin)?.push(client.id);
+        }
         this.logger.log(`Client connected: ${client.id}`);
     }
 }
