@@ -115,7 +115,7 @@ export namespace GOT {
      */
 
     /**
-     * Route: PATCH /change_image
+     * Route: PUT /change_image
      * @param: { ... } //TODO image
      * Front: Header (menu)
      */
@@ -160,9 +160,7 @@ export namespace GOT {
      *  WS: /get_leaderboard
      * Front: Leaderboard
      */
-    export interface LeaderBoard {
-        users: ProfileLeaderBoard[];
-    }
+    export type LeaderBoard = ProfileLeaderBoard[];
 
     /****************************************************/
     /**************** Clients to server *****************/

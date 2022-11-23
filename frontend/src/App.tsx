@@ -1,6 +1,6 @@
 import {BrowserRouter as Router} from 'react-router-dom'
 import MotionRoutes from "./components/motion"
- import { SocketContext, socket } from './socket/socketPovider';
+import { SocketContext, socket } from './socket/socketPovider';
 
 function App() {
   return ( 

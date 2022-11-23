@@ -6,4 +6,5 @@ export enum gameStatus {
 export interface Rank {
     id: number;
     val: number;
+    lose: number;
 }
