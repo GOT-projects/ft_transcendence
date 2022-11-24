@@ -51,7 +51,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
             const val = this.users.get(data.userLogin);
             if (!val) {
                 this.users.set(data.userLogin, [client.id]);
-                this.logger.log(`Client add ${data.userLogin}: ${client.id}`);
+                this.logger.verbose(`Client add ${data.userLogin}: ${client.id}`);
             }
             else if (val.indexOf(client.id) === -1) {
                 val.push(client.id);
@@ -75,7 +75,6 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
         }
     }
     
-    //@UseGuards(JWTGuardSocket)
     @SubscribeMessage('server_profil')
     async profil(@ConnectedSocket() client: Socket) {
         const auth = await this.connectUser(client);
@@ -89,7 +88,6 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
         client.emit('client_profil', await ret);
     }
 
-    //@UseGuards(JWTGuardSocket)
     @SubscribeMessage('server_profil_login')
     async profilLogin(@ConnectedSocket() client: Socket, @MessageBody('login') login: string) {
         const auth = await this.connectUser(client);
@@ -103,7 +101,6 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
         client.emit('client_profil_login', await ret);
     }
 
-    //@UseGuards(JWTGuardSocket)
     @SubscribeMessage('server_leaderboard')
     async leaderboard(@ConnectedSocket() client: Socket) {
         const auth = await this.connectUser(client);
@@ -135,6 +132,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
     }
 
     handleDisconnect(client: Socket) {
+        let status = true;
         this.users.forEach((ids, login) => {
             const i = ids.indexOf(client.id);
             if (i > -1) {
@@ -142,19 +140,21 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
                 if (ids.length === 0)
                     this.users.delete(login);
                 console.log(this.users);
-                this.logger.log(`Client disconnected ${login}: ${client.id}`);
-                return;
+                this.logger.verbose(`Client disconnected ${login}: ${client.id}`);
+                status = false;
+                return ;
             }
         });
-        this.logger.log(`Client disconnected anonymous: ${client.id}`);
+        if (status)
+            this.logger.verbose(`Client disconnected anonymous: ${client.id}`);
     }
 
     async handleConnection(client: Socket, ...args: any[]) {
         const auth = await this.connectUser(client);
         if (!auth) {
-            this.logger.log(`Client connected anonymous: ${client.id}`);
+            this.logger.verbose(`Client connected anonymous: ${client.id}`);
             return ;
         }
-        this.logger.log(`Client connected ${auth.userLogin}: ${client.id}`);
+        this.logger.verbose(`Client connected ${auth.userLogin}: ${client.id}`);
     }
 }

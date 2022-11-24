@@ -24,7 +24,10 @@ const Chat = () => {
     const [navActive, setNavActive] = useState("UnActiveMenu");
     const [chatSwitch, setChatSwitch] = useState<string>('private');
     const endRef = React.useRef<HTMLInputElement>(null);
-
+    socket.on('client_profil', (e) => {
+        console.log(e);
+    });
+    socket.emit('server_profil', "test");
     const [inputChat, setInputChat] = useState("");
     const [inputContact, setInputContact] = useState("");
     const [inputChannel, setInputChannel] = useState("");

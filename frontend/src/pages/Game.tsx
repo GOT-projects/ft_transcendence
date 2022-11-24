@@ -19,7 +19,7 @@ const Game = () => {
                     colorChat={Colors.MenuDisable}
                     notify={notify}
                     setNotify={setNotify}/>
-					<MousePadLeft />
+			<MousePadLeft />
             <Notification notify={notify} setNotify={setNotify}/>
 			<Footer/>
 		</React.Fragment>

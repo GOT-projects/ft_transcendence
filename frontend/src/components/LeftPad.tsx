@@ -132,7 +132,6 @@ const MousePadLeft = () => {
 	ballY  = tmp2.toString(); 
 
 	return (
-		<React.Fragment>
 			<StyledLeftPad id="Table">
 				<StyledHexaArea className='grid' x="0" y="0" w="0" h="0"/>
 				<StyledHexaAreaLight className='light' x="0px" y="0px" w="0px" h="0px"/>
@@ -140,7 +139,6 @@ const MousePadLeft = () => {
 				<StyledRightPadalias className="rightpad" y="0px"></StyledRightPadalias>
 				<StyledBallalias id="ball"  x="0px" y={ballY+"px"} rot="0px" size={sizeofball.toString()+"px"}></StyledBallalias>
 			</StyledLeftPad>
-		</React.Fragment>	
 		)
 }
 export default MousePadLeft;
