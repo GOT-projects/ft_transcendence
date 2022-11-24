@@ -49,11 +49,15 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
             }
             const data: jwtContent = await this.jwtService.verifyAsync(jwt);
             const val = this.users.get(data.userLogin);
-            if (!val)
+            if (!val) {
                 this.users.set(data.userLogin, [client.id]);
-            else
+                this.logger.log(`Client add ${data.userLogin}: ${client.id}`);
+            }
+            else if (val.indexOf(client.id) === -1) {
                 val.push(client.id);
-            console.log(this.users);
+                this.logger.log(`Client add ${data.userLogin}: ${client.id}`);
+            }
+            console.log('global', this.users);
             return data;         
         } catch (error) {
             const login: string | undefined = this.getUser(client);
@@ -124,7 +128,6 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
             return ;
         }
         this.server.emit('client_change_username', await ret);
-        //client.emit('client_change_username', await ret);
     }
 
     afterInit(server: Server) {
@@ -139,22 +142,19 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
                 if (ids.length === 0)
                     this.users.delete(login);
                 console.log(this.users);
-                this.logger.log(`Client disconnected: ${client.id}`);
+                this.logger.log(`Client disconnected ${login}: ${client.id}`);
                 return;
             }
         });
+        this.logger.log(`Client disconnected anonymous: ${client.id}`);
     }
 
     async handleConnection(client: Socket, ...args: any[]) {
         const auth = await this.connectUser(client);
-        if (!auth)
+        if (!auth) {
+            this.logger.log(`Client connected anonymous: ${client.id}`);
             return ;
-        const login: string | undefined = this.getUser(client);
-        if (login === undefined)
-            this.users.set(auth.userLogin, [client.id]);
-        else {
-            this.users.get(auth.userLogin)?.push(client.id);
         }
-        this.logger.log(`Client connected: ${client.id}`);
+        this.logger.log(`Client connected ${auth.userLogin}: ${client.id}`);
     }
 }
