@@ -18,24 +18,12 @@ import { accountService } from '../services/account.service';
 import { ResultType } from '@remix-run/router/dist/utils';
 import { SocketContext, useSocket } from '../socket/socketPovider';
 
-// function delay(milliseconds : number) {
-//     return new Promise(resolve => setTimeout( resolve, milliseconds));
-// }
-// ( async() => { 
-//     console.log('Starting, will sleep for 5 secs now');
-//     await delay(5000);
-//     console.log('Normal code execution continues now');
-// })();
-
-
-
-
-
-
 const responce = apiGet.getProfil(localStorage.getItem("token_access") + "", "rcuminal");
 responce.then((rep) => {
 //	console.log(rep);
-})
+});
+
+
 
 async function useInterval(callback: any, delay: number) {
 	const savedCallback: any = useRef();
@@ -59,7 +47,10 @@ async function useInterval(callback: any, delay: number) {
 }
 
 
+
+
 const MousePadLeft = () => {
+
 	const socket = useContext(SocketContext);
 	
 	//var socket = io(InfoServer.SocketServer);
@@ -68,6 +59,8 @@ const MousePadLeft = () => {
 	// 	p1 : HTMLElement | null,
 	// 	baballe: HTMLElement | null
 	// };
+
+
 
 	const [count, setCount] = useState(0);
 	const [tmp3, setTmp] = useState(0);
@@ -86,14 +79,35 @@ const MousePadLeft = () => {
 	var tmp2 = 0;
 
 
-	var table = document.getElementById(".Table");
-	var p1 = document.querySelector(".leftpad");
-	var baballe = document.querySelector(".ball");
+	var table = document.getElementById("Table");
+	var p1 = document.getElementById("leftpad");
+	var baballe = document.getElementById("ball");
+
+	socket.on('onUpdate', (e) => {
+		console.log(e);
+		setTmp(e);
+	})
+	
+	useInterval(() => {
+		// socket.on("connect", () => {
+		// 	console.log(socket.connected); // true
+		// });
+		socket.emit('updatePlayer', { msg: "lol ca marche pas", from: 'rcuminal' });
+		socket.off('onUpdate');
+		// socket.off('disconnect');
+		//console.log(tmp3);
+		setCount(count + 1);
+	}, 1000);
+
+
+	if (table){
+	table.addEventListener("mousemove", (e) => {
+		setY(e.pageY );
+		setCount(count + 1);
+	});}
+
 	if(table && p1 && baballe) {
 		
-		table.addEventListener("mousemove", (e) => {
-			setY(e.pageY );
-		});
 		rectable = table.getBoundingClientRect();
 		rectpad = p1.getBoundingClientRect();
 		rectball = baballe.getBoundingClientRect();
@@ -117,25 +131,22 @@ const MousePadLeft = () => {
 	mouseY = tmp.toString();
 	ballY  = tmp2.toString(); 
 
+	return (
+		<React.Fragment>
+			<StyledLeftPad id="Table">
+				<StyledHexaArea className='grid' x="0" y="0" w="0" h="0"/>
+				<StyledHexaAreaLight className='light' x="0px" y="0px" w="0px" h="0px"/>
+				<StyledLeftPad1alias id="leftpad" y={mouseY+"px"}></StyledLeftPad1alias>
+				<StyledRightPadalias className="rightpad" y="0px"></StyledRightPadalias>
+				<StyledBallalias id="ball"  x="0px" y={ballY+"px"} rot="0px" size={sizeofball.toString()+"px"}></StyledBallalias>
+			</StyledLeftPad>
+		</React.Fragment>	
+		)
+}
+export default MousePadLeft;
 
-
-	console.log("==>" + y.toString());
 	
-	socket.on('onUpdate', (e) => {
-		console.log(e);
-		setTmp(e);
-	})
 	
-	useInterval(() => {
-		// socket.on("connect", () => {
-		// 	console.log(socket.connected); // true
-		// });
-		socket.emit('updatePlayer', { msg: "lol ca marche pas", from: 'rcuminal' });
-		// socket.off('onUpdate');
-		// socket.off('disconnect');
-		console.log(tmp3);
-		setCount(count + 1);
-	}, 1000);
 	
 	
 	
@@ -262,19 +273,7 @@ const MousePadLeft = () => {
 	// socket.on("update 2nd player");
 	// socket.on("update ball");
 
-	return (
-		<React.Fragment>
-			<StyledLeftPad id="Table">
-				<StyledHexaArea className='grid' x="0" y="0" w="0" h="0"/>
-				<StyledHexaAreaLight className='light' x="0px" y="0px" w="0px" h="0px"/>
-				<StyledLeftPad1alias id="leftpad" y={mouseY+"px"}></StyledLeftPad1alias>
-				<StyledRightPadalias className="rightpad" y="0px"></StyledRightPadalias>
-				<StyledBallalias id="ball"  x="0px" y={ballY+"px"} rot="0px" size={sizeofball.toString()+"px"}></StyledBallalias>
-			</StyledLeftPad>
-		</React.Fragment>	
-		)
- }
-export default MousePadLeft;
+
 
 //40 64
 

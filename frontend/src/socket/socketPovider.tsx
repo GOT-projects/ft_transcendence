@@ -6,7 +6,7 @@ import { InfoServer } from "../components/interfaces";
 //init socket to server
 export const socket = io(InfoServer.SocketServer ,{withCredentials:false, extraHeaders: {
     "id": localStorage.getItem("login") + "",
-    "token": localStorage.getItem("token_access") + "",
+    "Authorization": "bearer " + localStorage.getItem("token_access"),
 }});
 
 export const SocketContext = createContext(socket);
