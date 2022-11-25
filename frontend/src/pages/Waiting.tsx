@@ -13,7 +13,6 @@ const Waiting = () => {
 	        response.then((response:any) => {
 	        	if(response.status === 201){
                     accountService.saveToken(response.data.access_token);
-                    accountService.getInfoUser(response.data.user);
                     window.location.href = '/game';
 	        	}
 	        }).catch((e) =>{

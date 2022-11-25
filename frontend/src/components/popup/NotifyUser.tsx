@@ -11,14 +11,7 @@ interface IProps {
 }
 
 const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
-    const [waitingUser, setWaitingUser] = useState([
-        {id: uuid(), name: "bernard"},
-        {id: uuid(), name: "albert"},
-        {id: uuid(), name: "paul"},
-        {id: uuid(), name: "jean"},
-        {id: uuid(), name: "theo"},
-        {id: uuid(), name: "rip"},
-    ])
+    const [waitingUser, setWaitingUser] = useState([props.notify])
     const handleAdd = () =>{
         props.setNotify({isOpen: true, message: 'Add friend', type:'success'});
     }
@@ -32,12 +25,11 @@ const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
             transition={{duration: 1}}
             exit={{x: 300, opacity: 0}}>
                 {waitingUser?.map((user) => (
-                    <StyledMenuNotifholder key={user.id}>
+                    <StyledMenuNotifholder key={uuid()}>
                         <div>
                         <StyledMenuNotifContentUser>
-                            <StyledMenuNotifUser>{user.name}</StyledMenuNotifUser>
+                            <StyledMenuNotifUser>{user.type}</StyledMenuNotifUser>
                         </StyledMenuNotifContentUser>
-
                         </div>
                         <StyledMenuNotifButton>
                             <StyledMenuNotifButtonHover>

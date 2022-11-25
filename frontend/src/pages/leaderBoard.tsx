@@ -2,7 +2,7 @@ import BackgroundAnimate from "../components/BackGroundAnimate";
 import Footer from "../components/Footer";
 import Header from "../components/Header"
 import {Colors} from "../components/Colors"
-import React from 'react'
+import React, { Dispatch, FunctionComponent } from 'react'
 import { useState } from "react";
 import { StyledLead, StyledLeadTile, StyledSep, StyledTile, StyledLeadP, StyledLeadTileRank, Button } from "../components/Styles/StyledleaderBoard";
 import {InfoServer, NotifyInter} from "../components/interfaces"
@@ -15,14 +15,18 @@ function test(user: string, setTmpp: any): boolean {
     const responce = apiGet.getHistoric(localStorage.getItem("token_access") + "", user);
         responce.then((rep) => {
         console.log(rep);
-
         setTmpp(rep.data.parties);
     }).catch(() => {setTmpp(); return false})
     return true
 }
 
 
-const LeaderBoard = () => {
+interface IProps {
+   profil: GOT.Profile | undefined;
+   setProfil: Dispatch<React.SetStateAction<GOT.Profile | undefined>> | undefined;
+}
+
+const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
     
     const [tmppp, setTmpp] = useState<GOT.Party[]>();
 
@@ -61,7 +65,10 @@ const LeaderBoard = () => {
                     colorLeadBoard={Colors.MenuActive} 
                     colorChat={Colors.MenuDisable}
                     notify={notify}
-                    setNotify={setNotify}/>
+                    setNotify={setNotify}
+                    profil={props.profil}
+                    setProfil={props.setProfil}
+                    />
 			<StyledLead>
 				<StyledTile>LeaderBoard</StyledTile>
 				<StyledSep/>

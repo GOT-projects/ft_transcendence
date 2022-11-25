@@ -1,5 +1,5 @@
 import {StyledHeader, StyleMenusHeader ,StyleMenuHeader, StyleNavToggler, StyleNavTogglerIcon, StyleMenuHeaderProfil , StyleMenuHeaderNotity, StyleNav, StyleMenuHeaderNotityResp, StyleMenuHeaderProfilResp, StyleHeaderUserList, StyleHeaderUserListResp} from "./Styles/StyledHeader"
-import {Dispatch, FunctionComponent, useState, useEffect, useCallback } from "react";
+import {Dispatch, FunctionComponent, useState, useEffect, useCallback, useContext } from "react";
 import { accountService } from "../services/account.service";
 import { IoIosNotifications, IoMdNotificationsOff } from 'react-icons/io';
 import ProfileMenu from "./MenuProfilHeader";
@@ -7,6 +7,8 @@ import {NotifyInter} from "../components/interfaces"
 import { Colors } from "./Colors";
 import PopupNotifUser from "./popup/NotifyUser";
 import PopupListFriends from "./popup/FriendLst";
+import { SocketContext } from "../socket/socketPovider";
+import { GOT } from "../types";
 
 interface IProps {
    notify: NotifyInter;
@@ -15,16 +17,38 @@ interface IProps {
    colorGame:string;
    colorLeadBoard:string;
    colorChat:string;
+   profil: GOT.Profile | undefined;
+   setProfil: Dispatch<React.SetStateAction<GOT.Profile | undefined>> | undefined;
 }
 
 const Header:FunctionComponent<IProps> = (props:IProps)=> {
+    //call socket; 
+    const socket = useContext(SocketContext);
     //boolean page open close
     const [friendList, setFriendList] = useState(false);
     const [notifMenu, setNotifMenu] = useState(false);
     const [profileMenu, setProfileMenu] = useState(false);
     const [notif, setNotif] = useState(true);
 
-    const profileImg = accountService.getUrlImg();
+
+    //Update info user all last data and Update if data are changed
+    useEffect(() => {
+        socket.on('client_profil', (rep:GOT.Profile) =>{
+            console.log("header:", rep);
+            if (rep && props.setProfil){
+                props.setProfil(rep);
+            }
+        })
+        return () => {
+            socket.off('client_profil');
+        }
+    }, [props.profil, socket])
+
+    //get profile info
+    useEffect(() => {
+        socket.emit('server_profil', "profil");
+    }, [socket]);
+
     //respond menu
     const [active, setActive] = useState("UnActiveMenu");
 
@@ -91,7 +115,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                     {notif ? <IoIosNotifications size={"22px"} onClick={handleMenuNotif}/> : <IoMdNotificationsOff size={"22px"}/>}
                 </StyleMenuHeaderNotity>
                 <StyleHeaderUserList onClick={handleFriendList}/>
-                <StyleMenuHeaderProfil onClick={handleMenuProfil} profil={profileImg}/>        
+                <StyleMenuHeaderProfil onClick={handleMenuProfil} profil={props.profil?.userInfos.urlImg}/>        
                 {profileMenu ? <ProfileMenu notify={props.notify} setNotify={props.setNotify}/> : <></>}
                 {notifMenu ? <PopupNotifUser notify={props.notify} setNotify={props.setNotify} setNotif={setNotif}/> : <></>}
                 </StyleMenusHeader>
@@ -100,7 +124,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                     {notif ? <IoIosNotifications size={"22px"} onClick={handleMenuNotif}/> : <IoMdNotificationsOff size={"22px"}/>}
                 </StyleMenuHeaderNotityResp>
                 <StyleHeaderUserListResp onClick={handleFriendList}/>
-                <StyleMenuHeaderProfilResp onClick={handleMenuProfil} profil={profileImg}/>        
+                <StyleMenuHeaderProfilResp onClick={handleMenuProfil} profil={props.profil?.userInfos.urlImg}/>        
                 <StyleNavToggler onClick={navMenu} className={active}>
                     <StyleNavTogglerIcon className={active}></StyleNavTogglerIcon>
                     <StyleNavTogglerIcon className={active}></StyleNavTogglerIcon>

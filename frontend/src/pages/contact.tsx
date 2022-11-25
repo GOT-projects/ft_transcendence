@@ -1,8 +1,8 @@
-import { StyledChat, StyledChatInput, StyledChatPrivAvatar, StyledChatPrive, StyledChatPrivName, StyledChatPlace, 
+    import { StyledChat, StyledChatInput, StyledChatPrivAvatar, StyledChatPrive, StyledChatPrivName, StyledChatPlace, 
 			StyledChatSendDiv, StyledChatSep, StyledChatSettingButton, StyledChatSwith, StyledChatSwithButton, StyledChatText, 
 			StyledChatWindow, StyledContact, StyledContaite, StyledSender, StyledUser, StyledChatTextArea, StyledMenuNav, StyledMenuDiv, 
 			StyledMenuSwitch, StyledAddInput, StyledAddInputdiv, StyledAddInputdivButton } from '../components/Styles/StyleChat';
-import React, {useContext, useEffect, useState } from 'react';
+import React, {Dispatch, FunctionComponent, useContext, useEffect, useState } from 'react';
 import BackgroundAnimate from '../components/BackGroundAnimate';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
@@ -15,19 +15,20 @@ import {Notification} from "../components/Notify"
 import { v4 as uuid } from 'uuid';
 import { SocketContext, useSocket } from '../socket/socketPovider';
 import { Socket } from 'socket.io-client';
+import { GOT } from '../types';
 
-const Chat = () => {
+interface IProps {
+   profil: GOT.Profile | undefined;
+   setProfil:Dispatch<React.SetStateAction<GOT.Profile | undefined>> | undefined;
+}
+
+const Chat:FunctionComponent<IProps> = (props:IProps)=> {
 	const url = window.location.href;
 	let params = (new URL(url)).searchParams;
-    const socket = useContext(SocketContext);
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
     const [navActive, setNavActive] = useState("UnActiveMenu");
     const [chatSwitch, setChatSwitch] = useState<string>('private');
     const endRef = React.useRef<HTMLInputElement>(null);
-    socket.on('client_profil', (e) => {
-        console.log(e);
-    });
-    socket.emit('server_profil', "test");
     const [inputChat, setInputChat] = useState("");
     const [inputContact, setInputContact] = useState("");
     const [inputChannel, setInputChannel] = useState("");
@@ -169,11 +170,15 @@ const Chat = () => {
 		<React.Fragment>
 			<BackgroundAnimate name="contact"/>
             <Header colorHome={Colors.MenuDisable} 
-                    colorGame={Colors.MenuDisable} 
+                    colorGame={Colors.MenuActive} 
                     colorLeadBoard={Colors.MenuDisable} 
-                    colorChat={Colors.MenuActive}
+                    colorChat={Colors.MenuDisable}
                     notify={notify}
-                    setNotify={setNotify}/>
+                    setNotify={setNotify}
+                    profil={props.profil}
+                    setProfil={props.setProfil}
+             />
+
             <StyledContaite>
                 <StyledMenuSwitch>
                     <StyledMenuNav className={navActive} onClick={navMenu}>
