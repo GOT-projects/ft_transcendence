@@ -133,8 +133,8 @@ const MousePadLeft = () => {
 
 	return (
 			<StyledLeftPad id="Table">
-				<StyledHexaArea className='grid' x="0" y="0" w="0" h="0"/>
-				<StyledHexaAreaLight className='light' x="0px" y="0px" w="0px" h="0px"/>
+				<StyledHexaArea className='grid'/>
+				<StyledHexaAreaLight className='light' x="0px" y="0px" />
 				<StyledLeftPad1alias id="leftpad" y={mouseY+"px"}></StyledLeftPad1alias>
 				<StyledRightPadalias className="rightpad" y="0px"></StyledRightPadalias>
 				<StyledBallalias id="ball"  x="0px" y={ballY+"px"} rot="0px" size={sizeofball.toString()+"px"}></StyledBallalias>

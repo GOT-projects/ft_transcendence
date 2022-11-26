@@ -19,12 +19,12 @@ function BackgroundAnimate(props:{name:string}){
     const sendW = w.toString() + "px";
     const sendH = h.toString() + "px";
 	return (
-        <StyledContainer w={sendW} h={sendH}>
+        <StyledContainer>
             <StyledGrid id="hex-grid">
-                <StyledHexaArea className='grid' x="0" y="0" w={sendW} h={sendH}/>
+                <StyledHexaArea className='grid'/>
 				{props.name === "game" ?
-					<StyledHexaAreaLight className='game' x={sendX} y={sendY} w={sendW} h={sendH}/> : 
-					<StyledHexaAreaLight className='light' x={sendX} y={sendY} w={sendW} h={sendH}/>}
+					<StyledHexaAreaLight className='game' x={sendX} y={sendY} /> : 
+					<StyledHexaAreaLight className='light' x={sendX} y={sendY} />}
             </StyledGrid>
         </StyledContainer>
 	)
