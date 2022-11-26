@@ -4,19 +4,21 @@ import { StyledMenuNotif, StyledMenuNotifButton, StyledMenuNotifButtonHover, Sty
 import {RiUserAddFill} from 'react-icons/ri';
 import {TiUserDelete} from 'react-icons/ti';
 import { v4 as uuid } from 'uuid';
+import { GOT } from '../../types';
+
 interface IProps {
    setNotif: Dispatch<SetStateAction<boolean>>;
    notify: NotifyInter;
    setNotify: Dispatch<any>;
+   profil: GOT.Profile | undefined;
 }
 
 const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
-    const [waitingUser, setWaitingUser] = useState([props.notify])
-    const handleAdd = () =>{
-        props.setNotify({isOpen: true, message: 'Add friend', type:'success'});
+    const handleAdd = (name: string) =>{
+        props.setNotify({isOpen: true, message: `Add ${name}`, type:'success'});
     }
-    const handleRemove = () =>{
-        props.setNotify({isOpen: true, message: 'Refused invitation', type:'success'});
+    const handleRemove = (name: string) =>{
+        props.setNotify({isOpen: true, message: `Refused invitation of ${name}`, type:'success'});
     }
     return(
         <StyledMenuNotif 
@@ -24,19 +26,19 @@ const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
             animate={{x:0}}
             transition={{duration: 1}}
             exit={{x: 300, opacity: 0}}>
-                {waitingUser?.map((user) => (
+                {props.profil?.notif.map((user) => (
                     <StyledMenuNotifholder key={uuid()}>
                         <div>
                         <StyledMenuNotifContentUser>
-                            <StyledMenuNotifUser>{user.type}</StyledMenuNotifUser>
+                            <StyledMenuNotifUser>{user.username}</StyledMenuNotifUser>
                         </StyledMenuNotifContentUser>
                         </div>
                         <StyledMenuNotifButton>
                             <StyledMenuNotifButtonHover>
-                                <RiUserAddFill size={"20px"} onClick={handleAdd}/>
+                                <RiUserAddFill size={"20px"} onClick={() => handleAdd(user.username)}/>
                             </StyledMenuNotifButtonHover>
                             <StyledMenuNotifButtonHover>
-                                <TiUserDelete size={"25px"} onClick={handleRemove}/>
+                                <TiUserDelete size={"25px"} onClick={() => handleRemove(user.username)}/>
                             </StyledMenuNotifButtonHover>
                         </StyledMenuNotifButton>
                 </StyledMenuNotifholder>

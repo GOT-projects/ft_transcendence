@@ -120,6 +120,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
         if (!auth) {
             return ;
         }
+        console.log("receive changeUsername")
         const ret = this.gatewayService.changeUsername(auth, username);
         if (ret === null) {
             return ;

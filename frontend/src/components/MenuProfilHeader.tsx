@@ -7,15 +7,16 @@ import { HiLogout  } from 'react-icons/hi';
 import PopupChangeUsername from "./popup/ChangeUserName";
 import {NotifyInter} from "../components/interfaces"
 import {Notification} from "../components/Notify"
+import { GOT } from '../types';
 
 interface IProps {
    notify: NotifyInter;
    setNotify: Dispatch<any>;
+   profil: GOT.Profile | undefined;
 }
 
 const ProfileMenu :FunctionComponent<IProps> = (props:IProps) => {
     const [changeUsername, setChangeUsername] = useState(false);
-    const [dataPlayer, setDataPlayer] = useState({id: uuid(), victory: 10, rank: 1});
     
     const handleChangeUsername = () => {
         if (changeUsername === true)
@@ -34,7 +35,7 @@ const ProfileMenu :FunctionComponent<IProps> = (props:IProps) => {
             <StyleMenuHeaderProfilOption>Avatar</StyleMenuHeaderProfilOption>
             <StyleMenuHeaderProfilOption>Add 2FA</StyleMenuHeaderProfilOption>
             <StyleMenuHeaderProfilData>
-                victory {dataPlayer.victory} rank {dataPlayer.rank}
+                victory {props.profil?.stat.victory} rank {props.profil?.stat.rank}
             </StyleMenuHeaderProfilData>
             <StyleMenuHeaderLoggout onClick={accountService.removeToken}>
                 <HiLogout size={"30px"}/>

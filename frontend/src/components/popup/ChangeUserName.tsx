@@ -14,16 +14,15 @@ const PopupChangeUsername:FunctionComponent<IProps> = (props:IProps) => {
     const [inputdata, setInputdata] = useState("");
 
     useEffect(() => {
-        socket.on('client_change_username', (rep: any ) => {
+        socket.off('client_change_username').on('client_change_username', (rep: any) => {
             console.log(rep);
             setInput("");
         })
-    }, [setInputdata])
+    }, [socket])
     
     const handleOk = () => {
         if (input === "")
             return;
-        console.log("emit server_change_username:", input);
         socket.emit("server_change_username", input);
         props.setChangeUsername(false);
         props.setNotify({isOpen: true, message: 'Change Username to ' + input , type:'success'});

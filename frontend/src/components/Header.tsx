@@ -28,8 +28,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
     const [friendList, setFriendList] = useState(false);
     const [notifMenu, setNotifMenu] = useState(false);
     const [profileMenu, setProfileMenu] = useState(false);
-    const [notif, setNotif] = useState(true);
-
+    const [notif, setNotif] = useState(false);
 
     //Update info user all last data and Update if data are changed
     useEffect(() => {
@@ -116,8 +115,15 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                 </StyleMenuHeaderNotity>
                 <StyleHeaderUserList onClick={handleFriendList}/>
                 <StyleMenuHeaderProfil onClick={handleMenuProfil} profil={props.profil?.userInfos.urlImg}/>        
-                {profileMenu ? <ProfileMenu notify={props.notify} setNotify={props.setNotify}/> : <></>}
-                {notifMenu ? <PopupNotifUser notify={props.notify} setNotify={props.setNotify} setNotif={setNotif}/> : <></>}
+                {profileMenu ? <ProfileMenu notify={props.notify} 
+                                            setNotify={props.setNotify} 
+                                            profil={props.profil}
+                                            /> : <></>}
+                {notifMenu ? <PopupNotifUser notify={props.notify} 
+                                             setNotify={props.setNotify} 
+                                             setNotif={setNotif}
+                                             profil={props.profil}
+                                             /> : <></>}
                 </StyleMenusHeader>
             <StyleNav>
                 <StyleMenuHeaderNotityResp colorIcon={notif ? Colors.NotifActive : Colors.NotifUnactive}>
@@ -130,8 +136,15 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                     <StyleNavTogglerIcon className={active}></StyleNavTogglerIcon>
                     <StyleNavTogglerIcon className={active}></StyleNavTogglerIcon>
                 </StyleNavToggler>
-                {profileMenu ? <ProfileMenu notify={props.notify} setNotify={props.setNotify}/> : <></>}
-                {notifMenu ? <PopupNotifUser notify={props.notify} setNotify={props.setNotify} setNotif={setNotif}/> : <></>}
+                {profileMenu ? <ProfileMenu notify={props.notify} 
+                                            setNotify={props.setNotify}
+                                            profil={props.profil}
+                                            /> : <></>}
+                {notifMenu ? <PopupNotifUser notify={props.notify} 
+                                             setNotify={props.setNotify} 
+                                             setNotif={setNotif}
+                                             profil={props.profil}
+                                             /> : <></>}
                 {friendList ? <PopupListFriends setFriendList={setFriendList}/> : <></>}
             </StyleNav>
         </StyledHeader>
