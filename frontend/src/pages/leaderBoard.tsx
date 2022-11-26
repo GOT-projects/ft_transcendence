@@ -11,10 +11,10 @@ import { v4 as uuid } from 'uuid';
 import { apiGet } from "../api/get";
 import { SocketContext } from "../socket/socketPovider";
 import { tmpdir } from "os";
-import React, { useContext, useState, useEffect, useRef } from 'react';
+import React, { useContext, useState, useEffect, useRef, FunctionComponent } from 'react';
 import { GOT } from "../shared/types";
 
-
+/*
 async function useInterval(callback: any, delay: number) {
 	const savedCallback: any = useRef();
 	
@@ -35,43 +35,40 @@ async function useInterval(callback: any, delay: number) {
 		}
 	}, [delay]);
 }
+*/
 
 
 
-
-const LeaderBoard = () => {
-    const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
-    
+const LeaderBoard= () => {
     const socket = useContext(SocketContext);
-    
+    const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
     const [tab, setTab] = useState<GOT.LeaderBoard>();
+    const [clickedButton, setClickedButton] = useState('');
+    const request = () => {
+        socket.emit("server_leaderboard", "leaderboard");
+    }
     
-
-    
-    socket.off("client_leaderboard");
-    
-    useEffect( () => {
+    useEffect(() => {
         socket.on("client_leaderboard", (e: GOT.LeaderBoard) => {
             console.log(e);
-            //if (tab === e)
-            setTab(e);
-        })
-    }, [tab])
+            if (e)
+                setTab(e);
+        });
+        return () => {
+            socket.off('client_leaderboard');
+        }
+    }, [tab]);
 
-    const [clickedButton, setClickedButton] = useState('');
     
 	const buttonHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         const button: HTMLButtonElement = event.currentTarget;
         setClickedButton(button.name);
 	};
-    
-    
-    
-    socket.emit("server_leaderboard", "test");
-    
-    
-    
+
+    if (!tab)
+        request();
+
 	return (
         
         <React.Fragment>
@@ -96,7 +93,6 @@ const LeaderBoard = () => {
 
 				{
                     tab?.map((usr: GOT.ProfileLeaderBoard) => (
-                        
                     <tr>
                         <Button onClick={buttonHandler} className="button" name={usr.userInfos.username}>{usr.userInfos.username}</Button>
                         <StyledLeadP>{usr.stat.rank}</StyledLeadP>
