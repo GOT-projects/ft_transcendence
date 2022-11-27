@@ -1,7 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
 import { GOT } from "shared/types";
-import { Socket } from "socket.io";
 import { UpdateUserDto } from "src/database/dtos/user.dto";
 import { User } from "src/database/entities/user.entity";
 import { GameService } from "src/database/services/game.service";
@@ -11,7 +9,6 @@ import { UserService } from "src/database/services/user.service";
 @Injectable()
 export class GatewayService {
     constructor(
-        private readonly jwtService: JwtService,
         private readonly userService: UserService,
         private readonly gameService: GameService,
         private readonly relUserService: RelUserService,
@@ -31,7 +28,7 @@ export class GatewayService {
             }
             return ret;
         } catch (error) {
-            return null;
+            return error.message;
         }
     }
 
@@ -58,7 +55,7 @@ export class GatewayService {
             }
             return ret;
         } catch (error) {
-            return null;
+            return error.message;
         }
     }
 
@@ -102,7 +99,7 @@ export class GatewayService {
             }
             return ret;
         } catch (error) {
-            return null;
+            return error.message;
         }
     }
 
@@ -116,7 +113,7 @@ export class GatewayService {
             const ret = this.userService.update(user.id, dto);
             return ret;
         } catch (error) {
-            return null;
+            return error.message;
         }
     }
 }

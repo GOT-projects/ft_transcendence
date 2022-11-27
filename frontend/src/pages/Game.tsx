@@ -7,7 +7,7 @@ import MousePadLeft from '../components/LeftPad';
 import {NotifyInter} from "../components/interfaces"
 import {Notification} from "../components/Notify"
 import { SocketContext } from '../socket/socketPovider';
-import { GOT } from '../types';
+import { GOT } from '../shared/types';
 
 interface IProps {
    profil: GOT.Profile | undefined;

@@ -7,7 +7,7 @@ import { HiLogout  } from 'react-icons/hi';
 import PopupChangeUsername from "./popup/ChangeUserName";
 import {NotifyInter} from "../components/interfaces"
 import {Notification} from "../components/Notify"
-import { GOT } from '../types';
+import { GOT } from '../shared/types';
 
 interface IProps {
    notify: NotifyInter;

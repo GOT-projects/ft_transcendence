@@ -1,8 +1,7 @@
-
-import {Dispatch, FunctionComponent, useState} from 'react';
+import {Dispatch, FunctionComponent, useContext, useEffect, useState} from 'react';
 import { v4 as uuid } from 'uuid';
-import { accountService } from '../../services/account.service';
-import { GOT } from '../../types';
+import { GOT } from '../../shared/types';
+import { SocketContext } from '../../socket/socketPovider';
 import { StyledMenuFriend, StyledMenuFriendContente, StyleMenuFriendUser, StyledMenuFriendImg, StyledMenuFriendImgContente, StyledMenuFriendStatus, StyledMenuFriendStatusBehind } from '../Styles/StyleFriendLst';
 
 interface IProps {
@@ -26,20 +25,24 @@ const StatusProfile:FunctionComponent<IProp> = (props:IProp)=> {
 }
 
 const PopupListFriends:FunctionComponent<IProps> = (props:IProps) => {
-    let imgUrl: string;
-    const [friends, setFriends] = useState([
-        {id: uuid(), name: "test", img: accountService.getUrlImg(), status:"online", inGame: false},
-        {id: uuid(), name: "Robert", img: accountService.getUrlImg(), status:"offline", inGame: true},
-        {id: uuid(), name: "Jean", img: accountService.getUrlImg(), status:"offline", inGame: false},
-        {id: uuid(), name: "aartiges", img: accountService.getUrlImg(), status:"offline", inGame: false},
-        {id: uuid(), name: "rcuminal", img: accountService.getUrlImg(), status:"offline", inGame: false},
-    ])
+    const socket = useContext(SocketContext);
+    const [friends, setFriends] = useState<GOT.User[]>()
+    useEffect(() => {
+        socket.on('client_friends', (rep:GOT.User[]) => {
+            console.log('client_friend', rep);
+            setFriends(rep);
+        })
+        return () => {
+            socket.off('client_friends');
+        } 
+    },[socket])
+
+    useEffect(() => {
+        socket.emit('server_friends', "");
+    }, [socket])
 
     const handleGotoMsg = (user:string) =>{
         window.location.href = '/chat?code=' + user;
-    }
-    if (props.profil?.userInfos.urlImg){
-        imgUrl = props.profil.userInfos.urlImg;
     }
     return (
         <StyledMenuFriend
@@ -49,9 +52,8 @@ const PopupListFriends:FunctionComponent<IProps> = (props:IProps) => {
             exit={{x: 300, opacity: 0}}>
             <StyledMenuFriendContente>
             {friends?.map((friend) => (
-                    <StyleMenuFriendUser key={friend.id} onClick={ () => handleGotoMsg(friend.name)}>
-                        <StatusProfile img={imgUrl} status={friend.status}></StatusProfile>
-                        <p>{friend.name}</p>
+                    <StyleMenuFriendUser key={uuid()} onClick={ () => handleGotoMsg(friend.username)}>
+                        <StatusProfile img={friend.urlImg} status={"online"}></StatusProfile>
                     </StyleMenuFriendUser>
             ))}
             </StyledMenuFriendContente>

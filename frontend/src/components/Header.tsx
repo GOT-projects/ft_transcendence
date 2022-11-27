@@ -8,7 +8,7 @@ import { Colors } from "./Colors";
 import PopupNotifUser from "./popup/NotifyUser";
 import PopupListFriends from "./popup/FriendLst";
 import { SocketContext } from "../socket/socketPovider";
-import { GOT } from "../types";
+import { GOT } from "../shared/types";
 
 interface IProps {
    notify: NotifyInter;
@@ -38,10 +38,22 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                 props.setProfil(rep);
             }
         })
+        socket.on('client_error', (rep:any) => {
+            console.log(rep);
+        })
+        socket.on('client_notif', (rep:any) =>{
+            console.log("client_notif:", rep);
+        })
         return () => {
             socket.off('client_profil');
+            socket.off('client_notif');
+            socket.off('client_error');
         }
     }, [props.profil, socket])
+    // get notify list;
+    useEffect(() => {
+        socket.emit('server_notif', "profil");
+    }, [socket]);
 
     //get profile info
     useEffect(() => {

@@ -15,7 +15,7 @@ import {Notification} from "../components/Notify"
 import { v4 as uuid } from 'uuid';
 import { SocketContext, useSocket } from '../socket/socketPovider';
 import { Socket } from 'socket.io-client';
-import { GOT } from '../types';
+import { GOT } from '../shared/types';
 
 interface IProps {
    profil: GOT.Profile | undefined;

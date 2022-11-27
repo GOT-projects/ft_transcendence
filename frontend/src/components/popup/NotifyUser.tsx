@@ -4,7 +4,7 @@ import { StyledMenuNotif, StyledMenuNotifButton, StyledMenuNotifButtonHover, Sty
 import {RiUserAddFill} from 'react-icons/ri';
 import {TiUserDelete} from 'react-icons/ti';
 import { v4 as uuid } from 'uuid';
-import { GOT } from '../../types';
+import { GOT } from '../../shared/types';
 
 interface IProps {
    setNotif: Dispatch<SetStateAction<boolean>>;

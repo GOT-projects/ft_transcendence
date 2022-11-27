@@ -9,8 +9,8 @@ import AuthGuard from '../Guard/AuthGuard'
 import Invite from '../pages/Invite'
 import { useContext, useEffect, useState } from 'react'
 import { SocketContext } from '../socket/socketPovider'
-import { GOT } from '../types'
 import LeaderBoard from '../pages/leaderBoard'
+import { GOT } from '../shared/types'
 
 const MotionRoutes = () => {
     const location = useLocation();
