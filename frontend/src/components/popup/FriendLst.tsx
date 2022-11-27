@@ -2,11 +2,14 @@
 import {Dispatch, FunctionComponent, useState} from 'react';
 import { v4 as uuid } from 'uuid';
 import { accountService } from '../../services/account.service';
+import { GOT } from '../../types';
 import { StyledMenuFriend, StyledMenuFriendContente, StyleMenuFriendUser, StyledMenuFriendImg, StyledMenuFriendImgContente, StyledMenuFriendStatus, StyledMenuFriendStatusBehind } from '../Styles/StyleFriendLst';
 
 interface IProps {
-   setFriendList: Dispatch<any>;
+    setFriendList: Dispatch<any>;
+    profil: GOT.Profile | undefined;
 }
+
 interface IProp {
     img: string,
     status: string,
@@ -23,6 +26,7 @@ const StatusProfile:FunctionComponent<IProp> = (props:IProp)=> {
 }
 
 const PopupListFriends:FunctionComponent<IProps> = (props:IProps) => {
+    let imgUrl: string;
     const [friends, setFriends] = useState([
         {id: uuid(), name: "test", img: accountService.getUrlImg(), status:"online", inGame: false},
         {id: uuid(), name: "Robert", img: accountService.getUrlImg(), status:"offline", inGame: true},
@@ -34,6 +38,9 @@ const PopupListFriends:FunctionComponent<IProps> = (props:IProps) => {
     const handleGotoMsg = (user:string) =>{
         window.location.href = '/chat?code=' + user;
     }
+    if (props.profil?.userInfos.urlImg){
+        imgUrl = props.profil.userInfos.urlImg;
+    }
     return (
         <StyledMenuFriend
             initial={{x: 300}}
@@ -43,7 +50,7 @@ const PopupListFriends:FunctionComponent<IProps> = (props:IProps) => {
             <StyledMenuFriendContente>
             {friends?.map((friend) => (
                     <StyleMenuFriendUser key={friend.id} onClick={ () => handleGotoMsg(friend.name)}>
-                        <StatusProfile img={accountService.getUrlImg()} status={friend.status}></StatusProfile>
+                        <StatusProfile img={imgUrl} status={friend.status}></StatusProfile>
                         <p>{friend.name}</p>
                     </StyleMenuFriendUser>
             ))}

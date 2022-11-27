@@ -145,7 +145,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                                              setNotif={setNotif}
                                              profil={props.profil}
                                              /> : <></>}
-                {friendList ? <PopupListFriends setFriendList={setFriendList}/> : <></>}
+                {friendList ? <PopupListFriends setFriendList={setFriendList} profil={props.profil}/> : <></>}
             </StyleNav>
         </StyledHeader>
 	)
