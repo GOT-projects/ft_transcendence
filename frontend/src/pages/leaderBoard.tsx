@@ -99,7 +99,7 @@ const LeaderBoard= () => {
                         <StyledLeadP>{usr.stat.victory}</StyledLeadP>
                         <StyledLeadP>{usr.stat.defeat}</StyledLeadP>
                     </tr>
-                ))
+                    ))
                 // rank.map((rk: Ranks) => (
                     // 	<StyledLeadTile color={Colors.Rank} key={uuid()}>
                     // 		<tr>

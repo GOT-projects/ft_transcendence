@@ -1,9 +1,10 @@
-import { Logger, UseGuards } from "@nestjs/common";
+import { Logger } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException, WsResponse } from "@nestjs/websockets";
+import { GOT } from "shared/types";
 import { Server, Socket } from "socket.io";
 import { AppService } from "src/app.service";
-import { JWTGuardSocket } from "../auth/guards/jwt.guard";
+import { FriendService } from "./friend.service";
 import { GatewayService } from "./gateway.service";
 
 //@UseGuards(JWTGuardSocket)
@@ -18,6 +19,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
         private readonly jwtService: JwtService,
         private readonly gatewayService: GatewayService,
         private readonly appService: AppService,
+        private readonly friendService: FriendService,
         ) {}
     @WebSocketServer() server: Server;
     private logger: Logger = new Logger('AppGateway');
@@ -71,6 +73,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
                     if (ids.length === 0)
                         this.users.delete(login);
             }
+            client.emit('error_client', error.message);
             return false;
         }
     }
@@ -81,11 +84,12 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
         if (!auth) {
             return ;
         }
-        const ret = this.gatewayService.profil(auth);
-        if (ret === null) {
+        const ret = await this.gatewayService.profil(auth);
+        if (typeof ret === 'string') {
+            client.emit('error_client', ret);
             return ;
         }
-        client.emit('client_profil', await ret);
+        client.emit('client_profil', ret);
     }
 
     @SubscribeMessage('server_profil_login')
@@ -94,11 +98,12 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
         if (!auth) {
             return ;
         }
-        const ret = this.gatewayService.profilLogin(login);
-        if (ret === null) {
+        const ret = await this.gatewayService.profilLogin(login);
+        if (typeof ret === 'string') {
+            client.emit('error_client', ret);
             return ;
         }
-        client.emit('client_profil_login', await ret);
+        client.emit('client_profil_login', ret);
     }
 
     @SubscribeMessage('server_leaderboard')
@@ -107,11 +112,12 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
         if (!auth) {
             return ;
         }
-        const ret = this.gatewayService.leaderboard();
-        if (ret === null) {
+        const ret = await this.gatewayService.leaderboard();
+        if (typeof ret === 'string') {
+            client.emit('error_client', ret);
             return ;
         }
-        client.emit('client_leaderboard', await ret);
+        client.emit('client_leaderboard', ret);
     }
 
     @SubscribeMessage('server_change_username')
@@ -120,11 +126,93 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
         if (!auth) {
             return ;
         }
-        const ret = this.gatewayService.changeUsername(auth, username);
-        if (ret === null) {
+        const ret = await this.gatewayService.changeUsername(auth, username);
+        if (typeof ret === 'string') {
+            client.emit('error_client', ret);
             return ;
         }
-        this.server.emit('client_change_username', await ret);
+        this.server.emit('client_change_username', ret);
+    }
+
+    @SubscribeMessage('server_demand_friend')
+    async demandFriend(@ConnectedSocket() client: Socket, @MessageBody('login') login: string) {
+        const auth = await this.connectUser(client);
+        if (!auth) {
+            return ;
+        }
+        const ret = await this.friendService.demandFriend(auth.userLogin, login);
+        if (typeof ret === 'string') {
+            client.emit('error_client', ret);
+            return ;
+        }
+        let userSockets = this.users.get(auth.userLogin);
+        if (userSockets) {
+            const tmpNotif = await this.friendService.getNotif(auth.userId);
+            if (typeof tmpNotif !== 'string')
+                this.server.to(userSockets).emit('client_notif', tmpNotif);
+            const tmpFriends = await this.friendService.getFriends(auth.userId);
+            if (typeof tmpFriends !== 'string')
+                this.server.to(userSockets).emit('client_friends', tmpFriends);
+        }
+        userSockets = this.users.get(login);
+        if (userSockets) {
+            const userId = ret.user1Id === auth.userId ? ret.user2Id : ret.user1Id;
+            const tmpNotif = await this.friendService.getNotif(userId);
+            if (typeof tmpNotif !== 'string')
+                this.server.to(userSockets).emit('client_notif', tmpNotif);
+            const tmpFriends = await this.friendService.getFriends(userId);
+            if (typeof tmpFriends !== 'string')
+                this.server.to(userSockets).emit('client_friends', tmpFriends);
+        }
+    }
+
+    @SubscribeMessage('server_reply_notification')
+    async replyNotif(@ConnectedSocket() client: Socket, @MessageBody() reply: GOT.NotifChoice) {
+        const auth = await this.connectUser(client);
+        if (!auth) {
+            return ;
+        }
+        const ret = await this.friendService.newFriendConfirmation(auth.userLogin, reply.user.login, reply.accept);
+        if (typeof ret === 'string') {
+            client.emit('error_client', ret);
+            const tmpNotif = await this.friendService.getNotif(auth.userId);
+            if (typeof tmpNotif !== 'string')
+                client.emit('client_notif', tmpNotif);
+            return ;
+        }
+        if (ret === false) {
+            client.emit('client_error', `Cannot add ${reply.user.username} as friend`);
+            return ;
+        }
+        let userSockets = this.users.get(auth.userLogin);
+        if (userSockets) {
+            const tmpNotif = await this.friendService.getNotif(auth.userId);
+            if (typeof tmpNotif !== 'string')
+                this.server.to(userSockets).emit('client_notif', tmpNotif);
+            const tmpFriends = await this.friendService.getFriends(auth.userId);
+            if (typeof tmpFriends !== 'string')
+                this.server.to(userSockets).emit('client_friends', tmpFriends);
+        }
+        userSockets = this.users.get(reply.user.login);
+        if (userSockets) {
+            const tmpFriends = await this.friendService.getFriends(reply.user.id);
+            if (typeof tmpFriends !== 'string')
+                this.server.to(userSockets).emit('client_friends', tmpFriends);
+        }
+    }
+
+    @SubscribeMessage('server_friends')
+    async getFriends(@ConnectedSocket() client: Socket) {
+        const auth = await this.connectUser(client);
+        if (!auth) {
+            return ;
+        }
+        const ret = await this.friendService.getFriends(auth.userId);
+        if (typeof ret === 'string') {
+            client.emit('error_client', ret);
+            return ;
+        }
+        client.emit('client_friends', ret);
     }
 
     afterInit(server: Server) {

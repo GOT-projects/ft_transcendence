@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
 import { multerModule } from './ressources';
 import { GatewayService } from './gateway/gateway.service';
+import { FriendService } from './gateway/friend.service';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { GatewayService } from './gateway/gateway.service';
   providers: [
     AppService,
     AppGateway,
-    GatewayService
+    GatewayService,
+    FriendService
   ],
 })
 export class AppModule {}
