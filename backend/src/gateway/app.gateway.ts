@@ -32,6 +32,20 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
         }
     }
 
+    private async getFriendsList(client: Socket, userId: number) {
+        let ret = await this.friendService.getFriends(userId);
+        console.log("ret server_friend", ret);
+        if (typeof ret === 'string') {
+            client.emit('error_client', ret);
+            return ;
+        }
+        ret.forEach(friend => {
+            if (this.users.get(friend.login) !== undefined)
+                friend.status = GOT.ProfileStatus.online;
+        });
+        return ret;
+    }
+
     private async connectUser(client: Socket) {
         try {
             const jwt = client.handshake.headers?.authorization?.split(' ')[1];
@@ -150,8 +164,8 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
             const tmpNotif = await this.friendService.getNotif(auth.userId);
             if (typeof tmpNotif !== 'string')
                 this.server.to(userSockets).emit('client_notif', tmpNotif);
-            const tmpFriends = await this.friendService.getFriends(auth.userId);
-            if (typeof tmpFriends !== 'string')
+            const tmpFriends = await this.getFriendsList(client, auth.userId);
+            if (tmpFriends !== undefined)
                 this.server.to(userSockets).emit('client_friends', tmpFriends);
         }
         userSockets = this.users.get(login);
@@ -160,8 +174,8 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
             const tmpNotif = await this.friendService.getNotif(userId);
             if (typeof tmpNotif !== 'string')
                 this.server.to(userSockets).emit('client_notif', tmpNotif);
-            const tmpFriends = await this.friendService.getFriends(userId);
-            if (typeof tmpFriends !== 'string')
+            const tmpFriends = await this.getFriendsList(client, userId);
+            if (tmpFriends !== undefined)
                 this.server.to(userSockets).emit('client_friends', tmpFriends);
         }
     }
@@ -189,14 +203,14 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
             const tmpNotif = await this.friendService.getNotif(auth.userId);
             if (typeof tmpNotif !== 'string')
                 this.server.to(userSockets).emit('client_notif', tmpNotif);
-            const tmpFriends = await this.friendService.getFriends(auth.userId);
-            if (typeof tmpFriends !== 'string')
+            const tmpFriends = await this.getFriendsList(client, auth.userId);
+            if (tmpFriends !== undefined)
                 this.server.to(userSockets).emit('client_friends', tmpFriends);
         }
         userSockets = this.users.get(reply.user.login);
         if (userSockets) {
-            const tmpFriends = await this.friendService.getFriends(reply.user.id);
-            if (typeof tmpFriends !== 'string')
+            const tmpFriends = await this.getFriendsList(client, reply.user.id);
+            if (tmpFriends !== undefined)
                 this.server.to(userSockets).emit('client_friends', tmpFriends);
         }
     }
@@ -208,13 +222,10 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
             return ;
         }
         //TODO je tu doit retourne Friend[] et pas User pour avoir les status online | offline des users
-        const ret = await this.friendService.getFriends(auth.userId);
+        const ret = await this.getFriendsList(client, auth.userId);
         console.log("ret server_friend", ret);
-        if (typeof ret === 'string') {
-            client.emit('error_client', ret);
-            return ;
-        }
-        client.emit('client_friends', ret);
+        if (ret !== undefined) 
+            client.emit('client_friends', ret);
     }
 
     afterInit(server: Server) {

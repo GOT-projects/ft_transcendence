@@ -1,6 +1,10 @@
 import { Injectable } from "@nestjs/common";
+import { userInfo } from "os";
+import { GOT } from "shared/types";
+import { Game } from "src/database/entities/game.entity";
 import { RelUser } from "src/database/entities/rel_user.entity";
 import { User } from "src/database/entities/user.entity";
+import { GameService } from "src/database/services/game.service";
 import { RelUserService } from "src/database/services/rel_user.service";
 import { UpdateResult } from "typeorm";
 
@@ -8,6 +12,7 @@ import { UpdateResult } from "typeorm";
 export class FriendService {
     constructor(
         private readonly relUserService: RelUserService,
+        private readonly gameService: GameService,
     ) {}
 
     async newFriendConfirmation(login: string, loginDemand: string, accept: boolean): Promise<false | UpdateResult | string> {
@@ -26,9 +31,26 @@ export class FriendService {
         }
     }
 
-    async getFriends(id: number): Promise<User[] | string> {
+    async getFriends(id: number): Promise<GOT.Friend[] | string> {
         try {
-            return await this.relUserService.getFriends(id);
+            const friends_user = await this.relUserService.getFriends(id);
+            let ret: GOT.Friend[] = [];
+            friends_user.forEach(async (user) => {
+                const inGame: Game[] = await this.gameService.getInGamesOf(user.id);
+                if (inGame.length > 0)
+                {
+                    ret.push({
+                        ...user,
+                        status: GOT.ProfileStatus.inGame
+                    });
+                } else {
+                    ret.push({
+                        ...user,
+                        status: GOT.ProfileStatus.offline
+                    });
+                }
+            });
+            return ret;
         } catch (error) {
             return error.message;
         }
