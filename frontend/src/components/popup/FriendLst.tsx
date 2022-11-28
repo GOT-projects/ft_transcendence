@@ -26,9 +26,16 @@ const StatusProfile:FunctionComponent<IProp> = (props:IProp)=> {
 
 const PopupListFriends:FunctionComponent<IProps> = (props:IProps) => {
     const socket = useContext(SocketContext);
-    const [friends, setFriends] = useState<GOT.User[]>()
+    const [friends, setFriends] = useState<GOT.Friend[]>()
+
+    //get erreur for notify
+    //TODO need fix problem add test return worng error
     useEffect(() => {
-        socket.on('client_friends', (rep:GOT.User[]) => {
+        socket.emit('server_demand_friend', {login: 'test'})
+    },[socket])
+
+    useEffect(() => {
+        socket.on('client_friends', (rep:GOT.Friend[]) => {
             console.log('client_friend', rep);
             setFriends(rep);
         })

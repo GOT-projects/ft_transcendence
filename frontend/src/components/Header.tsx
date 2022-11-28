@@ -1,6 +1,5 @@
 import {StyledHeader, StyleMenusHeader ,StyleMenuHeader, StyleNavToggler, StyleNavTogglerIcon, StyleMenuHeaderProfil , StyleMenuHeaderNotity, StyleNav, StyleMenuHeaderNotityResp, StyleMenuHeaderProfilResp, StyleHeaderUserList, StyleHeaderUserListResp} from "./Styles/StyledHeader"
 import {Dispatch, FunctionComponent, useState, useEffect, useCallback, useContext } from "react";
-import { accountService } from "../services/account.service";
 import { IoIosNotifications, IoMdNotificationsOff } from 'react-icons/io';
 import ProfileMenu from "./MenuProfilHeader";
 import {NotifyInter} from "../components/interfaces"
@@ -24,11 +23,24 @@ interface IProps {
 const Header:FunctionComponent<IProps> = (props:IProps)=> {
     //call socket; 
     const socket = useContext(SocketContext);
-    //boolean page open close
     const [friendList, setFriendList] = useState(false);
     const [notifMenu, setNotifMenu] = useState(false);
     const [profileMenu, setProfileMenu] = useState(false);
     const [notif, setNotif] = useState(false);
+
+    //Socket get erreur | notify add friend 
+    useEffect(() => {
+        socket.on('error_client', (rep:any) => {
+            props.setNotify({isOpen: true, message: `Error: ${rep}`, type:'error'});
+        })
+        socket.on('client_notif', (rep:any) => {
+            props.setNotify({isOpen: true, message: `Info: ${rep}`, type:'info'});
+        })
+        socket.on('client_friends', (rep:any) => {
+            // props.setNotify({isOpen: true, message: `Info: ${rep}`, type:'info'});
+            console.log("client friends", rep)
+        })
+    }, [socket])
 
     //Update info user all last data and Update if data are changed
     useEffect(() => {
@@ -38,18 +50,13 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                 props.setProfil(rep);
             }
         })
-        socket.on('client_error', (rep:any) => {
-            console.log(rep);
-        })
-        socket.on('client_notif', (rep:any) =>{
-            console.log("client_notif:", rep);
-        })
         return () => {
             socket.off('client_profil');
             socket.off('client_notif');
             socket.off('client_error');
         }
     }, [props.profil, socket])
+
     // get notify list;
     useEffect(() => {
         socket.emit('server_notif', "profil");

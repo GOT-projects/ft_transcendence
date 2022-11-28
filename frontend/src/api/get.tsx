@@ -12,7 +12,7 @@ const getAccess = async (token: string) => {
         headers: { Authorization: "Bearer " + token }})
 }
 
-const getProfil = async (token: string, user:string) => {
+const getProfil = async (token: string) => {
 	Axios.defaults.withCredentials = false;
 	return Axios.get(InfoServer.HttpServer + '/profil', {
         headers: { Authorization: "Bearer " + token }})

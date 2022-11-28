@@ -23,6 +23,7 @@ interface IProps {
 }
 
 const Chat:FunctionComponent<IProps> = (props:IProps)=> {
+    const socket = useContext(SocketContext)
 	const url = window.location.href;
 	let params = (new URL(url)).searchParams;
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
@@ -147,7 +148,8 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
         }
         const add = {id: uuid(), user: inputContact, mute:false, block: false, active: false, data:[]}
         setChatUser(chatUser => [...chatUser, add])
-        setNotify({isOpen: true, message: 'User ' + inputContact + ' is add', type:'success'});
+        socket.emit('server_demand_friend', {login: inputContact})
+        // setNotify({isOpen: true, message: 'User ' + inputContact + ' is add', type:'success'});
         setInputContact('')
     }
 	

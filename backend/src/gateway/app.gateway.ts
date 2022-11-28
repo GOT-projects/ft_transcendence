@@ -181,7 +181,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
             return ;
         }
         if (ret === false) {
-            client.emit('client_error', `Cannot add ${reply.user.username} as friend`);
+            client.emit('error_client', `Cannot add ${reply.user.username} as friend`);
             return ;
         }
         let userSockets = this.users.get(auth.userLogin);
@@ -207,7 +207,9 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
         if (!auth) {
             return ;
         }
+        //TODO je tu doit retourne Friend[] et pas User pour avoir les status online | offline des users
         const ret = await this.friendService.getFriends(auth.userId);
+        console.log("ret server_friend", ret);
         if (typeof ret === 'string') {
             client.emit('error_client', ret);
             return ;

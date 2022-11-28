@@ -18,12 +18,6 @@ import { accountService } from '../services/account.service';
 import { ResultType } from '@remix-run/router/dist/utils';
 import { SocketContext, useSocket } from '../socket/socketPovider';
 
-const responce = apiGet.getProfil(localStorage.getItem("token_access") + "", "rcuminal");
-responce.then((rep) => {
-//	console.log(rep);
-});
-
-
 
 async function useInterval(callback: any, delay: number) {
 	const savedCallback: any = useRef();
