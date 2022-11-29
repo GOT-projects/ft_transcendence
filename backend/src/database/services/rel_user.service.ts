@@ -43,6 +43,8 @@ export class RelUserService {
     }
 
     async newFriendConfirmation(login: string, loginDemand: string, accept: boolean) {
+        if (login === loginDemand)
+            throw {message: 'Same users seriously !!!'}
         const user1 = await this.userService.findLogin(loginDemand);
         const user2 = await this.userService.findLogin(login);
         if (!user1 || !user2)
@@ -66,6 +68,8 @@ export class RelUserService {
     }
 
     async demandFriend(login:string, loginDemand: string) {
+        if (login === loginDemand)
+            throw {message: 'Same users seriously !!!'}
         const user1 = await this.userService.findLogin(login);
         const user2 = await this.userService.findLogin(loginDemand);
         if (!user1 || !user2)
