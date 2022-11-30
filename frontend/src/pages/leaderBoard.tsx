@@ -37,17 +37,14 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
         return () => {
             socket.off('client_leaderboard');
         }
-    }, [tab]);
+    }, []);
     
 	const buttonHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         const button: HTMLButtonElement = event.currentTarget;
         setClickedButton(button.name);
 	};
-
-    if (!tab){
-        request();
-    }
+    request();
 
 	return (
         <React.Fragment>

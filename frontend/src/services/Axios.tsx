@@ -5,15 +5,20 @@ import { accountService } from "./account.service";
 const Axios = axios.create({
     baseURL: InfoServer.HttpServer,
     withCredentials: false,
+    headers: { Authorization: `Bearer`},
 })
 
-Axios.interceptors.request.use(request => {
-    if (accountService.isLogged()){
+
+Axios.interceptors.request.use(
+    request => {
         let token = accountService.getToken();
-        if (request.headers !== undefined && typeof token === "string")
+        if (request.headers){
             request.headers.Authorization = `Bearer ${token}`
-    }
-    return (request);
+        }
+        return (request);                        
+    }, (e) => {
+        return Promise.reject(e);
 })
+
 
 export default Axios

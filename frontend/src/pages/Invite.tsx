@@ -1,4 +1,4 @@
-import Axios from "axios";
+import Axios from "../services/Axios";
 import React from 'react';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -24,7 +24,7 @@ const Invite = () => {
 	}
     const PostConnectInvite = async (login:string ) => {
         Axios.defaults.withCredentials = false;
-        return await (Axios.post(InfoServer.HttpServer + '/auth/invite', { login: login}))
+        return await (Axios.post('/auth/invite', { login: login}))
     }
     const send = () => {
         //TODO send to db by socket

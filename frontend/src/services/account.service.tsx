@@ -33,7 +33,7 @@ let isLogged = () => {
     let token = localStorage.getItem('token_access')
     if (!!token){
         try {
-			const response = apiGet.getAccess(token);
+			const response = apiGet.getAccess();
 			response.then((rep:any) => {
                 if (rep.status === 200){
                     saveAccess("true");
@@ -57,7 +57,7 @@ let isLogged = () => {
 
 let getToken = () => {
     let token= localStorage.getItem('token_access');
-    if (!!token)
+    if (token === null)
         return ("");
     return (token);
 

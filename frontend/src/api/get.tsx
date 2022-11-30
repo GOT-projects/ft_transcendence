@@ -10,11 +10,11 @@ const getAccess = async () => {
 }
 
 const getProfil = async () => {
-	return Axios.get(InfoServer.HttpServer + '/profil')
+	return Axios.get('/profil')
 }
 
 const getHistoric = async (user:string) => {
-	return Axios.get(InfoServer.HttpServer + '/profil/' + user)
+	return Axios.get('/profil/' + user)
 }
 
 export const apiGet = {
