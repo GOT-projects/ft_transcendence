@@ -30,18 +30,31 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
 
     //Socket get erreur | notify add friend 
     useEffect(() => {
+        console.log("useEffect");
         socket.on('error_client', (rep:any) => {
             props.setNotify({isOpen: true, message: `Error: ${rep}`, type:'error'});
-        })
-        socket.on('client_notif', (rep:any) => {
-            props.setNotify({isOpen: true, message: `Info: ${rep}`, type:'info'});
         })
         socket.on('client_friends', (rep:any) => {
             // props.setNotify({isOpen: true, message: `Info: ${rep}`, type:'info'});
             console.log("client friends", rep)
         })
     }, [socket])
+    //Socket get erreur | notify add friend 
+    useEffect(() => {
+        console.log("useEffect1");
+        socket.on('client_notif', (rep:any) => {
+            console.log("get client notif", rep)
+            props.setNotify({isOpen: true, message: `Info: ${rep}`, type:'info'});
+        })
+    }, [socket])
 
+    useEffect(() => {
+        console.log("useEffect2");
+        socket.on('client_friends', (rep:any) => {
+            props.setNotify({isOpen: true, message: `Info: ${rep}`, type:'info'});
+            console.log("client friends", rep)
+        })
+    }, [socket])
     //Update info user all last data and Update if data are changed
     useEffect(() => {
         socket.on('client_profil', (rep:GOT.Profile) =>{

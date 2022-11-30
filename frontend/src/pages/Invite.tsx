@@ -1,6 +1,7 @@
 import Axios from "axios";
 import React from 'react';
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import BackgroundAnimate from "../components/BackGroundAnimate";
 import { Colors } from "../components/Colors";
 import Footer from "../components/Footer";
@@ -15,6 +16,7 @@ import { accountService } from "../services/account.service";
 const Invite = () => {
     const [infoUser, setInfoUser] = useState<UsersId>();
     const [inputChat, setInputChat] = useState("");
+    let navigate = useNavigate();
     function handChange(event: any, setInput: any, input: string){
         if (input === "" && event.target.value ==="\n")
             return;
@@ -34,7 +36,7 @@ const Invite = () => {
 	    response.then((response:any) => {
 	    	if(response.status === 201){
                 accountService.saveToken(response.data.access_token);
-                window.location.href = '/game';
+                navigate('/game');
 	    	}
 	    }).catch((e) =>{
             console.log(e);

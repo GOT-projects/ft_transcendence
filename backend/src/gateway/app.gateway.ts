@@ -190,6 +190,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
         if (typeof ret === 'string') {
             client.emit('error_client', ret);
             const tmpNotif = await this.friendService.getNotif(auth.userId);
+            console.log("tmpNotif", tmpNotif);
             if (typeof tmpNotif !== 'string')
                 client.emit('client_notif', tmpNotif);
             return ;
@@ -201,15 +202,19 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
         let userSockets = this.users.get(auth.userLogin);
         if (userSockets) {
             const tmpNotif = await this.friendService.getNotif(auth.userId);
+            console.log("tmpNotif", tmpNotif);
             if (typeof tmpNotif !== 'string')
                 this.server.to(userSockets).emit('client_notif', tmpNotif);
             const tmpFriends = await this.getFriendsList(client, auth.userId);
+            console.log("tmpFriends", tmpFriends);
+            if (typeof tmpNotif !== 'string')
             if (tmpFriends !== undefined)
                 this.server.to(userSockets).emit('client_friends', tmpFriends);
         }
         userSockets = this.users.get(reply.user.login);
         if (userSockets) {
             const tmpFriends = await this.getFriendsList(client, reply.user.id);
+            console.log("tmpFriends", tmpFriends);
             if (tmpFriends !== undefined)
                 this.server.to(userSockets).emit('client_friends', tmpFriends);
         }

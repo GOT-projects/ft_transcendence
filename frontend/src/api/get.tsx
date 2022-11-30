@@ -1,27 +1,20 @@
-import Axios from "axios"
+import Axios from "../services/Axios"
 import {InfoServer} from "../components/interfaces"
 
 const getIntraUrl = async () => {
-	Axios.defaults.withCredentials = false;
-	return (Axios.get(InfoServer.HttpServer + '/auth/get_intra_url'))
+	return (Axios.get('/auth/get_intra_url'))
 }
 
-const getAccess = async (token: string) => {
-	Axios.defaults.withCredentials = false;
-	return Axios.get(InfoServer.HttpServer + '/auth/access', {
-        headers: { Authorization: "Bearer " + token }})
+const getAccess = async () => {
+	return Axios.get('/auth/access');
 }
 
-const getProfil = async (token: string) => {
-	Axios.defaults.withCredentials = false;
-	return Axios.get(InfoServer.HttpServer + '/profil', {
-        headers: { Authorization: "Bearer " + token }})
+const getProfil = async () => {
+	return Axios.get(InfoServer.HttpServer + '/profil')
 }
 
-const getHistoric = async (token: string, user:string) => {
-	Axios.defaults.withCredentials = false;
-	return Axios.get(InfoServer.HttpServer + '/profil/' + user, {
-        headers: { Authorization: "Bearer " + token }})
+const getHistoric = async (user:string) => {
+	return Axios.get(InfoServer.HttpServer + '/profil/' + user)
 }
 
 export const apiGet = {

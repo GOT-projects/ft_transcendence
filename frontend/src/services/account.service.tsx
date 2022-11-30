@@ -17,31 +17,8 @@ let removeAccess= () => {
 }
 
 let removeUser= () => {
-    localStorage.removeItem('login')
-    localStorage.removeItem('urlImg')
     localStorage.removeItem('access')
 }
-let getInfoUser = (data: UsersId) => {
-    let infoUser:UsersId = {
-        id: data.id,
-        idIntra: data.idIntra,
-        login: data.login,
-        urlImg: data.urlImg,
-        username: data.username,
-        wallet: data.wallet,
-    };
-    localStorage.setItem("login", infoUser.login);
-    localStorage.setItem("urlImg", infoUser.urlImg);
-    return  infoUser;
-}
-
-let getUrlImg = () => {
-    let ret = localStorage.getItem("urlImg")
-    if (ret === null)
-        return ("");
-    return ret;
-}
-
 
 let removeToken= () => {
     document.cookie = `token_access=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
@@ -78,6 +55,14 @@ let isLogged = () => {
     return access;
 }
 
+let getToken = () => {
+    let token= localStorage.getItem('token_access');
+    if (!!token)
+        return ("");
+    return (token);
+
+}
+
 export const accountService = {
-    saveToken, removeToken, isLogged, getInfoUser, getUrlImg
+    saveToken, removeToken, isLogged, getToken
 }
