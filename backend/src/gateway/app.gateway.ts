@@ -167,7 +167,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
             const tmpFriends = await this.getFriendsList(client, auth.userId);
             if (tmpFriends !== undefined)
                 this.server.to(userSockets).emit('client_friends', tmpFriends);
-        }
+        }/*
         userSockets = this.users.get(login);
         if (userSockets) {
             const userId = ret.user1Id === auth.userId ? ret.user2Id : ret.user1Id;
@@ -177,7 +177,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
             const tmpFriends = await this.getFriendsList(client, userId);
             if (tmpFriends !== undefined)
                 this.server.to(userSockets).emit('client_friends', tmpFriends);
-        }
+        }*/
     }
 
     @SubscribeMessage('server_reply_notification')
