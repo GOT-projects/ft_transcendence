@@ -24,9 +24,10 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
     const [tab, setTab] = useState<GOT.LeaderBoard>();
     const [clickedButton, setClickedButton] = useState('');
-    const request = () => {
+
+    useEffect(() => {
         socket.emit("server_leaderboard", "leaderboard");
-    }
+    }, [socket])
     
     useEffect(() => {
         socket.on("client_leaderboard", (e: GOT.LeaderBoard) => {
@@ -37,14 +38,13 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
         return () => {
             socket.off('client_leaderboard');
         }
-    }, []);
+    }, [tab]);
     
 	const buttonHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         const button: HTMLButtonElement = event.currentTarget;
         setClickedButton(button.name);
 	};
-    request();
 
 	return (
         <React.Fragment>
@@ -72,7 +72,7 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 
 				{
                     tab?.map((usr: GOT.ProfileLeaderBoard) => (
-                    <tr>
+                    <tr key={uuid()}>
                         <Button onClick={buttonHandler} className="button" name={usr.userInfos.username}>{usr.userInfos.username}</Button>
                         <StyledLeadP>{usr.stat.rank}</StyledLeadP>
                         <StyledLeadP>{usr.stat.victory}</StyledLeadP>

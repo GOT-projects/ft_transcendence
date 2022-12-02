@@ -51,7 +51,6 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                     socket.emit('server_profil', "profil");
                     notif = true;
                 }else{
-                    notif = false;
                     setNotifMenu(false);
                 }
             }

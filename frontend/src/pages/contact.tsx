@@ -29,6 +29,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
     const [navActive, setNavActive] = useState("UnActiveMenu");
     const [chatSwitch, setChatSwitch] = useState<string>('private');
+    const [selectFriend, setSelectFriend] = useState<string>('');
     const endRef = React.useRef<HTMLInputElement>(null);
     const [inputChat, setInputChat] = useState("");
     const [inputContact, setInputContact] = useState("");
@@ -39,7 +40,6 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
 
     useEffect(() => {
         socket.on('client_friends', (rep:GOT.Friend[]) => {
-            console.log('client_friend', rep);
             setFriends(rep);
         })
         return () => {
@@ -50,7 +50,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     useEffect(() => {
         socket.emit('server_friends', "");
     }, [socket])
-    console.log(friends)
+
     //open chat user when is select by friendList
     // if (!!params.get("code")){
     //     const username = params.get("code")
@@ -75,17 +75,10 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
             setInputChat("");
             return;
         }
-        const addmsg:DataMesssage = {
-            id: uuid(),
-            message: inputChat,
-            from: localStorage.getItem("login") + "",
-        }
         console.log("Message Emit")
-        let newMessage = selectUser;
-        newMessage?.push(addmsg)
-        setSelectUser(newMessage)
         setInputChat("");
     }
+
     const insertMsg = (user:string, addmsg:DataMesssage)=>{
         let dataUser:DataMesssage[]|undefined;
     }
@@ -97,8 +90,6 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     }
 
     const addContact = () =>{
-        //TODO check contact before add
-        
         if (inputContact === " " || inputContact === "\n" || inputContact === ""){
             return;
         }
@@ -114,6 +105,11 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
         setNotify({isOpen: true, message: 'Channel ' + inputChannel + ' is add', type:'success'});
         setInputChannel('')
     }
+
+    const handleSelectFriend = (name:string) => {
+        setSelectFriend(name);
+    }
+
 	return (
 		<React.Fragment>
 			<BackgroundAnimate name="contact"/>
@@ -172,7 +168,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                     <StyledChatPrive className={navActive}>
                 <>
                     {chatSwitch === "private" ? friends?.map((user:GOT.Friend) =>(
-                        <StyledUser key={uuid()} color={user.status === "offline" ? Colors.ChatMenuButton : Colors.ChatMenu}>
+                        <StyledUser key={uuid()} color={user.username === selectFriend ? Colors.ChatMenuButton : Colors.ChatMenu} onClick={() => {handleSelectFriend(user.username)}}>
                             <StyledChatPrivAvatar/>
                         <StyledChatPrivName key={uuid()}>{user.username}</StyledChatPrivName>
                         </StyledUser>
@@ -180,7 +176,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                 </>
                 <>
                     {chatSwitch === "channel" ? friends?.map((user:GOT.Friend) =>(
-                        <StyledUser key={uuid()} color={user.status === "offline" ? Colors.ChatMenuButton : Colors.ChatMenu}>
+                        <StyledUser key={uuid()} color={user.username === selectFriend ? Colors.ChatMenuButton : Colors.ChatMenu} onClick={() => {handleSelectFriend(user.username)}}>
                         <StyledChatPrivName key={uuid()}>channel</StyledChatPrivName>
                         <StyledChatSettingButton >
                             <AiFillSetting className='setting' size={15} color={Colors.ChatMenuButtonText}/>
