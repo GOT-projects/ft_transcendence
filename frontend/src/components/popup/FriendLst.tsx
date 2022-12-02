@@ -2,7 +2,7 @@ import {Dispatch, FunctionComponent, useContext, useEffect, useState} from 'reac
 import { v4 as uuid } from 'uuid';
 import { GOT } from '../../shared/types';
 import { SocketContext } from '../../socket/socketPovider';
-import { StyledMenuFriend, StyledMenuFriendContente, StyleMenuFriendUser, StyledMenuFriendImg, StyledMenuFriendImgContente, StyledMenuFriendStatus, StyledMenuFriendStatusBehind } from '../Styles/StyleFriendLst';
+import { StyledMenuFriend, StyledMenuFriendContente, StyleMenuFriendUser, StyledMenuFriendImg, StyledMenuFriendImgContente, StyledMenuFriendStatus, StyledMenuFriendStatusBehind, StyleMenuFriendContenteUsername, StyleMenuFriendUsername } from '../Styles/StyleFriendLst';
 
 interface IProps {
     setFriendList: Dispatch<any>;
@@ -12,6 +12,7 @@ interface IProps {
 interface IProp {
     img: string,
     status: string,
+    username: string,
 }
 
 const StatusProfile:FunctionComponent<IProp> = (props:IProp)=> {
@@ -55,7 +56,10 @@ const PopupListFriends:FunctionComponent<IProps> = (props:IProps) => {
             <StyledMenuFriendContente>
             {friends?.map((friend) => (
                     <StyleMenuFriendUser key={uuid()} onClick={ () => handleGotoMsg(friend.username)}>
-                        <StatusProfile img={friend.urlImg} status={"online"}></StatusProfile>
+                        <StatusProfile img={friend.urlImg} username={friend.username} status={friend.status}></StatusProfile>
+                        <StyleMenuFriendContenteUsername>
+                            <StyleMenuFriendUsername>{friend.username}</StyleMenuFriendUsername>
+                        </StyleMenuFriendContenteUsername>
                     </StyleMenuFriendUser>
             ))}
             </StyledMenuFriendContente>

@@ -35,32 +35,33 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     const [inputChannel, setInputChannel] = useState("");
 
     const [selectUser, setSelectUser] = useState<DataMesssage[]>();
-    const [chatUser, setChatUser] = useState<UserListPrivate[]>([
-    {id: uuid(), user: "waxdred", mute:false, block: false, active: false, data:[
-        {id: uuid(), message: "salut", from: "pc"},
-        {id: uuid(), message: "ca va?", from: "pc"},
-        {id: uuid(), message: "super et toi?", from: "waxdred"},
-        {id: uuid(), message: "quoi de neuf", from: "waxdred"},
-    ]},
-    {id: uuid(), user: "rcuminal", mute:false, block: false, active: false, data:[]},
-    {id: uuid(), user: "aartiges", mute:false, block: false, active: false, data:[
-        {id: uuid(), message: "test", from: "pc"},
-        {id: uuid(), message: "de merde", from: "pc"},
-        {id: uuid(), message: "super et toi?", from: "waxdred"},
-    ]}
-    ]);
+    const [friends, setFriends] = useState<GOT.Friend[]>();
 
-    //open chat user when is select by friendList
-    if (!!params.get("code")){
-        const username = params.get("code")
-        chatUser.map((user) => {
-            if (user.user === username){
-                user.active = true;
-            }else{
-                user.active = false;
-            }
+    useEffect(() => {
+        socket.on('client_friends', (rep:GOT.Friend[]) => {
+            console.log('client_friend', rep);
+            setFriends(rep);
         })
-    }
+        return () => {
+            socket.off('client_friends');
+        } 
+    },[socket])
+
+    useEffect(() => {
+        socket.emit('server_friends', "");
+    }, [socket])
+    console.log(friends)
+    //open chat user when is select by friendList
+    // if (!!params.get("code")){
+    //     const username = params.get("code")
+    //     chatUser.map((user) => {
+    //         if (user.user === username){
+    //             user.active = true;
+    //         }else{
+    //             user.active = false;
+    //         }
+    //     })
+    // }
 
     function handChange(event: any, setInput: any, input: string){
         if (input === "" && event.target.value ==="\n")
@@ -68,49 +69,12 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
 		setInput(event.target.value);
 	}	
 
-    const getUserMsg = () =>{
-        let user = chatUser.map(ls => {
-            if (ls.active === true){
-                return ls.user;
-            }
-        })
-        user = user.filter(function( element ) {
-            return element !== undefined;
-        });
-        if (user.length === 1)
-            return user[0];
-        return null;
-    }
-
-    const handleUserSelector = (user: string) => {
-        const newArr = chatUser.map(ls => {
-            if (ls.user === user) {
-                ls.active = true;
-                return ls
-            } else {
-                ls.active = false;
-                return ls
-            }
-        });
-        setNavActive("UnActiveMenu");
-        getuserSelect();
-        setChatUser(newArr);
-    }
-
-    const getuserSelect = () => {
-        chatUser.map(ls => {
-            if (ls.active === true)
-                setSelectUser(ls.data);
-        })
-    }
-
     const sendMsg = () => {
         //TODO send to db by socket
         if (inputChat === " " || inputChat === "\n" || inputChat === ""){
             setInputChat("");
             return;
         }
-        const activeUser = getUserMsg();
         const addmsg:DataMesssage = {
             id: uuid(),
             message: inputChat,
@@ -124,14 +88,6 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     }
     const insertMsg = (user:string, addmsg:DataMesssage)=>{
         let dataUser:DataMesssage[]|undefined;
-        chatUser.map(ls => {
-            if (ls.user === user)
-                dataUser = ls.data;
-        })
-        if (dataUser !== undefined){
-            let newMessage = dataUser;
-            newMessage?.push(addmsg);
-        }
     }
 
     const navMenu = () => {
@@ -146,20 +102,10 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
         if (inputContact === " " || inputContact === "\n" || inputContact === ""){
             return;
         }
-        const add = {id: uuid(), user: inputContact, mute:false, block: false, active: false, data:[]}
-        setChatUser(chatUser => [...chatUser, add])
         socket.emit('server_demand_friend', {login: inputContact})
-        // setNotify({isOpen: true, message: 'User ' + inputContact + ' is add', type:'success'});
         setInputContact('')
     }
 	
-    const addContactUser = (user:string) =>{
-        //TODO check contact before add
-        const add = {id: uuid(), user: user, mute:false, block: false, active: false, data:[]}
-        setChatUser(chatUser => [...chatUser, add])
-        setNotify({isOpen: true, message: 'You get New message from ' + user, type:'info'});
-        setInputContact('')
-    }
     const addChannel = () =>{
         //TODO check contact before add
         if (inputChannel === " " || inputChannel === "\n" || inputChannel === ""){
@@ -225,17 +171,17 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                     }
                     <StyledChatPrive className={navActive}>
                 <>
-                    {chatSwitch === "private" ? chatUser.map((user:UserListPrivate) =>(
-                        <StyledUser key={user.id} color={user.active ? Colors.ChatMenuButton : Colors.ChatMenu} onClick={() => handleUserSelector(user.user)}>
+                    {chatSwitch === "private" ? friends?.map((user:GOT.Friend) =>(
+                        <StyledUser key={uuid()} color={user.status === "offline" ? Colors.ChatMenuButton : Colors.ChatMenu}>
                             <StyledChatPrivAvatar/>
-                        <StyledChatPrivName key={user.id}>{user.user}</StyledChatPrivName>
+                        <StyledChatPrivName key={uuid()}>{user.username}</StyledChatPrivName>
                         </StyledUser>
                     )) : ""}
                 </>
                 <>
-                    {chatSwitch === "channel" ? chatUser.map((user:UserListPrivate) =>(
-                        <StyledUser key={user.id} color={user.active ? Colors.ChatMenuButton : Colors.ChatMenu} onClick={() => handleUserSelector(user.user)}>
-                        <StyledChatPrivName key={user.id}>channel</StyledChatPrivName>
+                    {chatSwitch === "channel" ? friends?.map((user:GOT.Friend) =>(
+                        <StyledUser key={uuid()} color={user.status === "offline" ? Colors.ChatMenuButton : Colors.ChatMenu}>
+                        <StyledChatPrivName key={uuid()}>channel</StyledChatPrivName>
                         <StyledChatSettingButton >
                             <AiFillSetting className='setting' size={15} color={Colors.ChatMenuButtonText}/>
                         </StyledChatSettingButton>

@@ -26,8 +26,11 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
     const [friendList, setFriendList] = useState(false);
     const [notifMenu, setNotifMenu] = useState(false);
     const [profileMenu, setProfileMenu] = useState(false);
-    const [notif, setNotif] = useState(false);
+    let [notif, setNotif] = useState(false);
 
+    if (props.profil?.notif.length !== 0){
+        notif = true;
+    }
     //Socket get erreur | notify add friend 
     useEffect(() => {
         console.log("useEffect");
@@ -35,22 +38,32 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
             props.setNotify({isOpen: true, message: `Error: ${rep}`, type:'error'});
         })
     }, [socket])
-    //Socket get erreur | notify add friend 
+
+    //Socket listen add friend list
     useEffect(() => {
-        console.log("useEffect1");
-        socket.on('client_notif', (rep:any) => {
-            console.log("get client notif", rep)
-            props.setNotify({isOpen: true, message: `Info: ${rep}`, type:'info'});
+        socket.on('client_notif', (rep:GOT.User[]) => {
+            if (rep){
+                console.log("get client notif", rep, rep.lastIndexOf)
+                const size = rep.length - 1;
+                console.log(size);
+                if (size !== -1){
+                    props.setNotify({isOpen: true, message: `${rep[size].username} add you in Friend`, type:'info'});
+                    socket.emit('server_profil', "profil");
+                    notif = true;
+                }else{
+                    notif = false;
+                    setNotifMenu(false);
+                }
+            }
         })
     }, [socket])
 
     useEffect(() => {
-        console.log("useEffect2");
         socket.on('client_friends', (rep:any) => {
-            props.setNotify({isOpen: true, message: `Info: ${rep}`, type:'info'});
             console.log("client friends", rep)
         })
     }, [socket])
+
     //Update info user all last data and Update if data are changed
     useEffect(() => {
         socket.on('client_profil', (rep:GOT.Profile) =>{
@@ -61,15 +74,8 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
         })
         return () => {
             socket.off('client_profil');
-            // socket.off('client_notif');
-            // socket.off('client_error');
         }
     }, [props.profil, socket])
-
-    // get notify list;
-    useEffect(() => {
-        socket.emit('server_notif', "profil");
-    }, [socket]);
 
     //get profile info
     useEffect(() => {
@@ -149,7 +155,6 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                                             /> : <></>}
                 {notifMenu ? <PopupNotifUser notify={props.notify} 
                                              setNotify={props.setNotify} 
-                                             setNotif={setNotif}
                                              profil={props.profil}
                                              /> : <></>}
                 </StyleMenusHeader>
@@ -170,7 +175,6 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                                             /> : <></>}
                 {notifMenu ? <PopupNotifUser notify={props.notify} 
                                              setNotify={props.setNotify} 
-                                             setNotif={setNotif}
                                              profil={props.profil}
                                              /> : <></>}
                 {friendList ? <PopupListFriends setFriendList={setFriendList} profil={props.profil}/> : <></>}

@@ -1,21 +1,23 @@
-import {Dispatch, SetStateAction, FunctionComponent, useState} from 'react';
+import {Dispatch, SetStateAction, FunctionComponent, useState, useContext} from 'react';
 import {NotifyInter} from "../../components/interfaces"
 import { StyledMenuNotif, StyledMenuNotifButton, StyledMenuNotifButtonHover, StyledMenuNotifContentUser, StyledMenuNotifholder, StyledMenuNotifUser } from '../Styles/StyleNotifUser';
 import {RiUserAddFill} from 'react-icons/ri';
 import {TiUserDelete} from 'react-icons/ti';
 import { v4 as uuid } from 'uuid';
 import { GOT } from '../../shared/types';
+import { SocketContext } from '../../socket/socketPovider';
 
 interface IProps {
-   setNotif: Dispatch<SetStateAction<boolean>>;
    notify: NotifyInter;
    setNotify: Dispatch<any>;
    profil: GOT.Profile | undefined;
 }
 
 const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
+    const socket = useContext(SocketContext);
     const handleAdd = (name: string) =>{
         props.setNotify({isOpen: true, message: `Add ${name}`, type:'success'});
+        socket.emit('server_demand_friend', {login: name})
     }
     const handleRemove = (name: string) =>{
         props.setNotify({isOpen: true, message: `Refused invitation of ${name}`, type:'success'});
