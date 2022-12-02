@@ -16,12 +16,25 @@ export class RelUserService {
 
     private async getUsersFromNotif(relUsers: RelUser[]) {
         let ret: User[] = [];
-        relUsers.forEach(async relUser =>  {
+        for (const relUser of relUsers) {
             let tmp: User | null = await this.userService.findOne(relUser.user1Id);
+            console.log('debug', ret)
             if (tmp === null)
-                throw new HttpException('WTF db', HttpStatus.BAD_REQUEST);
-            ret[relUser.user1Id] = tmp;
-        });
+                throw {message: 'WTF db'};
+            ret.push(tmp);
+        }
+        console.log('info', relUsers, ret)
+        return ret;
+    }
+
+    private async getUsersFromFriend(id: number, relUsers: RelUser[]) {
+        let ret: User[] = [];
+        for (const relUser of relUsers) {
+            let tmp: User | null = await this.userService.findOne(relUser.user1Id === id ? relUser.user2Id : relUser.user1Id);
+            if (tmp === null)
+                throw {message: 'WTF db'};
+            ret.push(tmp);
+        }
         return ret;
     }
 
@@ -34,7 +47,7 @@ export class RelUserService {
     }
 
     async getFriends(id: number) {
-        return await this.getUsersFromNotif(await this.relUserRepository.find({
+        return await this.getUsersFromFriend(id, await this.relUserRepository.find({
             where: [
                 {user2Id: id, status: UserUserStatus.FRIEND},
                 {user1Id: id, status: UserUserStatus.FRIEND}
@@ -100,7 +113,7 @@ export class RelUserService {
             return waitingFriend[0];
         }
         const dto: CreateRelUserDto = {
-            status: UserUserStatus.FRIEND,
+            status: UserUserStatus.WAITING,
             user1Id: user1.id,
             user2Id: user2.id
         };

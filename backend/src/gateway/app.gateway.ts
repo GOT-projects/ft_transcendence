@@ -162,8 +162,10 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
         let userSockets = this.users.get(auth.userLogin);
         if (userSockets) {
             const tmpNotif = await this.friendService.getNotif(auth.userId);
-            if (typeof tmpNotif !== 'string')
+            if (typeof tmpNotif !== 'string') {
                 this.server.to(userSockets).emit('client_notif', tmpNotif);
+                
+            }
             const tmpFriends = await this.getFriendsList(client, auth.userId);
             if (tmpFriends !== undefined)
                 this.server.to(userSockets).emit('client_friends', tmpFriends);

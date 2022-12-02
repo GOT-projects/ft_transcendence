@@ -34,10 +34,6 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
         socket.on('error_client', (rep:any) => {
             props.setNotify({isOpen: true, message: `Error: ${rep}`, type:'error'});
         })
-        socket.on('client_friends', (rep:any) => {
-            // props.setNotify({isOpen: true, message: `Info: ${rep}`, type:'info'});
-            console.log("client friends", rep)
-        })
     }, [socket])
     //Socket get erreur | notify add friend 
     useEffect(() => {
@@ -65,8 +61,8 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
         })
         return () => {
             socket.off('client_profil');
-            socket.off('client_notif');
-            socket.off('client_error');
+            // socket.off('client_notif');
+            // socket.off('client_error');
         }
     }, [props.profil, socket])
 

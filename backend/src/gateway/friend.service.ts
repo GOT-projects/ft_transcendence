@@ -34,8 +34,9 @@ export class FriendService {
     async getFriends(id: number): Promise<GOT.Friend[] | string> {
         try {
             const friends_user = await this.relUserService.getFriends(id);
+            console.log('friend',friends_user)
             let ret: GOT.Friend[] = [];
-            friends_user.forEach(async (user) => {
+            for (const user of friends_user) {
                 const inGame: Game[] = await this.gameService.getInGamesOf(user.id);
                 if (inGame.length > 0)
                 {
@@ -49,7 +50,7 @@ export class FriendService {
                         status: GOT.ProfileStatus.offline
                     });
                 }
-            });
+            };
             return ret;
         } catch (error) {
             return error.message;
