@@ -31,9 +31,9 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
     if (props.profil?.notif.length !== 0){
         notif = true;
     }
+
     //Socket get erreur | notify add friend 
     useEffect(() => {
-        console.log("useEffect");
         socket.on('error_client', (rep:any) => {
             props.setNotify({isOpen: true, message: `Error: ${rep}`, type:'error'});
         })
@@ -43,7 +43,6 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
     useEffect(() => {
         socket.on('client_notif', (rep:GOT.User[]) => {
             if (rep){
-                console.log("get client notif", rep, rep.lastIndexOf)
                 const size = rep.length - 1;
                 console.log(size);
                 if (size !== -1){
@@ -54,12 +53,6 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                     setNotifMenu(false);
                 }
             }
-        })
-    }, [socket])
-
-    useEffect(() => {
-        socket.on('client_friends', (rep:any) => {
-            console.log("client friends", rep)
         })
     }, [socket])
 

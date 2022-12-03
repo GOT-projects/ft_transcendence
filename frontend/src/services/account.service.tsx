@@ -27,32 +27,22 @@ let removeToken= () => {
     window.location.href = '/';
 }
 
-let isLogged = () => {
-    var access = false;
-    Axios.defaults.withCredentials = false;
+let isLogged = async() => {
     let token = localStorage.getItem('token_access')
     if (!!token){
         try {
-			const response = apiGet.getAccess();
-			response.then((rep:any) => {
-                if (rep.status === 200){
-                    saveAccess("true");
-                }else{
-                    saveAccess("false");
-                }  
-			})
+			const response = await apiGet.getAccess();
+            console.log(response);
+            if (response.status === 200)
+                return (true);
+            else{
+                return (false);
+            }
         } catch (e) {
             console.log(e);
-            return access;
-        }
-        let auth = localStorage.getItem('access');
-        if (!!auth){
-            if (auth === "true")
-                access = true;
-            removeAccess();
         }
     }
-    return access;
+    return false;
 }
 
 let getToken = () => {

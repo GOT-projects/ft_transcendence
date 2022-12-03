@@ -114,9 +114,9 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
 		<React.Fragment>
 			<BackgroundAnimate name="contact"/>
             <Header colorHome={Colors.MenuDisable} 
-                    colorGame={Colors.MenuActive} 
+                    colorGame={Colors.MenuDisable} 
                     colorLeadBoard={Colors.MenuDisable} 
-                    colorChat={Colors.MenuDisable}
+                    colorChat={Colors.MenuActive}
                     notify={notify}
                     setNotify={setNotify}
                     profil={props.profil}

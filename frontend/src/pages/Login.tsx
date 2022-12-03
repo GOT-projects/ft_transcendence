@@ -7,19 +7,31 @@ import {Notification} from "../components/Notify"
 import {NotifyInter} from "../components/interfaces"
 import { accountService } from "../services/account.service";
 import { apiGet } from "../api/get";
+import { useNavigate } from "react-router-dom";
+
+let access:boolean;
+
+const getAcces = async () => {
+    let data = await accountService.isLogged();
+    if (data === true)
+        access = true;
+    else
+        access = false;
+}
 
 const Login = () => {
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''})
     const [Url, setUrl] = useState('')
-    if (accountService.isLogged() === true){
-        window.location.href = '/game';
+    const navigate = useNavigate();
+    (async () => await getAcces())()
+    if (access === true){
+        navigate('/game');
     }else{
         const responce = apiGet.getIntraUrl();
         responce.then((rep) => {
             setUrl(rep.data);
         }).catch((e) => {
             console.log(e);
-
         })
     }
 

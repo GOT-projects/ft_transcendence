@@ -6,7 +6,7 @@ const getIntraUrl = async () => {
 }
 
 const getAccess = async () => {
-	return Axios.get('/auth/access');
+	return await Axios.get('/auth/access');
 }
 
 const getProfil = async () => {
