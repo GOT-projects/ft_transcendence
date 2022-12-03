@@ -16,6 +16,7 @@ import { v4 as uuid } from 'uuid';
 import { SocketContext, useSocket } from '../socket/socketPovider';
 import { Socket } from 'socket.io-client';
 import { GOT } from '../shared/types';
+import { emitSocket } from '../socket/socketEmit';
 
 interface IProps {
    profil: GOT.Profile | undefined;
@@ -48,7 +49,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     },[socket])
 
     useEffect(() => {
-        socket.emit('server_friends', "");
+        emitSocket.emitFriends(socket);
     }, [socket])
 
     //open chat user when is select by friendList
@@ -75,7 +76,6 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
             setInputChat("");
             return;
         }
-        console.log("Message Emit")
         setInputChat("");
     }
 
@@ -93,7 +93,8 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
         if (inputContact === " " || inputContact === "\n" || inputContact === ""){
             return;
         }
-        socket.emit('server_demand_friend', {login: inputContact})
+        // socket.emit('server_demand_friend', {login: inputContact})
+        emitSocket.emitDemandFriend(socket, inputContact);
         setInputContact('')
     }
 	

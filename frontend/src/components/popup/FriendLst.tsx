@@ -1,6 +1,8 @@
 import {Dispatch, FunctionComponent, useContext, useEffect, useState} from 'react';
+import { useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 import { GOT } from '../../shared/types';
+import { emitSocket } from '../../socket/socketEmit';
 import { SocketContext } from '../../socket/socketPovider';
 import { StyledMenuFriend, StyledMenuFriendContente, StyleMenuFriendUser, StyledMenuFriendImg, StyledMenuFriendImgContente, StyledMenuFriendStatus, StyledMenuFriendStatusBehind, StyleMenuFriendContenteUsername, StyleMenuFriendUsername } from '../Styles/StyleFriendLst';
 
@@ -28,11 +30,11 @@ const StatusProfile:FunctionComponent<IProp> = (props:IProp)=> {
 const PopupListFriends:FunctionComponent<IProps> = (props:IProps) => {
     const socket = useContext(SocketContext);
     const [friends, setFriends] = useState<GOT.Friend[]>()
+    const navigate = useNavigate()
 
     //get erreur for notify
     useEffect(() => {
         socket.on('client_friends', (rep:GOT.Friend[]) => {
-            console.log('client_friend', rep);
             setFriends(rep);
         })
         return () => {
@@ -41,11 +43,11 @@ const PopupListFriends:FunctionComponent<IProps> = (props:IProps) => {
     },[socket])
 
     useEffect(() => {
-        socket.emit('server_friends', "");
+        emitSocket.emitFriends(socket);
     }, [socket])
 
     const handleGotoMsg = (user:string) =>{
-        window.location.href = '/chat?code=' + user;
+        navigate(`/chat?code=${user}`);
     }
     return (
         <StyledMenuFriend

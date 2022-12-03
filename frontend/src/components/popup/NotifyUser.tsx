@@ -6,6 +6,7 @@ import {TiUserDelete} from 'react-icons/ti';
 import { v4 as uuid } from 'uuid';
 import { GOT } from '../../shared/types';
 import { SocketContext } from '../../socket/socketPovider';
+import { emitSocket } from '../../socket/socketEmit';
 
 interface IProps {
    notify: NotifyInter;
@@ -17,7 +18,7 @@ const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
     const socket = useContext(SocketContext);
     const handleAdd = (name: string) =>{
         props.setNotify({isOpen: true, message: `Add ${name}`, type:'success'});
-        socket.emit('server_demand_friend', {login: name})
+        emitSocket.emitDemandFriend(socket, name);
     }
     const handleRemove = (name: string) =>{
         props.setNotify({isOpen: true, message: `Refused invitation of ${name}`, type:'success'});

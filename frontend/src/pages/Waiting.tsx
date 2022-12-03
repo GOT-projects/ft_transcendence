@@ -11,7 +11,6 @@ const Waiting = () => {
 	let params = (new URL(url)).searchParams;
     const code = params.get("code");
     if (!!code){
-            console.log(code)
             const response = apiPost.PostConnectIntra(code);
 	        response.then((response:any) => {
 	        	if(response.status === 201){
@@ -19,8 +18,7 @@ const Waiting = () => {
                     navigate('/game');
 	        	}
 	        }).catch((e) =>{
-                console.log(e);
-                // navigate('/');
+                navigate('/');
             });
     }else{
         navigate('/');

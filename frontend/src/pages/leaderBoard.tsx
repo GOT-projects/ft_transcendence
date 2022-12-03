@@ -12,6 +12,7 @@ import { apiGet } from "../api/get";
 import { GOT } from "../shared/types";
 import { SocketContext } from "../socket/socketPovider";
 import { tmpdir } from "os";
+import { emitSocket } from "../socket/socketEmit";
 
 interface IProps {
    profil: GOT.Profile | undefined;
@@ -26,7 +27,7 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
     const [clickedButton, setClickedButton] = useState('');
 
     useEffect(() => {
-        socket.emit("server_leaderboard", "leaderboard");
+        emitSocket.emitLeaderboard(socket);
     }, [socket])
     
     useEffect(() => {

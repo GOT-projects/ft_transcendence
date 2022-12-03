@@ -2,6 +2,7 @@ import {StyledMenuProfileUsername, StyledMenuProfileUsernameButton, StyledMenuPr
 import {Dispatch, SetStateAction, FunctionComponent, useState, useEffect, useContext} from 'react';
 import {NotifyInter} from "../../components/interfaces"
 import { SocketContext } from "../../socket/socketPovider";
+import { emitSocket } from "../../socket/socketEmit";
 
 interface IProps {
    setChangeUsername: Dispatch<SetStateAction<boolean>>;
@@ -15,7 +16,6 @@ const PopupChangeUsername:FunctionComponent<IProps> = (props:IProps) => {
 
     useEffect(() => {
         socket.off('client_change_username').on('client_change_username', (rep: any) => {
-            console.log(rep);
             setInput("");
         })
     }, [socket])
@@ -23,13 +23,12 @@ const PopupChangeUsername:FunctionComponent<IProps> = (props:IProps) => {
     const handleOk = () => {
         if (input === "")
             return;
-        socket.emit("server_change_username", input);
+        emitSocket.emitChangeUsername(socket, input);
         props.setChangeUsername(false);
         props.setNotify({isOpen: true, message: 'Change Username to ' + input , type:'success'});
         setInputdata(input);
     }
     const handleCancel = () => {
-        props.setNotify({isOpen: true, message: 'Username is already use', type:'error'});
         props.setChangeUsername(false);
     }
     function handleOnChange(e:any){

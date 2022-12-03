@@ -32,7 +32,6 @@ let isLogged = async() => {
     if (!!token){
         try {
 			const response = await apiGet.getAccess();
-            console.log(response);
             if (response.status === 200)
                 return (true);
             else{

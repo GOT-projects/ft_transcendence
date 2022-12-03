@@ -8,6 +8,7 @@ import PopupNotifUser from "./popup/NotifyUser";
 import PopupListFriends from "./popup/FriendLst";
 import { SocketContext } from "../socket/socketPovider";
 import { GOT } from "../shared/types";
+import { emitSocket } from "../socket/socketEmit";
 
 interface IProps {
    notify: NotifyInter;
@@ -44,10 +45,9 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
         socket.on('client_notif', (rep:GOT.User[]) => {
             if (rep){
                 const size = rep.length - 1;
-                console.log(size);
                 if (size !== -1){
                     props.setNotify({isOpen: true, message: `${rep[size].username} add you in Friend`, type:'info'});
-                    socket.emit('server_profil', "profil");
+                    emitSocket.emitProfil(socket);
                     notif = true;
                 }else{
                     setNotifMenu(false);
@@ -59,7 +59,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
     //Update info user all last data and Update if data are changed
     useEffect(() => {
         socket.on('client_profil', (rep:GOT.Profile) =>{
-            console.log("header:", rep);
+            console.log("Profil:", rep);
             if (rep && props.setProfil){
                 props.setProfil(rep);
             }
@@ -71,7 +71,8 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
 
     //get profile info
     useEffect(() => {
-        socket.emit('server_profil', "profil");
+        // socket.emit('server_profil', "profil");
+        emitSocket.emitProfil(socket);
     }, [socket]);
 
     //respond menu

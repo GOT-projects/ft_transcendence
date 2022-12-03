@@ -12,7 +12,7 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
    return(
       <Snackbar
          open={notify.isOpen}
-         autoHideDuration={6000}
+         autoHideDuration={5000}
          anchorOrigin={{vertical: 'top', horizontal: 'right'}}
          onClose={handleClose}
          style={{position: 'absolute',   
@@ -21,7 +21,7 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
 				 transition: '0.6s'
                  }}
          >
-         <Alert severity={notify.type} onClose={handleClose} 
+         <Alert severity={notify.type} onClose={handleClose} onClick={handleClose} 
                 style={{transform: 'translateX(0)', borderRadius: '16px', transition: '0.6s'}}>
             {notify.message}
          </Alert>

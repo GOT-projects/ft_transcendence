@@ -91,10 +91,61 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
             return false;
         }
     }
+    private async connectUserBody(client: Socket, jwt: string) {
+        try {
+            // const jwt = client.handshake.headers?.authorization?.split(' ')[1];
+            if (!jwt) {
+                const login: string | undefined = this.getUser(client);
+                if (login !== undefined) {
+                    const ids = this.users.get(login);
+                    if (!ids)
+                        return false;
+                    const i = ids.indexOf(client.id);
+                    if (i !== -1)
+                        ids.splice(i, 1);
+                        if (ids.length === 0)
+                            this.users.delete(login);
+                }
+                return false;
+            }
+            const data: jwtContent = await this.jwtService.verifyAsync(jwt);
+            const val = this.users.get(data.userLogin);
+            if (!val) {
+                this.users.set(data.userLogin, [client.id]);
+                this.logger.verbose(`Client add ${data.userLogin}: ${client.id}`);
+            }
+            else if (val.indexOf(client.id) === -1) {
+                val.push(client.id);
+                this.logger.log(`Client add ${data.userLogin}: ${client.id}`);
+            }
+            console.log('global', this.users);
+            return data;         
+        } catch (error) {
+            const login: string | undefined = this.getUser(client);
+            if (login !== undefined) {
+                const ids = this.users.get(login);
+                if (!ids)
+                    return false;
+                const i = ids.indexOf(client.id);
+                if (i !== -1)
+                    ids.splice(i, 1);
+                    if (ids.length === 0)
+                        this.users.delete(login);
+            }
+            client.emit('error_client', error.message);
+            return false;
+        }
+    }
     
     @SubscribeMessage('server_profil')
-    async profil(@ConnectedSocket() client: Socket) {
-        const auth = await this.connectUser(client);
+    async profil(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string) {
+        console.log("jwt socket", jwt);
+        if (jwt === undefined){
+            client.emit('error_client', "token JWT not found");
+            return ;
+        }
+
+        const auth = await this.connectUserBody(client, jwt);
         if (!auth) {
             return ;
         }
@@ -135,8 +186,9 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
     }
 
     @SubscribeMessage('server_change_username')
-    async changeUsername(@ConnectedSocket() client: Socket, @MessageBody('username') username: string) {
-        const auth = await this.connectUser(client);
+    async changeUsername(@ConnectedSocket() client: Socket, @MessageBody('username') username: string, 
+                        @MessageBody('Authorization') jwt: string) {
+        const auth = await this.connectUserBody(client, jwt);
         if (!auth) {
             return ;
         }
@@ -149,8 +201,9 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
     }
 
     @SubscribeMessage('server_demand_friend')
-    async demandFriend(@ConnectedSocket() client: Socket, @MessageBody('login') login: string) {
-        const auth = await this.connectUser(client);
+    async demandFriend(@ConnectedSocket() client: Socket, @MessageBody('login') login: string, 
+                    @MessageBody('Authorization') jwt: string) {
+        const auth = await this.connectUserBody(client, jwt);
         if (!auth) {
             return ;
         }
@@ -223,8 +276,8 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
     }
 
     @SubscribeMessage('server_friends')
-    async getFriends(@ConnectedSocket() client: Socket) {
-        const auth = await this.connectUser(client);
+    async getFriends(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string) {
+        const auth = await this.connectUserBody(client, jwt);
         if (!auth) {
             return ;
         }
