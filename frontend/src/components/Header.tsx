@@ -89,7 +89,6 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
     useEffect(() => {
         window.addEventListener("scroll", handleScroll)
     }, [handleScroll])
-
     const navMenu = () => {
         if (active === "ActiveMenu") {
             setActive("UnActiveMenu");
@@ -130,6 +129,9 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
             setFriendList(false);
         }
     }
+    if (props.profile?.notif.length !== undefined && props.profile.notif.length > 0){
+        setNotif(true);
+    }
 	return (
         <StyledHeader>
             <StyleMenusHeader className={active}>
@@ -150,6 +152,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                                              setNotify={props.setNotify} 
                                              profil={props.profil}
                                              /> : <></>}
+
                 </StyleMenusHeader>
             <StyleNav>
                 <StyleMenuHeaderNotityResp colorIcon={notif ? Colors.NotifActive : Colors.NotifUnactive}>
@@ -157,6 +160,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                 </StyleMenuHeaderNotityResp>
                 <StyleHeaderUserListResp onClick={handleFriendList}/>
                 <StyleMenuHeaderProfilResp onClick={handleMenuProfil} profil={props.profil?.userInfos.urlImg}/>        
+
                 <StyleNavToggler onClick={navMenu} className={active}>
                     <StyleNavTogglerIcon className={active}></StyleNavTogglerIcon>
                     <StyleNavTogglerIcon className={active}></StyleNavTogglerIcon>

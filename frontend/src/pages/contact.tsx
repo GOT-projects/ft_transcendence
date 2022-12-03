@@ -123,7 +123,6 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                     profil={props.profil}
                     setProfil={props.setProfil}
              />
-
             <StyledContaite>
                 <StyledMenuSwitch>
                     <StyledMenuNav className={navActive} onClick={navMenu}>

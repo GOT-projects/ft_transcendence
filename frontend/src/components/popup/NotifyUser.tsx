@@ -8,17 +8,19 @@ import { GOT } from '../../shared/types';
 import { SocketContext } from '../../socket/socketPovider';
 import { emitSocket } from '../../socket/socketEmit';
 
-interface IProps {
-   notify: NotifyInter;
-   setNotify: Dispatch<any>;
    profil: GOT.Profile | undefined;
 }
-
 const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
     const socket = useContext(SocketContext);
     const handleAdd = (name: string) =>{
         props.setNotify({isOpen: true, message: `Add ${name}`, type:'success'});
         emitSocket.emitDemandFriend(socket, name);
+   addFriend: GOT.User[] | undefined;
+}
+
+const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
+    const handleAdd = () =>{
+        props.setNotify({isOpen: true, message: 'Add friend', type:'success'});
     }
     const handleRemove = (name: string) =>{
         props.setNotify({isOpen: true, message: `Refused invitation of ${name}`, type:'success'});
@@ -30,6 +32,7 @@ const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
             transition={{duration: 1}}
             exit={{x: 300, opacity: 0}}>
                 {props.profil?.notif.map((user) => (
+
                     <StyledMenuNotifholder key={uuid()}>
                         <div>
                         <StyledMenuNotifContentUser>

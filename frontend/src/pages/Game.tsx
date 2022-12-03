@@ -9,6 +9,7 @@ import {Notification} from "../components/Notify"
 import { SocketContext } from '../socket/socketPovider';
 import { GOT } from '../shared/types';
 
+
 interface IProps {
    profil: GOT.Profile | undefined;
    setProfil: Dispatch<React.SetStateAction<GOT.Profile | undefined>> | undefined;
@@ -16,7 +17,6 @@ interface IProps {
 
 const Game:FunctionComponent<IProps> = (props:IProps)=> {
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
-
 	return (
 		<React.Fragment>
 			<BackgroundAnimate name="game"/>

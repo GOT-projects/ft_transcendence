@@ -19,6 +19,7 @@ interface IProps {
    setProfil: Dispatch<React.SetStateAction<GOT.Profile | undefined>> | undefined;
 }
 
+
 const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
     const [tmppp, setTmpp] = useState<GOT.Party[]>();
     const socket = useContext(SocketContext);
