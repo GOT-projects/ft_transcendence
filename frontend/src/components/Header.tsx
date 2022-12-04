@@ -9,6 +9,7 @@ import PopupListFriends from "./popup/FriendLst";
 import { SocketContext } from "../socket/socketPovider";
 import { GOT } from "../shared/types";
 import { emitSocket } from "../socket/socketEmit";
+import SetupOtc from "./popup/SetupOtc";
 
 interface IProps {
    notify: NotifyInter;
@@ -27,6 +28,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
     const [friendList, setFriendList] = useState(false);
     const [notifMenu, setNotifMenu] = useState(false);
     const [profileMenu, setProfileMenu] = useState(false);
+    const [otc, setOtc] = useState(false);
     let [notif, setNotif] = useState(false);
 
     if (props.profil?.notif.length !== 0){
@@ -107,6 +109,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
             setNotifMenu(false);
             setProfileMenu(false);
             setFriendList(false);
+            setOtc(false);
         }
     }
     const handleFriendList = () => {
@@ -117,6 +120,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
             setProfileMenu(false);
             setNotifMenu(false);
             setFriendList(true);
+            setOtc(false);
         }
     }
     const handleMenuProfil = () => {
@@ -127,6 +131,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
             setProfileMenu(true);
             setNotifMenu(false);
             setFriendList(false);
+            setOtc(false);
         }
     }
     const handleMenuNotif = () => {
@@ -137,6 +142,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
             setNotifMenu(true);
             setProfileMenu(false);
             setFriendList(false);
+            setOtc(false);
         }
     }
 	return (
@@ -154,6 +160,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                 {profileMenu ? <ProfileMenu notify={props.notify} 
                                             setNotify={props.setNotify} 
                                             setProfileMenu={setProfileMenu}
+                                            setOtc={setOtc}
                                             profil={props.profil}
                                             /> : <></>}
                 {notifMenu ? <PopupNotifUser notify={props.notify} 
@@ -173,6 +180,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                     <StyleNavTogglerIcon className={active}></StyleNavTogglerIcon>
                 </StyleNavToggler>
                 {profileMenu ? <ProfileMenu notify={props.notify} 
+                                            setOtc={setOtc}
                                             setNotify={props.setNotify}
                                             setProfileMenu={setProfileMenu}
                                             profil={props.profil}
@@ -183,6 +191,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                                              /> : <></>}
                 {friendList ? <PopupListFriends setFriendList={setFriendList} profil={props.profil}/> : <></>}
             </StyleNav>
+                {otc ? <SetupOtc setOtc={setOtc}/> : <></>}
         </StyledHeader>
 	)
 }

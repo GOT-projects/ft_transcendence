@@ -8,12 +8,12 @@ import {NotifyInter} from "../components/interfaces"
 import { GOT } from '../shared/types';
 import { BiUpload } from 'react-icons/bi';
 import { Colors } from './Colors';
-import { setPriority } from 'os';
 
 interface IProps {
    notify: NotifyInter;
    setNotify: Dispatch<any>;
    setProfileMenu: Dispatch<React.SetStateAction<boolean>>;
+   setOtc: Dispatch<React.SetStateAction<boolean>>;
    profil: GOT.Profile | undefined;
 }
 
@@ -38,7 +38,6 @@ const ProfileMenu :FunctionComponent<IProps> = (props:IProps) => {
         if (!fileObj) {
           return;
         }
-        
         console.log('fileObj is', fileObj);
         
         event.target.value = null;
@@ -49,6 +48,11 @@ const ProfileMenu :FunctionComponent<IProps> = (props:IProps) => {
         console.log(fileObj.name);
         props.setProfileMenu(false);
   };
+
+  const handleOtc= () =>{
+    props.setProfileMenu(false);
+    props.setOtc(true);
+  }
     
     return (
         <StyledMenuProfile 
@@ -68,7 +72,7 @@ const ProfileMenu :FunctionComponent<IProps> = (props:IProps) => {
                 <StyleMenuHeaderProfilOption >Avatar</StyleMenuHeaderProfilOption>
                 <BiUpload size={25} color={Colors.darkText}/>
             </StyleMenuHeaderAvatarContainte>
-            <StyleMenuHeaderProfilOption>Add 2FA</StyleMenuHeaderProfilOption>
+            <StyleMenuHeaderProfilOption onClick={handleOtc}>Setup 2FA</StyleMenuHeaderProfilOption>
             <StyleMenuHeaderProfilData>
                 victory {props.profil?.stat.victory} rank {props.profil?.stat.rank}
             </StyleMenuHeaderProfilData>
