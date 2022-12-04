@@ -144,6 +144,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                 <StyleMenuHeaderProfil onClick={handleMenuProfil} profil={props.profil?.userInfos.urlImg}/>        
                 {profileMenu ? <ProfileMenu notify={props.notify} 
                                             setNotify={props.setNotify} 
+                                            setProfileMenu={setProfileMenu}
                                             profil={props.profil}
                                             /> : <></>}
                 {notifMenu ? <PopupNotifUser notify={props.notify} 
@@ -164,6 +165,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                 </StyleNavToggler>
                 {profileMenu ? <ProfileMenu notify={props.notify} 
                                             setNotify={props.setNotify}
+                                            setProfileMenu={setProfileMenu}
                                             profil={props.profil}
                                             /> : <></>}
                 {notifMenu ? <PopupNotifUser notify={props.notify} 
