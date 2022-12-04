@@ -35,7 +35,7 @@ const ProfileMenu :FunctionComponent<IProps> = (props:IProps) => {
     }
 
     const handleFile = (event:any) => {
-        const fileObj:File | File[] = event.target.files && event.target.files[0];
+        const fileObj:File = event.target.files && event.target.files[0];
         if (!fileObj) {
           return;
         }
