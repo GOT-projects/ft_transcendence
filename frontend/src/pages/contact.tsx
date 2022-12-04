@@ -175,16 +175,16 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                         </StyledUser>
                     )) : ""}
                 </>
-                <>
+                <React.Fragment>
                     {chatSwitch === "channel" ? friends?.map((user:GOT.Friend) =>(
                         <StyledUser key={uuid()} color={user.username === selectFriend ? Colors.ChatMenuButton : Colors.ChatMenu} onClick={() => {handleSelectFriend(user.username)}}>
                         <StyledChatPrivName key={uuid()}>channel</StyledChatPrivName>
-                        <StyledChatSettingButton >
-                            <AiFillSetting className='setting' size={15} color={Colors.ChatMenuButtonText}/>
+                        <StyledChatSettingButton onClick={() => {console.log("ok")}}>
+                            <AiFillSetting className='setting' size={30} color={Colors.ChatMenuButtonText}/>
                         </StyledChatSettingButton>
                         </StyledUser>
                     )): ""}
-                </>
+                </React.Fragment>
                     </StyledChatPrive>
                 </StyledContact>
 

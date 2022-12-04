@@ -33,10 +33,19 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
         notif = true;
     }
 
-    //Socket get erreur | notify add friend 
+    //Socket get erreur from server 
     useEffect(() => {
         socket.on('error_client', (rep:any) => {
-            props.setNotify({isOpen: true, message: `Error: ${rep}`, type:'error'});
+            if (typeof rep === "string")
+                props.setNotify({isOpen: true, message: `Error: ${rep}`, type:'error'});
+        })
+    }, [socket])
+
+    //Socket get info from server 
+    useEffect(() => {
+        socket.on('info_client', (rep:any) => {
+            if (typeof rep === "string")
+                props.setNotify({isOpen: true, message: `Info: ${rep}`, type:'info'});
         })
     }, [socket])
 

@@ -8,6 +8,7 @@ import {NotifyInter} from "../components/interfaces"
 import { GOT } from '../shared/types';
 import { BiUpload } from 'react-icons/bi';
 import { Colors } from './Colors';
+import { setPriority } from 'os';
 
 interface IProps {
    notify: NotifyInter;
@@ -46,6 +47,7 @@ const ProfileMenu :FunctionComponent<IProps> = (props:IProps) => {
         
         console.log(fileObj);
         console.log(fileObj.name);
+        props.setProfileMenu(false);
   };
     
     return (

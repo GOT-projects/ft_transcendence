@@ -195,7 +195,10 @@ export const StyledChatSwithButton = styled.button<BgColor>`
     }
 `;
 
-export const StyledChatSettingButton = styled.button`
+export const StyledChatSettingButton = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: 0;
     width: 50px;
     height: 50px;
