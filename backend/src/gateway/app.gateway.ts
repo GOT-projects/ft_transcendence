@@ -99,12 +99,12 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
                 if (login !== undefined) {
                     const ids = this.users.get(login);
                     if (!ids)
-                        return false;
+                    return false;
                     const i = ids.indexOf(client.id);
                     if (i !== -1)
-                        ids.splice(i, 1);
-                        if (ids.length === 0)
-                            this.users.delete(login);
+                    ids.splice(i, 1);
+                    if (ids.length === 0)
+                    this.users.delete(login);
                 }
                 return false;
             }
@@ -188,16 +188,22 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
     @SubscribeMessage('server_change_username')
     async changeUsername(@ConnectedSocket() client: Socket, @MessageBody('username') username: string, 
                         @MessageBody('Authorization') jwt: string) {
+        console.log('debug token', jwt, username);
         const auth = await this.connectUserBody(client, jwt);
         if (!auth) {
             return ;
         }
-        const ret = await this.gatewayService.changeUsername(auth, username);
+        const result = await this.gatewayService.changeUsername(auth, username);
+        if (typeof result === 'string') {
+            client.emit('error_client', result);
+            return ;
+        }
+        const ret = await this.gatewayService.profil(auth);
         if (typeof ret === 'string') {
             client.emit('error_client', ret);
             return ;
         }
-        this.server.emit('client_change_username', ret);
+        client.emit('client_profil', ret);
     }
 
     @SubscribeMessage('server_demand_friend')

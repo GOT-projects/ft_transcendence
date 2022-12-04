@@ -15,7 +15,7 @@ let emitDemandFriend = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>,
 }
 
 let emitChangeUsername = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, username: string) => {
-    socket.emit('server_demand_friend', {Authorization: accountService.getToken(), username: username})
+    socket.emit('server_change_username', {Authorization: accountService.getToken(), username: username})
 }
 
 let emitLeaderboard = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>) => {
