@@ -38,7 +38,8 @@ export class AppService {
             let user = await this.userService.findUnique(data.userId, data.userLogin);
             if (!user)
                 throw new HttpException('Unauthorized User not found', HttpStatus.UNAUTHORIZED);
-            file.filename = user.login;
+            user.urlImg = '/' + file.path;
+            await this.userService.update(user.id, user);
             return file;
         } catch (error) {
             throw new HttpException(error.message, error.status);
@@ -46,12 +47,12 @@ export class AppService {
     }
 
     
-    async getProfilImage(jwt: GOT.Token, file: string, res: Response) {
+    async getProfilImage(/*jwt: GOT.Token, */file: string, res: Response) {
         try {
-            const data: jwtContent = await this.jwtService.verifyAsync(jwt);
+            /*const data: jwtContent = await this.jwtService.verifyAsync(jwt);
             let user = await this.userService.findUnique(data.userId, data.userLogin);
             if (!user)
-                throw new HttpException('Unauthorized User not found', HttpStatus.UNAUTHORIZED);
+                throw new HttpException('Unauthorized User not found', HttpStatus.UNAUTHORIZED);*/
             return res.sendFile(file, { root: './images' });
         } catch (error) {
             throw new HttpException(error.message, error.status);
