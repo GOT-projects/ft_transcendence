@@ -1,3 +1,4 @@
+import { InfoServer } from "../components/interfaces";
 import Axios from "../services/Axios"
 
 const PostConnectIntra = async (code:string) => {
@@ -8,6 +9,7 @@ const PostUpload = async (file:File) => {
     let formData = new FormData();
 
     formData.append("file", file);
+    formData.append("url", InfoServer.HttpServer);
 	return await (Axios.put('/upload', formData))
 }
 
