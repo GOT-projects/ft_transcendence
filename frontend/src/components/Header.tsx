@@ -112,6 +112,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
             setOtc(false);
         }
     }
+
     const handleFriendList = () => {
         if (friendList === true){
             setFriendList(false);
@@ -123,6 +124,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
             setOtc(false);
         }
     }
+
     const handleMenuProfil = () => {
         if (profileMenu === true){
             setProfileMenu(false);
@@ -134,6 +136,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
             setOtc(false);
         }
     }
+
     const handleMenuNotif = () => {
         if (notifMenu === true){
             setNotifMenu(false);

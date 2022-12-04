@@ -8,6 +8,7 @@ import {NotifyInter} from "../components/interfaces"
 import { GOT } from '../shared/types';
 import { BiUpload } from 'react-icons/bi';
 import { Colors } from './Colors';
+import { apiPost } from '../api/post';
 
 interface IProps {
    notify: NotifyInter;
@@ -34,18 +35,13 @@ const ProfileMenu :FunctionComponent<IProps> = (props:IProps) => {
     }
 
     const handleFile = (event:any) => {
-        const fileObj = event.target.files && event.target.files[0];
+        const fileObj:File | File[] = event.target.files && event.target.files[0];
         if (!fileObj) {
           return;
         }
-        console.log('fileObj is', fileObj);
-        
         event.target.value = null;
-        
-        console.log(event.target.files);
-        
         console.log(fileObj);
-        console.log(fileObj.name);
+        apiPost.PostUpload(fileObj);
         props.setProfileMenu(false);
   };
 
