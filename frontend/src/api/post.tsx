@@ -5,7 +5,7 @@ const PostConnectIntra = async (code:string) => {
 }
 
 const PostUpload = async (file:File|File[]) => {
-	return await (Axios.post('/uplaod', {file: file}))
+	return await (Axios.put('/upload', {file: file}))
 }
 
 export const apiPost = {

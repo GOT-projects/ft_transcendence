@@ -35,6 +35,8 @@ export class AuthService {
         }
 		let request;
 		try {
+			console.log(data);
+			console.log('https://api.intra.42.fr/oauth/token')
 			request = await axios.post('https://api.intra.42.fr/oauth/token', data);
 		} catch (error) {
 			throw new HttpException(error.message + ' PS: INTRA token', error.response.status);

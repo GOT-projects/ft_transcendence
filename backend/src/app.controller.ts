@@ -11,7 +11,7 @@ export class AppController {
         private readonly appService: AppService,
     ) {}
 
-    @Put('change_image')
+    @Put('upload')
     @UseInterceptors(FileInterceptor('file'))
     async changeProfileImage(@Req() req: Request, @UploadedFile(
         new ParseFilePipe({
@@ -19,8 +19,8 @@ export class AppController {
             new MaxFileSizeValidator({ maxSize: 10000000 }),
           ],
         }),
-      ) file: Express.Multer.File) {
-        console.log(file);
+    ) file: Express.Multer.File) {
+        console.log('file ', file);
         if (!req?.headers?.authorization || !file)
             throw new HttpException('No authorization header or no file', HttpStatus.BAD_REQUEST);
         const jwt = req.headers.authorization.split(' ')[1];
