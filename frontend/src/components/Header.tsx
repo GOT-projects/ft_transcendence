@@ -51,6 +51,13 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
         })
     }, [socket])
 
+    //Socket get info from server 
+    useEffect(() => {
+        socket.on('warning', (rep:any) => {
+            if (typeof rep === "string")
+                props.setNotify({isOpen: true, message: `Warning: ${rep}`, type:'warning'});
+        })
+    }, [socket])
     //Socket listen add friend list
     useEffect(() => {
         socket.on('client_notif', (rep:GOT.User[]) => {
