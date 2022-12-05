@@ -1,6 +1,7 @@
-import Axios from "axios";
+import Axios from "../services/Axios";
 import React from 'react';
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import BackgroundAnimate from "../components/BackGroundAnimate";
 import { Colors } from "../components/Colors";
 import Footer from "../components/Footer";
@@ -15,6 +16,7 @@ import { accountService } from "../services/account.service";
 const Invite = () => {
     const [infoUser, setInfoUser] = useState<UsersId>();
     const [inputChat, setInputChat] = useState("");
+    let navigate = useNavigate();
     function handChange(event: any, setInput: any, input: string){
         if (input === "" && event.target.value ==="\n")
             return;
@@ -22,7 +24,7 @@ const Invite = () => {
 	}
     const PostConnectInvite = async (login:string ) => {
         Axios.defaults.withCredentials = false;
-        return await (Axios.post(InfoServer.HttpServer + '/auth/invite', { login: login}))
+        return await (Axios.post('/auth/invite', { login: login}))
     }
     const send = () => {
         //TODO send to db by socket
@@ -34,8 +36,7 @@ const Invite = () => {
 	    response.then((response:any) => {
 	    	if(response.status === 201){
                 accountService.saveToken(response.data.access_token);
-                setInfoUser(accountService.getInfoUser(response.data.user));
-                window.location.href = '/game';
+                navigate('/game');
 	    	}
 	    }).catch((e) =>{
             console.log(e);

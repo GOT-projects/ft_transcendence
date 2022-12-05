@@ -1,29 +1,27 @@
-import {Dispatch, SetStateAction, FunctionComponent, useState} from 'react';
+import {Dispatch, SetStateAction, FunctionComponent, useState, useContext} from 'react';
 import {NotifyInter} from "../../components/interfaces"
 import { StyledMenuNotif, StyledMenuNotifButton, StyledMenuNotifButtonHover, StyledMenuNotifContentUser, StyledMenuNotifholder, StyledMenuNotifUser } from '../Styles/StyleNotifUser';
 import {RiUserAddFill} from 'react-icons/ri';
 import {TiUserDelete} from 'react-icons/ti';
 import { v4 as uuid } from 'uuid';
+import { GOT } from '../../shared/types';
+import { SocketContext } from '../../socket/socketPovider';
+import { emitSocket } from '../../socket/socketEmit';
+
 interface IProps {
-   setNotif: Dispatch<SetStateAction<boolean>>;
    notify: NotifyInter;
    setNotify: Dispatch<any>;
+   profil: GOT.Profile | undefined;
 }
 
 const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
-    const [waitingUser, setWaitingUser] = useState([
-        {id: uuid(), name: "bernard"},
-        {id: uuid(), name: "albert"},
-        {id: uuid(), name: "paul"},
-        {id: uuid(), name: "jean"},
-        {id: uuid(), name: "theo"},
-        {id: uuid(), name: "rip"},
-    ])
-    const handleAdd = () =>{
-        props.setNotify({isOpen: true, message: 'Add friend', type:'success'});
+    const socket = useContext(SocketContext);
+    const handleAdd = (name: string) =>{
+        props.setNotify({isOpen: true, message: `Add ${name}`, type:'success'});
+        emitSocket.emitDemandFriend(socket, name);
     }
-    const handleRemove = () =>{
-        props.setNotify({isOpen: true, message: 'Refused invitation', type:'success'});
+    const handleRemove = (name: string) =>{
+        props.setNotify({isOpen: true, message: `Refused invitation of ${name}`, type:'success'});
     }
     return(
         <StyledMenuNotif 
@@ -31,20 +29,19 @@ const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
             animate={{x:0}}
             transition={{duration: 1}}
             exit={{x: 300, opacity: 0}}>
-                {waitingUser?.map((user) => (
-                    <StyledMenuNotifholder key={user.id}>
+                {props.profil?.notif.map((user) => (
+                    <StyledMenuNotifholder key={uuid()}>
                         <div>
                         <StyledMenuNotifContentUser>
-                            <StyledMenuNotifUser>{user.name}</StyledMenuNotifUser>
+                            <StyledMenuNotifUser>{user.username}</StyledMenuNotifUser>
                         </StyledMenuNotifContentUser>
-
                         </div>
                         <StyledMenuNotifButton>
                             <StyledMenuNotifButtonHover>
-                                <RiUserAddFill size={"20px"} onClick={handleAdd}/>
+                                <RiUserAddFill size={"20px"} onClick={() => handleAdd(user.username)}/>
                             </StyledMenuNotifButtonHover>
                             <StyledMenuNotifButtonHover>
-                                <TiUserDelete size={"25px"} onClick={handleRemove}/>
+                                <TiUserDelete size={"25px"} onClick={() => handleRemove(user.username)}/>
                             </StyledMenuNotifButtonHover>
                         </StyledMenuNotifButton>
                 </StyledMenuNotifholder>

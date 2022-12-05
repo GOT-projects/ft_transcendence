@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { GOT } from "shared/types";
 import { Repository } from "typeorm";
 import { Game } from "../entities/game.entity";
-import { Rank } from "../types/game.types";
+import { gameStatus, Rank } from "../types/game.types";
 import { UserService } from "./user.service";
 
 @Injectable()
@@ -22,6 +22,15 @@ export class GameService {
         });
     }
 
+    async getInGamesOf(userId: number) {
+        return await this.gameRepository.find({
+            where: [
+                { user1Id: userId , status: gameStatus.IN_PROGRESS},
+                { user2Id: userId , status: gameStatus.IN_PROGRESS}
+            ]
+        });
+    }
+
     async getAll() {
         return await this.gameRepository.find();
     }
@@ -32,28 +41,46 @@ export class GameService {
         allGames.forEach( (game) => {
             if (game.points1 > game.points2) {
                 if (ranks.find(o => o.id === game.user1Id) === undefined)
-                    ranks.push({id: game.user1Id, val: 1})
+                    ranks.push({id: game.user1Id, val: 1, lose: 0})
                 else
                     ranks.find((o, i) => {
                         if (o.id === game.user1Id) {
-                            ranks[i] = {id: o.id, val: o.val + 1};
+                            ranks[i] = {id: o.id, val: o.val + 1, lose: o.lose};
+                            return true;
+                        }
+                    });
+                if (ranks.find(o => o.id === game.user2Id) === undefined)
+                    ranks.push({id: game.user2Id, val: 0, lose: 1})
+                else
+                    ranks.find((o, i) => {
+                        if (o.id === game.user2Id) {
+                            ranks[i] = {id: o.id, val: o.val, lose: o.lose + 1};
                             return true;
                         }
                     });
             } else {
                 if (ranks.find(o => o.id === game.user2Id) === undefined)
-                    ranks.push({id: game.user2Id, val: 1})
+                    ranks.push({id: game.user2Id, val: 1, lose: 0})
                 else
                     ranks.find((o, i) => {
                         if (o.id === game.user2Id) {
-                            ranks[i] = {id: o.id, val: o.val + 1};
+                            ranks[i] = {id: o.id, val: o.val + 1, lose: o.lose};
+                            return true;
+                        }
+                    });
+                if (ranks.find(o => o.id === game.user1Id) === undefined)
+                    ranks.push({id: game.user1Id, val: 0, lose: 1})
+                else
+                    ranks.find((o, i) => {
+                        if (o.id === game.user1Id) {
+                            ranks[i] = {id: o.id, val: o.val, lose: o.lose + 1};
                             return true;
                         }
                     });
             }
         });
         return ranks.sort(function(a,b) {
-            return a.val - b.val;
+            return (a.val - a.lose) - (b.val - b.lose);
         });
     }
 
@@ -61,10 +88,11 @@ export class GameService {
         const games = await this.getGamesOf(userId);
         const ranks = await this.getRanks();
         const max = await this.userService.countAll();
-        let stats = new GOT.StatUser();
-        stats.defeat = 0;
-        stats.victory = 0;
-        stats.rank = -1;
+        let stats: GOT.StatUser = {
+            defeat: 0,
+            victory: 0,
+            rank: -1
+        };
         ranks.find((o, i) => {if (o.id === userId) {stats.rank = i + 1; return true}});
         if (games !== null) {
             games.forEach( (game) => {

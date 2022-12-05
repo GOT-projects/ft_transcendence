@@ -23,6 +23,27 @@ export const StyledMenuFriendContente = styled.div`
     overflow: scroll;
 `
 
+export const StyleMenuFriendContenteUsername = styled.div`
+    width: 140px;
+    overflow: hidden;
+`;
+
+export const StyleMenuFriendUsername = styled.p`
+    padding: 10px;
+    &:hover{
+        animation: slide-left 6s;
+    }
+    @keyframes slide-left {
+        from {
+            margin-left: 0%;
+            width: 100%; 
+        }
+        to {
+            margin-left: -200%;
+            width: 100%;
+        }
+`;
+
 export const StyleMenuFriendUser = styled.div`
     display: flex;
     align-items: center;

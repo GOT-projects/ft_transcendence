@@ -11,11 +11,11 @@ export const StyledContaite = styled.div`
     display: flex;
     align-items: space-around;
     z-index: 10;
-    top: 50%;
+    top: 4.1rem;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -0%);
     width: 90%;
-    height: 86%;
+    height: calc(100% - 7rem);
     overflow: hidden;
     border: 2px solid ${Colors.border};
     border-radius: 20px;
@@ -102,12 +102,13 @@ background-color: ${Colors.MenuActive}
 `;
 
 export const StyledContact = styled.div`
+    display: flex;
     width: 40%;
     height: 104%;
-    display: flex;
     margin: 0;
     padding: 0;
     align-items: space-around;
+    justify-content: center;
     flex-direction: column;
     background-color: ${Colors.ChatMenu};
     border: 2px solid ${Colors.ChatMenuButton};
@@ -133,7 +134,6 @@ export const StyledChatSwith = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-around;
-    margin-top: 15px;
     height: 4rem;
     border-radius: 10px 0 0 0;
     background-color: ${Colors.ChatMenu};
@@ -195,7 +195,10 @@ export const StyledChatSwithButton = styled.button<BgColor>`
     }
 `;
 
-export const StyledChatSettingButton = styled.button`
+export const StyledChatSettingButton = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: 0;
     width: 50px;
     height: 50px;
@@ -353,12 +356,15 @@ export const StyledUser = styled.button<BgColor>`
 `;
 
 
-export const StyledChatPrivAvatar = styled.div`
+interface Ibg{
+    profil:string;
+}
+export const StyledChatPrivAvatar = styled.div<Ibg>`
     margin: 10px;
     width: 50px;
     height: 50px;
-    background-color: red;
-    border-radius: 50%;
+    background: url(${p => p.profil});
+    background-size: 100% 100%;
 `;
 
 export const StyledChatPrivName = styled.p`

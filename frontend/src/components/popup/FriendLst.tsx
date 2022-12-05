@@ -1,15 +1,20 @@
-
-import {Dispatch, FunctionComponent, useState} from 'react';
+import {Dispatch, FunctionComponent, useContext, useEffect, useState} from 'react';
+import { useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
-import { accountService } from '../../services/account.service';
-import { StyledMenuFriend, StyledMenuFriendContente, StyleMenuFriendUser, StyledMenuFriendImg, StyledMenuFriendImgContente, StyledMenuFriendStatus, StyledMenuFriendStatusBehind } from '../Styles/StyleFriendLst';
+import { GOT } from '../../shared/types';
+import { emitSocket } from '../../socket/socketEmit';
+import { SocketContext } from '../../socket/socketPovider';
+import { StyledMenuFriend, StyledMenuFriendContente, StyleMenuFriendUser, StyledMenuFriendImg, StyledMenuFriendImgContente, StyledMenuFriendStatus, StyledMenuFriendStatusBehind, StyleMenuFriendContenteUsername, StyleMenuFriendUsername } from '../Styles/StyleFriendLst';
 
 interface IProps {
-   setFriendList: Dispatch<any>;
+    setFriendList: Dispatch<any>;
+    profil: GOT.Profile | undefined;
 }
+
 interface IProp {
     img: string,
     status: string,
+    username: string,
 }
 
 const StatusProfile:FunctionComponent<IProp> = (props:IProp)=> {
@@ -23,16 +28,26 @@ const StatusProfile:FunctionComponent<IProp> = (props:IProp)=> {
 }
 
 const PopupListFriends:FunctionComponent<IProps> = (props:IProps) => {
-    const [friends, setFriends] = useState([
-        {id: uuid(), name: "test", img: accountService.getUrlImg(), status:"online", inGame: false},
-        {id: uuid(), name: "Robert", img: accountService.getUrlImg(), status:"offline", inGame: true},
-        {id: uuid(), name: "Jean", img: accountService.getUrlImg(), status:"offline", inGame: false},
-        {id: uuid(), name: "aartiges", img: accountService.getUrlImg(), status:"offline", inGame: false},
-        {id: uuid(), name: "rcuminal", img: accountService.getUrlImg(), status:"offline", inGame: false},
-    ])
+    const socket = useContext(SocketContext);
+    const [friends, setFriends] = useState<GOT.Friend[]>()
+    const navigate = useNavigate()
+
+    //get erreur for notify
+    useEffect(() => {
+        socket.on('client_friends', (rep:GOT.Friend[]) => {
+            setFriends(rep);
+        })
+        return () => {
+            socket.off('client_friends');
+        } 
+    },[socket])
+
+    useEffect(() => {
+        emitSocket.emitFriends(socket);
+    }, [socket])
 
     const handleGotoMsg = (user:string) =>{
-        window.location.href = '/chat?code=' + user;
+        navigate(`/chat?code=${user}`);
     }
     return (
         <StyledMenuFriend
@@ -42,9 +57,11 @@ const PopupListFriends:FunctionComponent<IProps> = (props:IProps) => {
             exit={{x: 300, opacity: 0}}>
             <StyledMenuFriendContente>
             {friends?.map((friend) => (
-                    <StyleMenuFriendUser key={friend.id} onClick={ () => handleGotoMsg(friend.name)}>
-                        <StatusProfile img={accountService.getUrlImg()} status={friend.status}></StatusProfile>
-                        <p>{friend.name}</p>
+                    <StyleMenuFriendUser key={uuid()} onClick={ () => handleGotoMsg(friend.username)}>
+                        <StatusProfile img={friend.urlImg} username={friend.username} status={friend.status}></StatusProfile>
+                        <StyleMenuFriendContenteUsername>
+                            <StyleMenuFriendUsername>{friend.username}</StyleMenuFriendUsername>
+                        </StyleMenuFriendContenteUsername>
                     </StyleMenuFriendUser>
             ))}
             </StyledMenuFriendContente>

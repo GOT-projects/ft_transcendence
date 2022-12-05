@@ -17,31 +17,8 @@ let removeAccess= () => {
 }
 
 let removeUser= () => {
-    localStorage.removeItem('login')
-    localStorage.removeItem('urlImg')
     localStorage.removeItem('access')
 }
-let getInfoUser = (data: UsersId) => {
-    let infoUser:UsersId = {
-        id: data.id,
-        idIntra: data.idIntra,
-        login: data.login,
-        urlImg: data.urlImg,
-        username: data.username,
-        wallet: data.wallet,
-    };
-    localStorage.setItem("login", infoUser.login);
-    localStorage.setItem("urlImg", infoUser.urlImg);
-    return  infoUser;
-}
-
-let getUrlImg = () => {
-    let ret = localStorage.getItem("urlImg")
-    if (ret === null)
-        return ("");
-    return ret;
-}
-
 
 let removeToken= () => {
     document.cookie = `token_access=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
@@ -50,34 +27,31 @@ let removeToken= () => {
     window.location.href = '/';
 }
 
-let isLogged = () => {
-    var access = false;
-    Axios.defaults.withCredentials = false;
+let isLogged = async() => {
     let token = localStorage.getItem('token_access')
     if (!!token){
         try {
-			const response = apiGet.getAccess(token);
-			response.then((rep:any) => {
-                if (rep.status === 200){
-                    saveAccess("true");
-                }else{
-                    saveAccess("false");
-                }  
-			})
+			const response = await apiGet.getAccess();
+            if (response.status === 200)
+                return (true);
+            else{
+                return (false);
+            }
         } catch (e) {
             console.log(e);
-            return access;
-        }
-        let auth = localStorage.getItem('access');
-        if (!!auth){
-            if (auth === "true")
-                access = true;
-            removeAccess();
         }
     }
-    return access;
+    return false;
+}
+
+let getToken = () => {
+    let token= localStorage.getItem('token_access');
+    if (token === null)
+        return ("");
+    return (token);
+
 }
 
 export const accountService = {
-    saveToken, removeToken, isLogged, getInfoUser, getUrlImg
+    saveToken, removeToken, isLogged, getToken
 }

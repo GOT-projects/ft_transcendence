@@ -14,6 +14,9 @@ export class RelUser {
     })
     status!: UserUserStatus;
 
+    @Column({default: false})
+    block!: boolean;
+
     @Column()
     user1Id!: number;
 

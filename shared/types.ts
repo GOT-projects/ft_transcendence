@@ -10,7 +10,7 @@ export namespace GOT {
     /**
      * Information of a user
      */
-    export class User {
+    export interface User {
         id: number;
         idIntra?: number;
         login: string;
@@ -32,7 +32,7 @@ export namespace GOT {
     /**
      * Information for friends (information of user + his status)
      */
-    export class Friend extends User {
+    export interface Friend extends User {
         status: ProfileStatus;
     }
 
@@ -44,7 +44,7 @@ export namespace GOT {
     /**
      * Information of a user about games
      */
-    export class StatUser {
+    export interface StatUser {
         victory: number;
         defeat: number;
         rank: number;
@@ -53,7 +53,7 @@ export namespace GOT {
     /**
      * Information of 1 game
      */
-    export class Party {
+    export interface Party {
         user1: User;
         user2: User;
         points1: number;
@@ -63,7 +63,7 @@ export namespace GOT {
     /**
      * All information of a user for leaderboard
      */
-    export class ProfileLeaderBoard {
+    export interface ProfileLeaderBoard {
         userInfos: User;
         stat: StatUser;
         inGame: number | undefined; // id de la game ou pas visualiser
@@ -79,7 +79,7 @@ export namespace GOT {
      * Route: POST /auth/connect_intra
      * Front: NaN
      */
-    export class Login {
+    export interface Login {
         access_token: Token;
         user: User;
     }
@@ -90,7 +90,7 @@ export namespace GOT {
      * Route: Get /profil
      * Front: Header (Profil)
      */
-    export class Profile {
+    export interface Profile {
         userInfos: User;
         stat: StatUser;
         notif: User[];  // users waiting responce to be friend
@@ -102,7 +102,7 @@ export namespace GOT {
      * Route: GET /profil/:login
      * Front: UserProfil (leaderboard)
      */
-    export class HistoryParties {
+    export interface HistoryParties {
         userInfos: User;
         stat: StatUser;
         parties: Party[];
@@ -115,7 +115,7 @@ export namespace GOT {
      */
 
     /**
-     * Route: PATCH /change_image
+     * Route: PUT /change_image
      * @param: { ... } //TODO image
      * Front: Header (menu)
      */
@@ -160,9 +160,7 @@ export namespace GOT {
      *  WS: /get_leaderboard
      * Front: Leaderboard
      */
-    export class LeaderBoard {
-        users: ProfileLeaderBoard[];
-    }
+    export type LeaderBoard = ProfileLeaderBoard[];
 
     /****************************************************/
     /**************** Clients to server *****************/
@@ -174,7 +172,7 @@ export namespace GOT {
      *  WS: /set_new_friend
      * Front: Notification
      */
-    export class NotifChoice {
+    export interface NotifChoice {
         user: User;
         accept: boolean;
     }
@@ -185,6 +183,27 @@ export namespace GOT {
      *  WS: /demand_friend
      * Front: Leaderboard
      * @param { login }
+     */
+
+
+
+    /**
+     * server_privmsg (login)
+     * 
+     * return client_privmsg (msg[])
+     */
+
+    export interface msg {
+        userFrom: User,
+        userTo: User,
+        msg: string,
+       // time: Date
+    }
+
+    /**
+     * server_privmsg_send (login, msg)
+     * 
+     * return client_privmsg_send (msg)
      */
 
 }

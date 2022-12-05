@@ -56,6 +56,11 @@ export const StyleMenusHeader = styled.ul`
     }
 `;
 
+export const StyleMenuHeaderAvatarContainte = styled.div`
+    display: flex;
+    align-items: center;
+`
+
 interface Notif{
     colorIcon: string;
 }
