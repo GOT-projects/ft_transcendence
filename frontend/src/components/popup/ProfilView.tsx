@@ -10,11 +10,12 @@ interface IProps {
    setPopupProfil:Dispatch<React.SetStateAction<boolean>>;
    login: GOT.User | undefined;
 }
+
 const ProfilView:FunctionComponent<IProps> = (props:IProps) =>{
     const handleClose = ( ) => {
-        console.log("close")
         props.setPopupProfil(false);
-    }
+}
+
     return(
         <StyledContaiteView>
             <StyledContaiteClose>

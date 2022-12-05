@@ -25,7 +25,7 @@ interface IProps {
 }
 
 const Chat:FunctionComponent<IProps> = (props:IProps)=> {
-    const [popuProfil, setPopupProfil] = useState(true);
+    const [popuProfil, setPopupProfil] = useState(false);
     const [popupUser, setPopupUser] = useState<GOT.User>();
     const socket = useContext(SocketContext)
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
