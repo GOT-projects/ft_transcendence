@@ -38,7 +38,7 @@ let emitUsers = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>) => {
 let emitBlockUser = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, login:string) => {
     socket.emit('server_block_somebody', {Authorization: accountService.getToken(), login:login})
 }
+
 export const emitSocket ={
     emitProfil, emitFriends, emitDemandFriend, emitChangeUsername, emitLeaderboard, emitPrivmsg, emitSendPrivmsg, emitUsers, emitBlockUser
-
 }

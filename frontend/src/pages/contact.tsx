@@ -16,6 +16,8 @@ import { SocketContext } from '../socket/socketPovider';
 import { GOT } from '../shared/types';
 import { emitSocket } from '../socket/socketEmit';
 import { MdOutlineBlock } from 'react-icons/md';
+import { CgProfile } from 'react-icons/cg';
+import ProfilView from '../components/popup/ProfilView';
 
 interface IProps {
    profil: GOT.Profile | undefined;
@@ -23,9 +25,9 @@ interface IProps {
 }
 
 const Chat:FunctionComponent<IProps> = (props:IProps)=> {
+    const [popuProfil, setPopupProfil] = useState(true);
+    const [popupUser, setPopupUser] = useState<GOT.User>();
     const socket = useContext(SocketContext)
-	const url = window.location.href;
-	let params = (new URL(url)).searchParams;
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
     const [navActive, setNavActive] = useState("UnActiveMenu");
     const [chatSwitch, setChatSwitch] = useState<string>('private');
@@ -144,6 +146,16 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
         emitSocket.emitPrivmsg(socket, name);
     }
 
+    const handleViewProfil = (name: string) =>{
+        const user = usersList?.filter((user) => user.login === name);
+        if (user){
+            const tmp:GOT.User = user[0];
+            setPopupUser(tmp);
+            setPopupProfil(true);
+        }
+
+    }
+
     const handleBlockUser = (name: string) => {
         emitSocket.emitBlockUser(socket, name);
     }
@@ -209,6 +221,9 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                         <StyledUser key={uuid()} color={user.username === selectUser?.username ? Colors.ChatMenuButton : Colors.ChatMenu} onClick={() => {handleSelectFriend(user.username)}}>
                             <StyledChatPrivAvatar profil={user.urlImg}/>
                         <StyledChatPrivName key={uuid()}>{user.username}</StyledChatPrivName>
+                        <StyledChatSettingButton onClick={() => {handleViewProfil(user.login)}}>
+                            <CgProfile className='setting' size={30} color={Colors.ChatMenuButtonText}/>
+                        </StyledChatSettingButton>
                         <StyledChatSettingButton onClick={() => {handleBlockUser(user.login)}}>
                             <MdOutlineBlock className='setting' size={30} color={Colors.ChatMenuButtonText}/>
                         </StyledChatSettingButton>
@@ -253,6 +268,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                 </StyledChat>
             </StyledContaite>
             <Notification notify={notify} setNotify={setNotify}/>
+            {popuProfil ? <ProfilView login={popupUser} profil={props.profil} setPopupProfil={setPopupProfil}/> : <> </>}
 			<Footer/>
 		</React.Fragment>
 	)
