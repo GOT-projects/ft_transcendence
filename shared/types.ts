@@ -34,7 +34,7 @@ export namespace GOT {
      */
     export interface Friend extends User {
         status: ProfileStatus;
-    }
+    } 
 
     /**
      * redefinition of a string - for a token
@@ -46,7 +46,7 @@ export namespace GOT {
      */
     export interface StatUser {
         victory: number;
-        defeat: number;
+        defeat: number; 
         rank: number;
     }
 
