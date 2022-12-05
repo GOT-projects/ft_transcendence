@@ -31,7 +31,7 @@ let emitPrivmsg = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, logi
     socket.emit('server_privmsg', {Authorization: accountService.getToken(), login: login})
 }
 
-let emitSendPrivmsg = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, login:string, msg:GOT.msg) => {
+let emitSendPrivmsg = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, login:string, msg: string) => {
     socket.emit('server_privmsg_send', {Authorization: accountService.getToken(), login: login, msg: msg})
 }
 

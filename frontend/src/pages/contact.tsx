@@ -25,7 +25,7 @@ interface IProps {
 }
 
 const Chat:FunctionComponent<IProps> = (props:IProps)=> {
-    const [popuProfil, setPopupProfil] = useState(true);
+    const [popuProfil, setPopupProfil] = useState(false);
     const [popupUser, setPopupUser] = useState<GOT.User>();
     const socket = useContext(SocketContext)
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
@@ -109,7 +109,10 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
         if (props.profil && selectUser !== undefined){
             const msg:GOT.msg = {userFrom: props.profil.userInfos, userTo:selectUser, msg: inputChat};
             console.log("Emit send", msg)
-            emitSocket.emitSendPrivmsg(socket, props.profil.userInfos.login, msg)
+            emitSocket.emitSendPrivmsg(socket, msg.userTo.login, msg.msg);
+            let tmp = selectUserMsg;
+            tmp?.push(msg);
+            setSelectUserMsg(tmp);
         }
         setInputChat("");
     }
@@ -246,11 +249,11 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                 <StyledChat>
                     <StyledChatWindow>
                         <StyledChatTextArea>
-                            {/* {selectUser?.map((data:DataMesssage) => (
-                                    <StyledChatPlace key={data.id} className={data.from === localStorage.getItem("login") ? "send" : "receive"}>
-                                        <StyledChatText>{data.message}</StyledChatText>
+                            {selectUserMsg?.map((data:GOT.msg) => (
+                                    <StyledChatPlace key={uuid()} className={data.userFrom.login === props.profil?.userInfos.login ? "send" : "receive"}>
+                                        <StyledChatText>{data.msg}</StyledChatText>
                                     </StyledChatPlace>
-                            ))} */}
+                            ))}
                             <div className='field' ref={endRef}/>
                         </StyledChatTextArea>
                         <StyledChatSendDiv className={selectUserMsg ? "active" : "deactive"}>

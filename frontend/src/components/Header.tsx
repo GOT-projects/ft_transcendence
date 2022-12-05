@@ -2,7 +2,7 @@ import {StyledHeader, StyleMenusHeader ,StyleMenuHeader, StyleNavToggler, StyleN
 import {Dispatch, FunctionComponent, useState, useEffect, useCallback, useContext } from "react";
 import { IoIosNotifications, IoMdNotificationsOff } from 'react-icons/io';
 import ProfileMenu from "./MenuProfilHeader";
-import {NotifyInter} from "../components/interfaces"
+import {InfoServer, NotifyInter} from "../components/interfaces"
 import { Colors } from "./Colors";
 import PopupNotifUser from "./popup/NotifyUser";
 import PopupListFriends from "./popup/FriendLst";
@@ -79,7 +79,13 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
         socket.on('client_profil', (rep:GOT.Profile) =>{
             console.log("Profil:", rep);
             if (rep && props.setProfil){
-                props.setProfil(rep);
+                if (rep.userInfos.urlImg.split('')[0] === '/'){
+                    console.log("url start with /")
+                    rep.userInfos.urlImg = `${InfoServer.HttpServer}${rep.userInfos.urlImg}`;
+                    props.setProfil(rep);
+                }else{
+                    props.setProfil(rep);
+                }
             }
         })
         return () => {
