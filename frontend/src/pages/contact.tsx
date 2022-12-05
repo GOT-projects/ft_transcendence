@@ -144,6 +144,10 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
         emitSocket.emitPrivmsg(socket, name);
     }
 
+    const handleBlockUser = (name: string) => {
+        emitSocket.emitBlockUser(socket, name);
+    }
+
 	return (
 		<React.Fragment>
 			<BackgroundAnimate name="contact"/>
@@ -205,6 +209,9 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                         <StyledUser key={uuid()} color={user.username === selectUser?.username ? Colors.ChatMenuButton : Colors.ChatMenu} onClick={() => {handleSelectFriend(user.username)}}>
                             <StyledChatPrivAvatar profil={user.urlImg}/>
                         <StyledChatPrivName key={uuid()}>{user.username}</StyledChatPrivName>
+                        <StyledChatSettingButton onClick={() => {handleBlockUser(user.login)}}>
+                            <MdOutlineBlock className='setting' size={30} color={Colors.ChatMenuButtonText}/>
+                        </StyledChatSettingButton>
                         </StyledUser>
                     )) : ""}
                 </>
