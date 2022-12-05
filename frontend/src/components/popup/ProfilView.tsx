@@ -3,12 +3,14 @@ import { GOT } from "../../shared/types";
 import { StyledContaiteClose, StyledContaiteHistory, StyledContaiteHistorylst, StyledContaiteHistoryScore, StyledContaiteHistorytile, StyledContaiteHistoryUser, StyledContaiteHistoryVs, StyledContaiteProfil, StyledContaiteRank, StyledContaiteText, StyledContaiteView, StyledViewAvatar } from "../Styles/StyleViewProfil";
 import { FaWindowClose } from 'react-icons/fa';
 import { Colors } from "../Colors";
+import { v4 as uuid } from 'uuid';
 
 
 interface IProps {
    profil: GOT.HistoryParties | undefined;
-
+   setPopupProfil:Dispatch<React.SetStateAction<boolean>>;
 }
+
 const ProfilView:FunctionComponent<IProps> = (props:IProps) =>{
     const handleClose = ( ) => {
         console.log("close")
@@ -28,22 +30,27 @@ const ProfilView:FunctionComponent<IProps> = (props:IProps) =>{
             </StyledContaiteRank>
             <StyledContaiteHistory>
                 <StyledContaiteHistorytile>
-                    <StyledContaiteText size={"16px"}>history game</StyledContaiteText>
+                    <StyledContaiteText size={"16px"}>HISTORIC</StyledContaiteText>
                 </StyledContaiteHistorytile>
-                <StyledContaiteHistorylst>
-                    <StyledContaiteHistoryUser>
-                        <StyledContaiteText size={"12px"}>robert</StyledContaiteText>
-                    </StyledContaiteHistoryUser>
-                    <StyledContaiteHistoryVs>
-                        <StyledContaiteText size={"12px"}>VS</StyledContaiteText>
-                    </StyledContaiteHistoryVs>
-                    <StyledContaiteHistoryUser>
-                        <StyledContaiteText size={"12px"}>robert</StyledContaiteText>
-                    </StyledContaiteHistoryUser>
-                    <StyledContaiteHistoryScore>
-                        <StyledContaiteText size={"12px"}>{`0 - 1`}</StyledContaiteText>
-                    </StyledContaiteHistoryScore>
-                </StyledContaiteHistorylst>
+                    {
+                        props.profil?.parties.map( (party: GOT.Party) => (
+                            
+                            <StyledContaiteHistorylst>
+                                <StyledContaiteHistoryUser>
+                                    <StyledContaiteText size={"12px"}>{party.user1.username}</StyledContaiteText>
+                                </StyledContaiteHistoryUser>
+                                <StyledContaiteHistoryVs>
+                                    <StyledContaiteText size={"12px"}>VS</StyledContaiteText>
+                                </StyledContaiteHistoryVs>
+                                <StyledContaiteHistoryUser>
+                                    <StyledContaiteText size={"12px"}>{party.user2.username}</StyledContaiteText>
+                                </StyledContaiteHistoryUser>
+                                <StyledContaiteHistoryScore>
+                                    <StyledContaiteText size={"10px"}>{party.points1}-{party.points2}</StyledContaiteText>
+                                </StyledContaiteHistoryScore>
+                            </StyledContaiteHistorylst>
+                        ))
+                    }
             </StyledContaiteHistory>
         </StyledContaiteView>
     )

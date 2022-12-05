@@ -59,6 +59,7 @@ export const StyledContaiteHistorylst = styled.div`
     display: flex;
     margin: 10px;
     width: 100%;
+    align-items: center;
 `
 export const StyledContaiteHistoryUser = styled.div`
     display: flex;
@@ -103,4 +104,5 @@ export const StyledViewAvatar = styled.div<Ibg>`
     height: 50px;
     background: url(${p => p.profilImg});
     background-size: 100% 100%;
+    border-radius: 50%;
 `;

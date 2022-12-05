@@ -268,8 +268,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                 </StyledChat>
             </StyledContaite>
             <Notification notify={notify} setNotify={setNotify}/>
-
-			<Footer/>
+           <Footer/>
 		</React.Fragment>
 	)
 }

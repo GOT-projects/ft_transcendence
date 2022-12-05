@@ -24,6 +24,9 @@ interface IProps {
 
 const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 
+
+
+
     const [popuProfil, setPopupProfil] = useState(false);
     const [popupUser, setPopupUser] = useState<GOT.User>();
 
@@ -48,7 +51,7 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
         socket.on("client_leaderboard", (e: GOT.LeaderBoard) => {
             console.log(e);
             if (e)
-            setTab(e);
+                setTab(e);
         });
         return () => {
             socket.off('client_leaderboard');
@@ -58,8 +61,10 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
     useEffect(() => {
         socket.on("client_profil_login", (e: GOT.HistoryParties) => {
             console.log(e);
+            e.parties[0] = {user1: e.userInfos, user2: e.userInfos, points1: 102, points2: 205};
+            e.parties[1] = {user1: e.userInfos, user2: e.userInfos, points1: 220, points2: 105};
             if (e)
-            setHisto(e);
+                setHisto(e);
         });
         return () => {
             socket.off('client_profil_login');
@@ -122,7 +127,7 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 				</>
 				</StyledLeadTileRank>
 			</StyledLead>
-            {popuProfil ? <ProfilView profil={histo} /> : <> </>}
+            {popuProfil ? <ProfilView profil={histo} setPopupProfil={setPopupProfil}/> : <> </>}
 			<Footer/>
 		</React.Fragment>
 	)
