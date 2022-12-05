@@ -80,6 +80,17 @@ export class RelUserService {
         return false;
     }
 
+    async isBlock(user1: User, user2: User) {
+        const blockBy = await this.relUserRepository.find({
+            where: [
+                {user1Id: user2.id, user2Id: user1.id, block: true}
+            ]
+        })
+        if (blockBy.length !== 0)
+            throw {message: `You're blocked by ${user2.login}`};
+        return false;
+    }
+
     async demandFriend(login:string, loginDemand: string) {
         if (login === loginDemand)
             throw {message: 'Same users seriously !!!'}
@@ -87,6 +98,7 @@ export class RelUserService {
         const user2 = await this.userService.findLogin(loginDemand);
         if (!user1 || !user2)
             throw {message: 'user not found'};
+        await this.isBlock(user1, user2);
         const alreadyFriend = await this.relUserRepository.find({
             where: [
                 {user1Id: user1.id, user2Id: user2.id, status: UserUserStatus.FRIEND},
@@ -101,19 +113,53 @@ export class RelUserService {
             ]
         });
         if (alreadyExist.length !== 0)
-        throw {message: `user ${login} have already demand ${loginDemand}`};
+            throw {message: `user ${login} have already demand ${loginDemand}`};
         const waitingFriend = await this.relUserRepository.find({
             where: [
                 {user1Id: user2.id, user2Id: user1.id, status: UserUserStatus.WAITING}
             ]
         });
         if (waitingFriend.length !== 0) {
+            waitingFriend[0].block = false;
             waitingFriend[0].status = UserUserStatus.FRIEND;
             await this.relUserRepository.update(waitingFriend[0].id, waitingFriend[0]);
             return waitingFriend[0];
         }
         const dto: CreateRelUserDto = {
+            block: false,
             status: UserUserStatus.WAITING,
+            user1Id: user1.id,
+            user2Id: user2.id
+        };
+        const newRel = this.relUserRepository.create(dto);
+        return await this.relUserRepository.save(newRel);
+    }
+
+    async blockSomebody(login:string, loginDemand: string) {
+        if (login === loginDemand)
+            throw {message: 'Same users seriously !!!'}
+        const user1 = await this.userService.findLogin(login);
+        const user2 = await this.userService.findLogin(loginDemand);
+        if (!user1 || !user2)
+            throw {message: 'user not found'};
+        const alreadyExist = await this.relUserRepository.find({
+            where: [
+                {user1Id: user1.id, user2Id: user2.id}
+            ]
+        });
+        if (alreadyExist.length !== 0) {
+            if (alreadyExist[0].block === true)
+                throw {message: `user ${loginDemand} is already blocked`};
+            else {
+                alreadyExist[0].block = true;
+                if (alreadyExist[0].status === UserUserStatus.FRIEND)
+                    alreadyExist[0].status = UserUserStatus.NONE;
+            }
+            await this.relUserRepository.update(alreadyExist[0].id, alreadyExist[0]);
+        }
+        const dto: CreateRelUserDto = {
+            block: true,
+            status: UserUserStatus.NONE,
             user1Id: user1.id,
             user2Id: user2.id
         };

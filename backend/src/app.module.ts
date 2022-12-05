@@ -8,6 +8,7 @@ import { DatabaseModule } from './database/database.module';
 import { multerModule } from './ressources';
 import { GatewayService } from './gateway/gateway.service';
 import { FriendService } from './gateway/friend.service';
+import { ChatService } from './gateway/chat.service';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { FriendService } from './gateway/friend.service';
     AppService,
     AppGateway,
     GatewayService,
-    FriendService
+    FriendService,
+    ChatService
   ],
 })
 export class AppModule {}

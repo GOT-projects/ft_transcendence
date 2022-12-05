@@ -64,4 +64,12 @@ export class FriendService {
             return error.message;
         }
     }
+
+    async blockSomebody(login:string, loginDemand: string): Promise<RelUser | string> {
+        try {
+            return await this.relUserService.blockSomebody(login, loginDemand);
+        } catch (error) {
+            return error.message;
+        }
+    }
 }

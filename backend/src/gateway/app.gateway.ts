@@ -4,6 +4,8 @@ import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect,
 import { GOT } from "shared/types";
 import { Server, Socket } from "socket.io";
 import { AppService } from "src/app.service";
+import { UserService } from "src/database/services/user.service";
+import { ChatService } from "./chat.service";
 import { FriendService } from "./friend.service";
 import { GatewayService } from "./gateway.service";
 
@@ -20,6 +22,8 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
         private readonly gatewayService: GatewayService,
         private readonly appService: AppService,
         private readonly friendService: FriendService,
+        private readonly userService: UserService,
+        private readonly chatService: ChatService,
         ) {}
     @WebSocketServer() server: Server;
     private logger: Logger = new Logger('AppGateway');
@@ -292,6 +296,92 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
         console.log("ret server_friend", ret);
         if (ret !== undefined) 
             client.emit('client_friends', ret);
+    }
+
+    @SubscribeMessage('server_block_somebody')
+    async blockSomebody(@ConnectedSocket() client: Socket, @MessageBody('login') login: string, 
+                    @MessageBody('Authorization') jwt: string) {
+        const auth = await this.connectUserBody(client, jwt);
+        if (!auth) {
+            return ;
+        }
+        const ret = await this.friendService.blockSomebody(auth.userLogin, login);
+        if (typeof ret === 'string') {
+            client.emit('error_client', ret);
+            return ;
+        }
+        let userSockets = this.users.get(auth.userLogin);
+        if (userSockets) {
+            const tmpNotif = await this.friendService.getNotif(auth.userId);
+            if (typeof tmpNotif !== 'string') {
+                this.server.to(userSockets).emit('client_notif', tmpNotif);
+                
+            }
+            const tmpFriends = await this.getFriendsList(client, auth.userId);
+            if (tmpFriends !== undefined)
+                this.server.to(userSockets).emit('client_friends', tmpFriends);
+        }
+        userSockets = this.users.get(login);
+        if (userSockets) {
+            const userId = ret.user1Id === auth.userId ? ret.user2Id : ret.user1Id;
+            const tmpNotif = await this.friendService.getNotif(userId);
+            if (typeof tmpNotif !== 'string')
+                this.server.to(userSockets).emit('client_notif', tmpNotif);
+            const tmpFriends = await this.getFriendsList(client, userId);
+            if (tmpFriends !== undefined)
+                this.server.to(userSockets).emit('client_friends', tmpFriends);
+            this.server.to(userSockets).emit('warning_client', `You're block by ${auth.userLogin}`);
+        }
+    }
+
+    @SubscribeMessage('server_privmsg')
+    async getPrivMessage(@ConnectedSocket() client: Socket, @MessageBody('login') login: string, 
+                @MessageBody('Authorization') jwt: string) {
+        const auth = await this.connectUserBody(client, jwt);
+        if (!auth) {
+            return ;
+        }
+        const ret = await this.chatService.getPrivMessage(auth.userLogin, login);
+        if (typeof ret === 'string') {
+            client.emit('error_client', ret);
+            return ;
+        }
+        client.emit('client_privmsg', ret);
+    }
+
+    @SubscribeMessage('server_privmsg_send')
+    async sendPrivMessage(@ConnectedSocket() client: Socket,
+        @MessageBody('login') login: string, @MessageBody('msg') msg: string,
+        @MessageBody('Authorization') jwt: string) {
+        const auth = await this.connectUserBody(client, jwt);
+        if (!auth) {
+            return ;
+        }
+        const ret = await this.chatService.sendPrivMessage(auth.userLogin, login, msg);
+        if (typeof ret === 'string') {
+            client.emit('error_client', ret);
+            return ;
+        }
+        const userSockets = this.users.get(login);
+        if (userSockets) {
+            this.server.to(userSockets).emit('client_privmsg_send', ret);
+            this.server.to(userSockets).emit('info_client', `You received a message send by ${auth.userLogin}`);
+        }
+    }
+
+    @SubscribeMessage('server_users')
+    async getUsers(@ConnectedSocket() client: Socket,
+        @MessageBody('Authorization') jwt: string) {
+        const auth = await this.connectUserBody(client, jwt);
+        if (!auth) {
+            return ;
+        }
+        try {
+            const ret = await this.userService.findAll();
+            client.emit('client_users', ret);
+        } catch (error) {
+            client.emit('error_client', error.message);
+        }
     }
 
     afterInit(server: Server) {

@@ -185,4 +185,25 @@ export namespace GOT {
      * @param { login }
      */
 
+
+
+    /**
+     * server_privmsg (login)
+     * 
+     * return client_privmsg (msg[])
+     */
+
+    export interface msg {
+        userFrom: User,
+        userTo: User,
+        msg: string,
+       // time: Date
+    }
+
+    /**
+     * server_privmsg_send (login, msg)
+     * 
+     * return client_privmsg_send (msg)
+     */
+
 }

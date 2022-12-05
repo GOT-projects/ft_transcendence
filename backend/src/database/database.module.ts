@@ -7,6 +7,7 @@ import { RelUser } from './entities/rel_user.entity';
 import { RelUserChannel } from './entities/rel_user_channel.entity';
 import { User } from './entities/user.entity';
 import { GameService } from './services/game.service';
+import { MessageService } from './services/message.service';
 import { RelUserService } from './services/rel_user.service';
 import { UserService } from './services/user.service';
 
@@ -34,12 +35,14 @@ import { UserService } from './services/user.service';
 	providers: [
 		UserService,
 		GameService,
-		RelUserService
+		RelUserService,
+		MessageService
 	  ],
 	exports: [
 		UserService,
 		GameService,
-		RelUserService
+		RelUserService,
+		MessageService
 	],
 })
 export class DatabaseModule {};
