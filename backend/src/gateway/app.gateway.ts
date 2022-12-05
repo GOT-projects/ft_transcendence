@@ -353,11 +353,13 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
     async sendPrivMessage(@ConnectedSocket() client: Socket,
         @MessageBody('login') login: string, @MessageBody('msg') msg: string,
         @MessageBody('Authorization') jwt: string) {
+        console.log("server send",login, msg);
         const auth = await this.connectUserBody(client, jwt);
         if (!auth) {
             return ;
         }
         const ret = await this.chatService.sendPrivMessage(auth.userLogin, login, msg);
+        console.log(ret);
         if (typeof ret === 'string') {
             client.emit('error_client', ret);
             return ;

@@ -9,14 +9,13 @@ import Header from '../components/Header';
 import {Colors} from "../components/Colors"
 import { AiFillSetting, AiOutlineSend } from 'react-icons/ai';
 import { GrAddCircle } from 'react-icons/gr';
-import { UserListPrivate, DataMesssage } from '../components/interfaces';
 import {NotifyInter} from "../components/interfaces"
 import {Notification} from "../components/Notify"
 import { v4 as uuid } from 'uuid';
-import { SocketContext, useSocket } from '../socket/socketPovider';
-import { Socket } from 'socket.io-client';
+import { SocketContext } from '../socket/socketPovider';
 import { GOT } from '../shared/types';
 import { emitSocket } from '../socket/socketEmit';
+import { MdOutlineBlock } from 'react-icons/md';
 
 interface IProps {
    profil: GOT.Profile | undefined;
@@ -36,7 +35,9 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     const [inputContact, setInputContact] = useState("");
     const [inputChannel, setInputChannel] = useState("");
 
-    const [selectUser, setSelectUser] = useState<DataMesssage[]>();
+    const [usersList, setUsersList] = useState<GOT.User[]>();
+    const [selectUserMsg, setSelectUserMsg] = useState<GOT.msg[]>();
+    const [selectUser, setSelectUser] = useState<GOT.User>();
     const [friends, setFriends] = useState<GOT.Friend[]>();
 
     useEffect(() => {
@@ -49,20 +50,48 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     },[socket])
 
     useEffect(() => {
+        socket.on('client_privmsg', (rep:GOT.msg[]) => {
+            if (rep){
+                setSelectUserMsg(rep);
+            }
+        })
+        return () => {
+            socket.off('client_privmsg');
+        } 
+    },[socket])
+
+    useEffect(() => {
+        socket.on('client_privmsg_send', (rep:GOT.msg) => {
+            console.log("receive priv msg", rep);
+            if (rep){
+                let tmp = selectUserMsg;
+                tmp?.push(rep);
+                setSelectUserMsg(tmp);
+            }
+        })
+        return () => {
+            socket.off('client_privmsg_send');
+        } 
+    },[socket])
+
+    useEffect(() => {
+        socket.on('client_users', (rep:GOT.User[]) => {
+            if (rep){
+                setUsersList(rep);
+            }
+        })
+        return () => {
+            socket.off('client_users');
+        } 
+    },[socket])
+
+    useEffect(() => {
         emitSocket.emitFriends(socket);
     }, [socket])
 
-    //open chat user when is select by friendList
-    // if (!!params.get("code")){
-    //     const username = params.get("code")
-    //     chatUser.map((user) => {
-    //         if (user.user === username){
-    //             user.active = true;
-    //         }else{
-    //             user.active = false;
-    //         }
-    //     })
-    // }
+    useEffect(() => {
+        emitSocket.emitUsers(socket);
+    }, [socket])
 
     function handChange(event: any, setInput: any, input: string){
         if (input === "" && event.target.value ==="\n")
@@ -71,16 +100,16 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
 	}	
 
     const sendMsg = () => {
-        //TODO send to db by socket
         if (inputChat === " " || inputChat === "\n" || inputChat === ""){
-            setInputChat("");
             return;
         }
+        console.log(selectUser);
+        if (props.profil && selectUser !== undefined){
+            const msg:GOT.msg = {userFrom: props.profil.userInfos, userTo:selectUser, msg: inputChat};
+            console.log("Emit send", msg)
+            emitSocket.emitSendPrivmsg(socket, props.profil.userInfos.login, msg)
+        }
         setInputChat("");
-    }
-
-    const insertMsg = (user:string, addmsg:DataMesssage)=>{
-        let dataUser:DataMesssage[]|undefined;
     }
 
     const navMenu = () => {
@@ -93,7 +122,6 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
         if (inputContact === " " || inputContact === "\n" || inputContact === ""){
             return;
         }
-        // socket.emit('server_demand_friend', {login: inputContact})
         emitSocket.emitDemandFriend(socket, inputContact);
         setInputContact('')
     }
@@ -108,7 +136,12 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     }
 
     const handleSelectFriend = (name:string) => {
-        setSelectFriend(name);
+        const user = usersList?.filter((user) => user.login === name);
+        if (user){
+            const tmp:GOT.User = user[0];
+            setSelectUser(tmp);
+        }
+        emitSocket.emitPrivmsg(socket, name);
     }
 
 	return (
@@ -169,8 +202,8 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                     <StyledChatPrive className={navActive}>
                 <>
                     {chatSwitch === "private" ? friends?.map((user:GOT.Friend) =>(
-                        <StyledUser key={uuid()} color={user.username === selectFriend ? Colors.ChatMenuButton : Colors.ChatMenu} onClick={() => {handleSelectFriend(user.username)}}>
-                            <StyledChatPrivAvatar/>
+                        <StyledUser key={uuid()} color={user.username === selectUser?.username ? Colors.ChatMenuButton : Colors.ChatMenu} onClick={() => {handleSelectFriend(user.username)}}>
+                            <StyledChatPrivAvatar profil={user.urlImg}/>
                         <StyledChatPrivName key={uuid()}>{user.username}</StyledChatPrivName>
                         </StyledUser>
                     )) : ""}
@@ -198,7 +231,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                             ))} */}
                             <div className='field' ref={endRef}/>
                         </StyledChatTextArea>
-                        <StyledChatSendDiv className={selectUser ? "active" : "deactive"}>
+                        <StyledChatSendDiv className={selectUserMsg ? "active" : "deactive"}>
                         <StyledChatInput  name='chat' placeholder="Send message" onChange={(e) => handChange(e, setInputChat, inputChat)} 
                                                                                 onKeyDown={(e) => {
                                                                                     if (e.key === 'Enter' && !e.shiftKey){

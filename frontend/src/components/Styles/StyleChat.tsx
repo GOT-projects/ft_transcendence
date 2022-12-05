@@ -356,12 +356,15 @@ export const StyledUser = styled.button<BgColor>`
 `;
 
 
-export const StyledChatPrivAvatar = styled.div`
+interface Ibg{
+    profil:string;
+}
+export const StyledChatPrivAvatar = styled.div<Ibg>`
     margin: 10px;
     width: 50px;
     height: 50px;
-    background-color: red;
-    border-radius: 50%;
+    background: url(${p => p.profil});
+    background-size: 100% 100%;
 `;
 
 export const StyledChatPrivName = styled.p`
