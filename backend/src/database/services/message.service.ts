@@ -57,6 +57,7 @@ export class MessageService {
         };
         const tmp = this.messageRepository.create(dto);
         const newMsg = await this.messageRepository.save(tmp);
+        //console.log('new', newMsg);
         return {
             userFrom: user1, 
             userTo: user2,

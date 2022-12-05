@@ -13,11 +13,11 @@ export class Message {
     @Column()
     userIdFrom!: number;
 
-    @Column()
-    userIdTo: number | null;
+    @Column({nullable: true})
+    userIdTo!: number | null;
 
-    @Column()
-    userIdChannelTo: number | null;
+    @Column({nullable: true})
+    userIdChannelTo!: number | null;
 
     @ManyToOne(() => User, (user) => user.messageFrom)
     @JoinColumn({name: 'userIdFrom'})
