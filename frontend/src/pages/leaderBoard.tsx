@@ -13,6 +13,9 @@ import { GOT } from "../shared/types";
 import { SocketContext } from "../socket/socketPovider";
 import { tmpdir } from "os";
 import { emitSocket } from "../socket/socketEmit";
+import Axios from "../services/Axios";
+import ProfilView from '../components/popup/ProfilView';
+
 
 interface IProps {
    profil: GOT.Profile | undefined;
@@ -20,31 +23,66 @@ interface IProps {
 }
 
 const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
+
+    const [popuProfil, setPopupProfil] = useState(false);
+    const [popupUser, setPopupUser] = useState<GOT.User>();
+
+
     const [tmppp, setTmpp] = useState<GOT.Party[]>();
     const socket = useContext(SocketContext);
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
+
     const [tab, setTab] = useState<GOT.LeaderBoard>();
+    const [histo, setHisto] = useState<GOT.HistoryParties>();
+
     const [clickedButton, setClickedButton] = useState('');
+
+
 
     useEffect(() => {
         emitSocket.emitLeaderboard(socket);
+        
     }, [socket])
-    
+
     useEffect(() => {
         socket.on("client_leaderboard", (e: GOT.LeaderBoard) => {
             console.log(e);
             if (e)
-                setTab(e);
+            setTab(e);
         });
         return () => {
             socket.off('client_leaderboard');
         }
     }, [tab]);
     
+    useEffect(() => {
+        socket.on("client_profil_login", (e: GOT.HistoryParties) => {
+            console.log(e);
+            if (e)
+            setHisto(e);
+        });
+        return () => {
+            socket.off('client_profil_login');
+        }
+    }, [histo]);
+    
+    
+    
+    
+    
+    
 	const buttonHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         const button: HTMLButtonElement = event.currentTarget;
+        emitSocket.emitProfilHisto(socket, button.name);
         setClickedButton(button.name);
+
+
+        if (popuProfil == false)
+            setPopupProfil(true);
+        else
+            setPopupProfil(false);
+
 	};
 
 	return (
@@ -84,6 +122,7 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 				</>
 				</StyledLeadTileRank>
 			</StyledLead>
+            {popuProfil ? <ProfilView profil={histo} /> : <> </>}
 			<Footer/>
 		</React.Fragment>
 	)

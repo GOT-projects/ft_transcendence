@@ -6,14 +6,13 @@ import { Colors } from "../Colors";
 
 
 interface IProps {
-   profil: GOT.Profile | undefined;
-   setPopupProfil:Dispatch<React.SetStateAction<boolean>>;
-   login: GOT.User | undefined;
+   profil: GOT.HistoryParties | undefined;
+
 }
 const ProfilView:FunctionComponent<IProps> = (props:IProps) =>{
     const handleClose = ( ) => {
         console.log("close")
-        props.setPopupProfil(false);
+ 
     }
     return(
         <StyledContaiteView>
@@ -21,8 +20,8 @@ const ProfilView:FunctionComponent<IProps> = (props:IProps) =>{
                     <FaWindowClose size={30} color={Colors.dark1} onClick={handleClose}/>
             </StyledContaiteClose>
             <StyledContaiteProfil>
-                <StyledViewAvatar profilImg={props.login?.urlImg}/>
-                <StyledContaiteText size={"18px"}>{props.login?.username}</StyledContaiteText>
+                <StyledViewAvatar profilImg={props.profil?.userInfos.urlImg}/>
+                <StyledContaiteText size={"18px"}>{props.profil?.userInfos.username}</StyledContaiteText>
             </StyledContaiteProfil>
             <StyledContaiteRank>
                 <StyledContaiteText size={"12px"}>{`rank ${props.profil?.stat.rank} victory ${props.profil?.stat.victory} lose ${props.profil?.stat.defeat}`}</StyledContaiteText>

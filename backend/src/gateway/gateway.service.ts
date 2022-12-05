@@ -107,7 +107,7 @@ export class GatewayService {
         try {
             let user = await this.userService.findUnique(data.userId, data.userLogin);
             if (!user)
-                throw {message: 'user not found'};
+                return null;
             let dto: UpdateUserDto = user;
             dto.username = username;
             const ret = this.userService.update(user.id, dto);
