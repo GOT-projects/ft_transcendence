@@ -62,6 +62,7 @@ export class AuthController {
             const jwt = req.headers.authorization.split(' ')[1];
             const data: jwtContent = await this.jwtService.verifyAsync(jwt);
             const tmpUser: User | null = await this.userService.findUnique(data.userId, data.userLogin);
+            console.log("body", body);
             if (!tmpUser)
                 throw new HttpException('No authorization header', HttpStatus.BAD_REQUEST);
             const isCodeValid =

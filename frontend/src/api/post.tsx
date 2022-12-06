@@ -17,10 +17,10 @@ const Post2FAGenerate = async () => {
     return await (Axios.post('/auth/2fa/generate'));
 }
 
-const Post2FAActivate = async (code:string) => {
-    return await (Axios.post('/auth/2fa/activate'));
+const Post2FAActivate = async (code:string | undefined) => {
+    return await (Axios.post('/auth/2fa/activate', {twoFactorAuthenticationCode:code}));
 }
 
 export const apiPost = {
-	PostConnectIntra, PostUpload, Post2FAGenerate 
+	PostConnectIntra, PostUpload, Post2FAGenerate, Post2FAActivate
 }

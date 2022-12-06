@@ -11,8 +11,8 @@ const SetupOtc:FunctionComponent<IProps> = (props: IProps) => {
     const [gcode, setGcode] = useState<string>();
     const [inputOtc, setInputOtc] = useState<string>();
     useEffect(() => {
-        const rep = apiPost.Post2FAGenerate();
         try{
+            const rep = apiPost.Post2FAGenerate();
             if (rep){
                 rep.then((response:any) =>{
                     setGcode(response.data)
@@ -30,14 +30,14 @@ const SetupOtc:FunctionComponent<IProps> = (props: IProps) => {
 		setInputOtc(event.target.value);
 	}	
     const sendOtc = () => {
-        const rep = apiPost.Post2FAActivate(inputOtc);
         try{
+            const rep = apiPost.Post2FAActivate(inputOtc);
             if (rep){
                 rep.then((response:any) =>{
                     console.log(response);
                 })
             }
-
+            setInputOtc('');
         }catch(e){
             console.log(e);
         }
