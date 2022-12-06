@@ -44,6 +44,7 @@ services:
       - JWT_TTL=${JWT_TTL}
       - API_UID=${API_UID}
       - API_SECRET=${API_SECRET}
+      - APP_NAME=${APP_NAME}
     depends_on:
       - postgres
     expose:

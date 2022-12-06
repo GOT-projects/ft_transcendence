@@ -7,6 +7,10 @@ let emitProfil = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>) =>{
     socket.emit('server_profil', {Authorization: accountService.getToken()});
 }
 
+let emitProfilHisto = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, username: string) =>{
+    socket.emit('server_profil_login', {Authorization: accountService.getToken(), login: username});
+}
+
 let emitFriends = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>) =>{
     socket.emit('server_friends', {Authorization: accountService.getToken()});
 }
@@ -40,5 +44,5 @@ let emitBlockUser = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, lo
 }
 
 export const emitSocket ={
-    emitProfil, emitFriends, emitDemandFriend, emitChangeUsername, emitLeaderboard, emitPrivmsg, emitSendPrivmsg, emitUsers, emitBlockUser
+    emitProfil, emitProfilHisto, emitFriends, emitDemandFriend, emitChangeUsername, emitLeaderboard, emitPrivmsg, emitSendPrivmsg, emitUsers, emitBlockUser
 }

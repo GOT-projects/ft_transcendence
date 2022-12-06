@@ -271,8 +271,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                 </StyledChat>
             </StyledContaite>
             <Notification notify={notify} setNotify={setNotify}/>
-            {popuProfil ? <ProfilView login={popupUser} profil={props.profil} setPopupProfil={setPopupProfil}/> : <> </>}
-			<Footer/>
+           <Footer/>
 		</React.Fragment>
 	)
 }
