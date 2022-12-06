@@ -17,6 +17,9 @@ const Post2FAGenerate = async () => {
     return await (Axios.post('/auth/2fa/generate'));
 }
 
+const Post2FAActivate = async (code:string) => {
+    return await (Axios.post('/auth/2fa/activate'));
+}
 
 export const apiPost = {
 	PostConnectIntra, PostUpload, Post2FAGenerate 

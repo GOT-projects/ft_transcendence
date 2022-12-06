@@ -9,11 +9,40 @@ interface IProps {
 const SetupOtc:FunctionComponent<IProps> = (props: IProps) => {
     //todo request post get qrcode
     const [gcode, setGcode] = useState<string>();
+    const [inputOtc, setInputOtc] = useState<string>();
     useEffect(() => {
         const rep = apiPost.Post2FAGenerate();
-        console.log(rep);
-        
-    })
+        try{
+            if (rep){
+                rep.then((response:any) =>{
+                    setGcode(response.data)
+                })
+            }
+
+        }catch(e){
+            console.log(e);
+        }
+    },[])
+
+    const handleChange = (event: any) => {
+        if (inputOtc === "" && event.target.value ==="\n")
+            return;
+		setInputOtc(event.target.value);
+	}	
+    const sendOtc = () => {
+        const rep = apiPost.Post2FAActivate(inputOtc);
+        try{
+            if (rep){
+                rep.then((response:any) =>{
+                    console.log(response);
+                })
+            }
+
+        }catch(e){
+            console.log(e);
+        }
+	}	
+
     return (
         <StyledContaite
             initial={{x: 300}}
@@ -34,9 +63,14 @@ const SetupOtc:FunctionComponent<IProps> = (props: IProps) => {
             <StyledContaiteDescriptionP>CODE GET BY SERVER</StyledContaiteDescriptionP>
         </StyledContaiteDescription>
         <StyledContaiteQrcode>
-            <img src=""/>
+            <img src={gcode}/>
         </StyledContaiteQrcode>
             <StyledContaiteDescriptionP>Verify the code from the app</StyledContaiteDescriptionP>
+            <input type="text" value={inputOtc} placeholder="OTC CODE" onChange={(e) => {handleChange(e)}}
+                                                                                onKeyDown={(e) => {
+                                                                                    if (e.key === 'Enter' && !e.shiftKey){
+                                                                                        sendOtc();
+                                                                                    }}}/>
         </StyledContaite>
     )
 
