@@ -362,7 +362,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
             client.emit('error_client', ret);
             return ;
         }
-        client.emit('client_privmsg', ret);
+        client.emit('client_privmsg_users', ret);
     }
 
     @SubscribeMessage('server_privmsg_send')

@@ -305,6 +305,7 @@ export const StyledChatInput = styled.textarea`
     font-family: "Public Pixel";
     padding: 6px;
     width: 100%;
+    margin: 10px;
     font-size: 14px;
     height: auto;
     margin-bottom: 40px;
@@ -363,6 +364,7 @@ export const StyledChatPrivAvatar = styled.div<Ibg>`
     margin: 10px;
     width: 50px;
     height: 50px;
+    border-radius: 50%;
     background: url(${p => p.profil});
     background-size: 100% 100%;
 `;
