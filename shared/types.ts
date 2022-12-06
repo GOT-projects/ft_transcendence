@@ -17,6 +17,7 @@ export namespace GOT {
         urlImg: string;
         wallet: number;
         email: string;
+        isTwoFactorAuthenticationEnabled: boolean;
         // TODO add 2FA
     }
 
