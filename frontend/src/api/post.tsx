@@ -13,6 +13,11 @@ const PostUpload = async (file:File) => {
 	return await (Axios.put('/upload', formData))
 }
 
+const Post2FAGenerate = async () => {
+    return await (Axios.post('/auth/2fa/generate'));
+}
+
+
 export const apiPost = {
-	PostConnectIntra, PostUpload
+	PostConnectIntra, PostUpload, Post2FAGenerate 
 }

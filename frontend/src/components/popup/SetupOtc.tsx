@@ -1,13 +1,17 @@
-import React, { Dispatch, FunctionComponent, useEffect } from "react";
+import React, { Dispatch, FunctionComponent, useEffect, useState } from "react";
 import { StyledContaite, StyledContaiteDescription, StyledContaiteDescriptionA, StyledContaiteDescriptionH1, StyledContaiteDescriptionH3, StyledContaiteDescriptionP, StyledContaiteQrcode } from "../Styles/StyleOtc";
 import QRCode from "react-qr-code";
+import {apiPost} from "../../api/post"
 
 interface IProps {
    setOtc: Dispatch<React.SetStateAction<boolean>>;
 }
 const SetupOtc:FunctionComponent<IProps> = (props: IProps) => {
     //todo request post get qrcode
+    const [gcode, setGcode] = useState<string>();
     useEffect(() => {
+        const rep = apiPost.Post2FAGenerate();
+        console.log(rep);
         
     })
     return (
@@ -30,12 +34,7 @@ const SetupOtc:FunctionComponent<IProps> = (props: IProps) => {
             <StyledContaiteDescriptionP>CODE GET BY SERVER</StyledContaiteDescriptionP>
         </StyledContaiteDescription>
         <StyledContaiteQrcode>
-            <QRCode
-                size={90}
-                style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                value={"fjdksjfdk"}
-                viewBox={`0 0 256 256`}
-                />
+            <img src=""/>
         </StyledContaiteQrcode>
             <StyledContaiteDescriptionP>Verify the code from the app</StyledContaiteDescriptionP>
         </StyledContaite>
