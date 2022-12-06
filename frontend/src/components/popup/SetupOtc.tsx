@@ -1,15 +1,48 @@
-import React, { Dispatch, FunctionComponent, useEffect } from "react";
+import React, { Dispatch, FunctionComponent, useEffect, useState } from "react";
 import { StyledContaite, StyledContaiteDescription, StyledContaiteDescriptionA, StyledContaiteDescriptionH1, StyledContaiteDescriptionH3, StyledContaiteDescriptionP, StyledContaiteQrcode } from "../Styles/StyleOtc";
 import QRCode from "react-qr-code";
+import {apiPost} from "../../api/post"
 
 interface IProps {
    setOtc: Dispatch<React.SetStateAction<boolean>>;
 }
 const SetupOtc:FunctionComponent<IProps> = (props: IProps) => {
     //todo request post get qrcode
+    const [gcode, setGcode] = useState<string>();
+    const [inputOtc, setInputOtc] = useState<string>();
     useEffect(() => {
-        
-    })
+        try{
+            const rep = apiPost.Post2FAGenerate();
+            if (rep){
+                rep.then((response:any) =>{
+                    setGcode(response.data)
+                })
+            }
+
+        }catch(e){
+            console.log(e);
+        }
+    },[])
+
+    const handleChange = (event: any) => {
+        if (inputOtc === "" && event.target.value ==="\n")
+            return;
+		setInputOtc(event.target.value);
+	}	
+    const sendOtc = () => {
+        try{
+            const rep = apiPost.Post2FAActivate(inputOtc);
+            if (rep){
+                rep.then((response:any) =>{
+                    console.log(response);
+                })
+            }
+            setInputOtc('');
+        }catch(e){
+            console.log(e);
+        }
+	}	
+
     return (
         <StyledContaite
             initial={{x: 300}}
@@ -30,14 +63,14 @@ const SetupOtc:FunctionComponent<IProps> = (props: IProps) => {
             <StyledContaiteDescriptionP>CODE GET BY SERVER</StyledContaiteDescriptionP>
         </StyledContaiteDescription>
         <StyledContaiteQrcode>
-            <QRCode
-                size={90}
-                style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                value={"fjdksjfdk"}
-                viewBox={`0 0 256 256`}
-                />
+            <img src={gcode}/>
         </StyledContaiteQrcode>
             <StyledContaiteDescriptionP>Verify the code from the app</StyledContaiteDescriptionP>
+            <input type="text" value={inputOtc} placeholder="OTC CODE" onChange={(e) => {handleChange(e)}}
+                                                                                onKeyDown={(e) => {
+                                                                                    if (e.key === 'Enter' && !e.shiftKey){
+                                                                                        sendOtc();
+                                                                                    }}}/>
         </StyledContaite>
     )
 

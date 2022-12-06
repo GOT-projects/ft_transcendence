@@ -128,6 +128,7 @@ export class AuthService {
 	isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode: string, user: User) {
 		if (user.twoFactorAuthenticationSecret === undefined || user.twoFactorAuthenticationSecret === null)
 			return false;
+        console.log(user.twoFactorAuthenticationSecret)
 		return authenticator.verify({
 			token: twoFactorAuthenticationCode,
 			secret: user.twoFactorAuthenticationSecret,
