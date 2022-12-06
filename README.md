@@ -39,38 +39,199 @@ npm i -g @nestjs/cli
 
 ### API
 
-#### Games
+#### HTTP
 
-##### Retours
 
-```json
-[
-    {
-        "points1":12,
-        "points2":85,
-        "user1":{
-            "id":1,
-            "idIntra":649854985654465,
-            "login":"aartiges",
-            "username":"aartiges",
-            "urlImg":"https://docs.nestjs.com/assets/logo-small.svg",
-            "wallet":185},
-        "user2": {
-            "id":3,
-            "idIntra":null,
-            "login":"test",
-            "username":"test",
-            "urlImg":"https://docs.nestjs.com/assets/logo-small.svg",
-            "wallet":-1
-        }
-    },
-    ...
-]
-```
+##### Image
 
-##### Routes
+`PUT /upload`
+- Params:
+    - `file` une image
+- Return:
+    - file
 
-`/games` toutes les parties finies
+`GET /images/:file`
+- Params:
+    - `:file` nom du fichier
+- Return:
+    - file
 
-`/games/user/:id` toutes les parites finies de l'utilisateur aant l'id :id
+
+##### Image
+
+`POST /auth/connect_intra`
+- Params:
+    - `code` code de l'intra
+- Return:
+    - status '201'
+
+`POST /auth/invite`
+- Params:
+    - `login` login de l'utilisateur à créer
+- Return:
+    - status '201'
+
+`POST /auth/2fa/generate`
+- Header token
+- Return:
+    - status '201'
+    - une string qrcode
+
+`POST /auth/2fa/activate`
+- Header: token
+- Return:
+    - status '201'
+
+`POST /auth/2fa/authenticate`
+- Header: token
+- Return:
+    - status '201'
+    - une string étant un jwt
+
+`GET /auth/get_intra_url`
+- Return:
+    - status '200'
+    - une string étant un l'url de l'intra
+
+#### Socket
+
+##### General
+
+`server_profil`
+- Params:
+    - `Authorization`: `GOT.Token` (string)
+- Return:
+    - `GOT.Profile` on `client_profil` (information du profil de la personne connecté)
+
+`server_profil_login`
+- Params:
+    - `Authorization`: `GOT.Token` (string)
+    - `login`: `string` login de la personne dont on veut le profil
+- Return:
+    - `GOT.Profile` on `client_profil_login` (information du profil de la personne voulu)
+
+`server_change_username`
+- Params:
+    - `Authorization`: `GOT.Token` (string)
+    - `username`: `string` nouveau username de la personne connecté
+- Return:
+    - `GOT.Profile` on `client_profil` (information du profil de la personne conneté)
+
+
+##### Leaderboard
+
+`server_leaderboard`
+- Params:
+    - `Authorization`: `GOT.Token` (string)
+- Return:
+    - `GOT.LeaderBoard` on `client_leaderboard` (tout le leaderboard)
+
+##### Amis
+
+`server_demand_friend`
+- Params:
+    - `Authorization`: `GOT.Token` (string)
+    - `login`: `string` login de la personne que l'on veut ajouter en amis
+- Return:
+    - `GOT.User[]` on `client_notif` (toutes les demandes d'amis en cours à la personne connecté)
+    - `GOT.Friend[]` on `client_friends` (touts les amis de la personne connecté)
+
+`server_reply_notification`
+- Params:
+    - `Authorization`: `GOT.Token` (string)
+    - `reply`: `GOT.NotifChoice` la réponse à la demande d'amis en notification
+- Return:
+    - `GOT.User[]` on `client_notif` (toutes les demandes d'amis en cours à la personne connecté)
+    - `GOT.Friend[]` on `client_friends` (touts les amis de la personne connecté)
+
+`server_friends`
+- Params:
+    - `Authorization`: `GOT.Token` (string)
+- Return:
+    - `GOT.Friend[]` on `client_friends` (touts les amis de la personne connecté)
+
+`server_block_somebody`
+- Params:
+    - `Authorization`: `GOT.Token` (string)
+    - `login`: `string` login de la personne que l'on veut bloquer
+- Return:
+    - `GOT.User[]` on `client_notif` (toutes les demandes d'amis en cours à la personne connecté)
+    - `GOT.Friend[]` on `client_friends` (touts les amis de la personne connecté)
+
+##### Chat
+
+`server_privmsg`
+- Params:
+    - `Authorization`: `GOT.Token` (string)
+    - `login`: `string` login de la personne avec qui sera la discution retournée
+- Return:
+    - `GOT.msg[]` on `client_privmsg` (messages entre les 2 utilisateurs)
+
+`server_privmsg_users`
+- Params:
+    - `Authorization`: `GOT.Token` (string)
+- Return:
+    - `GOT.User[]` on `client_privmsg_users` (utilisateurs avec qui la personnes connecté à reçu ou envoyé au moins un message)
+
+`server_privmsg_send`
+- Params:
+    - `Authorization`: `GOT.Token` (string)
+    - `login`: `string` login de la personne à qui l'on veut envoyer le message
+    - `msg`: `string` message à envoyer
+- Return:
+    - `GOT.msg` on `client_privmsg_send` (message reçu par un autre utilisateur)
+
+`server_users`
+- Params:
+    - `Authorization`: `GOT.Token` (string)
+- Return:
+    - `GOT.User[]` on `client_users` (liste des utilisateurs du server)
+
+
+###### Channel
+
+
+`server_chanmsg`
+- Params:
+    - `Authorization`: `GOT.Token` (string)
+    - `chanName`: `string` nom du channel dont la discution sera retournée
+- Return:
+    - `GOT.msg_hannel[]` on `client_chanmsg` (messages entre les 2 utilisateurs)
+
+`server_channels_in`
+- Params:
+    - `Authorization`: `GOT.Token` (string)
+- Return:
+    - `GOT.Channel[]` on `client_channels_in` (channels sur lesquels la personnes connecté est)
+
+`server_chanmsg_send`
+- Params:
+    - `Authorization`: `GOT.Token` (string)
+    - `chanName`: `string` nom du channel ou l'on veut envoyer le message
+    - `msg`: `string` message à envoyer
+- Return:
+    - `GOT.msg_hannel` on `client_chanmsg_send` (message reçu par un autre utilisateur)
+
+`server_channels`
+- Params:
+    - `Authorization`: `GOT.Token` (string)
+- Return:
+    - `GOT.Channel[]` on `client_channels` (liste des channels du server visible pour l'utilisateur)
+
+`server_chanmsg_join`
+- Params:
+    - `Authorization`: `GOT.Token` (string)
+    - `chanName`: `string` nom du channel ou l'on veut rejoindre
+    - `password`: `string` mdp
+- Return:
+    - `GOT.Channel[]` on `client_channels_in` (message reçu par un autre utilisateur)
+
+`server_chanmsg_invite`
+- Params:
+    - `Authorization`: `GOT.Token` (string)
+    - `chanName`: `string` nom du channel que la personne va rejoindre
+    - `login`: `string` login de la personne qui va rejoindre le channel
+- Return:
+    - `GOT.Channel[]` on `client_channels_in` (message reçu par un autre utilisateur)
+
 

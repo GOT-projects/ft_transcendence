@@ -24,11 +24,21 @@ export class ChatService {
         }
     }
 
-    async sendPrivMessage(login: string, loginDemand: string, msg: string): Promise<GOT.msg> {
+    async sendPrivMessage(login: string, loginDemand: string, msg: string): Promise<GOT.msg | string> {
+        if (msg.length > 1024)
+            return 'Message too long';
         try {
             return await this.messageService.sendPrivMessage(login, loginDemand, msg);
         } catch (error) {
             return error.message;
         }
+    }
+
+    async getChanMessage(auth: jwtContent, channel: string) {
+
+    }
+
+    async getPublicProtectedChannels(auth: jwtContent) {
+
     }
 }

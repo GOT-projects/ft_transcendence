@@ -20,7 +20,6 @@ export class AppController {
           ],
         }),
     ) file: Express.Multer.File) {
-        console.log('file ', file);
         if (!req?.headers?.authorization || !file)
             throw new HttpException('No authorization header or no file', HttpStatus.BAD_REQUEST);
         const jwt = req.headers.authorization.split(' ')[1];

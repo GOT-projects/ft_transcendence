@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { userInfo } from "os";
 import { GOT } from "shared/types";
 import { Game } from "src/database/entities/game.entity";
 import { RelUser } from "src/database/entities/rel_user.entity";
@@ -34,7 +33,6 @@ export class FriendService {
     async getFriends(id: number): Promise<GOT.Friend[] | string> {
         try {
             const friends_user = await this.relUserService.getFriends(id);
-            console.log('friend',friends_user)
             let ret: GOT.Friend[] = [];
             for (const user of friends_user) {
                 const inGame: Game[] = await this.gameService.getInGamesOf(user.id);

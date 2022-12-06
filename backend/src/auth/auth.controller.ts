@@ -109,10 +109,4 @@ export class AuthController {
     getIntraUrl(@Req() req: Request): string {
         return this.authService.getIntraUrl(req);
     }
-    
-    @UseGuards(JWTGuard)
-    @Get('access')
-    access() {
-        return 'lol';
-    }
 }
