@@ -1,11 +1,12 @@
 import { PartialType } from "@nestjs/swagger";
 
 export class CreateUserDto {
-    idIntra?: number;
+    twoFactorAuthenticationSecret?: string;
     login!: string;
     username!: string;
     urlImg!: string;
     wallet!: number;
+    email!: string;
 }
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {

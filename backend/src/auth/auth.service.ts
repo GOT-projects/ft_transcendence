@@ -7,6 +7,8 @@ import { UserService } from "src/database/services/user.service";
 import { CreateUserDto } from 'src/database/dtos/user.dto';
 import { User } from 'src/database/entities/user.entity';
 import { GOT } from 'shared/types';
+import { authenticator } from 'otplib';
+import { toDataURL } from 'qrcode';
 
 @Injectable()
 export class AuthService {
@@ -52,11 +54,12 @@ export class AuthService {
 			throw new HttpException(error.message + ' PS: INTRA info', error.response.status);
 		}
 		const createUserDto: CreateUserDto = {
-			idIntra: request.data.id,
+			twoFactorAuthenticationSecret: undefined,
 			login: request.data.login,
 			username: request.data.login,
 			urlImg: request.data.image.link,
 			wallet: request.data.wallet,
+			email: request.data.email,
 		}
 		// TODO 2FA
 		this.connect(res, createUserDto);
@@ -64,11 +67,12 @@ export class AuthService {
 
 	async invite(res: Response,login: string) {
 		const createUserDto: CreateUserDto = {
-			idIntra: undefined,
+			twoFactorAuthenticationSecret: undefined,
 			login: login,
 			username: login,
 			urlImg: 'https://docs.nestjs.com/assets/logo-small.svg',
 			wallet: -1,
+			email: login
 		}
 		this.connect(res, createUserDto);
     }
@@ -94,5 +98,29 @@ export class AuthService {
 			throw new HttpException(error.message + ' PS: jwt', error.status);
 		}
 	}
+
+	async generateTwoFactorAuthenticationSecret(user: User) {
+		const secret = authenticator.generateSecret();
+	
+		const otpAuthUrl = authenticator.keyuri(
+		  user.email,
+		  `${process.env.APP_NAME}`,
+		  secret,
+		);
+	
+		await this.usersService.setTwoFactorAuthenticationSecret(
+		  secret,
+		  user.id,
+		);
+	
+		return {
+		  secret,
+		  otpAuthUrl,
+		};
+	  }
+
+	  async generateQrCodeDataURL(otpAuthUrl: string) {
+		return toDataURL(otpAuthUrl);
+	  }
 
 }

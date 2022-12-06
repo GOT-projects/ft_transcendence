@@ -110,4 +110,12 @@ export class UserService {
           throw new HttpException(error.message, error.status);
         }
       }
+
+      async setTwoFactorAuthenticationSecret(secret: string, id: number) {
+          const user = await this.userRepository.findOneBy({ id, });
+          if (!user)
+            return null;
+          user.twoFactorAuthenticationSecret = secret;
+          return await this.userRepository.update(id, user);
+      }
 }

@@ -9,8 +9,8 @@ export class User {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @Column( {unique: true, nullable: true} )
-    idIntra?: number;
+    @Column({nullable: true, default: null})
+    twoFactorAuthenticationSecret?: string;
 
     @Column( {unique: true} )
     login!: string;
@@ -19,10 +19,13 @@ export class User {
     username!: string;
 
     @Column()
-    urlImg: string;
+    urlImg!: string;
 
     @Column()
-    wallet: number;
+    wallet!: number;
+
+    @Column()
+    email!: string;
 
     @OneToMany(() => Message, (message) => message.userFrom)
     messageFrom: Message[];

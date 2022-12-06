@@ -12,11 +12,11 @@ export namespace GOT {
      */
     export interface User {
         id: number;
-        idIntra?: number;
         login: string;
         username: string;
         urlImg: string;
         wallet: number;
+        email: string;
         // TODO add 2FA
     }
 
