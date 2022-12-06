@@ -54,6 +54,7 @@ export class AuthService {
 			throw new HttpException(error.message + ' PS: INTRA info', error.response.status);
 		}
 		const createUserDto: CreateUserDto = {
+			isTwoFactorAuthenticationEnabled: false,
 			twoFactorAuthenticationSecret: undefined,
 			login: request.data.login,
 			username: request.data.login,
@@ -67,6 +68,7 @@ export class AuthService {
 
 	async invite(res: Response,login: string) {
 		const createUserDto: CreateUserDto = {
+			isTwoFactorAuthenticationEnabled: false,
 			twoFactorAuthenticationSecret: undefined,
 			login: login,
 			username: login,
@@ -117,10 +119,31 @@ export class AuthService {
 		  secret,
 		  otpAuthUrl,
 		};
-	  }
+	}
 
-	  async generateQrCodeDataURL(otpAuthUrl: string) {
+	async generateQrCodeDataURL(otpAuthUrl: string) {
 		return toDataURL(otpAuthUrl);
-	  }
+	}
 
+	isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode: string, user: User) {
+		if (user.twoFactorAuthenticationSecret === undefined || user.twoFactorAuthenticationSecret === null)
+			return false;
+		return authenticator.verify({
+			token: twoFactorAuthenticationCode,
+			secret: user.twoFactorAuthenticationSecret,
+		});
+	}
+
+	async loginWith2fa(userWithoutPsw: User) {
+		const payload: jwtContent = {
+			userId: userWithoutPsw.id,
+			userLogin: userWithoutPsw.login,
+			isTwoFactorAuthenticationEnabled: !!userWithoutPsw.isTwoFactorAuthenticationEnabled,
+			isTwoFactorAuthenticated: true,
+		};
+
+		return {
+			access_token: this.jwtService.sign(payload),
+		};
+	}
 }

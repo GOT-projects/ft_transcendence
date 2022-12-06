@@ -118,4 +118,12 @@ export class UserService {
           user.twoFactorAuthenticationSecret = secret;
           return await this.userRepository.update(id, user);
       }
+
+      async turnOnTwoFactorAuthentication(id: number) {
+        const user = await this.userRepository.findOneBy({ id, });
+        if (!user)
+            return null;
+        user.isTwoFactorAuthenticationEnabled = true;
+        await this.userRepository.update(id, user);
+      }
 }

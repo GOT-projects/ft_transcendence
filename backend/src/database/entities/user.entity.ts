@@ -12,6 +12,9 @@ export class User {
     @Column({nullable: true, default: null})
     twoFactorAuthenticationSecret?: string;
 
+    @Column()
+    isTwoFactorAuthenticationEnabled!: boolean;
+
     @Column( {unique: true} )
     login!: string;
 
