@@ -4,6 +4,7 @@ import { GOT } from "shared/types";
 import { Repository } from "typeorm";
 import { CreateMessageDto } from "../dtos/message.dto";
 import { Message } from "../entities/message.entity";
+import { User } from "../entities/user.entity";
 import { RelUserService } from "./rel_user.service";
 import { UserService } from "./user.service";
 
@@ -43,6 +44,46 @@ export class MessageService {
         return ret;
     }
 
+    private contain(obj: GOT.User, list: GOT.User[]) {
+        var i;
+        for (i = 0; i < list.length; i++) {
+            if (list[i].id === obj.id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    async getPrivMessageUsers(login: string) {
+        const user = await this.userService.findLogin(login);
+        if (!user)
+            throw {message: 'user not found'};
+        const messagesFrom = await this.messageRepository.find({
+            select: ['userTo'],
+            where: [
+                {userIdFrom: user.id, channelIdTo: undefined}
+            ],
+            relations: ['userTo']
+        });
+        const messagesTo = await this.messageRepository.find({
+            select: ['userFrom'],
+            where: [
+                {userIdTo: user.id, channelIdTo: undefined}
+            ],
+            relations: ['userFrom']
+        });
+        let ret: GOT.User[] = [];
+        for (const message of messagesFrom) {
+            if (message.userTo && !this.contain(message.userTo, ret))
+                ret.push(message.userTo);
+        }
+        for (const message of messagesTo) {
+            if (!this.contain(message.userFrom, ret))
+                ret.push(message.userFrom);
+        }
+        return ret;
+    }
+
     async sendPrivMessage(login1: string, login2: string, msg: string): Promise<GOT.msg> {
         const user1 = await this.userService.findLogin(login1);
         const user2 = await this.userService.findLogin(login2);
@@ -53,7 +94,7 @@ export class MessageService {
             message: msg,
             userIdFrom: user1.id,
             userIdTo: user2.id,
-            userChannelTo: null
+            channelIdTo: null
         };
         const tmp = this.messageRepository.create(dto);
         const newMsg = await this.messageRepository.save(tmp);

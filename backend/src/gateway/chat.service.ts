@@ -15,6 +15,15 @@ export class ChatService {
             return error.message;
         }
     }
+
+    async getPrivMessageUsers(login: string): Promise<GOT.User[]> {
+        try {
+            return await this.messageService.getPrivMessageUsers(login);
+        } catch (error) {
+            return error.message;
+        }
+    }
+
     async sendPrivMessage(login: string, loginDemand: string, msg: string): Promise<GOT.msg> {
         try {
             return await this.messageService.sendPrivMessage(login, loginDemand, msg);

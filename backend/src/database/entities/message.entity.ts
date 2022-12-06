@@ -17,7 +17,7 @@ export class Message {
     userIdTo!: number | null;
 
     @Column({nullable: true})
-    userIdChannelTo!: number | null;
+    channelIdTo!: number | null;
 
     @ManyToOne(() => User, (user) => user.messageFrom)
     @JoinColumn({name: 'userIdFrom'})
@@ -25,9 +25,9 @@ export class Message {
 
     @ManyToOne(() => User, (user) => user.messageTo)
     @JoinColumn({name: 'userIdTo'})
-    userTo: User;
+    userTo?: User;
 
     @ManyToOne(() => Channel, (channel) => channel.messages)
-    @JoinColumn({name: 'userIdChannelTo'})
-    channelTo: Channel;
+    @JoinColumn({name: 'channelIdTo'})
+    channelTo?: Channel;
 }

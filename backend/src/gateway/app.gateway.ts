@@ -349,6 +349,22 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
         client.emit('client_privmsg', ret);
     }
 
+    @SubscribeMessage('server_privmsg_users')
+    async getPrivMessageUsers(@ConnectedSocket() client: Socket,
+                @MessageBody('Authorization') jwt: string) {
+        const auth = await this.connectUserBody(client, jwt);
+        if (!auth) {
+            return ;
+        }
+        const ret = await this.chatService.getPrivMessageUsers(auth.userLogin);
+        console.log('debug', ret);
+        if (typeof ret === 'string') {
+            client.emit('error_client', ret);
+            return ;
+        }
+        client.emit('client_privmsg', ret);
+    }
+
     @SubscribeMessage('server_privmsg_send')
     async sendPrivMessage(@ConnectedSocket() client: Socket,
         @MessageBody('login') login: string, @MessageBody('msg') msg: string,
