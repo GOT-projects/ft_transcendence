@@ -10,8 +10,6 @@ import { SocketContext } from "../../../socket/socketPovider";
 interface IProps {
    setAction:Dispatch<React.SetStateAction<boolean>> | undefined;
    listUser:GOT.User[] | undefined;
-   friends:GOT.User[] | undefined;
-   setFriend:Dispatch<React.SetStateAction<GOT.User[] | undefined>> | undefined;
    setAdd:Dispatch<React.SetStateAction<string>> | undefined;
 }
 const PopupOptionAddUser:FunctionComponent<IProps> = (props: IProps) =>{
@@ -35,12 +33,7 @@ const PopupOptionAddUser:FunctionComponent<IProps> = (props: IProps) =>{
             if (props.listUser){
                 const user = props.listUser?.filter((user:GOT.User) => user.login === input);
                 if (user && user.length > 0){
-                    console.log("add user")
-                    let tmp = props.friends;
-                    if (tmp !== undefined && props.setFriend){
-                        tmp.push(user[0]);
-                        props.setFriend(tmp);
-                    }
+                    emitSocket.emitSendPrivmsg(socket, user[0].login, "👋");
                 }
             }
             if (props.setAction)

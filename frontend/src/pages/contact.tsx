@@ -23,6 +23,8 @@ import PriveMsg from '../components/chat/PrivMsg';
 import PriveUserMenu from '../components/chat/PrivUsers';
 import { accountService } from '../services/account.service';
 import MenuChat from '../components/chat/Menu';
+import { onSocket } from '../socket/socketOn';
+import { offSocket } from '../socket/socketOff';
 
 interface IProps {
    profil: GOT.Profile | undefined;
@@ -46,52 +48,49 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     const [selectUserMsg, setSelectUserMsg] = useState<GOT.msg[]>();
     const [selectUser, setSelectUser] = useState<GOT.User>();
     const [friends, setFriends] = useState<GOT.User[]>();
+    const [lstFriends, setLstFriends] = useState<GOT.Friend[]>()
     
     const codeParam: Map<string, string> = accountService.getParamsPriv();
 
 
     useEffect(() => {
-        socket.on("client_profil_login", (e: GOT.HistoryParties) => {
-            if (e)
-                setHisto(e);
-        });
+        onSocket.profil_login(socket, setHisto);
         return () => {
-            socket.off('client_profil_login');
+            offSocket.profil_login(socket);
         }
     }, [histo]);
 
     useEffect(() => {
-        socket.on('client_privmsg_users', (rep:GOT.User[]) => {
-            if (rep){
-                setFriends(rep);
-            } 
+        onSocket.client_privmsg_users(socket, setFriends);
         return () => {
-            socket.off('client_privmsg_users');
+            offSocket.client_privmsg_users(socket);
         }
-        })
     },[socket, friends, setFriends])
-
+    
     useEffect(() => {
-        socket.on('client_privmsg_send', (rep:GOT.msg) => {
-            if (selectUser?.login === rep.userFrom.login){
-                emitSocket.emitPrivmsg(socket, rep.userFrom.login);
-            }
-        })
+        onSocket.client_friends(socket, setLstFriends);
         return () => {
-            socket.off('client_privmsg_send');
+            offSocket.client_friends(socket);
         } 
     },[socket])
 
     useEffect(() => {
-        socket.on('client_users', (rep:GOT.User[]) => {
-            if (rep){
-                setUsersList(rep);
-            }
-        })
+        onSocket.client_privmsg_send(socket, selectUser)
         return () => {
-            socket.off('client_users');
+            offSocket.client_privmsg_send(socket);
         } 
     },[socket])
+
+    useEffect(() => {
+        onSocket.client_users(socket, setUsersList);
+        return () => {
+            offSocket.client_users(socket);
+        } 
+    },[socket])
+
+    useEffect(() => {
+        emitSocket.emitFriends(socket);
+    }, [socket])
 
     useEffect(() => {
         emitSocket.emitPrivmsgUsers(socket);
@@ -140,6 +139,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
         }
         emitSocket.emitPrivmsg(socket, name);
     }
+
     useEffect(() =>{
         if (codeParam.get("code") === "Priv"){
             const name = codeParam.get("name");
@@ -164,15 +164,15 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
              />
 
             <StyledContaite>
-                <MenuChat profil={props.profil} setProfil={props.setProfil} chatSwitch={chatSwitch} setChatSwitch={setChatSwitch} setFriend={setFriends} friends={friends} listUser={usersList}/>
+                <MenuChat profil={props.profil} setProfil={props.setProfil} chatSwitch={chatSwitch} setChatSwitch={setChatSwitch} listUser={usersList}/>
                 <StyledContact >
                     <StyledChatSwith> 
                         <StyledChatSwithTile>{chatSwitch}</StyledChatSwithTile>
                     </StyledChatSwith>
                     <StyledChatSep/>
                     <StyledChatPrive >
-                    {chatSwitch === "private" ? <PriveUserMenu friends={friends} selectUser={selectUser} 
-                                                               setSelectUser={setSelectUser} usersList={usersList}
+                    {chatSwitch === "private" ? <PriveUserMenu friends={friends} setFriends={setFriends} selectUser={selectUser} 
+                                                               setSelectUser={setSelectUser} userFriend={lstFriends}
                                                                popupUser={popupUser} setPopupUser={setPopupUser}
                                                                setPopupProfil={setPopupProfil} popuProfil={popuProfil}/> : <></>}
                     </StyledChatPrive>

@@ -11,11 +11,9 @@ import PopupOptionJoinChannel from "./Option/JoinChannel";
 
 interface IProps {
    profil: GOT.Profile | undefined;
-   friends:GOT.User[] | undefined;
    listUser:GOT.User[] | undefined;
    setProfil:Dispatch<React.SetStateAction<GOT.Profile | undefined>> | undefined;
    setAction:Dispatch<React.SetStateAction<boolean>> | undefined;
-   setFriend:Dispatch<React.SetStateAction<GOT.User[] | undefined>> | undefined;
 }
 
 
@@ -56,14 +54,11 @@ const PopupAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
             </StyledContaiteViewAddOption>
             </motion.div> : <></>}
             {add === "addUser" ? <PopupOptionAddUser setAction={props.setAction} 
-                                listUser={props.listUser} friends={props.friends} 
-                                setFriend={props.setFriend} setAdd={setAdd}/> : <></>}
+                                listUser={props.listUser} setAdd={setAdd}/> : <></>}
             {add === "addChannel" ? <PopupOptionAddChannel setAction={props.setAction} 
-                                listUser={props.listUser} friends={props.friends} 
-                                setFriend={props.setFriend} setAdd={setAdd}/> : <></>}
+                                listUser={props.listUser} setAdd={setAdd}/> : <></>}
             {add === "joinChannel" ? <PopupOptionJoinChannel setAction={props.setAction} 
-                                listUser={props.listUser} friends={props.friends} 
-                                setFriend={props.setFriend} setAdd={setAdd}/> : <></>}
+                                listUser={props.listUser} setAdd={setAdd}/> : <></>}
         </StyledContaiteViewAddChan>
     )
 }

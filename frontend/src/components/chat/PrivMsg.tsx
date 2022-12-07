@@ -2,6 +2,8 @@ import { Dispatch, FunctionComponent, useContext, useEffect, useRef, useState } 
 import { v4 as uuid } from 'uuid';
 import { GOT } from "../../shared/types";
 import { emitSocket } from "../../socket/socketEmit";
+import { offSocket } from "../../socket/socketOff";
+import { onSocket } from "../../socket/socketOn";
 import { SocketContext } from "../../socket/socketPovider";
 import { StyledChat, StyledChatInput, StyledChatPlace, StyledChatSendDiv, StyledChatText, StyledChatTextArea, StyledChatWindow } from "../Styles/StyleChat";
 
@@ -26,13 +28,9 @@ const PriveMsg:FunctionComponent<IProps> = (props:IProps)=> {
     
     useEffect(() => {
         //receive list message
-        socket.on('client_privmsg', (rep:GOT.msg[]) => {
-            if (rep){
-                setSelectUserMsg(rep);
-            }
-        })
+        onSocket.client_privmsg(socket, setSelectUserMsg);
         return () => {
-            socket.off('client_privmsg');
+            offSocket.client_privmsg(socket);
         } 
     },[socket, setSelectUserMsg, selectUserMsg])
 
@@ -54,7 +52,7 @@ const PriveMsg:FunctionComponent<IProps> = (props:IProps)=> {
             }
         })
         return () => {
-            socket.off('client_privmsg_send');
+            offSocket.client_privmsg_send(socket);
         } 
     },[socket, setSelectUserMsg, selectUserMsg])
 

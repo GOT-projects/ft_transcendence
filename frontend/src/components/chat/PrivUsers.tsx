@@ -13,29 +13,21 @@ import { useNavigate } from "react-router-dom";
 
 
 interface IProps {
-   friends: GOT.User[] | undefined;
    selectUser: GOT.User | undefined;
    setSelectUser:Dispatch<React.SetStateAction<GOT.User | undefined>> | undefined;
-   usersList: GOT.User[] | undefined;
+   userFriend: GOT.Friend[] | undefined;
    popupUser: GOT.User | undefined;
    setPopupUser:Dispatch<React.SetStateAction<GOT.User | undefined>> | undefined;
    setPopupProfil:Dispatch<React.SetStateAction<boolean>> | undefined;
    popuProfil: boolean | undefined;
+   friends:GOT.User[] | undefined;
+   setFriends:Dispatch<React.SetStateAction<GOT.User[] | undefined>> | undefined;
 }
 
 const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
     const socket = useContext(SocketContext)
     const navigate =useNavigate();
-    const [friends, setFriends] = useState<GOT.Friend[]>()
 
-    useEffect(() => {
-        socket.on('client_friends', (rep:GOT.Friend[]) => {
-            setFriends(rep);
-        })
-        return () => {
-            socket.off('client_friends');
-        } 
-    },[socket])
     const handleSelectFriend = (name:string) => {
         const user = props.friends?.filter((user) => user.login === name);
         if (user){
@@ -48,7 +40,7 @@ const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
     }
     
     const handleViewProfil = (name: string) =>{
-        const user = props.usersList?.filter((user) => user.login === name);
+        const user = props.userFriend?.filter((user) => user.login === name);
         if (user && props.popupUser){
             const tmp:GOT.User = user[0];
             if (props.setPopupUser)
@@ -69,6 +61,8 @@ const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
     useEffect(() => {
         emitSocket.emitFriends(socket);
     }, [socket])
+
+    console.log("user list", props.userFriend, "friend",props.friends)
     return (
         <>
             {props.friends?.map((user:GOT.User) =>(
@@ -84,7 +78,7 @@ const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
                     <StyledChatSettingButton onClick={() => {handleBlockUser(user.login)}}>
                         <MdOutlineBlock className='setting' size={30} color={Colors.ChatMenuButtonText}/>
                     </StyledChatSettingButton>
-                    {friends?.find((friend) => (friend.login === user.login)) ? <StyledChatDivEmpty/>:
+                    {props.userFriend?.find((friend:GOT.Friend) => (friend.login === user.login)) ? <StyledChatDivEmpty/> :
                     <StyledChatSettingButton onClick={() => {handleAddFriend(user.login)}}>
                         <AiOutlineUserAdd className='setting' size={30} color={Colors.ChatMenuButtonText}/>
                     </StyledChatSettingButton>

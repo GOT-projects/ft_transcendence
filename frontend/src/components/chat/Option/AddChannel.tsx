@@ -13,8 +13,6 @@ import { Notification } from "../../Notify";
 interface IProps {
    setAction:Dispatch<React.SetStateAction<boolean>> | undefined;
    listUser:GOT.User[] | undefined;
-   friends:GOT.User[] | undefined;
-   setFriend:Dispatch<React.SetStateAction<GOT.User[] | undefined>> | undefined;
    setAdd:Dispatch<React.SetStateAction<string>> | undefined;
 }
 const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{

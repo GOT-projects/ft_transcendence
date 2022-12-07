@@ -11,8 +11,6 @@ interface IProps {
    setProfil:Dispatch<React.SetStateAction<GOT.Profile | undefined>> | undefined;
    chatSwitch: string; 
    setChatSwitch:Dispatch<React.SetStateAction<string>> | undefined;
-   setFriend:Dispatch<React.SetStateAction<GOT.User[] | undefined>> | undefined;
-   friends:GOT.User[] | undefined;
    listUser:GOT.User[] | undefined;
 }
 
@@ -44,7 +42,7 @@ const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
                     </StyledChanDiv>
                 ))}
             </StyledContaiteChannel>
-            {add ? <PopupAddChannel profil={props.profil} setProfil={props.setProfil} setAction={setAdd} setFriend={props.setFriend} listUser={props.listUser} friends={props.friends}/> : <></>}
+            {add ? <PopupAddChannel profil={props.profil} setProfil={props.setProfil} setAction={setAdd} listUser={props.listUser}/> : <></>}
         </StyledContaiteMenu>
     )
 }
