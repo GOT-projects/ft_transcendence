@@ -30,14 +30,32 @@ export const StyledContaiteReturn = styled.div`
 export const StyledContaiteReturnAddChannel = styled.div`
     display: flex;
     align-items: center;
-    width: 100px;
+    width: 100%;
     height: 140px;
+`
+
+export const StyledContaiteReturnAddButtonP = styled.p`
+    color: ${Colors.primary};
+
+`
+
+export const StyledContaiteReturnAddButton = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 40px;
+    margin-right: 10px;
+    border: 2px solid ${Colors.Bg2faIn};
+    background-color: ${Colors.Bg2faIn};
+    border-radius: 10px;
 `
 
 export const StyledContaiteReturnDiv = styled.div`
     display: flex;
     align-items: flex-start;
-    width: 80px;
+    justify-content: space-between;
+    width: 100%;
     height: 80px;
     margin-top: -10px;
     margin-left: 10px;
@@ -46,6 +64,8 @@ export const StyledContaiteAddUser = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    height: 40px;
     margin: 10px;
     font-family: "curve";
     font-size: 20px;
@@ -136,6 +156,9 @@ export const StyledChanDiv = styled.div`
     height: 50px;
     background-color: ${Colors.bgChannel};
     transition: 0.6s;
+    &.add{
+        background-color: ${Colors.green};
+    }
     &:hover{
         transition: 0.6s;
         border-radius: 20%;
@@ -169,7 +192,9 @@ export const StyledContaiteAddChanOptionP = styled.div<Icolor>`
 
 export const StyledContaiteClose = styled.div`
     display: flex;
-    margin: 10px;
+    margin: 0px;
+    margin-top: 10px;
+    margin-right: 10px;
     flex-direction: row-reverse;
     align-items: center;
     cursor: pointer;

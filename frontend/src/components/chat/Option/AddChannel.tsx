@@ -2,11 +2,13 @@
 import { Dispatch, FunctionComponent, useContext, useState } from "react";
 import { FaWindowClose } from "react-icons/fa";
 import { GOT } from "../../../shared/types";
-import { StyledContaiteAddChanDiv, StyledContaiteAddChanOption, StyledContaiteAddChanOptionP, StyledContaiteAddUser, StyledContaiteClose, StyledContaiteReturn, StyledContaiteReturnAddChannel, StyledContaiteReturnDiv, StyledContaiteViewAddChan } from "../../Styles/StyleViewProfil";
+import { StyledContaiteAddChanDiv, StyledContaiteAddChanOption, StyledContaiteAddChanOptionP, StyledContaiteAddUser, StyledContaiteClose, StyledContaiteReturn, StyledContaiteReturnAddButton, StyledContaiteReturnAddButtonP, StyledContaiteReturnAddChannel, StyledContaiteReturnDiv, StyledContaiteViewAddChan } from "../../Styles/StyleViewProfil";
 import { motion } from "framer-motion";
 import { Colors } from "../../Colors";
 import { emitSocket } from "../../../socket/socketEmit";
 import { SocketContext } from "../../../socket/socketPovider";
+import { NotifyInter } from "../../interfaces";
+import { Notification } from "../../Notify";
 
 interface IProps {
    setAction:Dispatch<React.SetStateAction<boolean>> | undefined;
@@ -17,17 +19,27 @@ interface IProps {
 }
 const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
     const socket = useContext(SocketContext)
-    const [input, setInput] = useState("");
+    const [inputChan, setInputChan] = useState("");
+    const [inputPwd, setInputPwd] = useState("");
     const [selecte, setSelecte] = useState("");
+    const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
     const handleClose = () => {
         if (props.setAction)
             props.setAction(false);
     }
-    const handleChange = (event: any,) => {
-        if (input === "" && event.target.value ==="\n")
+    const handleChangeChan = (event: any,) => {
+        if (inputChan === "" && event.target.value ==="\n")
             return;
-		setInput(event.target.value);
+		setInputChan(event.target.value);
 	}	
+    const handleChangePwd = (event: any,) => {
+        if (inputPwd === "" && event.target.value ==="\n")
+            return;
+        if (selecte === "public"  || selecte === "")
+            return;
+		setInputPwd(event.target.value);
+	}	
+
     const handleReturn = () => {
         console.log("return")
         if (props.setAdd)
@@ -37,6 +49,42 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
     const handleSelect = (name: string) =>{
         setSelecte(name);
     }
+    const handleSend = () =>{
+        let ok = false
+        if (selecte === "public"){
+            if (inputChan === ""){
+                setNotify({isOpen: true, message: "Please choose name to your channel", type: "error"})
+            }else{
+                console.log(inputChan, selecte, inputPwd);
+                ok = true;
+            }
+        }else if (selecte === "protected"){
+            if (inputChan === ""){
+                setNotify({isOpen: true, message: "Please choose name to your channel", type: "error"})
+            }else if (inputPwd === ""){
+                setNotify({isOpen: true, message: "Please choose password to your channel", type: "error"})
+            }else{
+                console.log(inputChan, selecte, inputPwd);
+                ok = true;
+            }
+        }else if (selecte === "private"){
+            if (inputChan === ""){
+                setNotify({isOpen: true, message: "Please choose name to your channel", type: "error"})
+            }else if (inputPwd === ""){
+                setNotify({isOpen: true, message: "Please choose password to your channel", type: "error"})
+            }else{
+                console.log(inputChan, selecte, inputPwd);
+                ok = true;
+            }
+        }else{
+            setNotify({isOpen: true, message: "Please select type of Channel", type: "error"})
+        }
+        if (ok){
+            if (props.setAction)
+                props.setAction(false);
+        }
+    }
+
     return (
         <StyledContaiteViewAddChan>
             <motion.div
@@ -49,7 +97,7 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
                     <p>Creation Channel</p>
                 </StyledContaiteAddChanDiv>
                 <StyledContaiteAddChanDiv>
-                    <input type="text" placeholder="Channel name"/>
+                    <input type="text" placeholder="Channel name" value={inputChan} onChange={handleChangeChan} autoFocus/>
                 </StyledContaiteAddChanDiv>
                 <StyledContaiteAddChanDiv>
                     <p>Options Channel:</p>
@@ -66,18 +114,24 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
                     </StyledContaiteAddChanOption>
                 </StyledContaiteAddChanDiv>
                 <StyledContaiteAddChanDiv>
-                    <p>Password</p>
+                    <p>Password:</p>
                 </StyledContaiteAddChanDiv>
                 <StyledContaiteAddChanDiv>
-                    <input type="password" placeholder="Channel password" name="password" autoComplete="on"/>
+                    <input type="password" placeholder="Channel password" name="password" value={inputPwd} onChange={handleChangePwd} autoComplete="on"/>
                 </StyledContaiteAddChanDiv>
                 <StyledContaiteReturnAddChannel>
-                    <StyledContaiteReturnDiv onClick={handleReturn}>
-                        <p>return</p>
+                    <StyledContaiteReturnDiv >
+                        <StyledContaiteReturnAddButton onClick={handleSend}>
+                            <StyledContaiteReturnAddButtonP>send</StyledContaiteReturnAddButtonP>
+                        </StyledContaiteReturnAddButton>
+                        <StyledContaiteReturnAddButton onClick={handleReturn}>
+                            <StyledContaiteReturnAddButtonP>return</StyledContaiteReturnAddButtonP>
+                        </StyledContaiteReturnAddButton>
                     </StyledContaiteReturnDiv>
             </StyledContaiteReturnAddChannel>
 
             </form>
+            <Notification notify={notify} setNotify={setNotify}/>
             </motion.div>
         </StyledContaiteViewAddChan>
     )

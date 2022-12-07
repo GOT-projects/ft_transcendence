@@ -35,8 +35,8 @@ const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
             </StyledChanDiv>
             <StyledChanSep/>
             <StyledContaiteChannel>
-                <StyledChanDiv onClick={() => {handleAddChannel()}}>
-                    <StyledChanPadd>+</StyledChanPadd>
+                <StyledChanDiv className="add"onClick={() => {handleAddChannel()}}>
+                    <StyledChanPadd >+</StyledChanPadd>
                 </StyledChanDiv>
                 {channel.map((chan) => (
                     <StyledChanDiv key={uuid()} onClick={() => {handlePriveMsg(chan)}}>

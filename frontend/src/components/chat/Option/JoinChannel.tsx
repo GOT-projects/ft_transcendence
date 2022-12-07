@@ -1,7 +1,7 @@
 import { Dispatch, FunctionComponent, useContext, useState } from "react";
 import { FaWindowClose } from "react-icons/fa";
 import { GOT } from "../../../shared/types";
-import { StyledContaiteAddUser, StyledContaiteClose, StyledContaiteReturn, StyledContaiteReturnDiv, StyledContaiteViewAddChan } from "../../Styles/StyleViewProfil";
+import { StyledContaiteAddUser, StyledContaiteClose, StyledContaiteReturn, StyledContaiteReturnDiv, StyledContaiteViewAddChan, StyledContaiteViewAddOption, StyledContaiteViewAddP } from "../../Styles/StyleViewProfil";
 import { motion } from "framer-motion";
 import { Colors } from "../../Colors";
 import { emitSocket } from "../../../socket/socketEmit";
@@ -14,39 +14,21 @@ interface IProps {
    setFriend:Dispatch<React.SetStateAction<GOT.User[] | undefined>> | undefined;
    setAdd:Dispatch<React.SetStateAction<string>> | undefined;
 }
-const PopupOptionAddUser:FunctionComponent<IProps> = (props: IProps) =>{
+const PopupOptionJoinChannel:FunctionComponent<IProps> = (props: IProps) =>{
+    const [add, setAdd] = useState("");
     const socket = useContext(SocketContext)
     const [input, setInput] = useState("");
     const handleClose = () => {
         if (props.setAction)
             props.setAction(false);
     }
-    const handleChange = (event: any,) => {
-        if (input === "" && event.target.value ==="\n")
-            return;
-		setInput(event.target.value);
-	}	
     const handleReturn = () => {
         if (props.setAdd)
             props.setAdd("");
     }
-    const send = (event : any) => {
-        if (event.key === "Enter"){
-            if (props.listUser){
-                const user = props.listUser?.filter((user:GOT.User) => user.login === input);
-                if (user && user.length > 0){
-                    console.log("add user")
-                    let tmp = props.friends;
-                    if (tmp !== undefined && props.setFriend){
-                        tmp.push(user[0]);
-                        props.setFriend(tmp);
-                    }
-                }
-            }
-            if (props.setAction)
-                props.setAction(false); 
-        }
-	}	
+    const handleAdd = (name: string) => {
+       setAdd(name); 
+    }
     return (
         <StyledContaiteViewAddChan>
             <motion.div
@@ -54,15 +36,22 @@ const PopupOptionAddUser:FunctionComponent<IProps> = (props: IProps) =>{
             animate={{x:0}}
             transition={{duration: 1}}
             >
-            <StyledContaiteClose onClick={handleClose}>
+            <StyledContaiteClose className="joinChan" onClick={handleClose}>
                     <FaWindowClose size={30} color={Colors.dark1}/>
             </StyledContaiteClose>
             <StyledContaiteAddUser>
-                <h1>Add user</h1>
-                <input type="text" value={input} placeholder="Add user" onChange={handleChange} onKeyDown={send} autoFocus/>
+                <h3>Join channel</h3>
             </StyledContaiteAddUser>
+            <StyledContaiteViewAddOption onClick={() => {handleAdd("public")}}>
+                <StyledContaiteViewAddP>list public channel</StyledContaiteViewAddP>
+                <StyledContaiteViewAddP>{">"}</StyledContaiteViewAddP>
+            </StyledContaiteViewAddOption>
+            <StyledContaiteViewAddOption onClick={() => {handleAdd("private")}}>
+                <StyledContaiteViewAddP>Join channel private</StyledContaiteViewAddP>
+                <StyledContaiteViewAddP>{">"}</StyledContaiteViewAddP>
+            </StyledContaiteViewAddOption>
             <StyledContaiteReturn>
-                <StyledContaiteReturnDiv onClick={handleReturn}>
+                <StyledContaiteReturnDiv className="joinChan" onClick={handleReturn}>
                     <p>return</p>
                 </StyledContaiteReturnDiv>
             </StyledContaiteReturn>
@@ -71,4 +60,4 @@ const PopupOptionAddUser:FunctionComponent<IProps> = (props: IProps) =>{
     )
 }
 
-export default PopupOptionAddUser;
+export default PopupOptionJoinChannel;

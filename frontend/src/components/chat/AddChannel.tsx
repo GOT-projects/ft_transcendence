@@ -6,6 +6,7 @@ import { StyledChanDiv, StyledChanSep, StyledContaiteChannel, StyledContaiteClos
 import { motion } from "framer-motion";
 import PopupOptionAddUser from "./Option/AddUser";
 import PopupOptionAddChannel from "./Option/AddChannel";
+import PopupOptionJoinChannel from "./Option/JoinChannel";
 
 
 interface IProps {
@@ -25,13 +26,10 @@ const PopupAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
             props.setAction(false);
     }
 
-    const handleAddUser = ( ) => {
-       setAdd("addUser"); 
+    const handleAdd = (name: string) => {
+       setAdd(name); 
     }
 
-    const handleAddChannel = ( ) => {
-       setAdd("addChannel"); 
-    }
     return (
         <StyledContaiteViewAddChan>
             {add === "" ?
@@ -44,15 +42,15 @@ const PopupAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
                     <FaWindowClose size={30} color={Colors.dark1}/>
             </StyledContaiteClose>
             <StyledContaiteViewAddP>Add</StyledContaiteViewAddP>
-            <StyledContaiteViewAddOption onClick={handleAddUser}>
+            <StyledContaiteViewAddOption onClick={() => {handleAdd("addUser")}}>
                 <StyledContaiteViewAddP >Add user for prive msg</StyledContaiteViewAddP>
                 <StyledContaiteViewAddP>{">"}</StyledContaiteViewAddP>
             </StyledContaiteViewAddOption>
-            <StyledContaiteViewAddOption onClick={handleAddChannel}>
+            <StyledContaiteViewAddOption onClick={() => {handleAdd("addChannel")}}>
                 <StyledContaiteViewAddP>Create channel</StyledContaiteViewAddP>
                 <StyledContaiteViewAddP>{">"}</StyledContaiteViewAddP>
             </StyledContaiteViewAddOption>
-            <StyledContaiteViewAddOption>
+            <StyledContaiteViewAddOption onClick={() => {handleAdd("joinChannel")}}>
                 <StyledContaiteViewAddP>Join channel</StyledContaiteViewAddP>
                 <StyledContaiteViewAddP>{">"}</StyledContaiteViewAddP>
             </StyledContaiteViewAddOption>
@@ -61,6 +59,9 @@ const PopupAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
                                 listUser={props.listUser} friends={props.friends} 
                                 setFriend={props.setFriend} setAdd={setAdd}/> : <></>}
             {add === "addChannel" ? <PopupOptionAddChannel setAction={props.setAction} 
+                                listUser={props.listUser} friends={props.friends} 
+                                setFriend={props.setFriend} setAdd={setAdd}/> : <></>}
+            {add === "joinChannel" ? <PopupOptionJoinChannel setAction={props.setAction} 
                                 listUser={props.listUser} friends={props.friends} 
                                 setFriend={props.setFriend} setAdd={setAdd}/> : <></>}
         </StyledContaiteViewAddChan>
