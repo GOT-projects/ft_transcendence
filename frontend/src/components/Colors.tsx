@@ -27,4 +27,5 @@ export const Colors = {
     Bg2fa: "#202225",
     Bg2faIn: "#2F3136",
     greyButton: "#8E9297",
+    hoverTextChat: "#42454D",
 }

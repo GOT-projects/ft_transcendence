@@ -272,23 +272,33 @@ export const StyledChatPlace = styled.div`
     margin: 10px;
     max-width: 45%;
     height: auto;
-    border-radius: 20px;
+    border-radius: 4px;
     overflow-wrap: anywhere;
     hyphens: auto;
+    transition: 0.6s;
     &.receive{
         justify-content: flex-start;
-        background-color: blue;
+        background-color: transparent;
         text-align: left;
     }
     &.send{
         justify-content: flex-end;
-        background-color: red;
+        background-color: transparent;
         transform: translateX(110%)
+    }
+    &:hover{
+        &.send{
+            transition: 0.6s;
+            background-color: ${Colors.hoverTextChat};
+        }
+        &.receive{
+            transition: 0.6s;
+            background-color: ${Colors.hoverTextChat};
+        }
     }
     @media screen and (max-width: 768px){
         transform: translateX(0%)
         max-width: 90%;
-        color: ${Colors.primary};
     }
 `;
 
@@ -296,7 +306,7 @@ export const StyledChatText = styled.p`
     margin: 10px;
     font-size:14px; 
     font-family: "Public Pixel";
-    color: ${Colors.primary}
+    color: ${Colors.primary};
     @media screen and (max-width: 768px){
         margin: 10px;
         font-size:8px; 

@@ -66,6 +66,7 @@ export const StyledWaitingButton = styled.button`
     margin: 0;
     font-family: "Public Pixel";
     width: 100%;
+    height: 80px;
     border-radius: 12px;
     background: ${Colors.greyButton};
 `
@@ -76,6 +77,8 @@ export const StyledWaiting2FAForm = styled.form`
 	padding-left: var(--space);
 	position: relative;
 	display: flex;
+    align-items: center;
+    justify-content: center;
 	overflow: hidden;
 	border-radius: calc(var(--size) / 4);
 	box-shadow: 0 1em 2em var(--softTint);
