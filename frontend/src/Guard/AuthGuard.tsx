@@ -10,7 +10,6 @@ const getAccess = async () => {
         access = true;
     else
         access = false;
-    console.log(access)
 }
 
 const AuthGuard = ({children}:any) => {

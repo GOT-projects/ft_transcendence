@@ -46,8 +46,15 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
     //Socket get info from server 
     useEffect(() => {
         socket.on('info_client', (rep:any) => {
-            if (typeof rep === "string")
-                props.setNotify({isOpen: true, message: `Info: ${rep}`, type:'info'});
+            console.log(rep);
+            if (typeof rep === "string"){
+                let regex:RegExp = /^You received a message send by*/
+                if (regex.test(rep)){
+                    props.setNotify({isOpen: true, message: `${rep}`, type:'info'});
+                }else{
+                    props.setNotify({isOpen: true, message: `Info: ${rep}`, type:'info'});
+                }
+            }
         })
     }, [socket])
 
@@ -80,7 +87,6 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
             console.log("Profil:", rep);
             if (rep && props.setProfil){
                 if (rep.userInfos.urlImg.split('')[0] === '/'){
-                    console.log("url start with /")
                     rep.userInfos.urlImg = `${InfoServer.HttpServer}${rep.userInfos.urlImg}`;
                     props.setProfil(rep);
                 }else{

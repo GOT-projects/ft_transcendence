@@ -27,6 +27,20 @@ let removeToken= () => {
     window.location.href = '/';
 }
 
+let getParamsPriv = () => {
+    const params = (new URL(window.location.href)).searchParams;
+    let code: Map<string, string> = new Map();
+    let tmp = params.get("code");
+    if (tmp){
+        code.set("code", tmp);
+        tmp = params.get("name");
+        if (tmp){
+            code.set("name", tmp);
+        }
+    }
+    return (code);
+}
+
 let isLogged = async() => {
     let token = localStorage.getItem('token_access')
     if (!!token){
@@ -53,5 +67,5 @@ let getToken = () => {
 }
 
 export const accountService = {
-    saveToken, removeToken, isLogged, getToken
+    saveToken, removeToken, isLogged, getToken, getParamsPriv
 }

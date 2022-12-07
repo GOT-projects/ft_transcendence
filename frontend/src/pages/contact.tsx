@@ -20,6 +20,8 @@ import ProfilView from '../components/popup/ProfilView';
 import { GOT } from '../shared/types';
 
 import PriveMsg from '../components/chat/PrivMsg';
+import PriveUserMenu from '../components/chat/PrivUsers';
+import { accountService } from '../services/account.service';
 
 interface IProps {
    profil: GOT.Profile | undefined;
@@ -30,10 +32,6 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     const socket = useContext(SocketContext)
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
 
-    const [popuProfil, setPopupProfil] = useState(false);
-    const [popupUser, setPopupUser] = useState<GOT.User>();
-
-
     const [navActive, setNavActive] = useState("UnActiveMenu");
     const [chatSwitch, setChatSwitch] = useState<string>('private');
     const [selectFriend, setSelectFriend] = useState<string>('');
@@ -41,12 +39,17 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     const [inputContact, setInputContact] = useState("");
     const [inputChannel, setInputChannel] = useState("");
     const [histo, setHisto] = useState<GOT.HistoryParties>();
+    const [popuProfil, setPopupProfil] = useState(false);
+    const [popupUser, setPopupUser] = useState<GOT.User>();
 
     const [usersList, setUsersList] = useState<GOT.User[]>();
     const [selectUserMsg, setSelectUserMsg] = useState<GOT.msg[]>();
     const [selectUser, setSelectUser] = useState<GOT.User>();
     const [friends, setFriends] = useState<GOT.User[]>();
     
+    const codeParam: Map<string, string> = accountService.getParamsPriv();
+
+
     useEffect(() => {
         socket.on("client_profil_login", (e: GOT.HistoryParties) => {
             if (e)
@@ -143,19 +146,15 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
         }
         emitSocket.emitPrivmsg(socket, name);
     }
-
-    const handleViewProfil = (name: string) =>{
-        const user = usersList?.filter((user) => user.login === name);
-        if (user){
-            const tmp:GOT.User = user[0];
-            setPopupUser(tmp);
-            setPopupProfil(true);
+    useEffect(() =>{
+        if (codeParam.get("code") === "Priv"){
+            const name = codeParam.get("name");
+            if (name){
+                handleSelectFriend(name);
+            }
         }
-    }
+    }, [codeParam])
 
-    const handleBlockUser = (name: string) => {
-        emitSocket.emitBlockUser(socket, name);
-    }
 
 	return (
 		<React.Fragment>
@@ -224,18 +223,10 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                     }
                     <StyledChatPrive className={navActive}>
                 <>
-                    {chatSwitch === "private" ? friends?.map((user:GOT.User) =>(
-                        <StyledUser key={uuid()} color={user.username === selectUser?.username ? Colors.ChatMenuButton : Colors.ChatMenu} onClick={() => {handleSelectFriend(user.username)}}>
-                            <StyledChatPrivAvatar profil={user.urlImg}/>
-                        <StyledChatPrivName key={uuid()}>{user.username}</StyledChatPrivName>
-                        <StyledChatSettingButton onClick={() => {handleViewProfil(user.login)}}>
-                            <CgProfile className='setting' size={30} color={Colors.ChatMenuButtonText}/>
-                        </StyledChatSettingButton>
-                        <StyledChatSettingButton onClick={() => {handleBlockUser(user.login)}}>
-                            <MdOutlineBlock className='setting' size={30} color={Colors.ChatMenuButtonText}/>
-                        </StyledChatSettingButton>
-                        </StyledUser>
-                    )) : ""}
+                    {chatSwitch === "private" ? <PriveUserMenu friends={friends} selectUser={selectUser} 
+                                                               setSelectUser={setSelectUser} usersList={usersList}
+                                                               popupUser={popupUser} setPopupUser={setPopupUser}
+                                                               setPopupProfil={setPopupProfil} popuProfil={popuProfil}/> : ""}
                 </>
                 <React.Fragment>
                     {chatSwitch === "channel" ? friends?.map((user:GOT.User) =>(

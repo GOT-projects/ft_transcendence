@@ -194,6 +194,25 @@ export const StyledChatSwithButton = styled.button<BgColor>`
         font-size: 8px;
     }
 `;
+export const StyledChatDivhandle = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    cursor: pointer;
+`
+export const StyledChatDivoption = styled.div`
+    display: flex;
+    gap: 3px;
+    cursor: pointer;
+`
+export const StyledChatDivEmpty = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    width: 50px;
+    height: 50px;
+`
 
 export const StyledChatSettingButton = styled.div`
     display: flex;
@@ -337,12 +356,13 @@ export const StyledSender = styled.button`
 export const StyledUser = styled.button<BgColor>`
     display: flex;
     margin: 10px;
-    width: 100%;
     height: 60px;
-    border-radius: 0;
+    width: 100%;
+    border-radius: 20px;
     border: 0;
     align-items: center;
-    justify-content: space-between;
+    justify-content: row;
+    flex-flow: column wrap;
     background-color: ${p => p.color};
     justify-content: space-around;
     transition: 0.4s;
@@ -371,7 +391,7 @@ export const StyledChatPrivAvatar = styled.div<Ibg>`
 
 export const StyledChatPrivName = styled.p`
     margin: 10px;
-	width: 200px;
+	width: 100px;
 	text-align: left;
     font-family: 'Public Pixel', cursive;
 	overflow: hidden;

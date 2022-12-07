@@ -44,7 +44,7 @@ const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
                 props.setSelectUser(tmp);
         }
         emitSocket.emitPrivmsg(socket, name);
-        navigate(`/chat?code=Priv?name=${name}`);
+        navigate(`/chat?code=Priv&name=${name}`);
     }
     
     const handleViewProfil = (name: string) =>{
