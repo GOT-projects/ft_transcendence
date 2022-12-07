@@ -40,8 +40,15 @@ const PriveMsg:FunctionComponent<IProps> = (props:IProps)=> {
         //receive send 
         socket.on('client_privmsg_send', (rep:GOT.msg) => {
             if (rep.userFrom.login === props.userSelect?.login){
-                if (selectUserMsg)
-                    setSelectUserMsg([...selectUserMsg, rep]);
+                if (selectUserMsg){
+                    let tmp:GOT.msg[] = selectUserMsg; 
+                    tmp.push(rep);
+                    setSelectUserMsg(tmp);
+                }else{
+                    let tmp:GOT.msg[] = []; 
+                    tmp.push(rep);
+                    setSelectUserMsg(tmp);
+                }
             }else{
                 emitSocket.emitPrivmsgUsers(socket);
             }
@@ -63,6 +70,7 @@ const PriveMsg:FunctionComponent<IProps> = (props:IProps)=> {
         }
         if (props.profil && props.userSelect){
             const msg:GOT.msg = {userFrom: props.profil.userInfos, userTo:props.userSelect, msg: inputChat};
+            console.log(msg)
             emitSocket.emitPrivmsg(socket, props.userSelect.login);
             emitSocket.emitSendPrivmsg(socket, props.userSelect.login, msg.msg);
         }

@@ -1,7 +1,7 @@
     import { StyledChat, StyledChatInput, StyledChatPrivAvatar, StyledChatPrive, StyledChatPrivName, StyledChatPlace, 
 			StyledChatSendDiv, StyledChatSep, StyledChatSettingButton, StyledChatSwith, StyledChatSwithButton, StyledChatText, 
 			StyledChatWindow, StyledContact, StyledContaite, StyledSender, StyledUser, StyledChatTextArea, StyledMenuNav, StyledMenuDiv, 
-			StyledMenuSwitch, StyledAddInput, StyledAddInputdiv, StyledAddInputdivButton } from '../components/Styles/StyleChat';
+			StyledMenuSwitch, StyledAddInput, StyledAddInputdiv, StyledAddInputdivButton, StyledChatSwithTile } from '../components/Styles/StyleChat';
 import React, {Dispatch, FunctionComponent, useContext, useEffect, useRef, useState } from 'react';
 import BackgroundAnimate from '../components/BackGroundAnimate';
 import Footer from '../components/Footer';
@@ -22,6 +22,7 @@ import { GOT } from '../shared/types';
 import PriveMsg from '../components/chat/PrivMsg';
 import PriveUserMenu from '../components/chat/PrivUsers';
 import { accountService } from '../services/account.service';
+import MenuChat from '../components/chat/Menu';
 
 interface IProps {
    profil: GOT.Profile | undefined;
@@ -32,7 +33,6 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     const socket = useContext(SocketContext)
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
 
-    const [navActive, setNavActive] = useState("UnActiveMenu");
     const [chatSwitch, setChatSwitch] = useState<string>('private');
     const [selectFriend, setSelectFriend] = useState<string>('');
     const [inputChat, setInputChat] = useState("");
@@ -108,12 +108,6 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
 		setInput(event.target.value);
 	}	
 
-    const navMenu = () => {
-        if (navActive === "ActiveMenu") {
-            setNavActive("UnActiveMenu");
-        } else setNavActive("ActiveMenu");
-    }
-
     const addContact = () =>{
         if (inputContact === " " || inputContact === "\n" || inputContact === ""){
             return;
@@ -170,78 +164,20 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
              />
 
             <StyledContaite>
-                <StyledMenuSwitch>
-                    <StyledMenuNav className={navActive} onClick={navMenu}>
-                        <StyledMenuDiv className={navActive}></StyledMenuDiv>
-                        <StyledMenuDiv className={navActive}></StyledMenuDiv>
-                        <StyledMenuDiv className={navActive}></StyledMenuDiv>
-                    </StyledMenuNav>
-                    <StyledChatSwithButton color={chatSwitch === "private" ? Colors.ChatMenuButtonHover : "transparent"} 
-									onClick={() => setChatSwitch("private")}>Private</StyledChatSwithButton>
-                    <StyledChatSwithButton color={chatSwitch === "channel" ? Colors.ChatMenuButtonHover : "transparent"}
-									onClick={() => setChatSwitch("channel")}>Channel</StyledChatSwithButton>
-                </StyledMenuSwitch>
-                <StyledContact className={navActive}>
+                <MenuChat profil={props.profil} setProfil={props.setProfil} chatSwitch={chatSwitch} setChatSwitch={setChatSwitch} setFriend={setFriends} friends={friends} listUser={usersList}/>
+                <StyledContact >
                     <StyledChatSwith> 
-                        <StyledChatSwithButton color={chatSwitch === "private" ? Colors.ChatMenuButtonHover : "transparent"}
-									onClick={() => setChatSwitch("private")}>Private</StyledChatSwithButton>
-                        <StyledChatSwithButton color={chatSwitch === "channel" ? Colors.ChatMenuButtonHover : "transparent"} 
-									onClick={() => setChatSwitch("channel")}>Channel</StyledChatSwithButton>
+                        <StyledChatSwithTile>{chatSwitch}</StyledChatSwithTile>
                     </StyledChatSwith>
                     <StyledChatSep/>
-                    {chatSwitch === "private" ?
-                    <StyledAddInputdiv>
-                        <StyledAddInput type="text" list="users" value={inputContact} placeholder='Add contact' onChange={(e) => handChange(e, setInputContact, inputContact)}
-                                                                                                   onKeyDown={(e) => {
-                                                                                                    if (e.key === 'Enter'){
-                                                                                                        addContact();
-                                                                                                    }}}/>
-                                    <datalist id="users">
-                                        {usersList?.map((user) => (
-                                            <option key={uuid()}>{user.login}</option>
-                                        ))}
-                                    </datalist>
-                        <StyledAddInputdivButton onClick={() => addContact()}>
-                            <GrAddCircle size={"40px"}/>
-                        </StyledAddInputdivButton>
-                    </StyledAddInputdiv> :
-                    <StyledAddInputdiv>
-                        <StyledAddInput type="text" list="users" value={inputChannel} placeholder='Add channel' onChange={(e) => handChange(e, setInputChannel, inputChannel)}
-                                                                                                   onKeyDown={(e) => {
-                                                                                                    if (e.key === 'Enter'){
-                                                                                                        addChannel();
-                                                                                                    }}}/>
-                                    <datalist id="users">
-                                        {usersList?.map((user) => (
-                                            <option key={uuid()}>{user.login}</option>
-                                        ))}
-                                    </datalist>
-                        <StyledAddInputdivButton onClick={() => addChannel()}>
-                            <GrAddCircle size={"40px"}/>
-                        </StyledAddInputdivButton>
-                    </StyledAddInputdiv>
-                    }
-                    <StyledChatPrive className={navActive}>
-                <>
+                    <StyledChatPrive >
                     {chatSwitch === "private" ? <PriveUserMenu friends={friends} selectUser={selectUser} 
                                                                setSelectUser={setSelectUser} usersList={usersList}
                                                                popupUser={popupUser} setPopupUser={setPopupUser}
-                                                               setPopupProfil={setPopupProfil} popuProfil={popuProfil}/> : ""}
-                </>
-                <React.Fragment>
-                    {chatSwitch === "channel" ? friends?.map((user:GOT.User) =>(
-                        <StyledUser key={uuid()} color={user.username === selectFriend ? Colors.ChatMenuButton : Colors.ChatMenu} onClick={() => {handleSelectFriend(user.username)}}>
-                        <StyledChatPrivName key={uuid()}>channel</StyledChatPrivName>
-                        <StyledChatSettingButton onClick={() => {console.log("ok")}}>
-                            <AiFillSetting className='setting' size={30} color={Colors.ChatMenuButtonText}/>
-                        </StyledChatSettingButton>
-                        </StyledUser>
-                    )): ""}
-                </React.Fragment>
+                                                               setPopupProfil={setPopupProfil} popuProfil={popuProfil}/> : <></>}
                     </StyledChatPrive>
                 </StyledContact>
                 <PriveMsg profil={props.profil} setProfil={props.setProfil} userSelect={selectUser}/>
-
             </StyledContaite>
             <Notification notify={notify} setNotify={setNotify}/>
             {popuProfil ? <ProfilView profil={histo} setPopupProfil={setPopupProfil}/> : <> </>}
@@ -249,24 +185,4 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
 		</React.Fragment>
 	)
 }
-
 export default Chat;
-                // <StyledChat>
-                //     <StyledChatWindow>
-                //         <StyledChatTextArea>
-                //             {selectUserMsg?.map((data:GOT.msg) => (
-                //                     <StyledChatPlace key={uuid()} className={data.userFrom.login === props.profil?.userInfos.login ? "send" : "receive"}>
-                //                         <StyledChatText>{data.msg}</StyledChatText>
-                //                     </StyledChatPlace>
-                //             ))}
-                //         </StyledChatTextArea>
-                //         <StyledChatSendDiv className={selectUserMsg ? "active" : "deactive"}>
-                //         <StyledChatInput  name='chat' placeholder="Send message" autoFocus onChange={(e) => handChange(e, setInputChat, inputChat)} 
-                //                                                                 onKeyDown={(e) => {
-                //                                                                     if (e.key === 'Enter' && !e.shiftKey){
-                //                                                                         sendMsg();
-                //                                                                     }}}
-                //                                                                 value={inputChat}/>
-                //         </StyledChatSendDiv>
-                //     </StyledChatWindow>
-                // </StyledChat>

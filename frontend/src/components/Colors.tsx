@@ -28,4 +28,6 @@ export const Colors = {
     Bg2faIn: "#2F3136",
     greyButton: "#8E9297",
     hoverTextChat: "#42454D",
+    bgChannel: "#96989D",
+    green: "#3B953B",
 }
