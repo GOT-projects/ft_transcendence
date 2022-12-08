@@ -1,360 +1,506 @@
 import { Logger } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException, WsResponse } from "@nestjs/websockets";
+import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { GOT } from "shared/types";
 import { Server, Socket } from "socket.io";
-import { AppService } from "src/app.service";
+import { JwtContent, jwtContent } from "src/auth/types";
+import { User } from "src/database/entities/user.entity";
 import { UserService } from "src/database/services/user.service";
-import { ChatService } from "./chat.service";
-import { FriendService } from "./friend.service";
-import { GatewayService } from "./gateway.service";
+import { ChatGateway } from "./chat.gateway";
+import { FriendGateway } from "./friend.gateway";
+import { GeneralGateway } from "./general.gateway";
 
 //@UseGuards(JWTGuardSocket)
 @WebSocketGateway({
-    cors: {
-        credentials: false,
-        origin: '*',
-    },
+	cors: {
+		credentials: false,
+		origin: '*',
+	},
 })
 export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-    constructor(
-        private readonly jwtService: JwtService,
-        private readonly gatewayService: GatewayService,
-        private readonly appService: AppService,
-        private readonly friendService: FriendService,
-        private readonly userService: UserService,
-        private readonly chatService: ChatService,
-        ) {}
-    @WebSocketServer() server: Server;
-    private logger: Logger = new Logger('AppGateway');
-    private users: Map<string, string[]> = new Map<string, string[]>();
+	constructor(
+		private readonly jwtService: JwtService,
+		private readonly userService: UserService,
+		private readonly generalGateway: GeneralGateway,
+		private readonly friendGateway: FriendGateway,
+		private readonly chatGateway: ChatGateway,
+		) {}
+	@WebSocketServer() server: Server;
+	private logger: Logger = new Logger('AppGateway');
+	private users: Map<string, string[]> = new Map<string, string[]>();
 
-    private getUser(client: Socket) {
-        for (let [key, value] of this.users.entries()) {
-            if (value.indexOf(client.id) !== -1)
-                return key;
-        }
-    }
+	/**
+	 * Utils
+	 */
 
-    private async getFriendsList(client: Socket, userId: number) {
-        let ret = await this.friendService.getFriends(userId);
-        if (typeof ret === 'string') {
-            client.emit('error_client', ret);
-            return ;
-        }
-        ret.forEach(friend => {
-            if (this.users.get(friend.login) !== undefined)
-                friend.status = GOT.ProfileStatus.online;
-        });
-        return ret;
-    }
 
-    private async connectUserBody(client: Socket, jwt: string) {
-        try {
-            if (!jwt) {
-                const login: string | undefined = this.getUser(client);
-                if (login !== undefined) {
-                    const ids = this.users.get(login);
-                    if (!ids)
-                    return false;
-                    const i = ids.indexOf(client.id);
-                    if (i !== -1)
-                    ids.splice(i, 1);
-                    if (ids.length === 0)
-                    this.users.delete(login);
-                }
-                return false;
-            }
-            const data: jwtContent = await this.jwtService.verifyAsync(jwt);
-            const val = this.users.get(data.userLogin);
-            if (!val) {
-                this.users.set(data.userLogin, [client.id]);
-                this.logger.verbose(`Client add ${data.userLogin}: ${client.id}`);
-            }
-            else if (val.indexOf(client.id) === -1) {
-                val.push(client.id);
-                this.logger.log(`Client add ${data.userLogin}: ${client.id}`);
-            }
-            return data;         
-        } catch (error) {
-            const login: string | undefined = this.getUser(client);
-            if (login !== undefined) {
-                const ids = this.users.get(login);
-                if (!ids)
-                    return false;
-                const i = ids.indexOf(client.id);
-                if (i !== -1)
-                    ids.splice(i, 1);
-                    if (ids.length === 0)
-                        this.users.delete(login);
-            }
-            client.emit('error_client', error.message);
-            return false;
-        }
-    }
+	private getUser(client: Socket): string | undefined {
+		for (let [key, value] of this.users.entries()) {
+			if (value.indexOf(client.id) !== -1)
+				return key;
+		}
+	}
 
-    private async connectionSecure(client: Socket, jwt: string) {
-        if (jwt === undefined){
-            client.emit('error_client', "JWT not found");
-            return false;
-        }
-        const auth = await this.connectUserBody(client, jwt);
-        if (!auth) {
-            return false;
-        }
-        return auth;
-    }
-    
-    @SubscribeMessage('server_profil')
-    async profil(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string) {
-        const auth = await this.connectionSecure(client, jwt);
-        if (!auth) {
-            return ;
-        }
-        const ret = await this.gatewayService.profil(auth);
-        if (typeof ret === 'string') {
-            client.emit('error_client', ret);
-            return ;
-        }
-        client.emit('client_profil', ret);
-    }
+	private async connectUserBody(client: Socket, jwt: string): Promise<JwtContent | false> {
+		try {
+			if (!jwt) {
+				const login: string | undefined = this.getUser(client);
+				if (login !== undefined) {
+					const ids = this.users.get(login);
+					if (!ids)
+						return false;
+					const i = ids.indexOf(client.id);
+					if (i !== -1)
+						ids.splice(i, 1);
+					if (ids.length === 0)
+						this.users.delete(login);
+				}
+				return false;
+			}
+			const data: jwtContent = await this.jwtService.verifyAsync(jwt);
+			if (data.isTwoFactorAuthenticationEnabled === true && !(data.isTwoFactorAuthenticated)) {
+				client.emit('error_client', 'Need 2fa');
+				return false;
+			}
+			const user = await this.userService.findUnique(data.userId, data.userLogin);
+			if (!user) {
+				client.emit('error_client', 'User not valid / authorized');
+				return false;
+			}
+			const val = this.users.get(data.userLogin);
+			if (!val) {
+				this.users.set(data.userLogin, [client.id]);
+				this.logger.verbose(`Client add ${data.userLogin}: ${client.id}`);
+			}
+			else if (val.indexOf(client.id) === -1) {
+				val.push(client.id);
+				this.logger.log(`Client add ${data.userLogin}: ${client.id}`);
+			}
+			const infos: JwtContent = {
+				user: user,
+				isTwoFactorAuthenticationEnabled: data.isTwoFactorAuthenticationEnabled,
+				isTwoFactorAuthenticated: data.isTwoFactorAuthenticated
+			};
+			return infos;
+		} catch (error) {
+			const login: string | undefined = this.getUser(client);
+			if (login !== undefined) {
+				const ids = this.users.get(login);
+				if (!ids)
+					return false;
+				const i = ids.indexOf(client.id);
+				if (i !== -1)
+					ids.splice(i, 1);
+				if (ids.length === 0)
+					this.users.delete(login);
+			}
+			client.emit('error_client', error.message);
+			return false;
+		}
+	}
 
-    @SubscribeMessage('server_profil_login')
-    async profilLogin(@ConnectedSocket() client: Socket, @MessageBody('login') login: string, @MessageBody('Authorization') jwt: string) {
-        const auth = await this.connectionSecure(client, jwt);
-        if (!auth)
-            return ;
-        const ret = await this.gatewayService.profilLogin(login);
-        if (typeof ret === 'string') {
-            client.emit('error_client', ret);
-            return ;
-        }
-        client.emit('client_profil_login', ret);
-    }
+	private async connectionSecure(client: Socket, jwt: string): Promise<false | JwtContent> {
+		if (jwt === undefined){
+			client.emit('error_client', "JWT not found");
+			return false;
+		}
+		const auth = await this.connectUserBody(client, jwt);
+		if (!auth)
+			return false;
+		return auth;
+	}
 
-    @SubscribeMessage('server_leaderboard')
-    async leaderboard(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string) {
-        const auth = await this.connectionSecure(client, jwt);
-        if (!auth)
-            return ;
-        const ret = await this.gatewayService.leaderboard();
-        if (typeof ret === 'string') {
-            client.emit('error_client', ret);
-            return ;
-        }
-        client.emit('client_leaderboard', ret);
-    }
+	/**
+	 * Socket routes General
+	 */
 
-    @SubscribeMessage('server_change_username')
-    async changeUsername(@ConnectedSocket() client: Socket, @MessageBody('username') username: string, @MessageBody('Authorization') jwt: string) {
-        const auth = await this.connectionSecure(client, jwt);
-        if (!auth)
-            return ;
-        const result = await this.gatewayService.changeUsername(auth, username);
-        if (typeof result === 'string') {
-            client.emit('error_client', result);
-            return ;
-        }
-        this.profil(client, jwt);
-    }
+	@SubscribeMessage('server_profil')
+	async getProfil(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string) {
+		const auth = await this.connectionSecure(client, jwt);
+		if (!auth)
+			return ;
+		const ret = await this.generalGateway.getProfil(auth.user);
+		if (typeof ret === 'string') {
+			client.emit('error_client', `${ret}`);
+			return ;
+		}
+		client.emit('client_profil', ret);
+	}
 
-    @SubscribeMessage('server_demand_friend')
-    async demandFriend(@ConnectedSocket() client: Socket, @MessageBody('login') login: string, @MessageBody('Authorization') jwt: string) {
-        const auth = await this.connectionSecure(client, jwt);
-        if (!auth)
-            return ;
-        const ret = await this.friendService.demandFriend(auth.userLogin, login);
-        if (typeof ret === 'string') {
-            client.emit('error_client', ret);
-            return ;
-        }
-        let userSockets = this.users.get(auth.userLogin);
-        if (userSockets) {
-            const tmpNotif = await this.friendService.getNotif(auth.userId);
-            if (typeof tmpNotif !== 'string') {
-                this.server.to(userSockets).emit('client_notif', tmpNotif);
-            }
-            const tmpFriends = await this.getFriendsList(client, auth.userId);
-            if (tmpFriends !== undefined)
-                this.server.to(userSockets).emit('client_friends', tmpFriends);
-        }
-        userSockets = this.users.get(login);
-        if (userSockets) {
-            const userId = ret.user1Id === auth.userId ? ret.user2Id : ret.user1Id;
-            const tmpNotif = await this.friendService.getNotif(userId);
-            if (typeof tmpNotif !== 'string')
-                this.server.to(userSockets).emit('client_notif', tmpNotif);
-            const tmpFriends = await this.getFriendsList(client, userId);
-            if (tmpFriends !== undefined)
-                this.server.to(userSockets).emit('client_friends', tmpFriends);
-        }
-    }
+	@SubscribeMessage('server_profil_login')
+	async getProfilLogin(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('login') login: string) {
+		const auth = await this.connectionSecure(client, jwt);
+		if (!auth)
+			return ;
+		const ret = await this.generalGateway.getProfilLogin(login);
+		if (typeof ret === 'string') {
+			client.emit('error_client', ret);
+			return ;
+		}
+		client.emit('client_profil_login', ret);
+	}
 
-    @SubscribeMessage('server_reply_notification')
-    async replyNotif(@ConnectedSocket() client: Socket, @MessageBody('reply') reply: GOT.NotifChoice, @MessageBody('Authorization') jwt: string) {
-        const auth = await this.connectionSecure(client, jwt);
-        if (!auth)
-            return ;
-        const ret = await this.friendService.newFriendConfirmation(auth.userLogin, reply.user.login, reply.accept);
-        if (typeof ret === 'string') {
-            client.emit('error_client', ret);
-            const tmpNotif = await this.friendService.getNotif(auth.userId);
-            //console.log("tmpNotif", tmpNotif);
-            if (typeof tmpNotif !== 'string')
-                client.emit('client_notif', tmpNotif);
-            return ;
-        }
-        if (ret === false) {
-            client.emit('error_client', `Cannot add ${reply.user.username} as friend`);
-            return ;
-        }
-        let userSockets = this.users.get(auth.userLogin);
-        if (userSockets) {
-            const tmpNotif = await this.friendService.getNotif(auth.userId);
-            if (typeof tmpNotif !== 'string')
-                this.server.to(userSockets).emit('client_notif', tmpNotif);
-            const tmpFriends = await this.getFriendsList(client, auth.userId);
-            if (typeof tmpNotif !== 'string')
-            if (tmpFriends !== undefined)
-                this.server.to(userSockets).emit('client_friends', tmpFriends);
-        }
-        userSockets = this.users.get(reply.user.login);
-        if (userSockets) {
-            const tmpFriends = await this.getFriendsList(client, reply.user.id);
-            if (tmpFriends !== undefined)
-                this.server.to(userSockets).emit('client_friends', tmpFriends);
-        }
-    }
+	@SubscribeMessage('server_change_username')
+	async changeUsername(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('username') username: string) {
+		const auth = await this.connectionSecure(client, jwt);
+		if (!auth)
+			return ;
+		const ret = await this.generalGateway.changeUsername(auth.user, username);
+		if (typeof ret === 'string') {
+			client.emit('error_client', ret);
+			return ;
+		}
+		this.getProfil(client, jwt);
+	}
 
-    @SubscribeMessage('server_friends')
-    async getFriends(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string) {
-        const auth = await this.connectionSecure(client, jwt);
-        if (!auth)
-            return ;
-        const ret = await this.getFriendsList(client, auth.userId);
-        if (ret !== undefined) 
-            client.emit('client_friends', ret);
-    }
+	@SubscribeMessage('server_leaderboard')
+	async getLeaderboard(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string) {
+		const auth = await this.connectionSecure(client, jwt);
+		if (!auth)
+			return ;
+		const ret = await this.generalGateway.getLeaderboard();
+		if (typeof ret === 'string') {
+			client.emit('error_client', ret);
+			return ;
+		}
+		client.emit('client_leaderboard', ret);
+	}
 
-    @SubscribeMessage('server_block_somebody')
-    async blockSomebody(@ConnectedSocket() client: Socket, @MessageBody('login') login: string, @MessageBody('Authorization') jwt: string) {
-        const auth = await this.connectionSecure(client, jwt);
-        if (!auth)
-            return ;
-        const ret = await this.friendService.blockSomebody(auth.userLogin, login);
-        if (typeof ret === 'string') {
-            client.emit('error_client', ret);
-            return ;
-        }
-        let userSockets = this.users.get(auth.userLogin);
-        if (userSockets) {
-            const tmpNotif = await this.friendService.getNotif(auth.userId);
-            if (typeof tmpNotif !== 'string') {
-                this.server.to(userSockets).emit('client_notif', tmpNotif);
-                
-            }
-            const tmpFriends = await this.getFriendsList(client, auth.userId);
-            if (tmpFriends !== undefined)
-                this.server.to(userSockets).emit('client_friends', tmpFriends);
-        }
-        userSockets = this.users.get(login);
-        if (userSockets) {
-            const userId = ret.user1Id === auth.userId ? ret.user2Id : ret.user1Id;
-            const tmpNotif = await this.friendService.getNotif(userId);
-            if (typeof tmpNotif !== 'string')
-                this.server.to(userSockets).emit('client_notif', tmpNotif);
-            const tmpFriends = await this.getFriendsList(client, userId);
-            if (tmpFriends !== undefined)
-                this.server.to(userSockets).emit('client_friends', tmpFriends);
-            this.server.to(userSockets).emit('warning_client', `You're block by ${auth.userLogin}`);
-        }
-    }
+	/**
+	 * Socket route friends
+	 */
 
-    @SubscribeMessage('server_privmsg')
-    async getPrivMessage(@ConnectedSocket() client: Socket, @MessageBody('login') login: string, @MessageBody('Authorization') jwt: string) {
-        const auth = await this.connectionSecure(client, jwt);
-        if (!auth)
-            return ;
-        const ret = await this.chatService.getPrivMessage(auth.userLogin, login);
-        if (typeof ret === 'string') {
-            client.emit('error_client', ret);
-            return ;
-        }
-        client.emit('client_privmsg', ret);
-    }
+	private async getFriends(user: User) {
+		const friends = await this.friendGateway.getFriends(user);
+		if (typeof friends !== 'string') {
+			for (const friend of friends) {
+				if (friend.status !== GOT.ProfileStatus.inGame && this.users.get(friend.login))
+					friend.status = GOT.ProfileStatus.online
+			}
+		}
+		return friends;
+	}
 
-    @SubscribeMessage('server_privmsg_users')
-    async getPrivMessageUsers(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string) {
-        const auth = await this.connectionSecure(client, jwt);
-        if (!auth)
-            return ;
-        const ret = await this.chatService.getPrivMessageUsers(auth.userLogin);
-        console.log('debug', ret);
-        if (typeof ret === 'string') {
-            client.emit('error_client', ret);
-            return ;
-        }
-        client.emit('client_privmsg_users', ret);
-    }
+	@SubscribeMessage('server_demand_friend')
+	async demandFriend(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('login') login: string) {
+		const auth = await this.connectionSecure(client, jwt);
+		if (!auth)
+			return ;
+		const ret = await this.friendGateway.demandFriend(auth.user, login);
+		if (typeof ret === 'string') {
+			client.emit('error_client', ret);
+			return ;
+		}
+		const user1 = this.users.get(auth.user.login);
+		if (user1) {
+			this.server.to(user1).emit('client_notif', await this.generalGateway.getFriendNotif(auth.user));
+			const friends = await this.getFriends(auth.user);
+			if (typeof friends !== 'string')
+				this.server.to(user1).emit('client_friends', friends);
+			this.server.to(user1).emit('info_client', `You invite user with login ${login} to be friend`);
+		}
+		const user2 = this.users.get(ret.login);
+		if (user2) {
+			this.server.to(user2).emit('client_notif', await this.generalGateway.getFriendNotif(ret));
+			const friends = await this.getFriends(ret);
+			if (typeof friends !== 'string')
+				this.server.to(user2).emit('client_friends', friends);
+			this.server.to(user2).emit('info_client', `User with login ${auth.user.login} invite you to be friend`);
+		}
+	}
 
-    @SubscribeMessage('server_privmsg_send')
-    async sendPrivMessage(@ConnectedSocket() client: Socket, @MessageBody('login') login: string, @MessageBody('msg') msg: string, @MessageBody('Authorization') jwt: string) {
-        const auth = await this.connectionSecure(client, jwt);
-        if (!auth)
-            return ;
-        const ret = await this.chatService.sendPrivMessage(auth.userLogin, login, msg);
-        console.log('send', ret);
-        if (typeof ret === 'string') {
-            client.emit('error_client', ret);
-            return ;
-        }
-        const userSockets = this.users.get(login);
-        if (userSockets) {
-            this.server.to(userSockets).emit('client_privmsg_send', ret);
-            this.server.to(userSockets).emit('info_client', `You received a message send by ${auth.userLogin}`);
-        }
-    }
+	@SubscribeMessage('server_reply_notification')
+	async replyNotif(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('reply') reply: GOT.NotifChoice) {
+		const auth = await this.connectionSecure(client, jwt);
+		if (!auth)
+			return ;
+		const ret = await this.friendGateway.replyNotif(auth.user, reply);
+		if (typeof ret === 'string') {
+			client.emit('error_client', ret);
+			return ;
+		}
+		const user1 = this.users.get(auth.user.login);
+		if (user1) {
+			this.server.to(user1).emit('client_notif', await this.generalGateway.getFriendNotif(auth.user));
+			const friends = await this.getFriends(auth.user);
+			if (typeof friends !== 'string')
+				this.server.to(user1).emit('client_friends', friends);
+			this.server.to(user1).emit('info_client', `You and user with login ${reply.user.login} are now friend`);
+		}
+		const user2 = this.users.get(ret.login);
+		if (user2) {
+			this.server.to(user2).emit('client_notif', await this.generalGateway.getFriendNotif(ret));
+			const friends = await this.getFriends(ret);
+			if (typeof friends !== 'string')
+				this.server.to(user2).emit('client_friends', friends);
+			this.server.to(user2).emit('info_client', `You and user with login ${auth.user.login} are now friend`);
+		}
+	}
 
-    @SubscribeMessage('server_users')
-    async getUsers(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string) {
-        const auth = await this.connectionSecure(client, jwt);
-        if (!auth)
-            return ;
-        try {
-            const ret = await this.userService.findAll();
-            client.emit('client_users', ret);
-        } catch (error) {
-            client.emit('error_client', error.message);
-        }
-    }
+	@SubscribeMessage('server_friends')
+	async getFriendsFor(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string) {
+		const auth = await this.connectionSecure(client, jwt);
+		if (!auth)
+			return ;
+		const friends = await this.getFriends(auth.user);
+		if (typeof friends === 'string')
+			client.emit('error_client', friends);
+		client.emit('client_friends', friends);
+	}
 
-    afterInit(server: Server) {
-        this.logger.log('Init');
-    }
+	@SubscribeMessage('server_block_somebody')
+	async blockSomebody(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('login') login: string) {
+		const auth = await this.connectionSecure(client, jwt);
+		if (!auth)
+			return ;
+		const ret = await this.friendGateway.blockSomebody(auth.user, login);
+		if (typeof ret === 'string') {
+			client.emit('error_client', ret);
+			return ;
+		}
+		const user1 = this.users.get(auth.user.login);
+		if (user1) {
+			this.server.to(user1).emit('client_notif', await this.generalGateway.getFriendNotif(auth.user));
+			const friends = await this.getFriends(auth.user);
+			if (typeof friends !== 'string')
+				this.server.to(user1).emit('client_friends', friends);
+			this.server.to(user1).emit('info_client', `You block user with login ${login}`);
+		}
+		const user2 = this.users.get(ret.login);
+		if (user2) {
+			this.server.to(user2).emit('client_notif', await this.generalGateway.getFriendNotif(ret));
+			const friends = await this.getFriends(ret);
+			if (typeof friends !== 'string')
+				this.server.to(user2).emit('client_friends', friends);
+			this.server.to(user2).emit('info_client', `User with login ${auth.user.login} block you`);
+		}
+	}
 
-    handleDisconnect(client: Socket) {
-        let status = true;
-        this.users.forEach((ids, login) => {
-            const i = ids.indexOf(client.id);
-            if (i > -1) {
-                ids.splice(i, 1);
-                if (ids.length === 0)
-                    this.users.delete(login);
-                this.logger.verbose(`Client disconnected ${login}: ${client.id}`);
-                status = false;
-                return ;
-            }
-        });
-        if (status)
-            this.logger.verbose(`Client disconnected anonymous: ${client.id}`);
-    }
+	@SubscribeMessage('server_unblock_somebody')
+	async unblockSomebody(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('login') login: string) {
+		const auth = await this.connectionSecure(client, jwt);
+		if (!auth)
+			return ;
+		const ret = await this.friendGateway.unblockSomebody(auth.user, login);
+		if (typeof ret === 'string') {
+			client.emit('error_client', ret);
+			return ;
+		}
+		const user1 = this.users.get(auth.user.login);
+		if (user1) {
+			this.server.to(user1).emit('client_notif', await this.generalGateway.getFriendNotif(auth.user));
+			const friends = await this.getFriends(auth.user);
+			if (typeof friends !== 'string')
+				this.server.to(user1).emit('client_friends', friends);
+			this.server.to(user1).emit('info_client', `You unblock user with login ${login}`);
+		}
+		const user2 = this.users.get(ret.login);
+		if (user2) {
+			this.server.to(user2).emit('client_notif', await this.generalGateway.getFriendNotif(ret));
+			const friends = await this.getFriends(ret);
+			if (typeof friends !== 'string')
+				this.server.to(user2).emit('client_friends', friends);
+			this.server.to(user2).emit('info_client', `User with login ${auth.user.login} unblock you`);
+		}
+	}
 
-    async handleConnection(client: Socket, @MessageBody('Authorization') jwt: string) {
-        const auth = await this.connectionSecure(client, jwt);
-        if (!auth) {
-            this.logger.verbose(`Client connected anonymous: ${client.id}`);
-            return ;
-        }
-        this.logger.verbose(`Client connected ${auth.userLogin}: ${client.id}`);
-    }
+	/**
+	 * socket routes privmsg
+	 */
+
+
+	@SubscribeMessage('server_privmsg')
+	async getPrivmsg(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('login') login: string) {
+		const auth = await this.connectionSecure(client, jwt);
+		if (!auth)
+			return ;
+		const ret = await this.chatGateway.getPrivmsg(auth.user, login);
+		if (typeof ret === 'string') {
+			client.emit('error_client', ret);
+			return ;
+		}
+		client.emit('client_privmsg', ret);
+	}
+
+	@SubscribeMessage('server_privmsg_users')
+	async getPrivmsgUsers(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string) {
+		const auth = await this.connectionSecure(client, jwt);
+		if (!auth)
+			return ;
+		const ret = await this.chatGateway.getPrivmsgUsers(auth.user);
+		if (typeof ret === 'string') {
+			client.emit('error_client', ret);
+			return ;
+		}
+		client.emit('client_privmsg_users', ret);
+	}
+
+	@SubscribeMessage('server_privmsg_send')
+	async getPrivmsgSend(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('login') login: string, @MessageBody('msg') msg: string) {
+		const auth = await this.connectionSecure(client, jwt);
+		if (!auth)
+			return ;
+		const ret = await this.chatGateway.getPrivmsgSend(auth.user, login, msg);
+		if (typeof ret === 'string') {
+			client.emit('error_client', ret);
+			return ;
+		}
+		const user = this.users.get(ret.userTo.login);
+		if (user) {
+			this.server.to(user).emit('client_privmsg_send', ret);
+			this.server.to(user).emit('info_client', `User with login ${auth.user.login} send you a provate message`);
+		}
+	}
+
+	@SubscribeMessage('server_users')
+	async getUsers(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string) {
+		const auth = await this.connectionSecure(client, jwt);
+		if (!auth)
+			return ;
+		const ret = await this.chatGateway.getUsers(auth.user);
+		if (typeof ret === 'string') {
+			client.emit('error_client', ret);
+			return ;
+		}
+		client.emit('client_users', ret);
+	}
+
+	/**
+	 * Socket routes channels
+	 */
+
+	@SubscribeMessage('server_chanmsg')
+	async getChanmsg(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('chanName') chanName: string) {
+		const auth = await this.connectionSecure(client, jwt);
+		if (!auth)
+			return ;
+		const ret = await this.chatGateway.getChanmsg(auth.user, chanName);
+		if (typeof ret === 'string') {
+			client.emit('error_client', ret);
+			return ;
+		}
+		client.emit('client_chanmsg', ret);
+	}
+
+	@SubscribeMessage('server_channels_in')
+	async getChannelsIn(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string) {
+		const auth = await this.connectionSecure(client, jwt);
+		if (!auth)
+			return ;
+		const ret = await this.chatGateway.getChannelsIn(auth.user);
+		if (typeof ret === 'string') {
+			client.emit('error_client', ret);
+			return ;
+		}
+		client.emit('client_channels_in', ret);
+	}
+
+	@SubscribeMessage('server_chanmsg_send')
+	async chanmsgSend(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('chanName') chanName: string, @MessageBody('msg') msg: string) {
+		const auth = await this.connectionSecure(client, jwt);
+		if (!auth)
+			return ;
+		const ret = await this.chatGateway.chanmsgSend(auth.user, chanName, msg);
+		if (typeof ret === 'string') {
+			client.emit('error_client', ret);
+			return ;
+		}
+		client.emit('client_chanmsg_send', ret);
+	}
+
+	@SubscribeMessage('server_channels')
+	async getChannels(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string) {
+		const auth = await this.connectionSecure(client, jwt);
+		if (!auth)
+			return ;
+		const ret = await this.chatGateway.getChannels(auth.user);
+		if (typeof ret === 'string') {
+			client.emit('error_client', ret);
+			return ;
+		}
+		client.emit('client_channels', ret);
+	}
+
+	@SubscribeMessage('server_chanmsg_join')
+	async joinChannel(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('chanName') chanName: string, @MessageBody('password') password?: string) {
+		const auth = await this.connectionSecure(client, jwt);
+		if (!auth)
+			return ;
+		const ret = await this.chatGateway.joinChannel(auth.user, chanName, password);
+		if (typeof ret === 'string') {
+			client.emit('error_client', ret);
+			return ;
+		}
+		const back = await this.chatGateway.getChannelsIn(auth.user);
+		if (typeof ret !== 'string')
+			client.emit('client_channels_in', back);
+	}
+
+	@SubscribeMessage('server_chanmsg_invite')
+	async inviteChannel(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('chanName') chanName: string, @MessageBody('loginInvite') loginInvite: string) {
+		const auth = await this.connectionSecure(client, jwt);
+		if (!auth)
+			return ;
+		const ret = await this.chatGateway.inviteChannel(auth.user, chanName, loginInvite);
+		if (typeof ret === 'string') {
+			client.emit('error_client', ret);
+			return ;
+		}
+		const back = await this.chatGateway.getChannelsIn(auth.user);
+		if (typeof ret !== 'string')
+			client.emit('client_channels_in', back);
+	}
+
+	@SubscribeMessage('server_chan_create')
+	async createChannel(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('chan') chan: GOT.Channel) {
+		const auth = await this.connectionSecure(client, jwt);
+		if (!auth)
+			return ;
+		const ret = await this.chatGateway.createChannel(auth.user, chan);
+		if (typeof ret === 'string') {
+			client.emit('error_client', ret);
+			return ;
+		}
+		const back = await this.chatGateway.getChannelsIn(auth.user);
+		if (typeof ret !== 'string')
+			client.emit('client_channels_in', back);
+	}
+
+
+	/**
+	 * Socket init
+	 */
+
+	afterInit(server: Server) {
+		this.logger.log('Init');
+	}
+
+	handleDisconnect(client: Socket) {
+		let status = true;
+		this.users.forEach((ids, login) => {
+			const i = ids.indexOf(client.id);
+			if (i > -1) {
+				ids.splice(i, 1);
+				if (ids.length === 0)
+					this.users.delete(login);
+				this.logger.verbose(`Client disconnected ${login}: ${client.id}`);
+				status = false;
+				return ;
+			}
+		});
+		if (status)
+			this.logger.verbose(`Client disconnected anonymous: ${client.id}`);
+	}
+
+	async handleConnection(client: Socket, @MessageBody('Authorization') jwt: string) {
+		const auth = await this.connectionSecure(client, jwt);
+		if (!auth) {
+			this.logger.verbose(`Client connected anonymous: ${client.id}`);
+			return ;
+		}
+		this.logger.verbose(`Client connected ${auth.user.login}: ${client.id}`);
+		const ret = await this.chatGateway.getUsers(auth.user);
+		if (typeof ret !== 'string')
+			this.server.emit('client_users', ret);
+	}
 }

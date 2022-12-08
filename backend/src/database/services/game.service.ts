@@ -1,114 +1,72 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { GOT } from "shared/types";
+import internal from "stream";
 import { Repository } from "typeorm";
-import { Game } from "../entities/game.entity";
-import { gameStatus, Rank } from "../types/game.types";
+import { Game, gameStatus } from "../entities/game.entity";
+import { User } from "../entities/user.entity";
 import { UserService } from "./user.service";
 
 @Injectable()
 export class GameService {
-    constructor(
-        @InjectRepository(Game) private gameRepository: Repository<Game>,
-        private readonly userService: UserService,
-    ) {}
+	constructor(
+		@InjectRepository(Game) private gameRepository: Repository<Game>,
+		private readonly userService: UserService,
+	) {}
 
-    async getGamesOf(userId: number) {
-        return await this.gameRepository.find({
-            where: [
-                { user1Id: userId },
-                { user2Id: userId }
-            ]
-        });
-    }
+	async isInParty(user: User): Promise<Game | undefined> {
+		const inProgress = await this.gameRepository.find({
+			where: [
+				{user1Id: user.id, status: gameStatus.IN_PROGRESS},
+				{user2Id: user.id, status: gameStatus.IN_PROGRESS},
+			]
+		});
+		if (inProgress.length === 0)
+			return undefined;
+		else
+			return inProgress[0];
+	}
 
-    async getInGamesOf(userId: number) {
-        return await this.gameRepository.find({
-            where: [
-                { user1Id: userId , status: gameStatus.IN_PROGRESS},
-                { user2Id: userId , status: gameStatus.IN_PROGRESS}
-            ]
-        });
-    }
+	async getStatUsers(): Promise<Map<number, GOT.StatUser>> {
+		let map: Map<number, GOT.StatUser> = new Map<number, GOT.StatUser>();
+		const allUsers = await this.userService.findAll();
+		for (const user of allUsers)
+			map.set(user.id, {victory: 0, defeat: 0, rank: -1});
+		const allGames = await this.gameRepository.find();
+		// Récupération des défaites et des victoires
+		for (const game of allGames) {
+			const idVictory = game.points1 > game.points2 ? game.user1Id : game.user2Id;
+			const idDefeat = game.user1Id === idVictory ? game.user2Id : game.user1Id;
+			const tmpVictory = map.get(idVictory);
+			if (tmpVictory === undefined)
+				map.set(idVictory, {victory: 1, defeat: 0, rank: -1});
+			else {
+				tmpVictory.victory += 1;
+				map.set(idVictory, tmpVictory);
+			}
+			const tmpDefeat = map.get(idDefeat);
+			if (tmpDefeat === undefined)
+				map.set(idDefeat, {victory: 0, defeat: 1, rank: -1});
+			else {
+				tmpDefeat.defeat += 1;
+				map.set(idDefeat, tmpDefeat);
+			}
+		}
+		let newMap: Map<number, GOT.StatUser> = new Map<number, GOT.StatUser>([...map].sort((a: any , b: any) => {
+			return (a[1].victory - a[1].defeat) - (b[1].victory - b[1].defeat);
+		}));
+		let i: number = 1;
+		for (const elem of newMap) {
+			elem[1].rank = i++;
+		}
+		return newMap;
+	}
 
-    async getAll() {
-        return await this.gameRepository.find();
-    }
-
-    async getRanks() {
-        const allGames = await this.getAll();
-        let ranks: Rank[] = new Array();
-        allGames.forEach( (game) => {
-            if (game.points1 > game.points2) {
-                if (ranks.find(o => o.id === game.user1Id) === undefined)
-                    ranks.push({id: game.user1Id, val: 1, lose: 0})
-                else
-                    ranks.find((o, i) => {
-                        if (o.id === game.user1Id) {
-                            ranks[i] = {id: o.id, val: o.val + 1, lose: o.lose};
-                            return true;
-                        }
-                    });
-                if (ranks.find(o => o.id === game.user2Id) === undefined)
-                    ranks.push({id: game.user2Id, val: 0, lose: 1})
-                else
-                    ranks.find((o, i) => {
-                        if (o.id === game.user2Id) {
-                            ranks[i] = {id: o.id, val: o.val, lose: o.lose + 1};
-                            return true;
-                        }
-                    });
-            } else {
-                if (ranks.find(o => o.id === game.user2Id) === undefined)
-                    ranks.push({id: game.user2Id, val: 1, lose: 0})
-                else
-                    ranks.find((o, i) => {
-                        if (o.id === game.user2Id) {
-                            ranks[i] = {id: o.id, val: o.val + 1, lose: o.lose};
-                            return true;
-                        }
-                    });
-                if (ranks.find(o => o.id === game.user1Id) === undefined)
-                    ranks.push({id: game.user1Id, val: 0, lose: 1})
-                else
-                    ranks.find((o, i) => {
-                        if (o.id === game.user1Id) {
-                            ranks[i] = {id: o.id, val: o.val, lose: o.lose + 1};
-                            return true;
-                        }
-                    });
-            }
-        });
-        return ranks.sort(function(a,b) {
-            return (a.val - a.lose) - (b.val - b.lose);
-        });
-    }
-
-    async getStatUser(userId: number) {
-        const games = await this.getGamesOf(userId);
-        const ranks = await this.getRanks();
-        const max = await this.userService.countAll();
-        let stats: GOT.StatUser = {
-            defeat: 0,
-            victory: 0,
-            rank: -1
-        };
-        ranks.find((o, i) => {if (o.id === userId) {stats.rank = i + 1; return true}});
-        if (games !== null) {
-            games.forEach( (game) => {
-                if (game.user1Id === userId) {
-                    if (game.points1 > game.points2)
-                        stats.victory += 1;
-                    else
-                        stats.defeat += 1;
-                } else {
-                    if (game.points1 < game.points2)
-                        stats.victory += 1;
-                    else
-                        stats.defeat += 1;
-                }
-            });
-        }
-        return stats;
-    }
+	async getStatUser(user: User): Promise<GOT.StatUser | string> {
+		const stats = await this.getStatUsers();
+		const statUser = stats.get(user.id);
+		if (statUser === undefined)
+			return 'User statistic problem';
+		return statUser;
+	}
 }

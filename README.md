@@ -158,6 +158,14 @@ npm i -g @nestjs/cli
     - `GOT.User[]` on `client_notif` (toutes les demandes d'amis en cours à la personne connecté)
     - `GOT.Friend[]` on `client_friends` (touts les amis de la personne connecté)
 
+`server_unblock_somebody`
+- Params:
+    - `Authorization`: `GOT.Token` (string)
+    - `login`: `string` login de la personne que l'on veut dé bloquer
+- Return:
+    - `GOT.User[]` on `client_notif` (toutes les demandes d'amis en cours à la personne connecté)
+    - `GOT.Friend[]` on `client_friends` (touts les amis de la personne connecté)
+
 ##### Chat
 
 `server_privmsg`
@@ -196,7 +204,7 @@ npm i -g @nestjs/cli
     - `Authorization`: `GOT.Token` (string)
     - `chanName`: `string` nom du channel dont la discution sera retournée
 - Return:
-    - `GOT.msg_hannel[]` on `client_chanmsg` (messages entre les 2 utilisateurs)
+    - `GOT.MsgChannel[]` on `client_chanmsg` (messages du channel)
 
 `server_channels_in`
 - Params:
@@ -210,7 +218,7 @@ npm i -g @nestjs/cli
     - `chanName`: `string` nom du channel ou l'on veut envoyer le message
     - `msg`: `string` message à envoyer
 - Return:
-    - `GOT.msg_hannel` on `client_chanmsg_send` (message reçu par un autre utilisateur)
+    - `GOT.MsgChannel` on `client_chanmsg_send` (message reçu par un autre utilisateur sur le channel)
 
 `server_channels`
 - Params:
@@ -234,4 +242,9 @@ npm i -g @nestjs/cli
 - Return:
     - `GOT.Channel[]` on `client_channels_in` (message reçu par un autre utilisateur)
 
-
+`server_chan_create`
+- Params:
+    - `Authorization`: `GOT.Token` (string)
+    - `chan`: `GOT.Channel` channel à créer
+- Return:
+    - `GOT.Channel[]` on `client_channels_in` (message reçu par un autre utilisateur)

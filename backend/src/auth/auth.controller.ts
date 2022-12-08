@@ -1,11 +1,11 @@
 import { Body, Controller, Get, HttpCode, HttpException, HttpStatus, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
-import { stringify } from 'querystring';
 import { JWTGuard } from './guards/jwt.guard';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/database/services/user.service';
 import { User } from 'src/database/entities/user.entity';
+import { jwtContent } from './types';
 
 @Controller('auth')
 export class AuthController {
@@ -108,5 +108,10 @@ export class AuthController {
     @Get('get_intra_url')
     getIntraUrl(@Req() req: Request): string {
         return this.authService.getIntraUrl(req);
+    }
+
+    @Get('access')
+    get() {
+        return true;
     }
 }
