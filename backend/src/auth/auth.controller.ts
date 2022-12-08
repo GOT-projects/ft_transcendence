@@ -111,7 +111,20 @@ export class AuthController {
     }
 
     @Get('access')
-    get() {
-        return true;
+    async get(@Req() req: Request) {
+        try {
+            if (!req?.headers?.authorization)
+                throw new HttpException('No authorization header', HttpStatus.BAD_REQUEST);
+            const jwt = req.headers.authorization.split(' ')[1];
+            const data: jwtContent = await this.jwtService.verifyAsync(jwt);
+            const tmpUser: User | null = await this.userService.findUnique(data.userId, data.userLogin);
+            if (!tmpUser)
+                throw new HttpException('No authorization header', HttpStatus.BAD_REQUEST);
+            if (data.isTwoFactorAuthenticationEnabled === true && data.isTwoFactorAuthenticated === false)
+                throw new UnauthorizedException();
+        } catch (error) {
+            throw new UnauthorizedException();
+            return false;
+        }
     }
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import BackgroundAnimate from "../components/BackGroundAnimate";
 import Footer from "../components/Footer";
 import { accountService } from '../services/account.service';
@@ -14,27 +14,32 @@ const Waiting = () => {
     let navigate = useNavigate();
 	let params = (new URL(url)).searchParams;
     const code = params.get("code");
-    if (!!code){
+    useEffect(() => {
+        if (!!code && !twoFAPop){
         try{
+            console.log("datafes")
             const response = apiPost.PostConnectIntra(code);
 	        response.then((response:any) => {
 	        	if(response.status === 201){
+                    console.log(response.data.user.isTwoFactorAuthenticationEnabled);
                     accountService.saveToken(response.data.access_token);
-                    if (twoFA){
-                        setTwoFAPop(true);
+                    if (response.data.user.isTwoFactorAuthenticationEnabled){
+                            setTwoFAPop(true);
+                    }else{
+                        navigate('/game');
                     }
-                    navigate('/game');
 	        	}
 	        }).catch((e) =>{
                 console.log(e);
-                // navigate('/');
+                navigate('/');
             });
         }catch(e){
             console.log(e);
         }
     }else{
-        // navigate('/');
+        navigate('/');
     }
+    }, [])
 
 	return (
         <React.Fragment>
@@ -42,7 +47,7 @@ const Waiting = () => {
             <StyledWaitingContente>
                 <StyledWaitingTitle>Waiting...</StyledWaitingTitle>
             </StyledWaitingContente>
-            {twoFAPop ? <Popup2FA/> : <Popup2FA/>}
+            {twoFAPop ? <Popup2FA/> : <></>}
             <Footer/>
         </React.Fragment>
 	)
