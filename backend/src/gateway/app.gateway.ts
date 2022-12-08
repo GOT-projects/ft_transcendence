@@ -101,7 +101,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 
 	private async connectionSecure(client: Socket, jwt: string): Promise<false | JwtContent> {
 		if (jwt === undefined){
-			client.emit('error_client', "JWT not found");
+			this.logger.debug("JWT not found");
 			return false;
 		}
 		const auth = await this.connectUserBody(client, jwt);
@@ -346,6 +346,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		}
 		const user = this.users.get(ret.userTo.login);
+		console.log(user, ret);
 		if (user) {
 			this.server.to(user).emit('client_privmsg_send', ret);
 			this.server.to(user).emit('info_client', `User with login ${auth.user.login} send you a provate message`);

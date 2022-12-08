@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { channel } from "diagnostics_channel";
 import { GOT } from "shared/types";
 import { Channel } from "src/database/entities/channel.entity";
 import { Message } from "src/database/entities/message.entity";
@@ -25,7 +24,21 @@ export class ChatGateway {
 		private readonly relUserChannelService: RelUserChannelService,
 	) {}
 
-	messageToGOTPriv(msg: Message): GOT.msg | false {
+	async messageToGOTPriv(msg: Message): Promise<GOT.msg | false> {
+		if (msg.userIdTo === null)
+			return false;
+		const userTo = await this.userService.findOne(msg.userIdTo);
+		const userFrom = await this.userService.findOne(msg.userIdFrom);
+		if (userTo === null || userFrom === null)
+			return false;
+		return {
+			userFrom: this.generalGateway.getGOTUserFromUser(userFrom),
+			userTo: this.generalGateway.getGOTUserFromUser(userTo),
+			msg: msg.message
+		};
+	}
+
+	messageToGOTPrivNOId(msg: Message): GOT.msg | false {
 		if (msg.userTo === undefined || msg.userFrom === undefined)
 			return false;
 		return {
@@ -63,9 +76,10 @@ export class ChatGateway {
 			if (userTo === null)
 				return `User ${login} not found`
 			const msgs = await this.messageService.getPrivmsg(user, userTo);
+			console.log(msgs)
 			let ret: GOT.msg[] = [];
 			for (const msg of msgs) {
-				const tmp = this.messageToGOTPriv(msg);
+				const tmp = this.messageToGOTPrivNOId(msg);
 				if (tmp !== false)
 					ret.push(tmp);
 			}
@@ -81,10 +95,23 @@ export class ChatGateway {
 			let ret: GOT.User[] = [];
 			for (const msg of msgs) {
 				if (msg.userFrom.id !== user.id) {
-					if (msg.userTo !== undefined)
-						ret.push(this.generalGateway.getGOTUserFromUser(msg.userTo));
+					let status = true;
+					for (const tmp of ret) {
+						if (tmp.id === msg.userFrom.id)
+							status = false;
+					}
+					if (status)
+						ret.push(this.generalGateway.getGOTUserFromUser(msg.userFrom));
 				} else {
-					ret.push(this.generalGateway.getGOTUserFromUser(msg.userFrom));
+					if (msg.userTo !== undefined) {
+						let status = true;
+						for (const tmp of ret) {
+							if (tmp.id === msg.userTo.id)
+								status = false;
+						}
+						if (status)
+							ret.push(this.generalGateway.getGOTUserFromUser(msg.userTo));
+					}
 				}
 			}
 			return ret;
@@ -99,7 +126,7 @@ export class ChatGateway {
 			if (userTo === null)
 				return `User ${login} not found`
 			const tmp = await this.messageService.getPrivmsgSend(user, userTo, msg);
-			const ret = this.messageToGOTPriv(tmp);
+			const ret = await this.messageToGOTPriv(tmp);
 			if (ret === false)
 				return 'Error user transformation'
 			return ret;

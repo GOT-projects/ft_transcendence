@@ -27,11 +27,12 @@ export class MessageService {
 
 	async getPrivmsg(user1: User, user2: User) {
 		return await this.messageRepository.find({
-			select: ["message", "userFrom", "userTo"],
+			select: ["id" ,"message", "userFrom", "userTo"],
 			where: [
 				{userIdFrom: user1.id, userIdTo: user2.id},
 				{userIdFrom: user2.id, userIdTo: user1.id}
-			]
+			],
+			relations: ["userFrom", "userTo"]
 		});
 	}
 
@@ -41,7 +42,8 @@ export class MessageService {
 			where: [
 				{userIdFrom: user.id, channelIdTo: undefined},
 				{userIdTo: user.id, channelIdTo: undefined}
-			]
+			],
+			relations: ["userFrom", "userTo"]
 		});
 	}
 

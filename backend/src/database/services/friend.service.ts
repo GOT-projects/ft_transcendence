@@ -36,14 +36,14 @@ export class RelFriendService {
 			where: [
 				{user1Id: user.id}
 			],
-			relations: ['user']
+			relations: ['user2']
 		});
 		const f2 = await this.relFriendRepository.find({
 			select: ["user1"],
 			where: [
 				{user2Id: user.id}
 			],
-			relations: ['user']
+			relations: ['user1']
 		});
 		let users: User[] = [];
 		for (const tmp of f1)

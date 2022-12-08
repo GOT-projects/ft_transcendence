@@ -8,7 +8,7 @@ import Popup2FA from '../components/popup/Popup2FA';
 import { StyledWaitingContente, StyledWaitingTitle } from '../components/Styles/StylesLogin';
 
 const Waiting = () => {
-    const [twoFA, setTwoFA] = useState(true);
+    const [twoFA, setTwoFA] = useState(false);
     const [twoFAPop, setTwoFAPop] = useState(false);
 	const url = window.location.href;
     let navigate = useNavigate();
@@ -23,7 +23,7 @@ const Waiting = () => {
                     if (twoFA){
                         setTwoFAPop(true);
                     }
-                    // navigate('/game');
+                    navigate('/game');
 	        	}
 	        }).catch((e) =>{
                 console.log(e);
