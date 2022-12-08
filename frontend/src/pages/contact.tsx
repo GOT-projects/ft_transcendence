@@ -1,8 +1,8 @@
     import { StyledChat, StyledChatInput, StyledChatPrivAvatar, StyledChatPrive, StyledChatPrivName, StyledChatPlace, 
 			StyledChatSendDiv, StyledChatSep, StyledChatSettingButton, StyledChatSwith, StyledChatSwithButton, StyledChatText, 
 			StyledChatWindow, StyledContact, StyledContaite, StyledSender, StyledUser, StyledChatTextArea, StyledMenuNav, StyledMenuDiv, 
-			StyledMenuSwitch, StyledAddInput, StyledAddInputdiv, StyledAddInputdivButton } from '../components/Styles/StyleChat';
-import React, {Dispatch, FunctionComponent, useContext, useEffect, useState } from 'react';
+			StyledMenuSwitch, StyledAddInput, StyledAddInputdiv, StyledAddInputdivButton, StyledChatSwithTile } from '../components/Styles/StyleChat';
+import React, {Dispatch, FunctionComponent, useContext, useEffect, useRef, useState } from 'react';
 import BackgroundAnimate from '../components/BackGroundAnimate';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
@@ -13,11 +13,18 @@ import {NotifyInter} from "../components/interfaces"
 import {Notification} from "../components/Notify"
 import { v4 as uuid } from 'uuid';
 import { SocketContext } from '../socket/socketPovider';
-import { GOT } from '../shared/types';
 import { emitSocket } from '../socket/socketEmit';
 import { MdOutlineBlock } from 'react-icons/md';
 import { CgProfile } from 'react-icons/cg';
 import ProfilView from '../components/popup/ProfilView';
+import { GOT } from '../shared/types';
+
+import PriveMsg from '../components/chat/PrivMsg';
+import PriveUserMenu from '../components/chat/PrivUsers';
+import { accountService } from '../services/account.service';
+import MenuChat from '../components/chat/Menu';
+import { onSocket } from '../socket/socketOn';
+import { offSocket } from '../socket/socketOff';
 
 interface IProps {
    profil: GOT.Profile | undefined;
@@ -25,71 +32,70 @@ interface IProps {
 }
 
 const Chat:FunctionComponent<IProps> = (props:IProps)=> {
-    const [popuProfil, setPopupProfil] = useState(false);
-    const [popupUser, setPopupUser] = useState<GOT.User>();
     const socket = useContext(SocketContext)
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
-    const [navActive, setNavActive] = useState("UnActiveMenu");
+
     const [chatSwitch, setChatSwitch] = useState<string>('private');
     const [selectFriend, setSelectFriend] = useState<string>('');
-    const endRef = React.useRef<HTMLInputElement>(null);
     const [inputChat, setInputChat] = useState("");
     const [inputContact, setInputContact] = useState("");
     const [inputChannel, setInputChannel] = useState("");
+    const [histo, setHisto] = useState<GOT.HistoryParties>();
+    const [popuProfil, setPopupProfil] = useState(false);
+    const [popupUser, setPopupUser] = useState<GOT.User>();
 
     const [usersList, setUsersList] = useState<GOT.User[]>();
     const [selectUserMsg, setSelectUserMsg] = useState<GOT.msg[]>();
     const [selectUser, setSelectUser] = useState<GOT.User>();
-    const [friends, setFriends] = useState<GOT.Friend[]>();
+    const [friends, setFriends] = useState<GOT.User[]>();
+    const [lstFriends, setLstFriends] = useState<GOT.Friend[]>()
+    
+    const codeParam: Map<string, string> = accountService.getParamsPriv();
+
 
     useEffect(() => {
-        socket.on('client_friends', (rep:GOT.Friend[]) => {
-            setFriends(rep);
-        })
+        onSocket.profil_login(socket, setHisto);
         return () => {
-            socket.off('client_friends');
+            offSocket.profil_login(socket);
+        }
+    }, [histo]);
+
+    useEffect(() => {
+        onSocket.client_privmsg_users(socket, setFriends);
+        return () => {
+            offSocket.client_privmsg_users(socket);
+        }
+    },[socket, friends, setFriends])
+    
+    useEffect(() => {
+        onSocket.client_friends(socket, setLstFriends);
+        return () => {
+            offSocket.client_friends(socket);
         } 
     },[socket])
 
     useEffect(() => {
-        socket.on('client_privmsg', (rep:GOT.msg[]) => {
-            if (rep){
-                setSelectUserMsg(rep);
-            }
-        })
+        onSocket.client_privmsg_send(socket, selectUser)
         return () => {
-            socket.off('client_privmsg');
+            offSocket.client_privmsg_send(socket);
         } 
     },[socket])
 
     useEffect(() => {
-        socket.on('client_privmsg_send', (rep:GOT.msg) => {
-            console.log("receive priv msg", rep);
-            if (rep){
-                let tmp = selectUserMsg;
-                tmp?.push(rep);
-                setSelectUserMsg(tmp);
-            }
-        })
+        onSocket.client_users(socket, setUsersList);
         return () => {
-            socket.off('client_privmsg_send');
-        } 
-    },[socket])
-
-    useEffect(() => {
-        socket.on('client_users', (rep:GOT.User[]) => {
-            if (rep){
-                setUsersList(rep);
-            }
-        })
-        return () => {
-            socket.off('client_users');
+            offSocket.client_users(socket);
         } 
     },[socket])
 
     useEffect(() => {
         emitSocket.emitFriends(socket);
     }, [socket])
+
+    useEffect(() => {
+        emitSocket.emitPrivmsgUsers(socket);
+    }, [])
+
 
     useEffect(() => {
         emitSocket.emitUsers(socket);
@@ -101,33 +107,18 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
 		setInput(event.target.value);
 	}	
 
-    const sendMsg = () => {
-        if (inputChat === " " || inputChat === "\n" || inputChat === ""){
-            return;
-        }
-        console.log(selectUser);
-        if (props.profil && selectUser !== undefined){
-            const msg:GOT.msg = {userFrom: props.profil.userInfos, userTo:selectUser, msg: inputChat};
-            console.log("Emit send", msg)
-            emitSocket.emitSendPrivmsg(socket, msg.userTo.login, msg.msg);
-            let tmp = selectUserMsg;
-            tmp?.push(msg);
-            setSelectUserMsg(tmp);
-        }
-        setInputChat("");
-    }
-
-    const navMenu = () => {
-        if (navActive === "ActiveMenu") {
-            setNavActive("UnActiveMenu");
-        } else setNavActive("ActiveMenu");
-    }
-
     const addContact = () =>{
         if (inputContact === " " || inputContact === "\n" || inputContact === ""){
             return;
         }
-        emitSocket.emitDemandFriend(socket, inputContact);
+        const user = usersList?.filter((user) => user.login === inputContact);
+        if (user){
+            let tmp = friends;
+            if (tmp !== undefined){
+                tmp.push(user[0]);
+                setFriends(tmp);
+            }
+        }
         setInputContact('')
     }
 	
@@ -141,7 +132,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     }
 
     const handleSelectFriend = (name:string) => {
-        const user = usersList?.filter((user) => user.login === name);
+        const user = friends?.filter((user) => user.login === name);
         if (user){
             const tmp:GOT.User = user[0];
             setSelectUser(tmp);
@@ -149,19 +140,15 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
         emitSocket.emitPrivmsg(socket, name);
     }
 
-    const handleViewProfil = (name: string) =>{
-        const user = usersList?.filter((user) => user.login === name);
-        if (user){
-            const tmp:GOT.User = user[0];
-            setPopupUser(tmp);
-            setPopupProfil(true);
+    useEffect(() =>{
+        if (codeParam.get("code") === "Priv"){
+            const name = codeParam.get("name");
+            if (name){
+                handleSelectFriend(name);
+            }
         }
+    }, [codeParam])
 
-    }
-
-    const handleBlockUser = (name: string) => {
-        emitSocket.emitBlockUser(socket, name);
-    }
 
 	return (
 		<React.Fragment>
@@ -177,103 +164,25 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
              />
 
             <StyledContaite>
-                <StyledMenuSwitch>
-                    <StyledMenuNav className={navActive} onClick={navMenu}>
-                        <StyledMenuDiv className={navActive}></StyledMenuDiv>
-                        <StyledMenuDiv className={navActive}></StyledMenuDiv>
-                        <StyledMenuDiv className={navActive}></StyledMenuDiv>
-                    </StyledMenuNav>
-                    <StyledChatSwithButton color={chatSwitch === "private" ? Colors.ChatMenuButtonHover : "transparent"} 
-									onClick={() => setChatSwitch("private")}>Private</StyledChatSwithButton>
-                    <StyledChatSwithButton color={chatSwitch === "channel" ? Colors.ChatMenuButtonHover : "transparent"}
-									onClick={() => setChatSwitch("channel")}>Channel</StyledChatSwithButton>
-                </StyledMenuSwitch>
-                <StyledContact className={navActive}>
+                <MenuChat profil={props.profil} setProfil={props.setProfil} chatSwitch={chatSwitch} setChatSwitch={setChatSwitch} listUser={usersList}/>
+                <StyledContact >
                     <StyledChatSwith> 
-                        <StyledChatSwithButton color={chatSwitch === "private" ? Colors.ChatMenuButtonHover : "transparent"}
-									onClick={() => setChatSwitch("private")}>Private</StyledChatSwithButton>
-                        <StyledChatSwithButton color={chatSwitch === "channel" ? Colors.ChatMenuButtonHover : "transparent"} 
-									onClick={() => setChatSwitch("channel")}>Channel</StyledChatSwithButton>
+                        <StyledChatSwithTile>{chatSwitch}</StyledChatSwithTile>
                     </StyledChatSwith>
                     <StyledChatSep/>
-                    {chatSwitch === "private" ?
-                    <StyledAddInputdiv>
-                        <StyledAddInput type="text" value={inputContact} placeholder='Add contact' onChange={(e) => handChange(e, setInputContact, inputContact)}
-                                                                                                   onKeyDown={(e) => {
-                                                                                                    if (e.key === 'Enter'){
-                                                                                                        addContact();
-                                                                                                    }}}/>
-                        <StyledAddInputdivButton onClick={() => addContact()}>
-                            <GrAddCircle size={"40px"}/>
-                        </StyledAddInputdivButton>
-                    </StyledAddInputdiv> :
-                    <StyledAddInputdiv>
-                        <StyledAddInput type="text" value={inputChannel} placeholder='Add channel' onChange={(e) => handChange(e, setInputChannel, inputChannel)}
-                                                                                                   onKeyDown={(e) => {
-                                                                                                    if (e.key === 'Enter'){
-                                                                                                        addChannel();
-                                                                                                    }}}/>
-                        <StyledAddInputdivButton onClick={() => addChannel()}>
-                            <GrAddCircle size={"40px"}/>
-                        </StyledAddInputdivButton>
-                    </StyledAddInputdiv>
-                    }
-                    <StyledChatPrive className={navActive}>
-                <>
-                    {chatSwitch === "private" ? friends?.map((user:GOT.Friend) =>(
-                        <StyledUser key={uuid()} color={user.username === selectUser?.username ? Colors.ChatMenuButton : Colors.ChatMenu} onClick={() => {handleSelectFriend(user.username)}}>
-                            <StyledChatPrivAvatar profil={user.urlImg}/>
-                        <StyledChatPrivName key={uuid()}>{user.username}</StyledChatPrivName>
-                        <StyledChatSettingButton onClick={() => {handleViewProfil(user.login)}}>
-                            <CgProfile className='setting' size={30} color={Colors.ChatMenuButtonText}/>
-                        </StyledChatSettingButton>
-                        <StyledChatSettingButton onClick={() => {handleBlockUser(user.login)}}>
-                            <MdOutlineBlock className='setting' size={30} color={Colors.ChatMenuButtonText}/>
-                        </StyledChatSettingButton>
-                        </StyledUser>
-                    )) : ""}
-                </>
-                <React.Fragment>
-                    {chatSwitch === "channel" ? friends?.map((user:GOT.Friend) =>(
-                        <StyledUser key={uuid()} color={user.username === selectFriend ? Colors.ChatMenuButton : Colors.ChatMenu} onClick={() => {handleSelectFriend(user.username)}}>
-                        <StyledChatPrivName key={uuid()}>channel</StyledChatPrivName>
-                        <StyledChatSettingButton onClick={() => {console.log("ok")}}>
-                            <AiFillSetting className='setting' size={30} color={Colors.ChatMenuButtonText}/>
-                        </StyledChatSettingButton>
-                        </StyledUser>
-                    )): ""}
-                </React.Fragment>
+                    <StyledChatPrive >
+                    {chatSwitch === "private" ? <PriveUserMenu friends={friends} setFriends={setFriends} selectUser={selectUser} 
+                                                               setSelectUser={setSelectUser} userFriend={lstFriends}
+                                                               popupUser={popupUser} setPopupUser={setPopupUser}
+                                                               setPopupProfil={setPopupProfil} popuProfil={popuProfil}/> : <></>}
                     </StyledChatPrive>
                 </StyledContact>
-
-                <StyledChat>
-                    <StyledChatWindow>
-                        <StyledChatTextArea>
-                            {selectUserMsg?.map((data:GOT.msg) => (
-                                    <StyledChatPlace key={uuid()} className={data.userFrom.login === props.profil?.userInfos.login ? "send" : "receive"}>
-                                        <StyledChatText>{data.msg}</StyledChatText>
-                                    </StyledChatPlace>
-                            ))}
-                            <div className='field' ref={endRef}/>
-                        </StyledChatTextArea>
-                        <StyledChatSendDiv className={selectUserMsg ? "active" : "deactive"}>
-                        <StyledChatInput  name='chat' placeholder="Send message" onChange={(e) => handChange(e, setInputChat, inputChat)} 
-                                                                                onKeyDown={(e) => {
-                                                                                    if (e.key === 'Enter' && !e.shiftKey){
-                                                                                        sendMsg();
-                                                                                    }}}
-                                                                                value={inputChat}/>
-                        <StyledSender>
-                            <AiOutlineSend size={30} color={Colors.primary} onClick={() => sendMsg()}/>
-                        </StyledSender>
-                        </StyledChatSendDiv>
-                    </StyledChatWindow>
-                </StyledChat>
+                <PriveMsg profil={props.profil} setProfil={props.setProfil} userSelect={selectUser}/>
             </StyledContaite>
             <Notification notify={notify} setNotify={setNotify}/>
+            {popuProfil ? <ProfilView profil={histo} setPopupProfil={setPopupProfil}/> : <> </>}
            <Footer/>
 		</React.Fragment>
 	)
 }
-
 export default Chat;

@@ -2,12 +2,19 @@ import {Snackbar} from "@material-ui/core"
 import {Alert} from "@material-ui/lab"
 import {NotifyInterUse} from "./interfaces"
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
    const {notify, setNotify} = props;
+   const navigate = useNavigate();
 
    const handleClose = () =>{
-      setNotify({...notify, isOpen: false})
+        let regex:RegExp = /^You received a message send by*/
+        if (regex.test(notify.message)){
+            const tab = notify.message.split(" ");
+            navigate(`/chat?code=Priv&name=${tab[tab.length - 1]}`);
+        }
+        setNotify({...notify, isOpen: false})
    }
    return(
       <Snackbar

@@ -10,6 +10,8 @@ import { SocketContext } from "../socket/socketPovider";
 import { GOT } from "../shared/types";
 import { emitSocket } from "../socket/socketEmit";
 import SetupOtc from "./popup/SetupOtc";
+import { onSocket } from "../socket/socketOn";
+import { offSocket } from "../socket/socketOff";
 
 interface IProps {
    notify: NotifyInter;
@@ -37,26 +39,17 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
 
     //Socket get erreur from server 
     useEffect(() => {
-        socket.on('error_client', (rep:any) => {
-            if (typeof rep === "string")
-                props.setNotify({isOpen: true, message: `Error: ${rep}`, type:'error'});
-        })
+        onSocket.error_client(socket, props.setNotify);
     }, [socket])
 
     //Socket get info from server 
     useEffect(() => {
-        socket.on('info_client', (rep:any) => {
-            if (typeof rep === "string")
-                props.setNotify({isOpen: true, message: `Info: ${rep}`, type:'info'});
-        })
+        onSocket.info_client(socket, props.setNotify);
     }, [socket])
 
     //Socket get info from server 
     useEffect(() => {
-        socket.on('warning', (rep:any) => {
-            if (typeof rep === "string")
-                props.setNotify({isOpen: true, message: `Warning: ${rep}`, type:'warning'});
-        })
+        onSocket.warning_client(socket, props.setNotify)
     }, [socket])
     //Socket listen add friend list
     useEffect(() => {
@@ -76,20 +69,9 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
 
     //Update info user all last data and Update if data are changed
     useEffect(() => {
-        socket.on('client_profil', (rep:GOT.Profile) =>{
-            console.log("Profil:", rep);
-            if (rep && props.setProfil){
-                if (rep.userInfos.urlImg.split('')[0] === '/'){
-                    console.log("url start with /")
-                    rep.userInfos.urlImg = `${InfoServer.HttpServer}${rep.userInfos.urlImg}`;
-                    props.setProfil(rep);
-                }else{
-                    props.setProfil(rep);
-                }
-            }
-        })
+        onSocket.client_profil(socket, props.setProfil)
         return () => {
-            socket.off('client_profil');
+            offSocket.client_profil(socket);
         }
     }, [props.profil, socket])
 

@@ -5,6 +5,100 @@ import {Colors} from "../Colors"
 interface BgColor{
     color:string;
 }
+export const StyledContaiteViewAddChan = styled.div`
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    height: 300px;
+    overflow: hidden;
+    z-index: 10;
+    top: 50%;
+    left: 50%;
+    background-color: ${Colors.primary};
+    transform: translate(-50%, -50%);
+    border: 2px solid ${Colors.border};
+    border-radius: 10px;
+    opacity: 1;
+`
+export const StyledContaiteReturn = styled.div`
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+`
+export const StyledContaiteReturnAddChannel = styled.div`
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 140px;
+`
+
+export const StyledContaiteReturnAddButtonP = styled.p`
+    color: ${Colors.primary};
+
+`
+
+export const StyledContaiteReturnAddButton = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 40px;
+    margin-right: 10px;
+    border: 2px solid ${Colors.Bg2faIn};
+    background-color: ${Colors.Bg2faIn};
+    border-radius: 10px;
+`
+
+export const StyledContaiteReturnDiv = styled.div`
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 100%;
+    height: 80px;
+    margin-top: -10px;
+    margin-left: 10px;
+`
+export const StyledContaiteAddUser = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    margin: 10px;
+    font-family: "curve";
+    font-size: 20px;
+`
+export const StyledContaiteViewAddP = styled.p`
+    margin: 10px;
+    font-family: "curve";
+    font-size: 20px;
+    color: ${Colors.Bg2fa};
+    transition: 0.6s;
+    &:hover{
+        transition: 0.6s;
+        color: ${Colors.primary};
+    }
+
+`
+
+export const StyledContaiteViewAddOption = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px;
+    width: 90%;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid ${Colors.Bg2fa};
+    background-color: ${Colors.primary};
+    transition: 0.6s;
+    &:hover{
+        transition: 0.6s;
+        background-color: ${Colors.Bg2faIn};
+    }
+`
 
 export const StyledContaiteView = styled.div`
     position: absolute;
@@ -23,9 +117,84 @@ export const StyledContaiteView = styled.div`
     opacity: 0.9;
 `;
 
+export const StyledContaiteMenu = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100px;
+    height: 100%;
+    background-color: ${Colors.Bg2faIn};
+`
+export const StyledContaiteChannel = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100px;
+    height: 100%;
+    overflow: scroll;
+    background-color: ${Colors.Bg2faIn};
+`
+export const StyledChanSep = styled.div`
+    margin-left: 10px;
+    width: 80%;
+    height: 4px;
+    border-radius: 2px;
+    background-color: ${Colors.Bg2fa};
+`
+export const StyledChanPadd = styled.p`
+    font-size: 20px;
+`
+
+export const StyledChanDiv = styled.div`
+    display: flex;
+    margin: 20px;
+    margin-right: 10px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    background-color: ${Colors.bgChannel};
+    transition: 0.6s;
+    &.add{
+        background-color: ${Colors.green};
+    }
+    &:hover{
+        transition: 0.6s;
+        border-radius: 20%;
+    }
+`
+
+
+export const StyledContaiteAddChanDiv = styled.div`
+    display: flex;
+    margin-left: 10px;
+    margin-right: 10px;
+    align-items: center;
+    justify-content: space-between;
+`
+interface Icolor{
+    color:string;
+}
+export const StyledContaiteAddChanOption = styled.div<Icolor>`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 30px;
+    border: 2px solid ${Colors.Bg2fa};
+    border-radius: 10px;
+    background-color: ${p => p.color};
+`
+export const StyledContaiteAddChanOptionP = styled.div<Icolor>`
+    color: ${p => p.color};
+`
+
 export const StyledContaiteClose = styled.div`
     display: flex;
-    margin: 10px;
+    margin: 0px;
+    margin-top: 10px;
+    margin-right: 10px;
     flex-direction: row-reverse;
     align-items: center;
     cursor: pointer;
