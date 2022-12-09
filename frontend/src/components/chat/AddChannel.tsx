@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import PopupOptionAddUser from "./Option/AddUser";
 import PopupOptionAddChannel from "./Option/AddChannel";
 import PopupOptionJoinChannel from "./Option/JoinChannel";
+import { useNavigate } from "react-router-dom";
 
 
 interface IProps {
@@ -14,14 +15,19 @@ interface IProps {
    listUser:GOT.User[] | undefined;
    setProfil:Dispatch<React.SetStateAction<GOT.Profile | undefined>> | undefined;
    setAction:Dispatch<React.SetStateAction<boolean>> | undefined;
+   setFriends:Dispatch<React.SetStateAction<GOT.User[] | undefined>> | undefined;
+   friends:GOT.User[] | undefined;
 }
 
 
 const PopupAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
     const [add, setAdd] = useState("");
+    const navigate = useNavigate();
     const handleClose = () => {
-        if (props.setAction)
+        if (props.setAction){
             props.setAction(false);
+            navigate("/chat");
+        }
     }
 
     const handleAdd = (name: string) => {
@@ -53,8 +59,8 @@ const PopupAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
                 <StyledContaiteViewAddP>{">"}</StyledContaiteViewAddP>
             </StyledContaiteViewAddOption>
             </motion.div> : <></>}
-            {add === "addUser" ? <PopupOptionAddUser setAction={props.setAction} 
-                                listUser={props.listUser} setAdd={setAdd}/> : <></>}
+            {add === "addUser" ? <PopupOptionAddUser setAction={props.setAction} friends={props.friends}
+                                listUser={props.listUser} setAdd={setAdd} setFriends={props.setFriends}/> : <></>}
             {add === "addChannel" ? <PopupOptionAddChannel setAction={props.setAction} 
                                 listUser={props.listUser} setAdd={setAdd}/> : <></>}
             {add === "joinChannel" ? <PopupOptionJoinChannel setAction={props.setAction} 

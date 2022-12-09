@@ -8,6 +8,7 @@ import { StyledMenuFriend, StyledMenuFriendContente, StyleMenuFriendUser, Styled
 
 interface IProps {
     profil: GOT.Profile | undefined;
+   setFriendsLst: Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface IProp {
@@ -36,7 +37,8 @@ const PopupListFriends:FunctionComponent<IProps> = (props:IProps) => {
     }, [socket])
 
     const handleGotoMsg = (user:string) =>{
-        navigate(`/chat?code=${user}`);
+        props.setFriendsLst(false);
+        navigate(`/chat?code=Priv&name=${user}`);
     }
     return (
         <StyledMenuFriend

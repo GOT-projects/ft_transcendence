@@ -9,10 +9,11 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
    const navigate = useNavigate();
 
    const handleClose = () =>{
-        let regex:RegExp = /^You received a message send by*/
+        let regex:RegExp = /^User with login (.*[a-z]) send you a private message/
         if (regex.test(notify.message)){
             const tab = notify.message.split(" ");
-            navigate(`/chat?code=Priv&name=${tab[tab.length - 1]}`);
+            console.log(tab);
+            navigate(`/chat?code=Priv&name=${tab[3]}`);
         }
         setNotify({...notify, isOpen: false})
    }
@@ -23,6 +24,8 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
          anchorOrigin={{vertical: 'top', horizontal: 'right'}}
          onClose={handleClose}
          style={{position: 'absolute',   
+                 top: ' 4rem',
+                 right: '0',
                  zIndex: '100',   
                  opacity: '0.9',
 				 transition: '0.6s'

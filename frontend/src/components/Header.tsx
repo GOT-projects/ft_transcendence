@@ -51,6 +51,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
     useEffect(() => {
         onSocket.warning_client(socket, props.setNotify)
     }, [socket])
+
     //Socket listen add friend list
     useEffect(() => {
         socket.on('client_notif', (rep:GOT.User[]) => {
@@ -188,7 +189,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                                              setNotify={props.setNotify} 
                                              profil={props.profil}
                                              /> : <></>}
-                {friendList ? <PopupListFriends profil={props.profil}/> : <></>}
+                {friendList ? <PopupListFriends setFriendsLst={setFriendList} profil={props.profil}/> : <></>}
             </StyleNav>
                 {otc ? <SetupOtc setOtc={setOtc}/> : <></>}
         </StyledHeader>

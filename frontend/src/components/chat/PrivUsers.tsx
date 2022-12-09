@@ -26,7 +26,7 @@ interface IProps {
 
 const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
     const socket = useContext(SocketContext)
-    const navigate =useNavigate();
+    const navigate = useNavigate();
 
     const handleSelectFriend = (name:string) => {
         const user = props.friends?.filter((user) => user.login === name);

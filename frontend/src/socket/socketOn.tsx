@@ -94,7 +94,7 @@ let info_client = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setN
     socket.on('info_client', (rep:any) => {
         console.log('info_client', rep);
         if (typeof rep === "string"){
-            let regex:RegExp = /^You received a message send by*/
+            let regex:RegExp = /^User with login (.*[a-z]) send you a private message/
             if (regex.test(rep)){
                 setNotify({isOpen: true, message: `${rep}`, type:'info'});
             }else{

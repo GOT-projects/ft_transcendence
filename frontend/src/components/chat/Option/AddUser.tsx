@@ -6,18 +6,24 @@ import { motion } from "framer-motion";
 import { Colors } from "../../Colors";
 import { emitSocket } from "../../../socket/socketEmit";
 import { SocketContext } from "../../../socket/socketPovider";
+import { useNavigate } from "react-router-dom";
 
 interface IProps {
    setAction:Dispatch<React.SetStateAction<boolean>> | undefined;
    listUser:GOT.User[] | undefined;
    setAdd:Dispatch<React.SetStateAction<string>> | undefined;
+   friends:GOT.User[] | undefined;
+   setFriends:Dispatch<React.SetStateAction<GOT.User[] | undefined>> | undefined;
 }
 const PopupOptionAddUser:FunctionComponent<IProps> = (props: IProps) =>{
+    const navigate = useNavigate();
     const socket = useContext(SocketContext)
     const [input, setInput] = useState("");
     const handleClose = () => {
-        if (props.setAction)
+        if (props.setAction){
             props.setAction(false);
+            navigate("/chat");
+        }
     }
     const handleChange = (event: any,) => {
         if (input === "" && event.target.value ==="\n")
@@ -28,12 +34,20 @@ const PopupOptionAddUser:FunctionComponent<IProps> = (props: IProps) =>{
         if (props.setAdd)
             props.setAdd("");
     }
-    const send = (event : any) => {
+    const send =  async (event : any) => {
         if (event.key === "Enter"){
             if (props.listUser){
                 const user = props.listUser?.filter((user:GOT.User) => user.login === input);
                 if (user && user.length > 0){
-                    emitSocket.emitSendPrivmsg(socket, user[0].login, "👋");
+                    await emitSocket.emitSendPrivmsg(socket, user[0].login, "👋");
+                    if (props.setFriends && props.friends){
+                        props.setFriends([...props.friends, user[0]])
+                    }else if (props.setFriends){
+                        const tmp:GOT.User[] = [];
+                        tmp.push(user[0]);
+                        props.setFriends(tmp);
+                    }
+                    navigate(`/chat?code=Priv&name=${user[0].login}`);
                 }
             }
             if (props.setAction)

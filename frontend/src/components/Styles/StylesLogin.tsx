@@ -130,12 +130,9 @@ export const StyledWaitingContente = styled.div`
     width: 600px;
     height: 200px;
     overflow: hidden;
-    box-shadow: 6px 0px 0px ${Colors.border};
-    border: 1px solid;
     border: 0;
     letter-spacing: 3px;
     outline: transparent;
-    background: linear-gradient(45deg, transparent 5%, ${Colors.dark1} 5%);
     &:after {
         --slice-0: inset(50% 50% 50% 50%);
         --slice-1: inset(80% -6px 0 0);

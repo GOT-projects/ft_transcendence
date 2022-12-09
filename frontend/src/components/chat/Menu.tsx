@@ -1,5 +1,7 @@
-import { Dispatch, FunctionComponent, useState } from "react";
+import { Dispatch, FunctionComponent, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { v4 as uuid } from "uuid";
+import { accountService } from "../../services/account.service";
 import { GOT } from "../../shared/types";
 import { StyledChatWindow } from "../Styles/StyleChat";
 import { StyledChanDiv, StyledChanPadd, StyledChanSep, StyledContaiteChannel, StyledContaiteMenu } from "../Styles/StyleViewProfil";
@@ -12,18 +14,28 @@ interface IProps {
    chatSwitch: string; 
    setChatSwitch:Dispatch<React.SetStateAction<string>> | undefined;
    listUser:GOT.User[] | undefined;
+   setFriends:Dispatch<React.SetStateAction<GOT.User[] | undefined>> | undefined;
+   setAdd:Dispatch<React.SetStateAction<boolean>>;
+   add:boolean;
+   friends:GOT.User[] | undefined;
 }
 
 
 const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
-    const [add, setAdd] =  useState(false);
+    const navigate = useNavigate();
+
     const handlePriveMsg = (name:string) => {
-        if (props.setChatSwitch)
+        if (props.setChatSwitch){
             props.setChatSwitch(name);
+            navigate("/chat?code=Priv")
+        }
     }
+
     const handleAddChannel = () => {
-        setAdd(true);
+        props.setAdd(true);
+        navigate("/chat?code=add")
     }
+
     const channel = ["channel 1", "channel 12", "channel 12312", "channel 1", 
     "channel 12", "channel 12312", "channel 1", "channel 12", "channel 12312"];
     return (
@@ -42,9 +54,8 @@ const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
                     </StyledChanDiv>
                 ))}
             </StyledContaiteChannel>
-            {add ? <PopupAddChannel profil={props.profil} setProfil={props.setProfil} setAction={setAdd} listUser={props.listUser}/> : <></>}
+            {props.add ? <PopupAddChannel friends={props.friends} setFriends={props.setFriends} profil={props.profil} setProfil={props.setProfil} setAction={props.setAdd} listUser={props.listUser}/> : <></>}
         </StyledContaiteMenu>
     )
 }
-
 export default MenuChat;

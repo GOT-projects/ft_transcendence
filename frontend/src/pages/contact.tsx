@@ -25,6 +25,7 @@ import { accountService } from '../services/account.service';
 import MenuChat from '../components/chat/Menu';
 import { onSocket } from '../socket/socketOn';
 import { offSocket } from '../socket/socketOff';
+import { useNavigate } from 'react-router-dom';
 
 interface IProps {
    profil: GOT.Profile | undefined;
@@ -32,9 +33,11 @@ interface IProps {
 }
 
 const Chat:FunctionComponent<IProps> = (props:IProps)=> {
-    const socket = useContext(SocketContext)
+    const socket = useContext(SocketContext);
+    const navigate = useNavigate();
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
 
+    const [add, setAdd] =  useState(false);
     const [chatSwitch, setChatSwitch] = useState<string>('private');
     const [selectFriend, setSelectFriend] = useState<string>('');
     const [inputChat, setInputChat] = useState("");
@@ -61,10 +64,9 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     }, [histo]);
 
     useEffect(() => {
-        onSocket.client_privmsg_users(socket, setFriends);
-        return () => {
-            offSocket.client_privmsg_users(socket);
-        }
+        (async () => {
+            await onSocket.client_privmsg_users(socket, setFriends);
+        })();
     },[socket, friends, setFriends])
     
     useEffect(() => {
@@ -72,7 +74,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
         return () => {
             offSocket.client_friends(socket);
         } 
-    },[socket])
+    },[socket, lstFriends, setLstFriends])
 
     useEffect(() => {
         onSocket.client_privmsg_send(socket, selectUser)
@@ -135,17 +137,29 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
         const user = friends?.filter((user) => user.login === name);
         if (user){
             const tmp:GOT.User = user[0];
-            setSelectUser(tmp);
+            if (selectUser !== tmp){
+                setSelectUser(tmp);
+                setAdd(false);
+                emitSocket.emitPrivmsg(socket, name);
+            }
         }
-        emitSocket.emitPrivmsg(socket, name);
     }
 
     useEffect(() =>{
-        if (codeParam.get("code") === "Priv"){
+        if (codeParam.get("code") === "Priv" && codeParam.get("name")){
             const name = codeParam.get("name");
-            if (name){
-                handleSelectFriend(name);
+            const check = friends?.filter((friend) => friend.login === name)
+            if (check && check?.length !== 0){
+                handleSelectFriend(check[0].login);
             }
+        }
+        else if (codeParam.get("code") === "Priv"){
+            setSelectUser(undefined);
+        }
+        if (codeParam.get("code") === "add"){
+            setAdd(true);
+        }else{
+            setAdd(false);
         }
     }, [codeParam])
 
@@ -164,7 +178,8 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
              />
 
             <StyledContaite>
-                <MenuChat profil={props.profil} setProfil={props.setProfil} chatSwitch={chatSwitch} setChatSwitch={setChatSwitch} listUser={usersList}/>
+                <MenuChat  friends={friends} profil={props.profil} setFriends={setFriends} setProfil={props.setProfil} 
+                           chatSwitch={chatSwitch} setChatSwitch={setChatSwitch} listUser={usersList} add={add} setAdd={setAdd}/>
                 <StyledContact >
                     <StyledChatSwith> 
                         <StyledChatSwithTile>{chatSwitch}</StyledChatSwithTile>

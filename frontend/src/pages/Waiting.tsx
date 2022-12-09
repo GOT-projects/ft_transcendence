@@ -8,7 +8,6 @@ import Popup2FA from '../components/popup/Popup2FA';
 import { StyledWaitingContente, StyledWaitingTitle } from '../components/Styles/StylesLogin';
 
 const Waiting = () => {
-    const [twoFA, setTwoFA] = useState(false);
     const [twoFAPop, setTwoFAPop] = useState(false);
 	const url = window.location.href;
     let navigate = useNavigate();
@@ -44,9 +43,10 @@ const Waiting = () => {
 	return (
         <React.Fragment>
             <BackgroundAnimate name="waiting"/>
+            {!twoFAPop ? 
             <StyledWaitingContente>
                 <StyledWaitingTitle>Waiting...</StyledWaitingTitle>
-            </StyledWaitingContente>
+            </StyledWaitingContente> : <></>}
             {twoFAPop ? <Popup2FA/> : <></>}
             <Footer/>
         </React.Fragment>

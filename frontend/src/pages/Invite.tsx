@@ -51,7 +51,7 @@ const Invite = () => {
                                                                                     if (e.key === 'Enter' && !e.shiftKey){
                                                                                         send();
                                                                                     }}}
-                                                                                value={inputChat}/>
+                                                                                value={inputChat} autoFocus/>
 
 			/*<Footer/>
         </React.Fragment>*/

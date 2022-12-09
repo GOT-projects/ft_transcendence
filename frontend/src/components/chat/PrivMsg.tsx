@@ -1,5 +1,6 @@
 import { Dispatch, FunctionComponent, useContext, useEffect, useRef, useState } from "react";
 import { v4 as uuid } from 'uuid';
+import { accountService } from "../../services/account.service";
 import { GOT } from "../../shared/types";
 import { emitSocket } from "../../socket/socketEmit";
 import { offSocket } from "../../socket/socketOff";
@@ -19,12 +20,19 @@ const PriveMsg:FunctionComponent<IProps> = (props:IProps)=> {
     const bottomChat = useRef<null | HTMLDivElement>(null);
     const [inputChat, setInputChat] = useState("");
     const socket = useContext(SocketContext)
+    const codeParam: Map<string, string> = accountService.getParamsPriv();
 
     const [selectUserMsg, setSelectUserMsg] = useState<GOT.msg[]>();
     useEffect(() => {
         //  scroll to bottom every time messages change
         bottomChat.current?.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'start' });
     }, [socket, setSelectUserMsg, selectUserMsg]);
+
+    useEffect(() =>{
+        if (codeParam.get("code") === "Priv" && !codeParam.get("name")){
+            setSelectUserMsg(undefined);
+        }
+    }, [codeParam])
     
     useEffect(() => {
         //receive list message
@@ -68,7 +76,6 @@ const PriveMsg:FunctionComponent<IProps> = (props:IProps)=> {
         }
         if (props.profil && props.userSelect){
             const msg:GOT.msg = {userFrom: props.profil.userInfos, userTo:props.userSelect, msg: inputChat};
-            console.log(msg)
             emitSocket.emitSendPrivmsg(socket, props.userSelect.login, msg.msg);
         }
         setInputChat("");
