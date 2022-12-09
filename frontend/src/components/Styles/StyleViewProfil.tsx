@@ -22,7 +22,9 @@ export const StyledContaiteViewAddChan = styled.div`
     opacity: 1;
 `
 export const StyledContaiteReturn = styled.div`
+    position: relative;
     display: flex;
+    top: 252px;
     align-items: center;
     width: 100%;
     height: 100%;
@@ -60,13 +62,45 @@ export const StyledContaiteReturnDiv = styled.div`
     margin-top: -10px;
     margin-left: 10px;
 `
+
+export const StyledContaiteDivUser = styled.div`
+    position: absolute;
+    display: flex;
+    top: 50px;
+    width: 280px;
+    height: 220px;
+    border-radius: 10px;
+    flex-direction: column;
+    overflow: scroll;
+    gap: 2px;
+    background-color: ${Colors.Bg2fa};
+`
+export const StyledContaitePUser = styled.p`
+    margin: 4px;
+    margin-left: 10px;
+    font-size: 20px;
+    color: ${Colors.primary};
+`
+
+export const StyledContaiteDivPUser = styled.div<BgColor>`
+    background-color: ${p => p.color};
+    &:hover{
+        transition: 0.6s;
+        background-color: ${Colors.grey};
+    }
+`
+
+export const StyledContaiteUser = styled.div`
+    height: 20px;
+`
+
 export const StyledContaiteAddUser = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 40px;
-    margin: 10px;
+    margin: -34px;
     font-family: "curve";
     font-size: 20px;
 `
