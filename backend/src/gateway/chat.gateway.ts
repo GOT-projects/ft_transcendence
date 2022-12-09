@@ -4,6 +4,7 @@ import { Channel } from "src/database/entities/channel.entity";
 import { Message } from "src/database/entities/message.entity";
 import { RelUserChannel, UserChannelStatus } from "src/database/entities/rel_user_channel.entity";
 import { User } from "src/database/entities/user.entity";
+import { BlockService } from "src/database/services/block.service";
 import { ChannelService } from "src/database/services/channel.service";
 import { RelDemandService } from "src/database/services/demand.service";
 import { GameService } from "src/database/services/game.service";
@@ -22,6 +23,7 @@ export class ChatGateway {
 		private readonly gameService: GameService,
 		private readonly demandService: RelDemandService,
 		private readonly relUserChannelService: RelUserChannelService,
+		private readonly blockService: BlockService,
 	) {}
 
 	async messageToGOTPriv(msg: Message): Promise<GOT.msg | false> {
@@ -125,6 +127,9 @@ export class ChatGateway {
 			if (userTo === null)
 				return `User ${login} not found`
 			const tmp = await this.messageService.getPrivmsgSend(user, userTo, msg);
+			const block = await this.blockService.getBlock(userTo, user);
+			if (block.length === 1)
+				return `Message not send, you're block`;
 			const ret = await this.messageToGOTPriv(tmp);
 			if (ret === false)
 				return 'Error user transformation'
