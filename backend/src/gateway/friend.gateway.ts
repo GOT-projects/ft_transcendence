@@ -10,6 +10,11 @@ import { GameService } from "src/database/services/game.service";
 import { UserService } from "src/database/services/user.service";
 import { GeneralGateway } from "./general.gateway";
 
+export interface UserAndStatus {
+	user: User;
+	status: boolean
+}
+
 @Injectable()
 export class FriendGateway {
 	constructor(
@@ -32,7 +37,7 @@ export class FriendGateway {
 		await this.relFriendService.create(dto);
 	}
 
-	async demandFriend(user: User, login: string): Promise<User | string> {
+	async demandFriend(user: User, login: string): Promise<UserAndStatus | string> {
 		try {
 			const userToDemand = await this.userService.findLogin(login);
 			if (userToDemand === null)
@@ -43,6 +48,10 @@ export class FriendGateway {
 			const alreadyFriend = await this.relFriendService.findFriendBetween(user, userToDemand);
 			if (alreadyFriend.length !== 0)
 				return `${user.login} and ${userToDemand.login} are already friend`;
+			const blockByMe = await this.blockService.getBlock(user, userToDemand);
+			if (blockByMe.length === 1) {
+				await this.blockService.delete(blockByMe[0].id);
+			}
 			const demands = await this.demandService.getFriendsDemandsBetween(user, userToDemand);
 			let toDelete: RelDemand[] = [];
 			for (const demand of demands) {
@@ -56,6 +65,7 @@ export class FriendGateway {
 				for (const elem of toDelete)
 					await this.demandService.delete(elem.id);
 				await this.addFriend(user, userToDemand);
+				return {user: userToDemand, status: true};
 			}
 			else {
 				await this.demandService.create({
@@ -63,8 +73,8 @@ export class FriendGateway {
 					userIdWhoDemand: user.id,
 					channelIdWhoDemand: null
 				});
+				return {user: userToDemand, status: false};
 			}
-			return userToDemand;
 		} catch (error) {
 			return error.message;
 		}
@@ -87,23 +97,25 @@ export class FriendGateway {
 		}
 	}
 
-	async replyNotif(user: User, reply: GOT.NotifChoice) {
+	async replyNotif(user: User, reply: GOT.NotifChoice): Promise<string | UserAndStatus> {
 		try {
 			const userReply = await this.userService.findUnique(reply.user.id, reply.user.login);
 			if (userReply === null)
 				return 'User not found';
 			const demands = await this.demandService.getFriendsDemands(userReply, user);
 			if (demands.length === 1) {
-				this.demandService.delete(demands[0].id);
+				await this.demandService.delete(demands[0].id);
 				if (reply.accept) {
-					this.relFriendService.create({
+					await this.relFriendService.create({
 						user1Id: user.id,
 						user2Id: userReply.id
 					});
+					return {user: userReply, status: true};
 				}
 			} else {
 				return "You're reply is refused";
 			}
+			return {user: userReply, status: false};
 		} catch (error) {
 			return error.message;
 		}
@@ -117,12 +129,12 @@ export class FriendGateway {
 			const friends = await this.relFriendService.findFriendBetween(user, userToBlock);
 			if ( friends.length !== 0) {
 				for (const friend of friends)
-					this.relFriendService.delete(friend.id);
+					await this.relFriendService.delete(friend.id);
 			}
 			const demands = await this.demandService.getFriendsDemandsBetween(user, userToBlock);
 			if ( demands.length !== 0) {
 				for (const demand of demands)
-					this.demandService.delete(demand.id);
+					await this.demandService.delete(demand.id);
 			}
 			const block = await this.blockService.getBlock(user, userToBlock);
 			if (block.length === 0) {
@@ -144,7 +156,7 @@ export class FriendGateway {
 				return 'User not found';
 			const block = await this.blockService.getBlock(user, userToBlock);
 			if (block.length === 1)
-				this.blockService.delete(block[0].id);
+				await this.blockService.delete(block[0].id);
 			else
 				return `User with login ${login} not block`;
 			return userToBlock;

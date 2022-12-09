@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { GOT } from "shared/types";
 import { Socket } from "socket.io";
 import { User } from "src/database/entities/user.entity";
+import { BlockService } from "src/database/services/block.service";
 import { RelDemandService } from "src/database/services/demand.service";
 import { GameService } from "src/database/services/game.service";
 import { UserService } from "src/database/services/user.service";
@@ -12,6 +13,7 @@ export class GeneralGateway {
 		private readonly userService: UserService,
 		private readonly gameService: GameService,
 		private readonly demandService: RelDemandService,
+		private readonly blockService: BlockService,
 	) {}
 
 	getGOTUserFromUser(user: User): GOT.User {
@@ -40,10 +42,17 @@ export class GeneralGateway {
 			const stat = await this.gameService.getStatUser(user);
 			if (typeof stat === 'string')
 				return stat;
+			const blocksTmp = await this.blockService.getBlockOfUser(user);
+			let blocks: GOT.User[] = [];
+			for (const tmp of blocksTmp) {
+				blocks.push(this.getGOTUserFromUser(tmp));
+			}
 			return {
 				notif: await this.getFriendNotif(user),
 				userInfos: this.getGOTUserFromUser(user),
 				stat: stat,
+				friends: [],
+				blocks
 			};
 		} catch (error) {
 			return error.message;

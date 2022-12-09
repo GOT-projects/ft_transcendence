@@ -55,6 +55,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
     useEffect(() => {
         socket.on('client_notif', (rep:GOT.User[]) => {
             if (rep){
+                console.log('client_notif', rep);
                 const size = rep.length - 1;
                 if (size !== -1){
                     props.setNotify({isOpen: true, message: `${rep[size].username} add you in Friend`, type:'info'});
@@ -73,7 +74,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
         return () => {
             offSocket.client_profil(socket);
         }
-    }, [props.profil, socket])
+    }, [socket])
 
     //get profile info
     useEffect(() => {
@@ -187,7 +188,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                                              setNotify={props.setNotify} 
                                              profil={props.profil}
                                              /> : <></>}
-                {friendList ? <PopupListFriends setFriendList={setFriendList} profil={props.profil}/> : <></>}
+                {friendList ? <PopupListFriends profil={props.profil}/> : <></>}
             </StyleNav>
                 {otc ? <SetupOtc setOtc={setOtc}/> : <></>}
         </StyledHeader>

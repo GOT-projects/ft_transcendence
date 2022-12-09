@@ -24,7 +24,7 @@ const PriveMsg:FunctionComponent<IProps> = (props:IProps)=> {
     useEffect(() => {
         //  scroll to bottom every time messages change
         bottomChat.current?.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'start' });
-    }, [setSelectUserMsg, selectUserMsg]);
+    }, [socket, setSelectUserMsg, selectUserMsg]);
     
     useEffect(() => {
         //receive list message
@@ -35,7 +35,7 @@ const PriveMsg:FunctionComponent<IProps> = (props:IProps)=> {
     },[socket, setSelectUserMsg, selectUserMsg])
 
     useEffect(() => {
-        //receive send 
+        //receive send
         socket.on('client_privmsg_send', (rep:GOT.msg) => {
             if (rep.userFrom.login === props.userSelect?.login){
                 if (selectUserMsg){
@@ -69,7 +69,6 @@ const PriveMsg:FunctionComponent<IProps> = (props:IProps)=> {
         if (props.profil && props.userSelect){
             const msg:GOT.msg = {userFrom: props.profil.userInfos, userTo:props.userSelect, msg: inputChat};
             console.log(msg)
-            emitSocket.emitPrivmsg(socket, props.userSelect.login);
             emitSocket.emitSendPrivmsg(socket, props.userSelect.login, msg.msg);
         }
         setInputChat("");
@@ -84,6 +83,7 @@ const PriveMsg:FunctionComponent<IProps> = (props:IProps)=> {
                                     <StyledChatText>{data.msg}</StyledChatText>
                                 </StyledChatPlace>
                         ))}
+                        <div className='field' ref={bottomChat}/>
                         <div className='field' ref={bottomChat}/>
                     </StyledChatTextArea>
                     <StyledChatSendDiv className={selectUserMsg ? "active" : "deactive"}>

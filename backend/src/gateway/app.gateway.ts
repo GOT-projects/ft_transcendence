@@ -114,12 +114,27 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 	 * Socket routes General
 	 */
 
+	private async getProfilWithFriends(user: User) {
+		let ret = await this.generalGateway.getProfil(user);
+		if (typeof ret === 'string')
+			return ret;
+		const friends = await this.friendGateway.getFriends(user);
+		if (typeof friends !== 'string') {
+			for (const friend of friends) {
+				if (friend.status !== GOT.ProfileStatus.inGame && this.users.get(friend.login))
+					friend.status = GOT.ProfileStatus.online
+			}
+			ret.friends = friends;
+		}
+		return ret;
+	}
+
 	@SubscribeMessage('server_profil')
 	async getProfil(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string) {
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
-		const ret = await this.generalGateway.getProfil(auth.user);
+		const ret = await this.getProfilWithFriends(auth.user);
 		if (typeof ret === 'string') {
 			client.emit('error_client', `${ret}`);
 			return ;
@@ -170,17 +185,6 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 	 * Socket route friends
 	 */
 
-	private async getFriends(user: User) {
-		const friends = await this.friendGateway.getFriends(user);
-		if (typeof friends !== 'string') {
-			for (const friend of friends) {
-				if (friend.status !== GOT.ProfileStatus.inGame && this.users.get(friend.login))
-					friend.status = GOT.ProfileStatus.online
-			}
-		}
-		return friends;
-	}
-
 	@SubscribeMessage('server_demand_friend')
 	async demandFriend(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('login') login: string) {
 		const auth = await this.connectionSecure(client, jwt);
@@ -193,19 +197,23 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		}
 		const user1 = this.users.get(auth.user.login);
 		if (user1) {
-			this.server.to(user1).emit('client_notif', await this.generalGateway.getFriendNotif(auth.user));
-			const friends = await this.getFriends(auth.user);
-			if (typeof friends !== 'string')
-				this.server.to(user1).emit('client_friends', friends);
-			this.server.to(user1).emit('info_client', `You invite user with login ${login} to be friend`);
+			const profil = await this.getProfilWithFriends(auth.user);
+			if (typeof profil !== 'string')
+				this.server.to(user1).emit('client_profil', profil);
+			if (ret.status)
+				this.server.to(user1).emit('info_client', `You and user with login ${ret.user.login} are now friend`);
+			else
+				this.server.to(user1).emit('info_client', `You invite user with login ${login} to be friend`);
 		}
-		const user2 = this.users.get(ret.login);
+		const user2 = this.users.get(ret.user.login);
 		if (user2) {
-			this.server.to(user2).emit('client_notif', await this.generalGateway.getFriendNotif(ret));
-			const friends = await this.getFriends(ret);
-			if (typeof friends !== 'string')
-				this.server.to(user2).emit('client_friends', friends);
-			this.server.to(user2).emit('info_client', `User with login ${auth.user.login} invite you to be friend`);
+			const profil = await this.getProfilWithFriends(ret.user);
+			if (typeof profil !== 'string')
+				this.server.to(user2).emit('client_profil', profil);
+			if (ret.status)
+				this.server.to(user2).emit('info_client', `You and user with login ${auth.user.login} are now friend`);
+			else
+				this.server.to(user2).emit('info_client', `User with login ${auth.user.login} invite you to be friend`);
 		}
 	}
 
@@ -221,19 +229,21 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		}
 		const user1 = this.users.get(auth.user.login);
 		if (user1) {
-			this.server.to(user1).emit('client_notif', await this.generalGateway.getFriendNotif(auth.user));
-			const friends = await this.getFriends(auth.user);
-			if (typeof friends !== 'string')
-				this.server.to(user1).emit('client_friends', friends);
-			this.server.to(user1).emit('info_client', `You and user with login ${reply.user.login} are now friend`);
+			const profil = await this.getProfilWithFriends(auth.user);
+			if (typeof profil !== 'string')
+				this.server.to(user1).emit('client_profil', profil);
+			if (ret.status)
+				this.server.to(user1).emit('info_client', `You and user with login ${reply.user.login} are now friend`);
 		}
-		const user2 = this.users.get(ret.login);
+		const user2 = this.users.get(ret.user.login);
 		if (user2) {
-			this.server.to(user2).emit('client_notif', await this.generalGateway.getFriendNotif(ret));
-			const friends = await this.getFriends(ret);
-			if (typeof friends !== 'string')
-				this.server.to(user2).emit('client_friends', friends);
-			this.server.to(user2).emit('info_client', `You and user with login ${auth.user.login} are now friend`);
+			const profil = await this.getProfilWithFriends(ret.user);
+			if (typeof profil !== 'string')
+				this.server.to(user2).emit('client_profil', profil);
+			if(ret.status)
+				this.server.to(user2).emit('info_client', `You and user with login ${auth.user.login} are now friend`);
+			else
+				this.server.to(user2).emit('info_client', `User with login ${auth.user.login} refuse your demand`);
 		}
 	}
 
@@ -242,10 +252,12 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
-		const friends = await this.getFriends(auth.user);
-		if (typeof friends === 'string')
-			client.emit('error_client', friends);
-		client.emit('client_friends', friends);
+		const profil = await this.getProfilWithFriends(auth.user);
+		if (typeof profil === 'string') {
+			client.emit('error_client', profil);
+			return ;
+		}
+		client.emit('client_profil', profil);
 	}
 
 	@SubscribeMessage('server_block_somebody')
@@ -260,18 +272,16 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		}
 		const user1 = this.users.get(auth.user.login);
 		if (user1) {
-			this.server.to(user1).emit('client_notif', await this.generalGateway.getFriendNotif(auth.user));
-			const friends = await this.getFriends(auth.user);
-			if (typeof friends !== 'string')
-				this.server.to(user1).emit('client_friends', friends);
+			const profil = await this.getProfilWithFriends(auth.user);
+			if (typeof profil !== 'string')
+				this.server.to(user1).emit('client_profil', profil);
 			this.server.to(user1).emit('info_client', `You block user with login ${login}`);
 		}
 		const user2 = this.users.get(ret.login);
 		if (user2) {
-			this.server.to(user2).emit('client_notif', await this.generalGateway.getFriendNotif(ret));
-			const friends = await this.getFriends(ret);
-			if (typeof friends !== 'string')
-				this.server.to(user2).emit('client_friends', friends);
+			const profil = await this.getProfilWithFriends(ret);
+			if (typeof profil !== 'string')
+				this.server.to(user2).emit('client_profil', profil);
 			this.server.to(user2).emit('info_client', `User with login ${auth.user.login} block you`);
 		}
 	}
@@ -288,18 +298,16 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		}
 		const user1 = this.users.get(auth.user.login);
 		if (user1) {
-			this.server.to(user1).emit('client_notif', await this.generalGateway.getFriendNotif(auth.user));
-			const friends = await this.getFriends(auth.user);
-			if (typeof friends !== 'string')
-				this.server.to(user1).emit('client_friends', friends);
+			const profil = await this.getProfilWithFriends(auth.user);
+			if (typeof profil !== 'string')
+				this.server.to(user1).emit('client_profil', profil);
 			this.server.to(user1).emit('info_client', `You unblock user with login ${login}`);
 		}
 		const user2 = this.users.get(ret.login);
 		if (user2) {
-			this.server.to(user2).emit('client_notif', await this.generalGateway.getFriendNotif(ret));
-			const friends = await this.getFriends(ret);
-			if (typeof friends !== 'string')
-				this.server.to(user2).emit('client_friends', friends);
+			const profil = await this.getProfilWithFriends(ret);
+			if (typeof profil !== 'string')
+				this.server.to(user2).emit('client_profil', profil);
 			this.server.to(user2).emit('info_client', `User with login ${auth.user.login} unblock you`);
 		}
 	}
@@ -346,10 +354,14 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		}
 		const user = this.users.get(ret.userTo.login);
-		console.log(user, ret);
 		if (user) {
 			this.server.to(user).emit('client_privmsg_send', ret);
-			this.server.to(user).emit('info_client', `User with login ${auth.user.login} send you a provate message`);
+			this.server.to(user).emit('info_client', `User with login ${auth.user.login} send you a private message`);
+		}
+		const actuUser = this.users.get(auth.user.login);
+		const actu = await this.chatGateway.getPrivmsg(auth.user, login);
+		if (typeof actu !== 'string' && actuUser) {
+			this.server.to(actuUser).emit('client_privmsg', actu);
 		}
 	}
 

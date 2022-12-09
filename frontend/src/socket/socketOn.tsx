@@ -44,8 +44,7 @@ let client_privmsg_send = async (socket:Socket<DefaultEventsMap, DefaultEventsMa
 
 let client_profil = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setProfil:React.Dispatch<React.SetStateAction<GOT.Profile | undefined>> | undefined) => {
     socket.on('client_profil', (rep:GOT.Profile) =>{
-        console.log('client_profil', rep);
-        console.log("Profil:", rep);
+        console.warn('client_profil', rep);
         if (rep && setProfil){
             if (rep.userInfos.urlImg.split('')[0] === '/'){
                 rep.userInfos.urlImg = `${InfoServer.HttpServer}${rep.userInfos.urlImg}`;

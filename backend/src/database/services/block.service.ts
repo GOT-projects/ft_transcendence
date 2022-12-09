@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { GOT } from "shared/types";
 import { DeleteResult, Repository } from "typeorm";
 import { RelBlock } from "../entities/rel_block.entity";
 import { User } from "../entities/user.entity";
@@ -26,6 +27,21 @@ export class BlockService {
 				{userIdIsBlock: userToBlock.id, userIdWhoBlock: user.id}
 			]
 		})
+	}
+
+	async getBlockOfUser(user: User) {
+		const rels = await this.relBlockRepository.find({
+			select: ["userIsBlock"],
+			where: [
+				{userIdWhoBlock: user.id}
+			],
+			relations: ["userIsBlock"]
+		})
+		let users: User[] = [];
+		for (const rel of rels) {
+			users.push(rel.userIsBlock);
+		}
+		return users;
 	}
 
 	async delete(id: number): Promise<DeleteResult> {

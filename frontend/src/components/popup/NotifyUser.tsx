@@ -16,12 +16,15 @@ interface IProps {
 
 const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
     const socket = useContext(SocketContext);
-    const handleAdd = (name: string) =>{
-        props.setNotify({isOpen: true, message: `Add ${name}`, type:'success'});
-        emitSocket.emitDemandFriend(socket, name);
+    const handleAdd = (user: GOT.User) =>{
+        let tmp: GOT.NotifChoice = {user:user, accept: true};
+        props.setNotify({isOpen: true, message: `Add ${user.login}`, type:'success'});
+        emitSocket.emitReplyNotif(socket, tmp)
     }
-    const handleRemove = (name: string) =>{
-        props.setNotify({isOpen: true, message: `Refused invitation of ${name}`, type:'success'});
+    const handleRemove = (user: GOT.User) =>{
+        let tmp: GOT.NotifChoice = {user:user, accept: false};
+        emitSocket.emitReplyNotif(socket, tmp)
+        props.setNotify({isOpen: true, message: `Refused invitation of ${user.login}`, type:'success'});
     }
     return(
         <StyledMenuNotif 
@@ -33,15 +36,15 @@ const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
                     <StyledMenuNotifholder key={uuid()}>
                         <div>
                         <StyledMenuNotifContentUser>
-                            <StyledMenuNotifUser>{user.username}</StyledMenuNotifUser>
+                            <StyledMenuNotifUser>{user.login}</StyledMenuNotifUser>
                         </StyledMenuNotifContentUser>
                         </div>
                         <StyledMenuNotifButton>
                             <StyledMenuNotifButtonHover>
-                                <RiUserAddFill size={"20px"} onClick={() => handleAdd(user.username)}/>
+                                <RiUserAddFill size={"20px"} onClick={() => handleAdd(user)}/>
                             </StyledMenuNotifButtonHover>
                             <StyledMenuNotifButtonHover>
-                                <TiUserDelete size={"25px"} onClick={() => handleRemove(user.username)}/>
+                                <TiUserDelete size={"25px"} onClick={() => handleRemove(user)}/>
                             </StyledMenuNotifButtonHover>
                         </StyledMenuNotifButton>
                 </StyledMenuNotifholder>

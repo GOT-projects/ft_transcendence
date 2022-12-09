@@ -83,6 +83,8 @@ export namespace GOT {
         userInfos: User;
         stat: StatUser;
         notif: User[];  // users waiting responce to be friend
+        friends: Friend[];
+        blocks: User[];
     }
 
     export interface HistoryParties {

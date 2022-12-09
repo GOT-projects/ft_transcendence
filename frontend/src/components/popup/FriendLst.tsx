@@ -7,7 +7,6 @@ import { SocketContext } from '../../socket/socketPovider';
 import { StyledMenuFriend, StyledMenuFriendContente, StyleMenuFriendUser, StyledMenuFriendImg, StyledMenuFriendImgContente, StyledMenuFriendStatus, StyledMenuFriendStatusBehind, StyleMenuFriendContenteUsername, StyleMenuFriendUsername } from '../Styles/StyleFriendLst';
 
 interface IProps {
-    setFriendList: Dispatch<any>;
     profil: GOT.Profile | undefined;
 }
 
@@ -32,16 +31,6 @@ const PopupListFriends:FunctionComponent<IProps> = (props:IProps) => {
     const [friends, setFriends] = useState<GOT.Friend[]>()
     const navigate = useNavigate()
 
-    //get erreur for notify
-    useEffect(() => {
-        socket.on('client_friends', (rep:GOT.Friend[]) => {
-            setFriends(rep);
-        })
-        return () => {
-            socket.off('client_friends');
-        } 
-    },[socket])
-
     useEffect(() => {
         emitSocket.emitFriends(socket);
     }, [socket])
@@ -56,7 +45,7 @@ const PopupListFriends:FunctionComponent<IProps> = (props:IProps) => {
             transition={{duration: 1}}
             exit={{x: 300, opacity: 0}}>
             <StyledMenuFriendContente>
-            {friends?.map((friend) => (
+            {props.profil?.friends?.map((friend) => (
                     <StyleMenuFriendUser key={uuid()} onClick={ () => handleGotoMsg(friend.username)}>
                         <StatusProfile img={friend.urlImg} username={friend.username} status={friend.status}></StatusProfile>
                         <StyleMenuFriendContenteUsername>

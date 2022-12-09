@@ -76,7 +76,6 @@ export class ChatGateway {
 			if (userTo === null)
 				return `User ${login} not found`
 			const msgs = await this.messageService.getPrivmsg(user, userTo);
-			console.log(msgs)
 			let ret: GOT.msg[] = [];
 			for (const msg of msgs) {
 				const tmp = this.messageToGOTPrivNOId(msg);

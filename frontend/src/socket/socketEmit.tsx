@@ -47,6 +47,11 @@ let emitPrivmsgUsers = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>)
     socket.emit('server_privmsg_users', {Authorization: accountService.getToken()})
 }
 
+let emitReplyNotif = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, reply: GOT.NotifChoice) => {
+    socket.emit('server_reply_notification', {Authorization: accountService.getToken(), reply :  reply})
+}
+
 export const emitSocket ={
-    emitProfil, emitProfilHisto, emitFriends, emitDemandFriend, emitChangeUsername, emitLeaderboard, emitPrivmsg, emitSendPrivmsg, emitUsers, emitBlockUser, emitPrivmsgUsers
+    emitProfil, emitProfilHisto, emitFriends, emitDemandFriend, emitChangeUsername, emitLeaderboard, 
+    emitPrivmsg, emitSendPrivmsg, emitUsers, emitBlockUser, emitPrivmsgUsers, emitReplyNotif
 }
