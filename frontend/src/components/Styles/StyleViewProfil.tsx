@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import {Colors} from "../Colors"
+import { motion } from "framer-motion";
 // import {Link} from 'react-router-dom'
 
 interface BgColor{
@@ -158,6 +159,14 @@ export const StyledContaiteMenu = styled.div`
     width: 100px;
     height: 100%;
     background-color: ${Colors.Bg2faIn};
+    transition: 0.6s;
+    @media screen and (max-width: 768px){
+        &.UnActiveMenu{
+            z-index: 20;
+            transform: translate(-100px);
+            transition: 0.3s;
+        }
+    }
 `
 export const StyledContaiteChannel = styled.div`
     display: flex;

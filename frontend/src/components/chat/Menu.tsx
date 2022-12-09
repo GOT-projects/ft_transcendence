@@ -4,6 +4,7 @@ import { v4 as uuid } from "uuid";
 import { accountService } from "../../services/account.service";
 import { GOT } from "../../shared/types";
 import { StyledChatWindow } from "../Styles/StyleChat";
+import { StyleNavToggler, StyleNavTogglerIcon } from "../Styles/StyledHeader";
 import { StyledChanDiv, StyledChanPadd, StyledChanSep, StyledContaiteChannel, StyledContaiteMenu } from "../Styles/StyleViewProfil";
 import PopupAddChannel from "./AddChannel";
 
@@ -18,6 +19,8 @@ interface IProps {
    setAdd:Dispatch<React.SetStateAction<boolean>>;
    add:boolean;
    friends:GOT.User[] | undefined;
+   active: string;
+   setActive:Dispatch<React.SetStateAction<string>> | undefined;
 }
 
 
@@ -31,6 +34,14 @@ const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
         }
     }
 
+    const navMenu = () => {
+        if (props.active === "ActiveMenu" && props.setActive) {
+            props.setActive("UnActiveMenu");
+        } else if (props.setActive){
+            props.setActive("ActiveMenu");
+        }
+    }
+
     const handleAddChannel = () => {
         props.setAdd(true);
         navigate("/chat?code=add")
@@ -40,6 +51,12 @@ const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
     "channel 12", "channel 12312", "channel 1", "channel 12", "channel 12312"];
     return (
         <StyledContaiteMenu> 
+            <StyleNavToggler onClick={navMenu} className={props.active}>
+                <StyleNavTogglerIcon className={props.active}></StyleNavTogglerIcon>
+                <StyleNavTogglerIcon className={props.active}></StyleNavTogglerIcon>
+                <StyleNavTogglerIcon className={props.active}></StyleNavTogglerIcon>
+            </StyleNavToggler>
+        <StyledContaiteMenu className={props.active}>
             <StyledChanDiv onClick={() => {handlePriveMsg("private")}}>
                 <p>Prive</p>
             </StyledChanDiv>
@@ -55,6 +72,7 @@ const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
                 ))}
             </StyledContaiteChannel>
             {props.add ? <PopupAddChannel friends={props.friends} setFriends={props.setFriends} profil={props.profil} setProfil={props.setProfil} setAction={props.setAdd} listUser={props.listUser}/> : <></>}
+        </StyledContaiteMenu> 
         </StyledContaiteMenu>
     )
 }

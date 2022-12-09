@@ -13,6 +13,7 @@ interface IProps {
    profil: GOT.Profile | undefined;
    setProfil:Dispatch<React.SetStateAction<GOT.Profile | undefined>> | undefined;
    userSelect: GOT.User | undefined;
+   active: string;
 }
 
 const PriveMsg:FunctionComponent<IProps> = (props:IProps)=> {
@@ -82,7 +83,7 @@ const PriveMsg:FunctionComponent<IProps> = (props:IProps)=> {
     }
 
     return (
-            <StyledChat>
+            <StyledChat className={props.active}>
                 <StyledChatWindow>
                     <StyledChatTextArea>
                         {selectUserMsg?.map((data:GOT.msg) => (

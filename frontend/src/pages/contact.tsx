@@ -36,6 +36,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     const socket = useContext(SocketContext);
     const navigate = useNavigate();
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
+    const [active, setActive] = useState("UnActiveMenu");
 
     const [add, setAdd] =  useState(false);
     const [chatSwitch, setChatSwitch] = useState<string>('private');
@@ -179,20 +180,23 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
 
             <StyledContaite>
                 <MenuChat  friends={friends} profil={props.profil} setFriends={setFriends} setProfil={props.setProfil} 
-                           chatSwitch={chatSwitch} setChatSwitch={setChatSwitch} listUser={usersList} add={add} setAdd={setAdd}/>
-                <StyledContact >
+                           chatSwitch={chatSwitch} setChatSwitch={setChatSwitch} 
+                           active={active} setActive={setActive}
+                           listUser={usersList} add={add} setAdd={setAdd}/>
+                <StyledContact className={active}>
                     <StyledChatSwith> 
                         <StyledChatSwithTile>{chatSwitch}</StyledChatSwithTile>
                     </StyledChatSwith>
                     <StyledChatSep/>
                     <StyledChatPrive >
                     {chatSwitch === "private" ? <PriveUserMenu friends={friends} setFriends={setFriends} selectUser={selectUser} 
+                                                               setActive={setActive}
                                                                setSelectUser={setSelectUser} userFriend={lstFriends}
                                                                popupUser={popupUser} setPopupUser={setPopupUser}
                                                                setPopupProfil={setPopupProfil} popuProfil={popuProfil}/> : <></>}
                     </StyledChatPrive>
                 </StyledContact>
-                <PriveMsg profil={props.profil} setProfil={props.setProfil} userSelect={selectUser}/>
+                <PriveMsg active={active} profil={props.profil} setProfil={props.setProfil} userSelect={selectUser}/>
             </StyledContaite>
             <Notification notify={notify} setNotify={setNotify}/>
             {popuProfil ? <ProfilView profil={histo} setPopupProfil={setPopupProfil}/> : <> </>}

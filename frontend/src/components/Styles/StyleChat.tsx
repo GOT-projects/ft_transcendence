@@ -100,9 +100,10 @@ background-color: ${Colors.MenuActive}
     }
 `;
 
+//Par list user Privmsg
 export const StyledContact = styled.div`
     display: flex;
-    width: 40%;
+    width: 460px;
     height: 104%;
     margin: 0;
     padding: 0;
@@ -111,6 +112,16 @@ export const StyledContact = styled.div`
     flex-direction: column;
     background-color: ${Colors.ChatMenu};
     border: 2px solid ${Colors.ChatMenuButton};
+    transition: 0.6s;
+    @media screen and (max-width: 768px){
+        &.UnActiveMenu{
+            z-index: 18;
+            width: 500px;
+            height: calc(100% - 6rem);
+            transform: translate(-800px);
+            transition: 0.6s;
+        }
+    }
 `;
 export const StyledChatSep = styled.div`
     width: 100%;
@@ -197,16 +208,32 @@ export const StyledChatTextArea = styled.div`
     overflow: scroll;
 `;
 
+//Privmsg 
 export const StyledChat = styled.div`
     position: relative;
     display: flex;
     flex-direction: column;
-    width: 67%;
+    width: calc(100% - 450px);
     margin: 0;
     height: 100%;
     margin-left: 10px;
     padding: 0px;
     background-color: ${Colors.ChatMenu};
+    transition: 0.9s;
+    @media screen and (max-width: 768px){
+        &.UnActiveMenu{
+            position: absolute;
+            width: 80%;
+            height: calc(100% - 6rem);
+            transition: 0.9s;
+            left: 90px;
+        }
+        &.ActiveMenu{
+            display: none;
+            transform: translate(400px);
+            transition: 0.9s;
+        }
+    }
 `;
 
 export const StyledChatWindow = styled.div`

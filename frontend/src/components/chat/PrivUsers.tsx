@@ -10,6 +10,7 @@ import { CgProfile } from "react-icons/cg";
 import { MdOutlineBlock } from "react-icons/md";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+import ProfilView from "../popup/ProfilView";
 
 
 interface IProps {
@@ -22,11 +23,13 @@ interface IProps {
    popuProfil: boolean | undefined;
    friends:GOT.User[] | undefined;
    setFriends:Dispatch<React.SetStateAction<GOT.User[] | undefined>> | undefined;
+   setActive:Dispatch<React.SetStateAction<string>> | undefined;
 }
 
 const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
     const socket = useContext(SocketContext)
     const navigate = useNavigate();
+    const [popuProfil, setPopupProfil] = useState(false);
 
     const handleSelectFriend = (name:string) => {
         const user = props.friends?.filter((user) => user.login === name);
@@ -36,6 +39,8 @@ const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
                 props.setSelectUser(tmp);
         }
         emitSocket.emitPrivmsg(socket, name);
+        if (props.setActive)
+            props.setActive("UnActiveMenu");
         navigate(`/chat?code=Priv&name=${name}`);
     }
     

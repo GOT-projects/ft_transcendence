@@ -23,10 +23,6 @@ interface IProps {
 }
 
 const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
-
-
-
-
     const [popuProfil, setPopupProfil] = useState(false);
     const [popupUser, setPopupUser] = useState<GOT.User>();
 
