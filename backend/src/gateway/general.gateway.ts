@@ -59,12 +59,20 @@ export class GeneralGateway {
 		}
 	}
 
-	async getProfilLogin(login: string): Promise<GOT.Profile | string> {
+	async getProfilLogin(login: string): Promise<GOT.HistoryParties | string> {
 		try {
 			const user = await this.userService.findLogin(login);
 			if (user === null)
 				return `User with login ${login} not found`;
-			return await this.getProfil(user);
+			const stat = await this.gameService.getStatUser(user);
+			if (typeof stat === 'string')
+				return stat;
+			const parties = await this.gameService.getPartiesOfUser(user);
+			return {
+				userInfos: this.getGOTUserFromUser(user),
+				stat,
+				parties 
+			};
 		} catch (error) {
 			return error.message;
 		}

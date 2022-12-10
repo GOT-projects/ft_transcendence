@@ -62,6 +62,17 @@ export class GameService {
 		return newMap;
 	}
 
+	async getPartiesOfUser(user: User): Promise<GOT.Party[]> {
+		return await this.gameRepository.find({
+			select: ["points1", "points2", "user1", "user2"],
+			where: [
+				{user1Id: user.id, status: gameStatus.FINISH},
+				{user2Id: user.id, status: gameStatus.FINISH},
+			],
+			relations: ["user1", "user2"]
+		});
+	}
+
 	async getStatUser(user: User): Promise<GOT.StatUser | string> {
 		const stats = await this.getStatUsers();
 		const statUser = stats.get(user.id);
