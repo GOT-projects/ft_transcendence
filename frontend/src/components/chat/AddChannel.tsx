@@ -59,7 +59,7 @@ const PopupAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
                 <StyledContaiteViewAddP>{">"}</StyledContaiteViewAddP>
             </StyledContaiteViewAddOption>
             </motion.div> : <></>}
-            {add === "addUser" ? <PopupOptionAddUser setAction={props.setAction} friends={props.friends}
+            {add === "addUser" ? <PopupOptionAddUser profil={props.profil} setAction={props.setAction} friends={props.friends}
                                 listUser={props.listUser} setAdd={setAdd} setFriends={props.setFriends} userList={props.listUser}/> : <></>}
             {add === "addChannel" ? <PopupOptionAddChannel setAction={props.setAction} 
                                 listUser={props.listUser} setAdd={setAdd}/> : <></>}

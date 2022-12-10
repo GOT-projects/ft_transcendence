@@ -1,11 +1,9 @@
-import { Dispatch, FunctionComponent, useEffect, useState } from "react";
+import { Dispatch, FunctionComponent } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuid } from "uuid";
-import { accountService } from "../../services/account.service";
 import { GOT } from "../../shared/types";
-import { StyledChatWindow } from "../Styles/StyleChat";
 import { StyleNavToggler, StyleNavTogglerIcon } from "../Styles/StyledHeader";
-import { StyledChanDiv, StyledChanPadd, StyledChanSep, StyledContaiteChannel, StyledContaiteMenu } from "../Styles/StyleViewProfil";
+import { StyledChanDiv, StyledChanPadd, StyledChanSep, StyledContaiteChannel, StyledContaiteMenu, StyledMenuTitle } from "../Styles/StyleViewProfil";
 import PopupAddChannel from "./AddChannel";
 
 
@@ -34,6 +32,12 @@ const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
         }
     }
 
+    const handleChan = (name:string) => {
+        if (props.setChatSwitch){
+            props.setChatSwitch(name);
+            navigate(`/chat?code=Chan&name=${name}`)
+        }
+    }
     const navMenu = () => {
         if (props.active === "ActiveMenu" && props.setActive) {
             props.setActive("UnActiveMenu");
@@ -58,7 +62,7 @@ const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
             </StyleNavToggler>
         <StyledContaiteMenu className={props.active}>
             <StyledChanDiv onClick={() => {handlePriveMsg("private")}}>
-                <p>Prive</p>
+                <StyledMenuTitle>Prive</StyledMenuTitle>
             </StyledChanDiv>
             <StyledChanSep/>
             <StyledContaiteChannel>
@@ -66,7 +70,7 @@ const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
                     <StyledChanPadd >+</StyledChanPadd>
                 </StyledChanDiv>
                 {channel.map((chan) => (
-                    <StyledChanDiv key={uuid()} onClick={() => {handlePriveMsg(chan)}}>
+                    <StyledChanDiv key={uuid()} onClick={() => {handleChan(chan)}}>
                         <p>{chan.substring(0, 4)}</p>
                     </StyledChanDiv>
                 ))}

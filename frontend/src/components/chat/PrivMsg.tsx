@@ -92,7 +92,6 @@ const PriveMsg:FunctionComponent<IProps> = (props:IProps)=> {
                                 </StyledChatPlace>
                         ))}
                         <div className='field' ref={bottomChat}/>
-                        <div className='field' ref={bottomChat}/>
                     </StyledChatTextArea>
                     <StyledChatSendDiv className={selectUserMsg ? "active" : "deactive"}>
                     <StyledChatInput  name='chat' placeholder="Send message" autoFocus onChange={(e) => handChange(e, setInputChat, inputChat)} 

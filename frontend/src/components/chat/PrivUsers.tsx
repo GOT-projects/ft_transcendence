@@ -76,8 +76,14 @@ const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
     useEffect(() => {
         emitSocket.emitFriends(socket);
     }, [socket])
+    
+    const handleFriend = (login: string) => {
+        const tmp = props.profil?.friends?.filter((user) => user.login === login);
+        if (tmp !== undefined && tmp.length !== 0)
+            return (true);
+        return (false);
+    }
 
-    console.log("user list", props.userFriend, "friend",props.friends)
     return (
         <>
             {props.friends?.map((user:GOT.User) =>(
@@ -93,7 +99,7 @@ const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
                     <StyledChatSettingButton onClick={() => {handleBlockUser(user.login)}}>
                         <MdOutlineBlock className='setting' size={30} color={handleBlockUserColor(user.login) ? Colors.ChatMenuButtonText : "red"}/>
                     </StyledChatSettingButton>
-                    {props.userFriend?.find((friend:GOT.Friend) => (friend.login === user.login)) ? <StyledChatDivEmpty/> :
+                    {handleFriend(user.login) ? <StyledChatDivEmpty/> :
                     <StyledChatSettingButton onClick={() => {handleAddFriend(user.login)}}>
                         <AiOutlineUserAdd className='setting' size={30} color={Colors.ChatMenuButtonText}/>
                     </StyledChatSettingButton>

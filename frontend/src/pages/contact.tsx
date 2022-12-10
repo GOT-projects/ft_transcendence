@@ -1,21 +1,13 @@
-    import { StyledChat, StyledChatInput, StyledChatPrivAvatar, StyledChatPrive, StyledChatPrivName, StyledChatPlace, 
-			StyledChatSendDiv, StyledChatSep, StyledChatSettingButton, StyledChatSwith, StyledChatSwithButton, StyledChatText, 
-			StyledChatWindow, StyledContact, StyledContaite, StyledSender, StyledUser, StyledChatTextArea, StyledMenuNav, StyledMenuDiv, 
-			StyledMenuSwitch, StyledAddInput, StyledAddInputdiv, StyledAddInputdivButton, StyledChatSwithTile } from '../components/Styles/StyleChat';
-import React, {Dispatch, FunctionComponent, useContext, useEffect, useRef, useState } from 'react';
+    import { StyledChat, StyledChatPrive, StyledChatSep, StyledChatSettingButton, StyledChatSwith, StyledChatSwithButton, StyledChatText, StyledContact, StyledContaite, StyledChatSwithTile } from '../components/Styles/StyleChat';
+import React, {Dispatch, FunctionComponent, useContext, useEffect, useState } from 'react';
 import BackgroundAnimate from '../components/BackGroundAnimate';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import {Colors} from "../components/Colors"
-import { AiFillSetting, AiOutlineSend } from 'react-icons/ai';
-import { GrAddCircle } from 'react-icons/gr';
 import {NotifyInter} from "../components/interfaces"
 import {Notification} from "../components/Notify"
-import { v4 as uuid } from 'uuid';
 import { SocketContext } from '../socket/socketPovider';
 import { emitSocket } from '../socket/socketEmit';
-import { MdOutlineBlock } from 'react-icons/md';
-import { CgProfile } from 'react-icons/cg';
 import ProfilView from '../components/popup/ProfilView';
 import { GOT } from '../shared/types';
 
@@ -25,7 +17,6 @@ import { accountService } from '../services/account.service';
 import MenuChat from '../components/chat/Menu';
 import { onSocket } from '../socket/socketOn';
 import { offSocket } from '../socket/socketOff';
-import { useNavigate } from 'react-router-dom';
 
 interface IProps {
    profil: GOT.Profile | undefined;
@@ -34,23 +25,16 @@ interface IProps {
 
 const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     const socket = useContext(SocketContext);
-    const navigate = useNavigate();
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
     const [active, setActive] = useState("UnActiveMenu");
     const [login, setLogin] = useState<string>("");
 
     const [add, setAdd] =  useState(false);
     const [chatSwitch, setChatSwitch] = useState<string>('private');
-    const [selectFriend, setSelectFriend] = useState<string>('');
-    const [inputChat, setInputChat] = useState("");
-    const [inputContact, setInputContact] = useState("");
-    const [inputChannel, setInputChannel] = useState("");
     const [histo, setHisto] = useState<GOT.HistoryParties>();
     const [popuProfil, setPopupProfil] = useState(false);
-    const [popupUser, setPopupUser] = useState<GOT.User>();
 
     const [usersList, setUsersList] = useState<GOT.User[]>();
-    const [selectUserMsg, setSelectUserMsg] = useState<GOT.msg[]>();
     const [selectUser, setSelectUser] = useState<GOT.User>();
     const [friends, setFriends] = useState<GOT.User[]>();
     const [lstFriends, setLstFriends] = useState<GOT.Friend[]>()
@@ -105,36 +89,6 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
         emitSocket.emitUsers(socket);
     }, [socket])
 
-    function handChange(event: any, setInput: any, input: string){
-        if (input === "" && event.target.value ==="\n")
-            return;
-		setInput(event.target.value);
-	}	
-
-    const addContact = () =>{
-        if (inputContact === " " || inputContact === "\n" || inputContact === ""){
-            return;
-        }
-        const user = usersList?.filter((user) => user.login === inputContact);
-        if (user){
-            let tmp = friends;
-            if (tmp !== undefined){
-                tmp.push(user[0]);
-                setFriends(tmp);
-            }
-        }
-        setInputContact('')
-    }
-	
-    const addChannel = () =>{
-        //TODO check contact before add
-        if (inputChannel === " " || inputChannel === "\n" || inputChannel === ""){
-            return;
-        }
-        setNotify({isOpen: true, message: 'Channel ' + inputChannel + ' is add', type:'success'});
-        setInputChannel('')
-    }
-
     const handleSelectFriend = (name:string) => {
         const user = friends?.filter((user) => user.login === name);
         if (user){
@@ -148,17 +102,20 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     }
 
     useEffect(() =>{
+        console.log(codeParam)
         if (codeParam.get("code") === "Priv" && codeParam.get("name")){
             const name = codeParam.get("name");
             const check = friends?.filter((friend) => friend.login === name)
             if (check && check?.length !== 0){
                 handleSelectFriend(check[0].login);
+                setAdd(false);
             }
         }
         else if (codeParam.get("code") === "Priv"){
             setSelectUser(undefined);
-        }
-        if (codeParam.get("code") === "add"){
+            setAdd(false);
+        }else if (codeParam.get("code") === "add"){
+            console.log("add")
             setAdd(true);
         }else{
             setAdd(false);

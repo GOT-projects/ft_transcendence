@@ -7,6 +7,7 @@ import { emitSocket } from "../../../socket/socketEmit";
 import { SocketContext } from "../../../socket/socketPovider";
 import { NotifyInter } from "../../interfaces";
 import { Notification } from "../../Notify";
+import { useNavigate } from "react-router-dom";
 
 interface IProps {
    setAction:Dispatch<React.SetStateAction<boolean>> | undefined;
@@ -26,15 +27,13 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
     const [inputPwd, setInputPwd] = useState("");
     const [selecte, setSelecte] = useState("");
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
-    const handleClose = () => {
-        if (props.setAction)
-            props.setAction(false);
-    }
+
     const handleChangeChan = (event: any,) => {
         if (inputChan === "" && event.target.value ==="\n")
             return;
 		setInputChan(event.target.value);
 	}	
+
     const handleChangePwd = (event: any,) => {
         if (inputPwd === "" && event.target.value ==="\n")
             return;

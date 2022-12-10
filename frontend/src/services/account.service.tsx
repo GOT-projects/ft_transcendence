@@ -27,6 +27,12 @@ let removeToken= () => {
     window.location.href = '/';
 }
 
+let replaceParamsTo = (key:string, value:string) => {
+    let url = (new URL(window.location.href));
+    url.searchParams.set(key, value);
+    return (url.search);
+} 
+
 let getParamsPriv = () => {
     const params = (new URL(window.location.href)).searchParams;
     let code: Map<string, string> = new Map();
@@ -41,6 +47,15 @@ let getParamsPriv = () => {
     return (code);
 }
 
+let getParamsNotif = () => {
+    const params = (new URL(window.location.href)).searchParams;
+    let code: Map<string, string> = new Map();
+    let tmp = params.get("notif");
+    if (tmp){
+        code.set("notif", tmp);
+    }
+    return (code);
+}
 let getParamsCode = () => {
     const params = (new URL(window.location.href)).searchParams;
     let code: Map<string, string> = new Map();
@@ -77,5 +92,5 @@ let getToken = () => {
 }
 
 export const accountService = {
-    saveToken, removeToken, isLogged, getToken, getParamsPriv, getParamsCode
+    saveToken, removeToken, isLogged, getToken, getParamsPriv, getParamsCode, replaceParamsTo, getParamsNotif
 }

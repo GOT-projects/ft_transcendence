@@ -103,7 +103,8 @@ background-color: ${Colors.MenuActive}
 //Par list user Privmsg
 export const StyledContact = styled.div`
     display: flex;
-    width: 460px;
+    max-width:  400px;
+    min-width:  200px;
     height: 104%;
     margin: 0;
     padding: 0;
@@ -140,6 +141,7 @@ export const StyledChatSwith = styled.div`
 export const StyledChatSwithTile = styled.div`
     font-size: 20px;
     font-family: "Public Pixel";
+    margin: 10px;
     color: ${Colors.primary};
 `
 

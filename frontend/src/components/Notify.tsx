@@ -15,6 +15,12 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
             console.log(tab);
             navigate(`/chat?code=Priv&name=${tab[3]}`);
         }
+        let regexChan:RegExp = /^Error: Channel (.*[a-z])/
+        if (regexChan.test(notify.message)){
+            const tab = notify.message.split(" ");
+            console.log(tab);
+            navigate(`/chat?code=Chan=${tab[3]}`)
+        }
         setNotify({...notify, isOpen: false})
    }
    return(

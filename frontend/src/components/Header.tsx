@@ -12,6 +12,9 @@ import { emitSocket } from "../socket/socketEmit";
 import SetupOtc from "./popup/SetupOtc";
 import { onSocket } from "../socket/socketOn";
 import { offSocket } from "../socket/socketOff";
+import { useNavigate } from "react-router-dom";
+import { query } from "express";
+import { accountService } from "../services/account.service";
 
 interface IProps {
    notify: NotifyInter;
@@ -27,11 +30,13 @@ interface IProps {
 const Header:FunctionComponent<IProps> = (props:IProps)=> {
     //call socket; 
     const socket = useContext(SocketContext);
+    const navigate = useNavigate();
     const [friendList, setFriendList] = useState(false);
     const [notifMenu, setNotifMenu] = useState(false);
     const [profileMenu, setProfileMenu] = useState(false);
     const [otc, setOtc] = useState(false);
     let [notif, setNotif] = useState(false);
+    const codeParam: Map<string, string> = accountService.getParamsNotif();
 
     if (props.profil?.notif.length !== 0){
         notif = true;
@@ -135,23 +140,39 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
     }
 
     const handleMenuNotif = () => {
+        let url = (new URL(window.location.href));
         if (notifMenu === true){
+            const param = accountService.replaceParamsTo("notif", "false");
             setNotifMenu(false);
+            navigate(`${url.pathname}${param}`);
         }else if (notifMenu === false){
+            const param = accountService.replaceParamsTo("notif", "true");
             setActive("UnActiveMenu");
             setNotifMenu(true);
             setProfileMenu(false);
             setFriendList(false);
             setOtc(false);
+            navigate(`${url.pathname}${param}`);
         }
     }
+
+    useEffect(() => {
+        console.log(codeParam);
+        console.log(props.profil?.notif.length)
+        if (codeParam.get("notif") === "true" && props.profil?.notif !== undefined && props.profil?.notif.length !== 0){
+            console.log("param is true")
+            setNotifMenu(true);
+        }else if (codeParam.get("notif") === "false"){
+            setNotifMenu(false);
+        }
+    }, [])
 	return (
         <StyledHeader>
             <StyleMenusHeader className={active}>
                 <StyleMenuHeader colortext={props.colorHome} text={"Home"} to='/'>Home</StyleMenuHeader>
                 <StyleMenuHeader colortext={props.colorGame}text={"Game"}to="/game">Game</StyleMenuHeader>
                 <StyleMenuHeader colortext={props.colorLeadBoard}text={"LeaderBoard"} to='/leaderboard'>LeaderBoard</StyleMenuHeader>
-                <StyleMenuHeader colortext={props.colorChat} text={"Chat"}to='/chat'>Chat</StyleMenuHeader>
+                <StyleMenuHeader colortext={props.colorChat} text={"Chat"}to='/chat?code=Priv'>Chat</StyleMenuHeader>
                 <StyleMenuHeaderNotity colorIcon={notif ? Colors.NotifActive : Colors.NotifUnactive}>
                     {notif ? <IoIosNotifications size={"22px"} onClick={handleMenuNotif}/> : <IoMdNotificationsOff size={"22px"}/>}
                 </StyleMenuHeaderNotity>

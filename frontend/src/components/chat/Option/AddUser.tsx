@@ -17,6 +17,7 @@ interface IProps {
    friends:GOT.User[] | undefined;
    userList:GOT.User[] | undefined;
    setFriends:Dispatch<React.SetStateAction<GOT.User[] | undefined>> | undefined;
+   profil: GOT.Profile | undefined;
 }
 const PopupOptionAddUser:FunctionComponent<IProps> = (props: IProps) =>{
     const navigate = useNavigate();
@@ -66,6 +67,18 @@ const PopupOptionAddUser:FunctionComponent<IProps> = (props: IProps) =>{
         navigate(`/chat?`);
     }
 
+    const handleListUser = (login : string) => {
+        if (login === props.profil?.userInfos.login)
+            return (false);
+        const tmp =props.profil?.friends.filter((user) => user.login === login);
+        if (tmp !== undefined && tmp.length !== 0)
+            return (false);
+        const tmp1 =props.friends?.filter((user) => user.login === login);
+        if (tmp1 !== undefined && tmp1.length !== 0)
+            return (false);
+        return (true);
+    }
+
     return (
         <StyledContaiteViewAddChan>
             <motion.div
@@ -80,9 +93,11 @@ const PopupOptionAddUser:FunctionComponent<IProps> = (props: IProps) =>{
                 <h3>Add user</h3>
                 <StyledContaiteDivUser>
                     {props.listUser?.map((user) => (
-                            <StyledContaiteDivPUser key={uuid()} onClick={() => {handleSelect(user)}} color={selectUser.find((select) => select.login === user.login) ? Colors.grey : Colors.Bg2faIn}>
+                            handleListUser(user.login) ? 
+                            <StyledContaiteDivPUser key={uuid()} onClick={() => {handleSelect(user)}} 
+                                color={selectUser.find((select) => select.login === user.login) ? Colors.grey : Colors.Bg2faIn}>
                                 <StyledContaitePUser>{user.login}</StyledContaitePUser>
-                            </StyledContaiteDivPUser>
+                            </StyledContaiteDivPUser> : <></>
                     ))}
                 </StyledContaiteDivUser>
             </StyledContaiteAddUser>
