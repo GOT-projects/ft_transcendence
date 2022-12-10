@@ -1,5 +1,4 @@
 import { Dispatch, FunctionComponent, useContext, useState } from "react";
-import { FaWindowClose } from "react-icons/fa";
 import { GOT } from "../../../shared/types";
 import { StyledContaiteAddChanDiv, StyledContaiteAddChanOption, StyledContaiteAddChanOptionP, StyledContaiteAddUser, StyledContaiteClose, StyledContaiteReturn, StyledContaiteReturnAddButton, StyledContaiteReturnAddButtonP, StyledContaiteReturnAddChannel, StyledContaiteReturnDiv, StyledContaiteViewAddChan } from "../../Styles/StyleViewProfil";
 import { motion } from "framer-motion";
@@ -14,6 +13,13 @@ interface IProps {
    listUser:GOT.User[] | undefined;
    setAdd:Dispatch<React.SetStateAction<string>> | undefined;
 }
+
+enum ChannelStatus {
+    PUBLIC = 'PUBLIC',
+    PROTECTED = 'PROTECTED',
+    PRIVATE = 'PRIVATE'
+}
+
 const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
     const socket = useContext(SocketContext)
     const [inputChan, setInputChan] = useState("");
@@ -53,7 +59,7 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
             if (inputChan === ""){
                 setNotify({isOpen: true, message: "Please choose name to your channel", type: "error"})
             }else{
-                chan = {id:-1, name:inputChan, status:GOT.ChannelStatus.PUBLIC, password:undefined}; 
+                chan = {name:inputChan, status: ChannelStatus.PUBLIC, password:undefined}; 
             }
         }else if (selecte === "protected"){
             if (inputChan === ""){
@@ -61,7 +67,7 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
             }else if (inputPwd === ""){
                 setNotify({isOpen: true, message: "Please choose password to your channel", type: "error"})
             }else{
-                chan = {id:-1, name:inputChan, status:GOT.ChannelStatus.PROTECTED, password:inputPwd}; 
+                chan = {name:inputChan, status: ChannelStatus.PROTECTED, password:inputPwd}; 
             }
         }else if (selecte === "private"){
             if (inputChan === ""){
@@ -69,7 +75,7 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
             }else if (inputPwd === ""){
                 setNotify({isOpen: true, message: "Please choose password to your channel", type: "error"})
             }else{
-                chan = {id:-1, name:inputChan, status:GOT.ChannelStatus.PRIVATE, password:inputPwd}; 
+                chan = {name:inputChan, status: ChannelStatus.PRIVATE, password:inputPwd}; 
             }
         }else{
             setNotify({isOpen: true, message: "Please select type of Channel", type: "error"})

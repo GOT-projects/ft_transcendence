@@ -52,7 +52,6 @@ export class ChatGateway {
 
 	GOTChannel(channel: Channel): GOT.Channel {
 		return {
-			id: channel.id,
 			name: channel.name,
 			status: channel.status
 		}

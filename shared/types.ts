@@ -126,7 +126,6 @@ export namespace GOT {
     }
 
     export interface Channel {
-        id: number,
         name: string,
         status: ChannelStatus,
         password?: string

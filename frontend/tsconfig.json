@@ -21,6 +21,6 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "src"
-, "public/pong.js"  ]
+    "src",
+    "public/pong.js"  ]
 }
