@@ -15,6 +15,7 @@ import ProfilView from "../popup/ProfilView";
 
 interface IProps {
    selectUser: GOT.User | undefined;
+   profil: GOT.Profile | undefined;
    setSelectUser:Dispatch<React.SetStateAction<GOT.User | undefined>> | undefined;
    userFriend: GOT.Friend[] | undefined;
    popupUser: GOT.User | undefined;
@@ -56,7 +57,22 @@ const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
     }
 
     const handleBlockUser = (name: string) => {
-        emitSocket.emitBlockUser(socket, name);
+        const filter = props.profil?.blocks.filter((block) => block.login === name);
+        if (filter?.length !== 0){
+            console.log("Unblock")
+            emitSocket.emitUnBlockUser(socket, name);
+        }else{
+            console.log("block")
+            emitSocket.emitBlockUser(socket, name);
+        }
+    }
+    const handleBlockUserColor = (name: string) => {
+        const filter = props.profil?.blocks.filter((block) => block.login === name);
+        if (filter?.length !== 0){
+            return false
+        }else{
+            return true
+        }
     }
 
     const handleAddFriend = (login:string) => {
@@ -81,7 +97,7 @@ const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
                         <CgProfile className='setting' size={30} color={Colors.ChatMenuButtonText}/>
                     </StyledChatSettingButton>
                     <StyledChatSettingButton onClick={() => {handleBlockUser(user.login)}}>
-                        <MdOutlineBlock className='setting' size={30} color={Colors.ChatMenuButtonText}/>
+                        <MdOutlineBlock className='setting' size={30} color={handleBlockUserColor(user.login) ? Colors.ChatMenuButtonText : "red"}/>
                     </StyledChatSettingButton>
                     {props.userFriend?.find((friend:GOT.Friend) => (friend.login === user.login)) ? <StyledChatDivEmpty/> :
                     <StyledChatSettingButton onClick={() => {handleAddFriend(user.login)}}>

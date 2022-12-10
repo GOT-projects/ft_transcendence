@@ -190,7 +190,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                     <StyledChatSep/>
                     <StyledChatPrive >
                     {chatSwitch === "private" ? <PriveUserMenu friends={friends} setFriends={setFriends} selectUser={selectUser} 
-                                                               setActive={setActive}
+                                                               setActive={setActive} profil={props.profil}
                                                                setSelectUser={setSelectUser} userFriend={lstFriends}
                                                                popupUser={popupUser} setPopupUser={setPopupUser}
                                                                setPopupProfil={setPopupProfil} popuProfil={popuProfil}/> : <></>}
