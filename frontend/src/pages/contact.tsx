@@ -102,7 +102,6 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     }
 
     useEffect(() =>{
-        console.log(codeParam)
         if (codeParam.get("code") === "Priv" && codeParam.get("name")){
             const name = codeParam.get("name");
             const check = friends?.filter((friend) => friend.login === name)

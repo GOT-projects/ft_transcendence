@@ -101,7 +101,7 @@ const PopupOptionAddUser:FunctionComponent<IProps> = (props: IProps) =>{
                     ))}
                 </StyledContaiteDivUser>
             </StyledContaiteAddUser>
-            <StyledContaiteReturn>
+            <StyledContaiteReturn className="addUser">
                 <StyledContaiteReturnDiv onClick={handleReturn}>
                     <p>return</p>
                 </StyledContaiteReturnDiv>

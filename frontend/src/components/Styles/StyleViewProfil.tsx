@@ -21,6 +21,11 @@ export const StyledContaiteViewAddChan = styled.div`
     border: 2px solid ${Colors.border};
     border-radius: 10px;
     opacity: 1;
+    @media screen and (max-width: 768px){
+        transform: translate(50%, -50%);
+        top: calc(-60px + 50%);
+        left: calc(50%);
+    }
 `
 export const StyledContaiteReturn = styled.div`
     position: relative;
@@ -29,6 +34,11 @@ export const StyledContaiteReturn = styled.div`
     align-items: center;
     width: 100%;
     height: 100%;
+    &.addUser{
+        position: absolute;
+        top: 155px;
+        margin-left: 5px;
+    }
 `
 export const StyledContaiteReturnAddChannel = styled.div`
     display: flex;
@@ -62,6 +72,10 @@ export const StyledContaiteReturnDiv = styled.div`
     height: 80px;
     margin-top: -10px;
     margin-left: 10px;
+    &.joinChan{
+        margin-top: 46px;
+        margin-left: 10px;
+    }
 `
 
 export const StyledContaiteDivUser = styled.div`
@@ -101,7 +115,7 @@ export const StyledContaiteAddUser = styled.div`
     align-items: center;
     justify-content: center;
     height: 40px;
-    margin: -34px;
+    margin: 20px;
     font-family: "curve";
     font-size: 20px;
 `
@@ -123,6 +137,7 @@ export const StyledContaiteViewAddOption = styled.div`
     align-items: center;
     justify-content: space-between;
     margin: 10px;
+    margin-left: 15px;
     width: 90%;
     height: 40px;
     border-radius: 8px;

@@ -14,16 +14,17 @@ interface IProps {
 }
 const PopupOptionJoinChannel:FunctionComponent<IProps> = (props: IProps) =>{
     const [add, setAdd] = useState("");
-    const socket = useContext(SocketContext)
-    const [input, setInput] = useState("");
+
     const handleClose = () => {
         if (props.setAction)
             props.setAction(false);
     }
+
     const handleReturn = () => {
         if (props.setAdd)
             props.setAdd("");
     }
+
     const handleAdd = (name: string) => {
        setAdd(name); 
     }
@@ -41,18 +42,16 @@ const PopupOptionJoinChannel:FunctionComponent<IProps> = (props: IProps) =>{
                 <h3>Join channel</h3>
             </StyledContaiteAddUser>
             <StyledContaiteViewAddOption onClick={() => {handleAdd("public")}}>
-                <StyledContaiteViewAddP>list public channel</StyledContaiteViewAddP>
+                <StyledContaiteViewAddP>Explore channel</StyledContaiteViewAddP>
                 <StyledContaiteViewAddP>{">"}</StyledContaiteViewAddP>
             </StyledContaiteViewAddOption>
             <StyledContaiteViewAddOption onClick={() => {handleAdd("private")}}>
                 <StyledContaiteViewAddP>Join channel private</StyledContaiteViewAddP>
                 <StyledContaiteViewAddP>{">"}</StyledContaiteViewAddP>
             </StyledContaiteViewAddOption>
-            <StyledContaiteReturn>
                 <StyledContaiteReturnDiv className="joinChan" onClick={handleReturn}>
                     <p>return</p>
                 </StyledContaiteReturnDiv>
-            </StyledContaiteReturn>
             </motion.div>
         </StyledContaiteViewAddChan>
     )

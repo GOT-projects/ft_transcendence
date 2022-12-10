@@ -19,7 +19,7 @@ export const StyledContaite = styled.div`
     overflow: hidden;
     border: 2px solid ${Colors.border};
     border-radius: 20px;
-    background-color: ${Colors.dark1};
+    background-color: ${Colors.Bg2fa};
     opacity: 0.6;
     cursor: pointer;
     @media screen and (max-width: 768px){
