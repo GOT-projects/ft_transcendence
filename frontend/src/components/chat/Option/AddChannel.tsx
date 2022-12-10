@@ -1,4 +1,3 @@
-
 import { Dispatch, FunctionComponent, useContext, useState } from "react";
 import { FaWindowClose } from "react-icons/fa";
 import { GOT } from "../../../shared/types";
@@ -47,14 +46,14 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
     const handleSelect = (name: string) =>{
         setSelecte(name);
     }
+
     const handleSend = () =>{
-        let ok = false
+        let chan:GOT.Channel | undefined = undefined;
         if (selecte === "public"){
             if (inputChan === ""){
                 setNotify({isOpen: true, message: "Please choose name to your channel", type: "error"})
             }else{
-                console.log(inputChan, selecte, inputPwd);
-                ok = true;
+                chan = {id:-1, name:inputChan, status:GOT.ChannelStatus.PUBLIC, password:undefined}; 
             }
         }else if (selecte === "protected"){
             if (inputChan === ""){
@@ -62,8 +61,7 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
             }else if (inputPwd === ""){
                 setNotify({isOpen: true, message: "Please choose password to your channel", type: "error"})
             }else{
-                console.log(inputChan, selecte, inputPwd);
-                ok = true;
+                chan = {id:-1, name:inputChan, status:GOT.ChannelStatus.PROTECTED, password:inputPwd}; 
             }
         }else if (selecte === "private"){
             if (inputChan === ""){
@@ -71,15 +69,13 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
             }else if (inputPwd === ""){
                 setNotify({isOpen: true, message: "Please choose password to your channel", type: "error"})
             }else{
-                console.log(inputChan, selecte, inputPwd);
-                ok = true;
+                chan = {id:-1, name:inputChan, status:GOT.ChannelStatus.PRIVATE, password:inputPwd}; 
             }
         }else{
             setNotify({isOpen: true, message: "Please select type of Channel", type: "error"})
         }
-        if (ok){
-            if (props.setAction)
-                props.setAction(false);
+        if (chan !== undefined){
+            emitSocket.emitCreateChan(socket, chan);
         }
     }
 

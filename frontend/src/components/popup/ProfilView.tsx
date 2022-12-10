@@ -28,7 +28,6 @@ const ProfilView:FunctionComponent<IProps> = (props:IProps) =>{
     useEffect(() => {
         emitSocket.emitProfilHisto(socket, props.login);
     }, [socket]);
-    console.log("history", profil);
     return(
         <StyledContaiteView>
             <StyledContaiteClose>
@@ -47,6 +46,7 @@ const ProfilView:FunctionComponent<IProps> = (props:IProps) =>{
                 </StyledContaiteHistorytile>
                     {
                         profil?.parties.map( (party: GOT.Party) => (
+                            
                             <StyledContaiteHistorylst>
                                 <StyledContaiteHistoryUser>
                                     <StyledContaiteText size={"12px"}>{party.user1.username}</StyledContaiteText>

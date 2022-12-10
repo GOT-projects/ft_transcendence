@@ -19,6 +19,10 @@ let emitDemandFriend = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>,
     socket.emit('server_demand_friend', {Authorization: accountService.getToken(), login: username})
 }
 
+let emitCreateChan = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, channel: GOT.Channel) => {
+    socket.emit('server_chan_create', {Authorization: accountService.getToken(), chan: channel})
+}
+
 let emitChangeUsername = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, username: string) => {
     socket.emit('server_change_username', {Authorization: accountService.getToken(), username: username})
 }
@@ -57,5 +61,5 @@ let emitReplyNotif = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, r
 
 export const emitSocket ={
     emitProfil, emitProfilHisto, emitFriends, emitDemandFriend, emitChangeUsername, emitLeaderboard, 
-    emitPrivmsg, emitSendPrivmsg, emitUsers, emitBlockUser, emitPrivmsgUsers, emitReplyNotif, emitUnBlockUser
+    emitPrivmsg, emitSendPrivmsg, emitUsers, emitBlockUser, emitPrivmsgUsers, emitReplyNotif, emitUnBlockUser, emitCreateChan
 }
