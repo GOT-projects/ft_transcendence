@@ -23,24 +23,16 @@ interface IProps {
 }
 
 const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
-    const [popuProfil, setPopupProfil] = useState(false);
-    const [popupUser, setPopupUser] = useState<GOT.User>();
-
-
-    const [tmppp, setTmpp] = useState<GOT.Party[]>();
     const socket = useContext(SocketContext);
-    const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
 
+    const [popuProfil, setPopupProfil] = useState(false);
+    const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
     const [tab, setTab] = useState<GOT.LeaderBoard>();
     const [histo, setHisto] = useState<GOT.HistoryParties>();
-
-    const [clickedButton, setClickedButton] = useState('');
-
-
+    const [login, setLogin] = useState<string>("");
 
     useEffect(() => {
         emitSocket.emitLeaderboard(socket);
-        
     }, [socket])
 
     useEffect(() => {
@@ -66,24 +58,19 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
             socket.off('client_profil_login');
         }
     }, [histo]);
-    
-    
-    
-    
-    
-    
+
 	const buttonHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         const button: HTMLButtonElement = event.currentTarget;
         emitSocket.emitProfilHisto(socket, button.name);
-        setClickedButton(button.name);
-
-
-        if (popuProfil == false)
+        if (popuProfil === false){
             setPopupProfil(true);
-        else
+            setLogin(button.name);
+        }
+        else{
+            setLogin(button.name);
             setPopupProfil(false);
-
+        }
 	};
 
 	return (
@@ -109,7 +96,6 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 					<StyledLeadP>Loses</StyledLeadP>
 				</tr>
                 <>
-
 				{
                     tab?.map((usr: GOT.ProfileLeaderBoard) => (
                     <tr key={uuid()}>
@@ -123,6 +109,7 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 				</>
 				</StyledLeadTileRank>
 			</StyledLead>
+            {popuProfil ? <ProfilView login={login} setPopupProfil={setPopupProfil}/> : <> </>}
 			<Footer/>
 		</React.Fragment>
 	)
