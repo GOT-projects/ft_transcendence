@@ -157,10 +157,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
     }
 
     useEffect(() => {
-        console.log(codeParam);
-        console.log(props.profil?.notif.length)
         if (codeParam.get("notif") === "true" && props.profil?.notif !== undefined && props.profil?.notif.length !== 0){
-            console.log("param is true")
             setNotifMenu(true);
         }else if (codeParam.get("notif") === "false"){
             setNotifMenu(false);
