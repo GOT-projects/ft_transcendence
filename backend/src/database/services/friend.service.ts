@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { Certificate } from "crypto";
 import { DeleteResult, Repository } from "typeorm";
 import { RelFriend } from "../entities/rel_friend.entity";
 import { User } from "../entities/user.entity";
@@ -16,6 +17,12 @@ export class RelFriendService {
 	) {}
 
 	async create(createUserDto: CreateRelFriendDto): Promise<RelFriend> {
+		if (createUserDto.user1Id < createUserDto.user2Id) {
+			const tmp = createUserDto.user1Id;
+			createUserDto.user1Id = createUserDto.user2Id;
+			createUserDto.user2Id = tmp;
+			return await this.create(createUserDto);
+		}
 		const newFriend = this.relFriendRepository.create(createUserDto);
 		return await this.relFriendRepository.save(newFriend);
 	}
