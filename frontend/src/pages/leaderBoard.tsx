@@ -99,7 +99,7 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 				{
                     tab?.map((usr: GOT.ProfileLeaderBoard) => (
                     <tr key={uuid()}>
-                        <Button onClick={buttonHandler} className="button" name={usr.userInfos.username}>{usr.userInfos.username}</Button>
+                        <Button onClick={buttonHandler} className="button" name={ (usr.inGame === undefined ? '' : 'EMOJI ') +  usr.userInfos.username}>{usr.userInfos.username}</Button>
                         <StyledLeadP>{usr.stat.rank}</StyledLeadP>
                         <StyledLeadP>{usr.stat.victory}</StyledLeadP>
                         <StyledLeadP>{usr.stat.defeat}</StyledLeadP>
