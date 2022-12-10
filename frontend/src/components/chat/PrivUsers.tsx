@@ -18,19 +18,17 @@ interface IProps {
    profil: GOT.Profile | undefined;
    setSelectUser:Dispatch<React.SetStateAction<GOT.User | undefined>> | undefined;
    userFriend: GOT.Friend[] | undefined;
-   popupUser: GOT.User | undefined;
-   setPopupUser:Dispatch<React.SetStateAction<GOT.User | undefined>> | undefined;
    setPopupProfil:Dispatch<React.SetStateAction<boolean>> | undefined;
    popuProfil: boolean | undefined;
    friends:GOT.User[] | undefined;
    setFriends:Dispatch<React.SetStateAction<GOT.User[] | undefined>> | undefined;
    setActive:Dispatch<React.SetStateAction<string>> | undefined;
+   setLogin:Dispatch<React.SetStateAction<string>> | undefined;
 }
 
 const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
     const socket = useContext(SocketContext)
     const navigate = useNavigate();
-    const [popuProfil, setPopupProfil] = useState(false);
 
     const handleSelectFriend = (name:string) => {
         const user = props.friends?.filter((user) => user.login === name);
@@ -46,13 +44,9 @@ const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
     }
     
     const handleViewProfil = (name: string) =>{
-        const user = props.userFriend?.filter((user) => user.login === name);
-        if (user && props.popupUser){
-            const tmp:GOT.User = user[0];
-            if (props.setPopupUser)
-                props.setPopupUser(tmp);
-            if (!props.popuProfil && props.setPopupProfil)
-                props.setPopupProfil(true);
+        if (props.setLogin && props.setPopupProfil){
+            props.setLogin(name);
+            props.setPopupProfil(true);
         }
     }
 

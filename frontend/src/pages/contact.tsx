@@ -37,6 +37,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     const navigate = useNavigate();
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
     const [active, setActive] = useState("UnActiveMenu");
+    const [login, setLogin] = useState<string>("");
 
     const [add, setAdd] =  useState(false);
     const [chatSwitch, setChatSwitch] = useState<string>('private');
@@ -192,14 +193,14 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                     {chatSwitch === "private" ? <PriveUserMenu friends={friends} setFriends={setFriends} selectUser={selectUser} 
                                                                setActive={setActive} profil={props.profil}
                                                                setSelectUser={setSelectUser} userFriend={lstFriends}
-                                                               popupUser={popupUser} setPopupUser={setPopupUser}
+                                                               setLogin={setLogin}
                                                                setPopupProfil={setPopupProfil} popuProfil={popuProfil}/> : <></>}
                     </StyledChatPrive>
                 </StyledContact>
                 <PriveMsg active={active} profil={props.profil} setProfil={props.setProfil} userSelect={selectUser}/>
             </StyledContaite>
             <Notification notify={notify} setNotify={setNotify}/>
-            {popuProfil ? <ProfilView profil={histo} setPopupProfil={setPopupProfil}/> : <> </>}
+            {popuProfil ? <ProfilView login={login} setPopupProfil={setPopupProfil}/> : <> </>}
            <Footer/>
 		</React.Fragment>
 	)

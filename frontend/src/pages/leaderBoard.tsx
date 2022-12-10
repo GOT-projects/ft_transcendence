@@ -123,7 +123,6 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 				</>
 				</StyledLeadTileRank>
 			</StyledLead>
-            {popuProfil ? <ProfilView profil={histo} setPopupProfil={setPopupProfil}/> : <> </>}
 			<Footer/>
 		</React.Fragment>
 	)
