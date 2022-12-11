@@ -14,7 +14,7 @@ interface IProps {
    profil: GOT.Profile | undefined;
    listUser:GOT.User[] | undefined;
    setProfil:Dispatch<React.SetStateAction<GOT.Profile | undefined>> | undefined;
-   setAction:Dispatch<React.SetStateAction<boolean>> | undefined;
+   setAction:Dispatch<React.SetStateAction<string>>;
    setFriends:Dispatch<React.SetStateAction<GOT.User[] | undefined>> | undefined;
    friends:GOT.User[] | undefined;
 }
@@ -25,13 +25,14 @@ const PopupAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
     const navigate = useNavigate();
     const handleClose = () => {
         if (props.setAction){
-            props.setAction(false);
+            props.setAction("");
             navigate("/chat");
         }
     }
 
     const handleAdd = (name: string) => {
        setAdd(name); 
+       navigate(`/chat?code=${name}`)
     }
 
     return (
@@ -45,7 +46,7 @@ const PopupAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
             <StyledContaiteClose onClick={handleClose}>
                     <FaWindowClose size={30} color={Colors.dark1}/>
             </StyledContaiteClose>
-            <StyledContaiteViewAddP>Add</StyledContaiteViewAddP>
+            <StyledContaiteViewAddP className="addTitle">Add</StyledContaiteViewAddP>
             <StyledContaiteViewAddOption onClick={() => {handleAdd("addUser")}}>
                 <StyledContaiteViewAddP >Add user for prive msg</StyledContaiteViewAddP>
                 <StyledContaiteViewAddP>{">"}</StyledContaiteViewAddP>
@@ -59,12 +60,6 @@ const PopupAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
                 <StyledContaiteViewAddP>{">"}</StyledContaiteViewAddP>
             </StyledContaiteViewAddOption>
             </motion.div> : <></>}
-            {add === "addUser" ? <PopupOptionAddUser profil={props.profil} setAction={props.setAction} friends={props.friends}
-                                listUser={props.listUser} setAdd={setAdd} setFriends={props.setFriends} userList={props.listUser}/> : <></>}
-            {add === "addChannel" ? <PopupOptionAddChannel setAction={props.setAction} 
-                                listUser={props.listUser} setAdd={setAdd}/> : <></>}
-            {add === "joinChannel" ? <PopupOptionJoinChannel setAction={props.setAction} 
-                                listUser={props.listUser} setAdd={setAdd}/> : <></>}
         </StyledContaiteViewAddChan>
     )
 }

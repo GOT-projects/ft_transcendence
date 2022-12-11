@@ -204,6 +204,10 @@ export const StyledChatSettingButton = styled.div`
         background-color: ${Colors.ChatMenuButtonHover};
         transition: 0.4s;
     }
+    @media screen and (max-width: 768px){
+        width: 40px;
+        height: 40px;
+    }
 `;
 
 export const StyledChatTextArea = styled.div`
@@ -355,8 +359,7 @@ export const StyledUser = styled.button<BgColor>`
         transition: 0.4s;
     }
     @media screen and (max-width: 768px){
-        margin: 6px;
-        font-size: 16px;
+        width: 350px;
     }
 `;
 
@@ -371,6 +374,9 @@ export const StyledChatPrivAvatar = styled.div<Ibg>`
     border-radius: 50%;
     background: url(${p => p.profil});
     background-size: 100% 100%;
+    @media screen and (max-width: 768px){
+        margin-left: 25px;
+    }
 `;
 
 export const StyledChatPrivName = styled.p`
@@ -378,6 +384,11 @@ export const StyledChatPrivName = styled.p`
 	width: 100px;
 	text-align: left;
     font-family: 'Public Pixel', cursive;
+    font-size: 20px;
 	overflow: hidden;
-    color: ${Colors.ChatMenuButtonText}
+    color: ${Colors.ChatMenuButtonText};
+    @media screen and (max-width: 768px){
+	    width: 70px;
+        font-size: 14px;
+    }
 `;

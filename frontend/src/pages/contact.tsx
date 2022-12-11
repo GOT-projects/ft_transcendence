@@ -17,6 +17,10 @@ import { accountService } from '../services/account.service';
 import MenuChat from '../components/chat/Menu';
 import { onSocket } from '../socket/socketOn';
 import { offSocket } from '../socket/socketOff';
+import PopupAddChannel from '../components/chat/AddChannel';
+import PopupOptionAddUser from '../components/chat/Option/AddUser';
+import PopupOptionAddChannel from '../components/chat/Option/AddChannel';
+import PopupOptionJoinChannel from '../components/chat/Option/JoinChannel';
 
 interface IProps {
    profil: GOT.Profile | undefined;
@@ -29,7 +33,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     const [active, setActive] = useState("UnActiveMenu");
     const [login, setLogin] = useState<string>("");
 
-    const [add, setAdd] =  useState(false);
+    const [add, setAdd] =  useState("");
     const [chatSwitch, setChatSwitch] = useState<string>('private');
     const [histo, setHisto] = useState<GOT.HistoryParties>();
     const [popuProfil, setPopupProfil] = useState(false);
@@ -95,7 +99,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
             const tmp:GOT.User = user[0];
             if (selectUser !== tmp){
                 setSelectUser(tmp);
-                setAdd(false);
+                setAdd("");
                 emitSocket.emitPrivmsg(socket, name);
             }
         }
@@ -107,18 +111,14 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
             const check = friends?.filter((friend) => friend.login === name)
             if (check && check?.length !== 0){
                 handleSelectFriend(check[0].login);
-                setAdd(false);
+                setAdd("");
             }
         }
-        else if (codeParam.get("code") === "Priv"){
-            setSelectUser(undefined);
-            setAdd(false);
-        }else if (codeParam.get("code") === "add"){
-            console.log("add")
-            setAdd(true);
-        }else{
-            setAdd(false);
-        }
+        const tmp = codeParam.get("code");
+        if (tmp)
+            setAdd(tmp);
+        else
+            setAdd("");
     }, [codeParam])
 
 
@@ -156,6 +156,11 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                 <PriveMsg active={active} profil={props.profil} setProfil={props.setProfil} userSelect={selectUser}/>
             </StyledContaite>
             <Notification notify={notify} setNotify={setNotify}/>
+            {add === "add" ? <PopupAddChannel friends={friends} setFriends={setFriends} profil={props.profil} setProfil={props.setProfil} setAction={setAdd} listUser={usersList}/> : <></>}
+            {add === "addUser" ? <PopupOptionAddUser profil={props.profil} friends={friends}
+                                listUser={usersList} setAdd={setAdd} setFriends={setFriends} /> : <></>}
+            {add === "addChannel" ? <PopupOptionAddChannel /> : <></>}
+            {add === "joinChannel" ? <PopupOptionJoinChannel listUser={usersList}/> : <></>}
             {popuProfil ? <ProfilView login={login} setPopupProfil={setPopupProfil}/> : <> </>}
            <Footer/>
 		</React.Fragment>

@@ -6,23 +6,22 @@ import { motion } from "framer-motion";
 import { Colors } from "../../Colors";
 import { emitSocket } from "../../../socket/socketEmit";
 import { SocketContext } from "../../../socket/socketPovider";
+import { useNavigate } from "react-router-dom";
 
 interface IProps {
-   setAction:Dispatch<React.SetStateAction<boolean>> | undefined;
    listUser:GOT.User[] | undefined;
-   setAdd:Dispatch<React.SetStateAction<string>> | undefined;
 }
 const PopupOptionJoinChannel:FunctionComponent<IProps> = (props: IProps) =>{
     const [add, setAdd] = useState("");
+    const navigate = useNavigate();
 
     const handleClose = () => {
-        if (props.setAction)
-            props.setAction(false);
+        navigate("/chat?code=Prvi")
+         
     }
 
     const handleReturn = () => {
-        if (props.setAdd)
-            props.setAdd("");
+        navigate("/chat?code=add")
     }
 
     const handleAdd = (name: string) => {

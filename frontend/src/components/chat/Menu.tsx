@@ -4,7 +4,6 @@ import { v4 as uuid } from "uuid";
 import { GOT } from "../../shared/types";
 import { StyleNavToggler, StyleNavTogglerIcon } from "../Styles/StyledHeader";
 import { StyledChanDiv, StyledChanPadd, StyledChanSep, StyledContaiteChannel, StyledContaiteMenu, StyledMenuTitle } from "../Styles/StyleViewProfil";
-import PopupAddChannel from "./AddChannel";
 
 
 interface IProps {
@@ -14,8 +13,8 @@ interface IProps {
    setChatSwitch:Dispatch<React.SetStateAction<string>> | undefined;
    listUser:GOT.User[] | undefined;
    setFriends:Dispatch<React.SetStateAction<GOT.User[] | undefined>> | undefined;
-   setAdd:Dispatch<React.SetStateAction<boolean>>;
-   add:boolean;
+   setAdd:Dispatch<React.SetStateAction<string>>;
+   add:string;
    friends:GOT.User[] | undefined;
    active: string;
    setActive:Dispatch<React.SetStateAction<string>> | undefined;
@@ -44,10 +43,13 @@ const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
         } else if (props.setActive){
             props.setActive("ActiveMenu");
         }
+        navigate("/chat")
     }
 
     const handleAddChannel = () => {
-        props.setAdd(true);
+        props.setAdd("add");
+        if (props.setActive)
+            props.setActive("UnActiveMenu");
         navigate("/chat?code=add")
     }
 
@@ -75,7 +77,6 @@ const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
                     </StyledChanDiv>
                 ))}
             </StyledContaiteChannel>
-            {props.add ? <PopupAddChannel friends={props.friends} setFriends={props.setFriends} profil={props.profil} setProfil={props.setProfil} setAction={props.setAdd} listUser={props.listUser}/> : <></>}
         </StyledContaiteMenu> 
         </StyledContaiteMenu>
     )

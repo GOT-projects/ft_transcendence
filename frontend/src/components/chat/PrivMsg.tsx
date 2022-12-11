@@ -94,12 +94,12 @@ const PriveMsg:FunctionComponent<IProps> = (props:IProps)=> {
                         <div className='field' ref={bottomChat}/>
                     </StyledChatTextArea>
                     <StyledChatSendDiv className={selectUserMsg ? "active" : "deactive"}>
-                    <StyledChatInput  name='chat' placeholder="Send message" autoFocus onChange={(e) => handChange(e, setInputChat, inputChat)} 
+                    <StyledChatInput  name='chat' placeholder="Send message"  onChange={(e) => handChange(e, setInputChat, inputChat)} 
                                                                             onKeyDown={(e) => {
                                                                                 if (e.key === 'Enter' && !e.shiftKey){
                                                                                     sendMsg();
                                                                                 }}}
-                                                                            value={inputChat}/>
+                                                                            value={inputChat} autoFocus/>
                     </StyledChatSendDiv>
                 </StyledChatWindow>
             </StyledChat>

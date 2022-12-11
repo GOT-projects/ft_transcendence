@@ -10,9 +10,6 @@ import { Notification } from "../../Notify";
 import { useNavigate } from "react-router-dom";
 
 interface IProps {
-   setAction:Dispatch<React.SetStateAction<boolean>> | undefined;
-   listUser:GOT.User[] | undefined;
-   setAdd:Dispatch<React.SetStateAction<string>> | undefined;
 }
 
 enum ChannelStatus {
@@ -22,7 +19,8 @@ enum ChannelStatus {
 }
 
 const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
-    const socket = useContext(SocketContext)
+    const socket = useContext(SocketContext);
+    const navigate = useNavigate();
     const [inputChan, setInputChan] = useState("");
     const [inputPwd, setInputPwd] = useState("");
     const [selecte, setSelecte] = useState("");
@@ -43,9 +41,7 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
 	}	
 
     const handleReturn = () => {
-        console.log("return")
-        if (props.setAdd)
-            props.setAdd("");
+        navigate("/chat?code=add");
     }
 
     const handleSelect = (name: string) =>{
@@ -81,6 +77,7 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
         }
         if (chan !== undefined){
             emitSocket.emitCreateChan(socket, chan);
+            navigate("/chat");
         }
     }
 

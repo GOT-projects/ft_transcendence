@@ -13,30 +13,40 @@ export const StyledContaiteViewAddChan = styled.div`
     width: 300px;
     height: 300px;
     overflow: hidden;
-    z-index: 10;
+    z-index: 99;
     top: 50%;
     left: 50%;
-    background-color: ${Colors.primary};
+    opacity: 0.8;
+    background-color: ${Colors.dark3};
     transform: translate(-50%, -50%);
     border: 2px solid ${Colors.border};
     border-radius: 10px;
-    opacity: 1;
-    @media screen and (max-width: 768px){
-        transform: translate(50%, -50%);
-        top: calc(-60px + 50%);
-        left: calc(50%);
-    }
+    opacity: 0.6;
 `
+export const StyledMotionDiv = styled(motion.div)`
+    @media only screen 
+    and (min-device-width: 320px) 
+    and (max-device-width: 480px)
+    and (-webkit-min-device-pixel-ratio: 2) {
+          position: relative;
+          z-index: 99;
+          top: -50%;
+          left: 50%;
+          width: 300px;
+          height: 80%;
+          transform: translate(80%, 0);
+      }
+    
+
+`
+
+
 export const StyledContaiteReturn = styled.div`
-    position: relative;
-    display: flex;
-    top: 252px;
-    align-items: center;
-    width: 100%;
-    height: 100%;
     &.addUser{
         position: absolute;
-        top: 155px;
+        display: flex;
+        gap: 190px;
+        top: 270px;
         margin-left: 5px;
     }
 `
@@ -72,6 +82,8 @@ export const StyledContaiteReturnDiv = styled.div`
     height: 80px;
     margin-top: -10px;
     margin-left: 10px;
+    cursor: pointer;
+    color: ${Colors.primary};
     &.joinChan{
         margin-top: 46px;
         margin-left: 10px;
@@ -86,7 +98,7 @@ export const StyledContaiteDivUser = styled.div`
     height: 220px;
     border-radius: 10px;
     flex-direction: column;
-    overflow: scroll;
+    overflow: hidden;
     gap: 2px;
     background-color: ${Colors.Bg2fa};
 `
@@ -99,6 +111,7 @@ export const StyledContaitePUser = styled.p`
 
 export const StyledContaiteDivPUser = styled.div<BgColor>`
     background-color: ${p => p.color};
+    cursor: pointer;
     &:hover{
         transition: 0.6s;
         background-color: ${Colors.grey};
@@ -120,11 +133,18 @@ export const StyledContaiteAddUser = styled.div`
     font-size: 20px;
 `
 export const StyledContaiteViewAddP = styled.p`
-    margin: 10px;
+    margin: 15px;
     font-family: "curve";
     font-size: 20px;
     color: ${Colors.Bg2fa};
     transition: 0.6s;
+    &.addTitle{
+        color: ${Colors.primary};
+    }
+    &.addUserTitle{
+        color: ${Colors.primary};
+
+    }
     &:hover{
         transition: 0.6s;
         color: ${Colors.primary};
@@ -144,6 +164,7 @@ export const StyledContaiteViewAddOption = styled.div`
     border: 1px solid ${Colors.Bg2fa};
     background-color: ${Colors.primary};
     transition: 0.6s;
+    cursor: pointer;
     &:hover{
         transition: 0.6s;
         background-color: ${Colors.Bg2faIn};
@@ -173,7 +194,7 @@ export const StyledContaiteMenu = styled.div`
     align-items: center;
     width: 100px;
     height: 100%;
-    background-color: ${Colors.Bg2faIn};
+    background: ${Colors.Bg2faIn};
     transition: 0.6s;
     @media screen and (max-width: 768px){
         &.UnActiveMenu{
@@ -258,8 +279,12 @@ export const StyledContaiteClose = styled.div`
     margin-top: 10px;
     margin-right: 10px;
     flex-direction: row-reverse;
+    gap: 54px;
     align-items: center;
     cursor: pointer;
+    &.addUser{
+        position: absolute;
+    }
 `
 
 export const StyledContaiteRank = styled.div`

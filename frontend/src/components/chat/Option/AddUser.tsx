@@ -1,7 +1,7 @@
 import { Dispatch, FunctionComponent, useContext, useEffect, useState } from "react";
 import { FaWindowClose } from "react-icons/fa";
 import { GOT } from "../../../shared/types";
-import { StyledContaiteAddUser, StyledContaiteClose, StyledContaiteDivPUser, StyledContaiteDivUser, StyledContaitePUser, StyledContaiteReturn, StyledContaiteReturnDiv, StyledContaiteUser, StyledContaiteViewAddChan } from "../../Styles/StyleViewProfil";
+import { StyledContaiteAddUser, StyledContaiteClose, StyledContaiteDivPUser, StyledContaiteDivUser, StyledContaitePUser, StyledContaiteReturn, StyledContaiteReturnDiv, StyledContaiteUser, StyledContaiteViewAddChan, StyledContaiteViewAddP } from "../../Styles/StyleViewProfil";
 import { motion } from "framer-motion";
 import { Colors } from "../../Colors";
 import { emitSocket } from "../../../socket/socketEmit";
@@ -11,11 +11,9 @@ import { onSocket } from "../../../socket/socketOn";
 import { v4 as uuid } from "uuid";
 
 interface IProps {
-   setAction:Dispatch<React.SetStateAction<boolean>> | undefined;
    listUser:GOT.User[] | undefined;
    setAdd:Dispatch<React.SetStateAction<string>> | undefined;
    friends:GOT.User[] | undefined;
-   userList:GOT.User[] | undefined;
    setFriends:Dispatch<React.SetStateAction<GOT.User[] | undefined>> | undefined;
    profil: GOT.Profile | undefined;
 }
@@ -26,16 +24,12 @@ const PopupOptionAddUser:FunctionComponent<IProps> = (props: IProps) =>{
     const [selectUser, setSelectUser] = useState<GOT.User[]>([]);
 
     const handleClose = () => {
-        if (props.setAction){
-            props.setAction(false);
             navigate("/chat");
-        }
     }
 
     const handleSelect = (user: GOT.User) => {
         const find = selectUser.find((select) => select.login === user.login)
         if (find !== undefined){
-            console.log("pop");
             setSelectUser((select) => select.filter((use) => use.login !== user.login))
         }else if (setSelectUser){
             const tmp:GOT.User[] = [];
@@ -47,7 +41,7 @@ const PopupOptionAddUser:FunctionComponent<IProps> = (props: IProps) =>{
 
     const handleReturn = () => {
         if (props.setAdd)
-            props.setAdd("");
+            navigate("/chat?code=add")
     }
 
     const handleSend = async () => {
@@ -88,9 +82,9 @@ const PopupOptionAddUser:FunctionComponent<IProps> = (props: IProps) =>{
             >
             <StyledContaiteClose onClick={handleClose}>
                     <FaWindowClose size={30} color={Colors.dark1}/>
+                    <StyledContaiteViewAddP className="addUserTitle">Add user for message</StyledContaiteViewAddP>
             </StyledContaiteClose>
             <StyledContaiteAddUser>
-                <h3>Add user</h3>
                 <StyledContaiteDivUser>
                     {props.listUser?.map((user) => (
                             handleListUser(user.login) ? 
@@ -106,7 +100,7 @@ const PopupOptionAddUser:FunctionComponent<IProps> = (props: IProps) =>{
                     <p>return</p>
                 </StyledContaiteReturnDiv>
                 <StyledContaiteReturnDiv onClick={handleSend}>
-                    <p>send</p>
+                    <p>add</p>
                 </StyledContaiteReturnDiv>
             </StyledContaiteReturn>
             </motion.div>
