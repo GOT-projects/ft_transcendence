@@ -17,11 +17,11 @@ export const StyledContaiteViewAddChan = styled.div`
     top: 50%;
     left: 50%;
     opacity: 0.8;
-    background-color: ${Colors.dark3};
+    background-color: ${Colors.grey};
     transform: translate(-50%, -50%);
     border: 2px solid ${Colors.border};
     border-radius: 10px;
-    opacity: 0.6;
+    opacity: 0.9;
 `
 export const StyledMotionDiv = styled(motion.div)`
     @media only screen 
@@ -85,7 +85,7 @@ export const StyledContaiteReturnDiv = styled.div`
     cursor: pointer;
     color: ${Colors.primary};
     &.joinChan{
-        margin-top: 46px;
+        margin-top: 30px;
         margin-left: 10px;
     }
 `
@@ -98,10 +98,11 @@ export const StyledContaiteDivUser = styled.div`
     height: 220px;
     border-radius: 10px;
     flex-direction: column;
-    overflow: hidden;
+    overflow: scroll;
     gap: 2px;
     background-color: ${Colors.Bg2fa};
 `
+
 export const StyledContaitePUser = styled.p`
     margin: 4px;
     margin-left: 10px;
@@ -132,6 +133,14 @@ export const StyledContaiteAddUser = styled.div`
     font-family: "curve";
     font-size: 20px;
 `
+
+export const StyledContaiteViewoptionChan = styled.div`
+    height: 160px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+`
+
 export const StyledContaiteViewAddP = styled.p`
     margin: 15px;
     font-family: "curve";
@@ -139,6 +148,9 @@ export const StyledContaiteViewAddP = styled.p`
     color: ${Colors.Bg2fa};
     transition: 0.6s;
     &.addTitle{
+        color: ${Colors.primary};
+    }
+    &.exploreTitle{
         color: ${Colors.primary};
     }
     &.addUserTitle{
@@ -164,6 +176,7 @@ export const StyledContaiteViewAddOption = styled.div`
     border: 1px solid ${Colors.Bg2fa};
     background-color: ${Colors.primary};
     transition: 0.6s;
+    opacity: 0.6;
     cursor: pointer;
     &:hover{
         transition: 0.6s;
@@ -186,6 +199,9 @@ export const StyledContaiteView = styled.div`
     border-radius: 20px;
     background-color: ${Colors.dark2};
     opacity: 0.9;
+    @media screen and (max-width: 768px){
+        height: 500px;
+    }
 `;
 
 export const StyledContaiteMenu = styled.div`
@@ -284,6 +300,13 @@ export const StyledContaiteClose = styled.div`
     cursor: pointer;
     &.addUser{
         position: absolute;
+    }
+    &.explore{
+        gap: 90px;
+        position: absolute;
+    }
+    &.joinChan{
+        gap: 94px;
     }
 `
 

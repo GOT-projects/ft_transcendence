@@ -21,6 +21,8 @@ import PopupAddChannel from '../components/chat/AddChannel';
 import PopupOptionAddUser from '../components/chat/Option/AddUser';
 import PopupOptionAddChannel from '../components/chat/Option/AddChannel';
 import PopupOptionJoinChannel from '../components/chat/Option/JoinChannel';
+import PopupOptionExloreChat from '../components/chat/Option/ExploreChan';
+import PopupOptionPrivateChan from '../components/chat/Option/AddChannelPriv';
 
 interface IProps {
    profil: GOT.Profile | undefined;
@@ -160,7 +162,9 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
             {add === "addUser" ? <PopupOptionAddUser profil={props.profil} friends={friends}
                                 listUser={usersList} setAdd={setAdd} setFriends={setFriends} /> : <></>}
             {add === "addChannel" ? <PopupOptionAddChannel /> : <></>}
-            {add === "joinChannel" ? <PopupOptionJoinChannel listUser={usersList}/> : <></>}
+            {add === "joinChannel" ? <PopupOptionJoinChannel /> : <></>}
+            {add === "explore" ? <PopupOptionExloreChat /> : <></>}
+            {add === "privateChan" ? <PopupOptionPrivateChan /> : <></>}
             {popuProfil ? <ProfilView login={login} setPopupProfil={setPopupProfil}/> : <> </>}
            <Footer/>
 		</React.Fragment>
