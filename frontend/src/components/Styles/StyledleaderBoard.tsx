@@ -76,6 +76,11 @@ export const StyledLeadBorder = styled.div`
     border-radius: 4px;
 `;
 
+export const StyledSepController = styled.div`
+    width: 20px;
+    height: 20px;
+`
+
 
 export const StyledLeadP = styled.td`
     margin: 20px;
