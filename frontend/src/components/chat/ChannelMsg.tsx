@@ -64,7 +64,6 @@ const ChannelMsg:FunctionComponent<IProps> = (props:IProps)=> {
         emitSocket.emitChannelMsg_send(socket, props.chanName, inputChat);
         setInputChat("");
     }
-    console.log(selectChanMsg);
 
     return (
             <StyledChat className={props.active}>
