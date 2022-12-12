@@ -38,37 +38,17 @@ const ChannelMsg:FunctionComponent<IProps> = (props:IProps)=> {
     
     useEffect(() => {
         //receive list message
+        console.log("receive message")
         onSocket.client_channelMsg(socket, setSelectChanMsg);
         return () => {
             offSocket.client_channelMsg(socket);
         } 
     },[socket, setSelectChanMsg, selectChanMsg])
 
+
     useEffect(() =>{
         emitSocket.emitChannelMsg(socket, props.chanName)
     }, [socket])
-
-    useEffect(() => {
-        //receive send
-        // socket.on('client_privmsg_send', (rep:GOT.msg) => {
-        //     if (rep.userFrom.login === props.userSelect?.login){
-        //         if (selectChanMsg){
-        //             let tmp:GOT.msg[] = selectChanMsg; 
-        //             tmp.push(rep);
-        //             setSelectUserMsg(tmp);
-        //         }else{
-        //             let tmp:GOT.msg[] = []; 
-        //             tmp.push(rep);
-        //             setSelectUserMsg(tmp);
-        //         }
-        //     }else{
-        //         emitSocket.emitPrivmsgUsers(socket);
-        //     }
-        // })
-        // return () => {
-        //     offSocket.client_privmsg_send(socket);
-        // } 
-    },[socket, setSelectChanMsg, selectChanMsg])
 
     function handChange(event: any, setInput: any, input: string){
         if (input === "" && event.target.value ==="\n")
@@ -80,10 +60,7 @@ const ChannelMsg:FunctionComponent<IProps> = (props:IProps)=> {
         if (inputChat === " " || inputChat === "\n" || inputChat === ""){
             return;
         }
-        if (props.profil && props.chanName){
-            // const msg:GOT.msg = {userFrom: props.profil.userInfos, userTo:props.chanName, msg: inputChat};
-            // emitSocket.emitSendPrivmsg(socket, props.userSelect.login, msg.msg);
-        }
+        emitSocket.emitChannelMsg_send(socket, props.chanName, inputChat);
         setInputChat("");
     }
 

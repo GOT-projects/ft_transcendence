@@ -33,25 +33,6 @@ const ChanUserMenu:FunctionComponent<IProps> = (props: IProps) => {
         }
     }
 
-    const handleBlockUser = (name: string) => {
-        const filter = props.profil?.blocks.filter((block) => block.login === name);
-        if (filter?.length !== 0){
-            console.log("Unblock")
-            emitSocket.emitUnBlockUser(socket, name);
-        }else{
-            console.log("block")
-            emitSocket.emitBlockUser(socket, name);
-        }
-    }
-    const handleBlockUserColor = (name: string) => {
-        const filter = props.profil?.blocks.filter((block) => block.login === name);
-        if (filter?.length !== 0){
-            return false
-        }else{
-            return true
-        }
-    }
-
     const handleAddFriend = (login:string) => {
         emitSocket.emitDemandFriend(socket, login);
     }

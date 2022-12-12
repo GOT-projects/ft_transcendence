@@ -48,6 +48,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     const [lstFriends, setLstFriends] = useState<GOT.Friend[]>()
 
     const [channelIn, setChannelIn] = useState<GOT.Channel[]>();
+    const [selectNameChan, setSelectNameChan] = useState<string>();
     
     const codeParam: Map<string, string> = accountService.getParamsPriv();
 
@@ -160,7 +161,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                            listUser={usersList} add={add} setAdd={setAdd}/>
                 <StyledContact className={active}>
                     <StyledChatSwith> 
-                        <StyledChatSwithTile>{add}</StyledChatSwithTile>
+                        <StyledChatSwithTile>{chatSwitch}</StyledChatSwithTile>
                     </StyledChatSwith>
                     <StyledChatSep/>
                     <StyledChatPrive >
@@ -174,7 +175,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                     </StyledChatPrive>
                 </StyledContact>
                 {add === "Private" ? <PriveMsg active={active} profil={props.profil} setProfil={props.setProfil} userSelect={selectUser}/> : <></>}
-                {add === "Channel" ? <ChannelMsg active={active} profil={props.profil} setProfil={props.setProfil} chanName={"test"}/> : <></>}
+                {add === "Channel" ? <ChannelMsg active={active} profil={props.profil} setProfil={props.setProfil} chanName={chatSwitch}/> : <></>}
             </StyledContaite>
             <Notification notify={notify} setNotify={setNotify}/>
             {add === "add" ? <PopupAddChannel friends={friends} setFriends={setFriends} profil={props.profil} setProfil={props.setProfil} setAction={setAdd} listUser={usersList}/> : <></>}
