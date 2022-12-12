@@ -5,10 +5,12 @@ import {Link} from 'react-router-dom'
 
 export const Button = styled.button`
 postion: absolute;
+  width: 400%;
   background-color: black;
   color: white;
   font-size: 20px;
-  padding: 10px 60px;
+  display: auto;
+  text-align: center;
   border-radius: 5px;
   margin: 10px 0px;
   cursor: pointer;
@@ -83,4 +85,20 @@ export const StyledLeadP = styled.td`
     text-align: left;
     opacity: 1;
     color: ${Colors.primary};
+
+`;
+
+export const StyledLeadB = styled.button`
+background-color: transparent;
+background-opacity: 0;
+    margin: 20px;
+    width: 75%;
+    padding: 6px;
+    font-family: "Public Pixel";
+    color: black;
+    text-align: left;
+    opacity: 1;
+    color: ${Colors.primary};
+    cursor: pointer;
+    border: none;
 `;
