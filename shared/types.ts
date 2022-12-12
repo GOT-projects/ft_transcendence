@@ -137,8 +137,19 @@ export namespace GOT {
         msg: string
     }
 
+    export enum UserChannelStatus {
+        MEMBER = 'MEMBER',
+        OWNER = 'OWNER',
+        ADMIN = 'ADMIN',
+        BAN = 'BAN'
+    }
+
+    export interface UserChannel extends User {
+        status: UserChannelStatus;
+    }
+
     export interface ChannelUsers {
         channel: Channel;
-        users: User[];
+        users: UserChannel[];
     }
 }

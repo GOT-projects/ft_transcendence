@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { GOT } from "shared/types";
 import { Channel } from "src/database/entities/channel.entity";
 import { Message } from "src/database/entities/message.entity";
-import { RelUserChannel, UserChannelStatus } from "src/database/entities/rel_user_channel.entity";
+import { RelUserChannel } from "src/database/entities/rel_user_channel.entity";
 import { User } from "src/database/entities/user.entity";
 import { BlockService } from "src/database/services/block.service";
 import { ChannelService } from "src/database/services/channel.service";
@@ -162,7 +162,7 @@ export class ChatGateway {
 			const rels = await this.relUserChannelService.getChannelRel(user, channel);
 			if (rels.length === 0)
 				return `You're not in the channel ${chanName}`;
-			if (rels[0].status === UserChannelStatus.BAN)
+			if (rels[0].status === GOT.UserChannelStatus.BAN)
 				return `You can't get messages of channel ${chanName} because BAN`;
 			const msgs = await this.messageService.getChanmsg(user, channel);
 			console.log("all msgs in db",msgs)
@@ -186,7 +186,7 @@ export class ChatGateway {
 			const rels = await this.relUserChannelService.getChannelRel(user, channel);
 			if (rels.length === 0)
 				return `You're not in the channel ${chanName}`;
-			if (rels[0].status === UserChannelStatus.BAN)
+			if (rels[0].status === GOT.UserChannelStatus.BAN)
 				return `You can't get messages of channel ${chanName} because BAN`;
 			const allRels = await this.relUserChannelService.getChanUsersNotBan(user, channel);
 			let ret: GOT.ChannelUsers = {
@@ -195,7 +195,10 @@ export class ChatGateway {
 			};
 			for (const rel of allRels) {
 				const tmp = this.generalGateway.getGOTUserFromUser(rel.user);
-				ret.users.push(tmp);
+				ret.users.push({
+					...tmp,
+					status: rel.status
+				});
 			}
 			return ret;
 		} catch (error) {
@@ -224,7 +227,7 @@ export class ChatGateway {
 			const rels = await this.relUserChannelService.getChannelRel(user, channel);
 			if (rels.length === 0)
 				return `You're not in the channel ${chanName}`;
-			if (rels[0].status === UserChannelStatus.BAN)
+			if (rels[0].status === GOT.UserChannelStatus.BAN)
 				return `You can't send messages on channel ${chanName} because BAN`;
 			const newMessage = await this.messageService.create({
 				userIdFrom: user.id,
@@ -262,7 +265,7 @@ export class ChatGateway {
 			if (!channel)
 				return `Channel ${chanName} not found`;
 			const rels = await this.relUserChannelService.getChannelRel(user, channel);
-			if (rels.length !== 0 && rels[0].status === UserChannelStatus.BAN)
+			if (rels.length !== 0 && rels[0].status === GOT.UserChannelStatus.BAN)
 				return `You can't join channel ${chanName} because BAN`;
 			if (rels.length === 1)
 				return 'You already are in the channel'
@@ -272,7 +275,7 @@ export class ChatGateway {
 				return await this.relUserChannelService.create({
 					userId: user.id,
 					channelId: channel.id,
-					status: UserChannelStatus.MEMBER
+					status: GOT.UserChannelStatus.MEMBER
 				});
 			}
 			if (channel.status === GOT.ChannelStatus.PUBLIC || 
@@ -280,7 +283,7 @@ export class ChatGateway {
 				return await this.relUserChannelService.create({
 					userId: user.id,
 					channelId: channel.id,
-					status: UserChannelStatus.MEMBER
+					status: GOT.UserChannelStatus.MEMBER
 				});
 			}
 			return 'Bad password or private channel';
@@ -299,11 +302,11 @@ export class ChatGateway {
 				return `User with login ${loginInvite} not found`;
 			const relUser = await this.relUserChannelService.getChannelRel(user, channel);
 			// Pas le droit d'inviter
-			if (relUser.length === 0 || (relUser[0].status === UserChannelStatus.BAN))
+			if (relUser.length === 0 || (relUser[0].status === GOT.UserChannelStatus.BAN))
 				return `You have not rights to invite people on channel ${chanName}`;
 			const relUserInvite = await this.relUserChannelService.getChannelRel(userInvite, channel);
 			// Déjà dans le channel
-			if (relUserInvite.length === 1 && relUserInvite[0].status !== UserChannelStatus.BAN)
+			if (relUserInvite.length === 1 && relUserInvite[0].status !== GOT.UserChannelStatus.BAN)
 				return `User with login ${loginInvite} already in channel ${chanName}`;
 			const alreadyDemand = await this.demandService.getChannel(userInvite, channel);
 			if (alreadyDemand.length === 1)
@@ -332,7 +335,7 @@ export class ChatGateway {
 			await this.relUserChannelService.create({
 				userId: user.id,
 				channelId: channel.id,
-				status: UserChannelStatus.OWNER
+				status: GOT.UserChannelStatus.OWNER
 			});
 			
 		} catch (error) {
