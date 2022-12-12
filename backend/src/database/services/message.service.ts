@@ -63,7 +63,10 @@ export class MessageService {
 				{userIdFrom: user.id, channelIdTo: channel.id},
 				{userIdFrom: user.id, channelIdTo: channel.id}
 			],
-			relations: ["userFrom", "userTo"]
+			relations: ["userFrom", "userTo"],
+			order: {
+				id: "ASC"
+			}
 		});
 	}
 
