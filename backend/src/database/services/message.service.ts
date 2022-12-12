@@ -62,7 +62,8 @@ export class MessageService {
 			where: [
 				{userIdFrom: user.id, channelIdTo: channel.id},
 				{userIdFrom: user.id, channelIdTo: channel.id}
-			]
+			],
+			relations: ["userFrom", "userTo"]
 		});
 	}
 

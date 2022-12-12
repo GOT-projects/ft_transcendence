@@ -176,6 +176,31 @@ export class ChatGateway {
 		}
 	}
 
+	async getChanUsersNotBan(user: User, chanName: string): Promise<GOT.ChannelUsers | string> {
+		try {
+			const channel = await this.channelService.findChanName(chanName);
+			if (!channel)
+				return `Channel ${chanName} not found`;
+			const rels = await this.relUserChannelService.getChannelRel(user, channel);
+			if (rels.length === 0)
+				return `You're not in the channel ${chanName}`;
+			if (rels[0].status === UserChannelStatus.BAN)
+				return `You can't get messages of channel ${chanName} because BAN`;
+			const allRels = await this.relUserChannelService.getChanUsersNotBan(user, channel);
+			let ret: GOT.ChannelUsers = {
+				users: [],
+				channel: channel
+			};
+			for (const rel of allRels) {
+				const tmp = this.generalGateway.getGOTUserFromUser(rel.user);
+				ret.users.push(tmp);
+			}
+			return ret;
+		} catch (error) {
+			return error.message;
+		}
+	}
+
 	async getChannelsIn(user: User): Promise<GOT.Channel[] | string> {
 		try {
 			const channels = await this.relUserChannelService.getChannelInNOTBan(user);

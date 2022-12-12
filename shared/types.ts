@@ -136,4 +136,9 @@ export namespace GOT {
         channel: Channel,
         msg: string
     }
+
+    export interface ChannelUsers {
+        channel: Channel;
+        users: User[];
+    }
 }

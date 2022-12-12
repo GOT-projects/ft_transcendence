@@ -395,6 +395,19 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		client.emit('client_chanmsg', ret);
 	}
 
+	@SubscribeMessage('server_chanmsg_users_not_ban')
+	async getChanUsersNotBan(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('chanName') chanName: string) {
+		const auth = await this.connectionSecure(client, jwt);
+		if (!auth)
+			return ;
+		const ret = await this.chatGateway.getChanUsersNotBan(auth.user, chanName);
+		if (typeof ret === 'string') {
+			client.emit('error_client', ret);
+			return ;
+		}
+		client.emit('client_chanmsg_users_not_ban', ret);
+	}
+
 	@SubscribeMessage('server_channels_in')
 	async getChannelsIn(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string) {
 		const auth = await this.connectionSecure(client, jwt);
