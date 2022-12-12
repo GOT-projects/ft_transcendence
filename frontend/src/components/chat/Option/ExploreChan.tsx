@@ -54,6 +54,11 @@ const PopupOptionExloreChat:FunctionComponent<IProps> = (props: IProps) =>{
 
     const handleSend = async () => {
         console.log("send selection ", selectUser);
+        //TODO need check if channel are protected or not
+        if (selectUser.length === 1){
+            emitSocket.emitChannelJoin(socket, selectUser[0], undefined);
+            navigate(`/chat?code=chan&name=${selectUser[0]}`);
+        }
     }
 
     return (

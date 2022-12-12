@@ -38,8 +38,8 @@ const ChannelMsg:FunctionComponent<IProps> = (props:IProps)=> {
     
     useEffect(() => {
         //receive list message
-        console.log("receive message")
         onSocket.client_channelMsg(socket, setSelectChanMsg);
+        console.log("receive message", selectChanMsg)
         return () => {
             offSocket.client_channelMsg(socket);
         } 
@@ -47,6 +47,7 @@ const ChannelMsg:FunctionComponent<IProps> = (props:IProps)=> {
 
 
     useEffect(() =>{
+        console.log("emit ", chanName);
         emitSocket.emitChannelMsg(socket, props.chanName)
     }, [socket])
 
@@ -63,6 +64,7 @@ const ChannelMsg:FunctionComponent<IProps> = (props:IProps)=> {
         emitSocket.emitChannelMsg_send(socket, props.chanName, inputChat);
         setInputChat("");
     }
+    console.log(selectChanMsg);
 
     return (
             <StyledChat className={props.active}>
