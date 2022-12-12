@@ -58,12 +58,12 @@ export class MessageService {
 
 	async getChanmsg(user: User, channel: Channel) {
 		return await this.messageRepository.find({
-			select: ["message", "userFrom", "userTo"],
+			select: ["message", "userFrom", "channelTo"],
 			where: [
 				{userIdFrom: user.id, channelIdTo: channel.id},
 				{userIdFrom: user.id, channelIdTo: channel.id}
 			],
-			relations: ["userFrom", "userTo"],
+			relations: ["userFrom", "channelTo"],
 			order: {
 				id: "ASC"
 			}

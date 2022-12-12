@@ -92,6 +92,7 @@ export class ChatGateway {
 	async getPrivmsgUsers(user: User): Promise<GOT.User[] | string> {
 		try {
 			const msgs = await this.messageService.getPrivmsgUsers(user);
+			console.log('fdfdfdf', msgs)
 			let ret: GOT.User[] = [];
 			for (const msg of msgs) {
 				if (msg.userFrom.id !== user.id) {
@@ -164,6 +165,7 @@ export class ChatGateway {
 			if (rels[0].status === UserChannelStatus.BAN)
 				return `You can't get messages of channel ${chanName} because BAN`;
 			const msgs = await this.messageService.getChanmsg(user, channel);
+			console.log("all msgs in db",msgs)
 			let ret: GOT.MsgChannel[] = [];
 			for (const msg of msgs) {
 				const tmp = this.messageToGOTMsgChannel(msg);
@@ -230,6 +232,7 @@ export class ChatGateway {
 				channelIdTo: channel.id,
 				message: msg
 			});
+			console.log("message save in db",newMessage)
 			return {
 				userFrom: this.generalGateway.getGOTUserFromUser(user),
 				channel: this.GOTChannel(channel),

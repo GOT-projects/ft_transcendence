@@ -136,7 +136,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		const ret = await this.getProfilWithFriends(auth.user);
 		if (typeof ret === 'string') {
-			client.emit('error_client', `${ret}`);
+			client.emit('error_client', `profil ${ret}`);
 			return ;
 		}
 		client.emit('client_profil', ret);
@@ -149,7 +149,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		const ret = await this.generalGateway.getProfilLogin(login);
 		if (typeof ret === 'string') {
-			client.emit('error_client', ret);
+			client.emit('error_client', 'profil_login' + ret);
 			return ;
 		}
 		client.emit('client_profil_login', ret);
@@ -162,7 +162,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		const ret = await this.generalGateway.changeUsername(auth.user, username);
 		if (typeof ret === 'string') {
-			client.emit('error_client', ret);
+			client.emit('error_client', 'change_username' + ret);
 			return ;
 		}
 		this.getProfil(client, jwt);
@@ -175,7 +175,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		const ret = await this.generalGateway.getLeaderboard();
 		if (typeof ret === 'string') {
-			client.emit('error_client', ret);
+			client.emit('error_client', 'leaderboard' + ret);
 			return ;
 		}
 		client.emit('client_leaderboard', ret);
@@ -192,7 +192,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		const ret = await this.friendGateway.demandFriend(auth.user, login);
 		if (typeof ret === 'string') {
-			client.emit('error_client', ret);
+			client.emit('error_client', 'demand_friend' + ret);
 			return ;
 		}
 		const user1 = this.users.get(auth.user.login);
@@ -224,7 +224,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		const ret = await this.friendGateway.replyNotif(auth.user, reply);
 		if (typeof ret === 'string') {
-			client.emit('error_client', ret);
+			client.emit('error_client', 'reply_notification' + ret);
 			return ;
 		}
 		const user1 = this.users.get(auth.user.login);
@@ -254,7 +254,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		const profil = await this.getProfilWithFriends(auth.user);
 		if (typeof profil === 'string') {
-			client.emit('error_client', profil);
+			client.emit('error_client', 'friends' + profil);
 			return ;
 		}
 		client.emit('client_profil', profil);
@@ -267,7 +267,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		const ret = await this.friendGateway.blockSomebody(auth.user, login);
 		if (typeof ret === 'string') {
-			client.emit('error_client', ret);
+			client.emit('error_client', 'block_somebody' + ret);
 			return ;
 		}
 		const user1 = this.users.get(auth.user.login);
@@ -293,7 +293,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		const ret = await this.friendGateway.unblockSomebody(auth.user, login);
 		if (typeof ret === 'string') {
-			client.emit('error_client', ret);
+			client.emit('error_client', 'unblock_somebody' + ret);
 			return ;
 		}
 		const user1 = this.users.get(auth.user.login);
@@ -324,7 +324,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		const ret = await this.chatGateway.getPrivmsg(auth.user, login);
 		if (typeof ret === 'string') {
-			client.emit('error_client', ret);
+			client.emit('error_client', 'privmsg' + ret);
 			return ;
 		}
 		client.emit('client_privmsg', ret);
@@ -337,7 +337,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		const ret = await this.chatGateway.getPrivmsgUsers(auth.user);
 		if (typeof ret === 'string') {
-			client.emit('error_client', ret);
+			client.emit('error_client', 'privmsg_users' + ret);
 			return ;
 		}
 		client.emit('client_privmsg_users', ret);
@@ -350,7 +350,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		const ret = await this.chatGateway.getPrivmsgSend(auth.user, login, msg);
 		if (typeof ret === 'string') {
-			client.emit('error_client', ret);
+			client.emit('error_client', 'privmsg_send' + ret);
 			return ;
 		}
 		const user = this.users.get(ret.userTo.login);
@@ -372,7 +372,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		const ret = await this.chatGateway.getUsers(auth.user);
 		if (typeof ret === 'string') {
-			client.emit('error_client', ret);
+			client.emit('error_client', 'users' + ret);
 			return ;
 		}
 		client.emit('client_users', ret);
@@ -389,7 +389,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		const ret = await this.chatGateway.getChanmsg(auth.user, chanName);
 		if (typeof ret === 'string') {
-			client.emit('error_client', ret);
+			client.emit('error_client', 'chan_msg' + ret);
 			return ;
 		}
 		client.emit('client_chanmsg', ret);
@@ -402,7 +402,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		const ret = await this.chatGateway.getChanUsersNotBan(auth.user, chanName);
 		if (typeof ret === 'string') {
-			client.emit('error_client', ret);
+			client.emit('error_client', 'chanmsg_users_not_ban' + ret);
 			return ;
 		}
 		client.emit('client_chanmsg_users_not_ban', ret);
@@ -415,7 +415,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		const ret = await this.chatGateway.getChannelsIn(auth.user);
 		if (typeof ret === 'string') {
-			client.emit('error_client', ret);
+			client.emit('error_client', 'channels_in' + ret);
 			return ;
 		}
 		client.emit('client_channels_in', ret);
@@ -428,7 +428,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		const ret = await this.chatGateway.chanmsgSend(auth.user, chanName, msg);
 		if (typeof ret === 'string') {
-			client.emit('error_client', ret);
+			client.emit('error_client', 'chanmsg_send' + ret);
 			return ;
 		}
 		const actu = await this.chatGateway.getChanmsg(auth.user, chanName);
@@ -443,7 +443,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		const ret = await this.chatGateway.getChannels(auth.user);
 		if (typeof ret === 'string') {
-			client.emit('error_client', ret);
+			client.emit('error_client', 'channels' + ret);
 			return ;
 		}
 		client.emit('client_channels', ret);
@@ -456,7 +456,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		const ret = await this.chatGateway.joinChannel(auth.user, chanName, password);
 		if (typeof ret === 'string') {
-			client.emit('error_client', ret);
+			client.emit('error_client', 'chanmsg_join' + ret);
 			return ;
 		}
 		const back = await this.chatGateway.getChannelsIn(auth.user);
@@ -471,7 +471,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		const ret = await this.chatGateway.inviteChannel(auth.user, chanName, loginInvite);
 		if (typeof ret === 'string') {
-			client.emit('error_client', ret);
+			client.emit('error_client', 'chanmsg_invite' + ret);
 			return ;
 		}
 		const back = await this.chatGateway.getChannelsIn(auth.user);
@@ -486,7 +486,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		const ret = await this.chatGateway.createChannel(auth.user, chan);
 		if (typeof ret === 'string') {
-			client.emit('error_client', ret);
+			client.emit('error_client', 'chan_create' + ret);
 			return ;
 		}
 		const back = await this.chatGateway.getChannelsIn(auth.user);
