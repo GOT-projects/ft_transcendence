@@ -35,7 +35,7 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
     const handleChangePwd = (event: any,) => {
         if (inputPwd === "" && event.target.value ==="\n")
             return;
-        if (selecte === "public"  || selecte === "")
+        if (selecte === "public" || selecte === "private"  || selecte === "")
             return;
 		setInputPwd(event.target.value);
 	}	
@@ -67,8 +67,6 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
         }else if (selecte === "private"){
             if (inputChan === ""){
                 setNotify({isOpen: true, message: "Please choose name to your channel", type: "error"})
-            }else if (inputPwd === ""){
-                setNotify({isOpen: true, message: "Please choose password to your channel", type: "error"})
             }else{
                 chan = {name:inputChan, status: ChannelStatus.PRIVATE, password:inputPwd}; 
             }

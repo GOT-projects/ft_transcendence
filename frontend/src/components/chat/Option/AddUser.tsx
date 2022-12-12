@@ -90,7 +90,7 @@ const PopupOptionAddUser:FunctionComponent<IProps> = (props: IProps) =>{
                             handleListUser(user.login) ? 
                             <StyledContaiteDivPUser key={uuid()} onClick={() => {handleSelect(user)}} 
                                 color={selectUser.find((select) => select.login === user.login) ? Colors.grey : Colors.Bg2faIn}>
-                                <StyledContaitePUser key={uuid()}>{user.login}</StyledContaitePUser>
+                                <StyledContaitePUser key={uuid()} >{user.login}</StyledContaitePUser>
                             </StyledContaiteDivPUser> : <></>
                     ))}
                 </StyledContaiteDivUser>

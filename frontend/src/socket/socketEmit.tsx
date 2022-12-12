@@ -47,6 +47,14 @@ let emitBlockUser = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, lo
     socket.emit('server_block_somebody', {Authorization: accountService.getToken(), login:login})
 }
 
+let emitChannels = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>) => {
+    socket.emit('server_channels', {Authorization: accountService.getToken()})
+}
+
+let emitChannelsIn = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>) => {
+    socket.emit('server_channels_in', {Authorization: accountService.getToken()})
+}
+
 let emitUnBlockUser = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, login:string) => {
     socket.emit('server_unblock_somebody', {Authorization: accountService.getToken(), login:login})
 }
@@ -61,5 +69,6 @@ let emitReplyNotif = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, r
 
 export const emitSocket ={
     emitProfil, emitProfilHisto, emitFriends, emitDemandFriend, emitChangeUsername, emitLeaderboard, 
-    emitPrivmsg, emitSendPrivmsg, emitUsers, emitBlockUser, emitPrivmsgUsers, emitReplyNotif, emitUnBlockUser, emitCreateChan
+    emitPrivmsg, emitSendPrivmsg, emitUsers, emitBlockUser, emitPrivmsgUsers, emitReplyNotif, emitUnBlockUser, emitCreateChan, 
+    emitChannels, emitChannelsIn
 }

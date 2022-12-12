@@ -12,7 +12,6 @@ interface IProps {
 }
 
 const PopupOptionJoinChannel:FunctionComponent<IProps> = (props: IProps) =>{
-    const [add, setAdd] = useState("");
     const navigate = useNavigate();
 
     const handleClose = () => {
@@ -25,7 +24,6 @@ const PopupOptionJoinChannel:FunctionComponent<IProps> = (props: IProps) =>{
     }
 
     const handleAdd = (name: string) => {
-       setAdd(name); 
        navigate(`/chat?code=${name}`)
     }
     return (

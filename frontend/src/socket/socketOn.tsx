@@ -24,6 +24,23 @@ let client_privmsg_users = async (socket:Socket<DefaultEventsMap, DefaultEventsM
     })
 }
 
+let client_channels = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setChannel:React.Dispatch<React.SetStateAction<GOT.Channel[] | undefined>>) => {
+    socket.on('client_channels', (rep:GOT.Channel[]) => {
+        console.log('client_channels', rep);
+        if (rep){
+            setChannel(rep);
+        } 
+    })
+}
+
+let client_channels_in = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setChannel:React.Dispatch<React.SetStateAction<GOT.Channel[] | undefined>>) => {
+    socket.on('client_channels_in', (rep:GOT.Channel[]) => {
+        console.log('client_channels_in', rep);
+        if (rep){
+            setChannel(rep);
+        } 
+    })
+}
 let client_friends = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setLstFriends:React.Dispatch<React.SetStateAction<GOT.Friend[] | undefined>>) => {
     socket.on('client_friends', (rep:GOT.Friend[]) => {
         console.log('client_friends', rep);
@@ -105,6 +122,7 @@ let info_client = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setN
 }
 
 export const onSocket = {
-    profil_login, client_privmsg_users, client_friends, client_privmsg_send, error_client, info_client, warning_client, client_profil ,client_users, client_privmsg
+    profil_login, client_privmsg_users, client_friends, client_privmsg_send, error_client, 
+    info_client, warning_client, client_profil ,client_users, client_privmsg, client_channels, client_channels_in
 
 }

@@ -44,6 +44,8 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     const [selectUser, setSelectUser] = useState<GOT.User>();
     const [friends, setFriends] = useState<GOT.User[]>();
     const [lstFriends, setLstFriends] = useState<GOT.Friend[]>()
+
+    const [channelIn, setChannelIn] = useState<GOT.Channel[]>();
     
     const codeParam: Map<string, string> = accountService.getParamsPriv();
 
@@ -76,6 +78,13 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     },[socket])
 
     useEffect(() => {
+        onSocket.client_channels_in(socket, setChannelIn)
+        return () => {
+            offSocket.client_channelIn(socket);
+        } 
+    },[socket])
+
+    useEffect(() => {
         onSocket.client_users(socket, setUsersList);
         return () => {
             offSocket.client_users(socket);
@@ -88,11 +97,14 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
 
     useEffect(() => {
         emitSocket.emitPrivmsgUsers(socket);
-    }, [])
-
+    }, [socket])
 
     useEffect(() => {
         emitSocket.emitUsers(socket);
+    }, [socket])
+
+    useEffect(() => {
+        emitSocket.emitChannelsIn(socket);
     }, [socket])
 
     const handleSelectFriend = (name:string) => {
@@ -106,6 +118,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
             }
         }
     }
+
 
     useEffect(() =>{
         if (codeParam.get("code") === "Priv" && codeParam.get("name")){
@@ -140,7 +153,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
             <StyledContaite>
                 <MenuChat  friends={friends} profil={props.profil} setFriends={setFriends} setProfil={props.setProfil} 
                            chatSwitch={chatSwitch} setChatSwitch={setChatSwitch} 
-                           active={active} setActive={setActive}
+                           active={active} setActive={setActive} channelIn={channelIn}
                            listUser={usersList} add={add} setAdd={setAdd}/>
                 <StyledContact className={active}>
                     <StyledChatSwith> 
@@ -163,7 +176,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                                 listUser={usersList} setAdd={setAdd} setFriends={setFriends} /> : <></>}
             {add === "addChannel" ? <PopupOptionAddChannel /> : <></>}
             {add === "joinChannel" ? <PopupOptionJoinChannel /> : <></>}
-            {add === "explore" ? <PopupOptionExloreChat /> : <></>}
+            {add === "explore" ? <PopupOptionExloreChat channelIn={channelIn}/> : <></>}
             {add === "privateChan" ? <PopupOptionPrivateChan /> : <></>}
             {popuProfil ? <ProfilView login={login} setPopupProfil={setPopupProfil}/> : <> </>}
            <Footer/>

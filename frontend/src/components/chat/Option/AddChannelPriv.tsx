@@ -12,7 +12,8 @@ interface IProps {
 }
 
 const PopupOptionPrivateChan:FunctionComponent<IProps> = (props: IProps) =>{
-    const [add, setAdd] = useState("");
+    const [inputName, setInputName] = useState("");
+    const [inputPwd, setInputPwd] = useState("");
     const navigate = useNavigate();
 
     const handleClose = () => {
@@ -25,7 +26,6 @@ const PopupOptionPrivateChan:FunctionComponent<IProps> = (props: IProps) =>{
     }
 
     const handleAdd = (name: string) => {
-       setAdd(name); 
        navigate(`/chat?code=${name}`)
     }
     return (

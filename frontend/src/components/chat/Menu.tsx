@@ -16,6 +16,7 @@ interface IProps {
    setAdd:Dispatch<React.SetStateAction<string>>;
    add:string;
    friends:GOT.User[] | undefined;
+   channelIn:GOT.Channel[] | undefined;
    active: string;
    setActive:Dispatch<React.SetStateAction<string>> | undefined;
 }
@@ -53,8 +54,6 @@ const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
         navigate("/chat?code=add")
     }
 
-    const channel = ["channel 1", "channel 12", "channel 12312", "channel 1", 
-    "channel 12", "channel 12312", "channel 1", "channel 12", "channel 12312"];
     return (
         <StyledContaiteMenu> 
             <StyleNavToggler onClick={navMenu} className={props.active}>
@@ -71,9 +70,9 @@ const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
                 <StyledChanDiv className="add"onClick={() => {handleAddChannel()}}>
                     <StyledChanPadd >+</StyledChanPadd>
                 </StyledChanDiv>
-                {channel.map((chan) => (
-                    <StyledChanDiv key={uuid()} onClick={() => {handleChan(chan)}}>
-                        <p>{chan.substring(0, 4)}</p>
+                {props.channelIn?.map((chan) => (
+                    <StyledChanDiv key={uuid()} onClick={() => {handleChan(chan.name)}}>
+                        <p>{chan.name.substring(0, 4)}</p>
                     </StyledChanDiv>
                 ))}
             </StyledContaiteChannel>

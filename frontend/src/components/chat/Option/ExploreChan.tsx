@@ -9,21 +9,35 @@ import { SocketContext } from "../../../socket/socketPovider";
 import { useNavigate } from "react-router-dom";
 import { onSocket } from "../../../socket/socketOn";
 import { v4 as uuid } from "uuid";
+import { offSocket } from "../../../socket/socketOff";
 
 interface IProps {
+    channelIn: GOT.Channel[] | undefined ;
 }
+
 const PopupOptionExloreChat:FunctionComponent<IProps> = (props: IProps) =>{
     const navigate = useNavigate();
     const socket = useContext(SocketContext)
     const [selectUser, setSelectUser] = useState<string[]>([]);
-    const [chan, setChan] = useState(["chan", "42", "general", "Update"]);
+    const [channel, setChannel] = useState<GOT.Channel[]>();
+
+    useEffect(() => {
+        emitSocket.emitChannels(socket);
+    }, [socket])
+
+    useEffect(() => {
+        onSocket.client_channels(socket, setChannel);
+        return () => {
+            offSocket.client_channel(socket);
+        } 
+    }, [socket, setChannel])
 
     const handleClose = () => {
             navigate("/chat");
     }
 
     const handleSelect = (user: string) => {
-        const find = selectUser.find((select) => select === user)
+        const find = props.channelIn?.find((select) => select.name === user)
         if (find !== undefined){
             setSelectUser((select) => select.filter((use) => use !== user))
         }else if (setSelectUser){
@@ -55,10 +69,10 @@ const PopupOptionExloreChat:FunctionComponent<IProps> = (props: IProps) =>{
             </StyledContaiteClose>
             <StyledContaiteAddUser>
                 <StyledContaiteDivUser>
-                    {chan.map((user) => (
-                            <StyledContaiteDivPUser key={uuid()} onClick={() => {handleSelect(user)}} 
-                                color={selectUser.find((select) => select === user) ? Colors.grey : Colors.Bg2faIn}>
-                                <StyledContaitePUser key={uuid()}>{user}</StyledContaitePUser>
+                    {channel?.map((user) => (
+                            <StyledContaiteDivPUser key={uuid()} onClick={() => {handleSelect(user.name)}} 
+                                color={selectUser.find((select) => select === user.name) ? Colors.grey : Colors.Bg2faIn}>
+                                <StyledContaitePUser key={uuid()}>{user.name}</StyledContaitePUser>
                             </StyledContaiteDivPUser>
                     ))}
                 </StyledContaiteDivUser>
