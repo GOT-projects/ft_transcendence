@@ -449,14 +449,14 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		client.emit('client_channels', ret);
 	}
 
-	@SubscribeMessage('server_chanmsg_join')
+	@SubscribeMessage('server_chan_join')
 	async joinChannel(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('chanName') chanName: string, @MessageBody('password') password?: string) {
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
 		const ret = await this.chatGateway.joinChannel(auth.user, chanName, password);
 		if (typeof ret === 'string') {
-			client.emit('error_client', 'chanmsg_join' + ret);
+			client.emit('error_client', 'chan_join' + ret);
 			return ;
 		}
 		const back = await this.chatGateway.getChannelsIn(auth.user);
@@ -471,7 +471,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		const ret = await this.chatGateway.inviteChannel(auth.user, chanName, loginInvite);
 		if (typeof ret === 'string') {
-			client.emit('error_client', 'chanmsg_invite' + ret);
+			client.emit('error_client', 'chan_invite' + ret);
 			return ;
 		}
 		const back = await this.chatGateway.getChannelsIn(auth.user);

@@ -51,6 +51,10 @@ let emitChannels = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>) => 
     socket.emit('server_channels', {Authorization: accountService.getToken()})
 }
 
+let emitChannelJoin = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName: string, password: string | undefined) => {
+    socket.emit('server_chan_join', {Authorization: accountService.getToken(), chanName:chanName, password:password})
+}
+
 let emitChannelsIn = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>) => {
     socket.emit('server_channels_in', {Authorization: accountService.getToken()})
 }
@@ -78,5 +82,5 @@ let emitReplyNotif = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, r
 export const emitSocket ={
     emitProfil, emitProfilHisto, emitFriends, emitDemandFriend, emitChangeUsername, emitLeaderboard, 
     emitPrivmsg, emitSendPrivmsg, emitUsers, emitBlockUser, emitPrivmsgUsers, emitReplyNotif, emitUnBlockUser, emitCreateChan, 
-    emitChannels, emitChannelsIn, emitChannelMsg_send, emitChannelMsg
+    emitChannels, emitChannelsIn, emitChannelMsg_send, emitChannelMsg, emitChannelJoin
 }
