@@ -1,13 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { PartialType } from "@nestjs/swagger";
 import { InjectRepository } from "@nestjs/typeorm";
+import { GOT } from "shared/types";
 import { DeleteResult, Repository, UpdateResult } from "typeorm";
 import { Channel } from "../entities/channel.entity";
-import { RelUserChannel, UserChannelStatus } from "../entities/rel_user_channel.entity";
+import { RelUserChannel } from "../entities/rel_user_channel.entity";
 import { User } from "../entities/user.entity";
 
 export class CreateRelUserChannelDto {
-	status!: UserChannelStatus;
+	status!: GOT.UserChannelStatus;
 	userId!: number;
 	channelId!: number;
 }
@@ -51,7 +52,7 @@ export class RelUserChannelService {
 		});
 		let ret: Channel[] = [];
 		for (const rel of rels) {
-			if (rel.status !== UserChannelStatus.BAN)
+			if (rel.status !== GOT.UserChannelStatus.BAN)
 				ret.push(rel.channel);
 		}
 		return ret;
@@ -68,11 +69,11 @@ export class RelUserChannelService {
 
 	async getChanUsersNotBan(user: User, channel: Channel) {
 		const rels = await this.relUserChannelRepository.find({
-			select: ["user"],
+			select: ["user", "status"],
 			where: [
-				{userId: user.id, channelId: channel.id, status: UserChannelStatus.ADMIN},
-				{userId: user.id, channelId: channel.id, status: UserChannelStatus.OWNER},
-				{userId: user.id, channelId: channel.id, status: UserChannelStatus.MEMBER}
+				{userId: user.id, channelId: channel.id, status: GOT.UserChannelStatus.ADMIN},
+				{userId: user.id, channelId: channel.id, status: GOT.UserChannelStatus.OWNER},
+				{userId: user.id, channelId: channel.id, status: GOT.UserChannelStatus.MEMBER}
 			],
 			relations: ["user"]
 		});

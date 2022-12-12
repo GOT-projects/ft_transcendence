@@ -1,13 +1,7 @@
+import { GOT } from "shared/types";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Channel } from "./channel.entity";
 import { User } from "./user.entity";
-
-export enum UserChannelStatus {
-    MEMBER = 'MEMBER',
-    OWNER = 'OWNER',
-    ADMIN = 'ADMIN',
-    BAN = 'BAN'
-}
 
 @Entity()
 export class RelUserChannel {
@@ -16,10 +10,10 @@ export class RelUserChannel {
 
     @Column({
         type: "enum",
-        enum: UserChannelStatus,
-        default: UserChannelStatus.MEMBER
+        enum: GOT.UserChannelStatus,
+        default: GOT.UserChannelStatus.MEMBER
     })
-    status!: UserChannelStatus;
+    status!: GOT.UserChannelStatus;
 
     @Column()
     userId!: number;
