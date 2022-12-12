@@ -431,9 +431,19 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			client.emit('error_client', 'chanmsg_send' + ret);
 			return ;
 		}
+		const users = await this.chatGateway.getChanUsersNotBan(auth.user, chanName);
 		const actu = await this.chatGateway.getChanmsg(auth.user, chanName);
-		if (typeof actu !== 'string')
-			client.emit('client_chanmsg', actu);
+		if (typeof users !== 'string') {
+			let sock: string[] = [];
+			for (const tmp of users.users) {
+				const tmp2 = this.users.get(tmp.login);
+				if (tmp2)
+					sock = [...sock, ...tmp2];
+			}
+			this.server.to(sock).emit('client_info', `Channel ${chanName} received a message`);
+			if (typeof actu !== 'string')
+				this.server.to(sock).emit('client_chanmsg', actu);
+		}
 	}
 
 	@SubscribeMessage('server_channels')
@@ -459,8 +469,19 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			client.emit('error_client', 'chan_join' + ret);
 			return ;
 		}
+		const users = await this.chatGateway.getChanUsersNotBan(auth.user, chanName);
+		if (typeof users !== 'string') {
+			let sock: string[] = [];
+			for (const tmp of users.users) {
+				const tmp2 = this.users.get(tmp.login);
+				if (tmp2)
+					sock = [...sock, ...tmp2];
+			}
+			this.server.to(sock).emit('client_info', `Channel ${chanName} have a new member ${auth.user.login}`);
+			this.server.to(sock).emit('server_chanmsg_users_not_ban', users);
+		}
 		const back = await this.chatGateway.getChannelsIn(auth.user);
-		if (typeof ret !== 'string')
+		if (typeof back !== 'string')
 			client.emit('client_channels_in', back);
 	}
 
