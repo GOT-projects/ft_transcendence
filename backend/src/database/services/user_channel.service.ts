@@ -71,9 +71,9 @@ export class RelUserChannelService {
 		const rels = await this.relUserChannelRepository.find({
 			select: ["user", "status"],
 			where: [
-				{userId: user.id, channelId: channel.id, status: GOT.UserChannelStatus.ADMIN},
-				{userId: user.id, channelId: channel.id, status: GOT.UserChannelStatus.OWNER},
-				{userId: user.id, channelId: channel.id, status: GOT.UserChannelStatus.MEMBER}
+				{channelId: channel.id, status: GOT.UserChannelStatus.ADMIN},
+				{channelId: channel.id, status: GOT.UserChannelStatus.OWNER},
+				{channelId: channel.id, status: GOT.UserChannelStatus.MEMBER}
 			],
 			relations: ["user"]
 		});
