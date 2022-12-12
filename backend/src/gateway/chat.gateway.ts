@@ -294,7 +294,7 @@ export class ChatGateway {
 	async createChannel(user: User, chan: GOT.Channel) {
 		try {
 			let channel = await this.channelService.findChanName(chan.name);
-			if (!channel)
+			if (channel)
 				return `Channel ${chan.name} already exist`;
 			channel = await this.channelService.create({
 				name: chan.name,
