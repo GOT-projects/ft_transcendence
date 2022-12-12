@@ -21,7 +21,9 @@ export class RelUserChannel {
     })
     status!: UserChannelStatus;
 
+    @Column()
     userId!: number;
+    @Column()
     channelId!: number;
 
     @ManyToOne(() => User, (user) => user.channelsRel)

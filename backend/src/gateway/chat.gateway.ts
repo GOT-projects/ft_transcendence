@@ -306,6 +306,7 @@ export class ChatGateway {
 				channelId: channel.id,
 				status: UserChannelStatus.OWNER
 			});
+			
 		} catch (error) {
 			return error.message;
 		}

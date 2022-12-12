@@ -43,10 +43,11 @@ export class RelUserChannelService {
 
 	async getChannelInNOTBan(user: User) {
 		const rels = await this.relUserChannelRepository.find({
-			select: ["channel", "status", "user", "id"],
+			select: ["channel", "status", "id", "userId"],
 			where: [
 				{userId: user.id}
-			]
+			],
+			relations: ["channel"]
 		});
 		let ret: Channel[] = [];
 		for (const rel of rels) {
