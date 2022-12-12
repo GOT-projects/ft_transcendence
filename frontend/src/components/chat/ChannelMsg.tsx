@@ -47,7 +47,7 @@ const ChannelMsg:FunctionComponent<IProps> = (props:IProps)=> {
 
 
     useEffect(() =>{
-        console.log("emit ", chanName);
+        console.log("emit ", props.chanName);
         emitSocket.emitChannelMsg(socket, props.chanName)
     }, [socket])
 
