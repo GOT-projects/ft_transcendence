@@ -28,14 +28,14 @@ const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
     const handlePriveMsg = (name:string) => {
         if (props.setChatSwitch){
             props.setChatSwitch(name);
-            navigate("/chat?code=Priv")
+            navigate("/chat?code=Private")
         }
     }
 
     const handleChan = (name:string) => {
         if (props.setChatSwitch){
             props.setChatSwitch(name);
-            navigate(`/chat?code=Chan&name=${name}`)
+            navigate(`/chat?code=Channel&name=${name}`)
         }
     }
     const navMenu = () => {

@@ -14,35 +14,18 @@ import ProfilView from "../popup/ProfilView";
 
 
 interface IProps {
-   selectUser: GOT.User | undefined;
    profil: GOT.Profile | undefined;
-   setSelectUser:Dispatch<React.SetStateAction<GOT.User | undefined>> | undefined;
-   userFriend: GOT.Friend[] | undefined;
    setPopupProfil:Dispatch<React.SetStateAction<boolean>> | undefined;
    popuProfil: boolean | undefined;
-   friends:GOT.User[] | undefined;
-   setFriends:Dispatch<React.SetStateAction<GOT.User[] | undefined>> | undefined;
    setActive:Dispatch<React.SetStateAction<string>> | undefined;
    setLogin:Dispatch<React.SetStateAction<string>> | undefined;
 }
 
-const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
+const ChanUserMenu:FunctionComponent<IProps> = (props: IProps) => {
     const socket = useContext(SocketContext)
     const navigate = useNavigate();
+    const [userList, setUserlist] = useState(["test", "test1", "data"])
 
-    const handleSelectFriend = (name:string) => {
-        const user = props.friends?.filter((user) => user.login === name);
-        if (user){
-            const tmp:GOT.User = user[0];
-            if (props.setSelectUser)
-                props.setSelectUser(tmp);
-        }
-        emitSocket.emitPrivmsg(socket, name);
-        if (props.setActive)
-            props.setActive("UnActiveMenu");
-        navigate(`/chat?code=Private&name=${name}`);
-    }
-    
     const handleViewProfil = (name: string) =>{
         if (props.setLogin && props.setPopupProfil){
             props.setLogin(name);
@@ -86,28 +69,20 @@ const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
 
     return (
         <>
-            {props.friends?.map((user:GOT.User) =>(
-                <StyledUser key={uuid()} color={user.username === props.selectUser?.username ? Colors.ChatMenuButton : Colors.ChatMenu} >
-                    <StyledChatDivhandle onClick={() => {handleSelectFriend(user.username)}}>
-                        <StyledChatPrivAvatar profil={user.urlImg}/>
-                        <StyledChatPrivName key={uuid()}>{user.username}</StyledChatPrivName>
+            {userList.map((user:string) =>(
+                <StyledUser key={uuid()} color={Colors.ChatMenuButton} >
+                    <StyledChatDivhandle >
+                        <StyledChatPrivAvatar profil={user}/>
+                        <StyledChatPrivName key={uuid()}>{user}</StyledChatPrivName>
                     </StyledChatDivhandle>
                 <StyledChatDivoption>
-                    <StyledChatSettingButton onClick={() => {handleViewProfil(user.login)}}>
+                    <StyledChatSettingButton onClick={() => {handleViewProfil(user)}}>
                         <CgProfile className='setting' size={30} color={Colors.ChatMenuButtonText}/>
                     </StyledChatSettingButton>
-                    <StyledChatSettingButton onClick={() => {handleBlockUser(user.login)}}>
-                        <MdOutlineBlock className='setting' size={30} color={handleBlockUserColor(user.login) ? Colors.ChatMenuButtonText : "red"}/>
-                    </StyledChatSettingButton>
-                    {handleFriend(user.login) ? <StyledChatDivEmpty/> :
-                    <StyledChatSettingButton onClick={() => {handleAddFriend(user.login)}}>
-                        <AiOutlineUserAdd className='setting' size={30} color={Colors.ChatMenuButtonText}/>
-                    </StyledChatSettingButton>
-                    }
                 </StyledChatDivoption>
                 </StyledUser>))}
         </>
     )
 }
 
-export default PriveUserMenu;
+export default ChanUserMenu;
