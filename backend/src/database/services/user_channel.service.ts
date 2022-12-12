@@ -66,6 +66,19 @@ export class RelUserChannelService {
 		return rels;
 	}
 
+	async getChanUsersNotBan(user: User, channel: Channel) {
+		const rels = await this.relUserChannelRepository.find({
+			select: ["user"],
+			where: [
+				{userId: user.id, channelId: channel.id, status: UserChannelStatus.ADMIN},
+				{userId: user.id, channelId: channel.id, status: UserChannelStatus.OWNER},
+				{userId: user.id, channelId: channel.id, status: UserChannelStatus.MEMBER}
+			],
+			relations: ["user"]
+		});
+		return rels;
+	}
+
 	async update(id: number, updateRelUserChannelDto: UpdateRelUserChannelDto): Promise<UpdateResult> {
 		return await this.relUserChannelRepository.update(id, updateRelUserChannelDto);
 	}
