@@ -438,14 +438,11 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		if (typeof users !== 'string') {
 			let sock: string[] = [];
 			for (const tmp of users.users) {
-				console.log(tmp.login);
-				
 				const tmp2 = this.users.get(tmp.login);
 				if (tmp2)
 					sock = [...sock, ...tmp2];
 			}
-			console.log(sock)
-			this.server.to(sock).emit('client_info', `Channel ${chanName} received a message`);
+			this.server.to(sock).emit('info_client', `Channel ${chanName} received a message`);
 			if (typeof actu !== 'string')
 				this.server.to(sock).emit('client_chanmsg', actu);
 		}
@@ -482,7 +479,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 				if (tmp2)
 					sock = [...sock, ...tmp2];
 			}
-			this.server.to(sock).emit('client_info', `Channel ${chanName} have a new member ${auth.user.login}`);
+			this.server.to(sock).emit('info_client', `Channel ${chanName} have a new member ${auth.user.login}`);
 			this.server.to(sock).emit('server_chanmsg_users_not_ban', users);
 		}
 		const back = await this.chatGateway.getChannelsIn(auth.user);
@@ -503,7 +500,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const back = await this.chatGateway.getChannelsIn(auth.user);
 		if (typeof ret !== 'string')
 			client.emit('client_channels_in', back);
-		client.emit('client_info', `Channel ${chanName} you invite user with login ${loginInvite}`);
+		client.emit('info_client', `Channel ${chanName} you invite user with login ${loginInvite}`);
 	}
 
 	@SubscribeMessage('server_chan_create')
@@ -519,7 +516,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const back = await this.chatGateway.getChannelsIn(auth.user);
 		if (typeof ret !== 'string')
 			client.emit('client_channels_in', back);
-		client.emit('client_info', `Channel ${chan.name} created`);
+		client.emit('info_client', `Channel ${chan.name} created`);
 	}
 
 
