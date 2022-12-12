@@ -418,7 +418,9 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			client.emit('error_client', ret);
 			return ;
 		}
-		client.emit('client_chanmsg_send', ret);
+		const actu = await this.chatGateway.getChanmsg(auth.user, chanName);
+		if (typeof actu !== 'string')
+			client.emit('client_chanmsg', actu);
 	}
 
 	@SubscribeMessage('server_channels')
