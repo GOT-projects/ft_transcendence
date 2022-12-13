@@ -83,6 +83,7 @@ export namespace GOT {
         userInfos: User;
         stat: StatUser;
         notif: User[];  // users waiting responce to be friend
+        notifChannel: Channel[];
         friends: Friend[];
         blocks: User[];
     }
@@ -109,7 +110,8 @@ export namespace GOT {
     /****************************************************/
 
     export interface NotifChoice {
-        user: User;
+        user: User| undefined;
+        channel: Channel | undefined;
         accept: boolean;
     }
 

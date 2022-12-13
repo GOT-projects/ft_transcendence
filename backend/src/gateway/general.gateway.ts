@@ -6,6 +6,8 @@ import { BlockService } from "src/database/services/block.service";
 import { RelDemandService } from "src/database/services/demand.service";
 import { GameService } from "src/database/services/game.service";
 import { UserService } from "src/database/services/user.service";
+import { MyTransform } from "src/utils/transform";
+import { ChatGateway } from "./chat.gateway";
 
 @Injectable()
 export class GeneralGateway {
@@ -37,6 +39,16 @@ export class GeneralGateway {
 		return users;
 	}
 
+	async getChannelNotif(user: User) {
+		const demands = await this.demandService.getChannelDemands(user);
+		let channels: GOT.Channel[] = [];
+		for (const demand of demands) {
+			if (demand.channelWhoDemand)
+				channels.push(MyTransform.channelEntityToGot(demand.channelWhoDemand));
+		}
+		return channels;
+	}
+
 	async getProfil(user: User): Promise<GOT.Profile | string> {
 		try {
 			const stat = await this.gameService.getStatUser(user);
@@ -49,6 +61,7 @@ export class GeneralGateway {
 			}
 			return {
 				notif: await this.getFriendNotif(user),
+				notifChannel: await this.getChannelNotif(user),
 				userInfos: this.getGOTUserFromUser(user),
 				stat: stat,
 				friends: [],

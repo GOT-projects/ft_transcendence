@@ -99,6 +99,8 @@ export class FriendGateway {
 
 	async replyNotif(user: User, reply: GOT.NotifChoice): Promise<string | UserAndStatus> {
 		try {
+			if (!reply.user)
+				return 'user not defined';
 			const userReply = await this.userService.findUnique(reply.user.id, reply.user.login);
 			if (userReply === null)
 				return 'User not found';
