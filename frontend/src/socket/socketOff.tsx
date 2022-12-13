@@ -42,7 +42,7 @@ let client_channelMsg = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>
     socket.off('client_Msgchannels');
 }
 let client_chanmsg_users_not_ban = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>) => {
-    socket.off('client_chanmsg_users_not_ban');
+    socket.off('client_chan_users');
 }
 export const offSocket ={
     profil_login, client_privmsg_users, client_friends, client_privmsg_send, client_profil, client_users, client_privmsg, client_channel, client_channelIn,

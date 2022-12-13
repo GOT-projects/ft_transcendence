@@ -7,7 +7,7 @@ import { emitSocket } from "../../socket/socketEmit";
 import { offSocket } from "../../socket/socketOff";
 import { onSocket } from "../../socket/socketOn";
 import { SocketContext } from "../../socket/socketPovider";
-import { StyledChat, StyledChatInput, StyledChatPlace, StyledChatSendDiv, StyledChatText, StyledChatTextArea, StyledChatWindow } from "../Styles/StyleChat";
+import { StyledChat, StyledChatInput, StyledChatNameUser, StyledChatPlace, StyledChatSendDiv, StyledChatText, StyledChatTextArea, StyledChatWindow } from "../Styles/StyleChat";
 
 
 interface IProps {
@@ -72,6 +72,7 @@ const ChannelMsg:FunctionComponent<IProps> = (props:IProps)=> {
                         {selectChanMsg?.map((data:GOT.MsgChannel) => (
                                 <StyledChatPlace key={uuid()} className={data.userFrom.login === props.profil?.userInfos.login ? "send" : "receive"}>
                                     <StyledChatText>{data.msg}</StyledChatText>
+                                    <StyledChatNameUser>Send by {data.userFrom.login}</StyledChatNameUser>
                                 </StyledChatPlace>
                         ))}
                         <div className='field' ref={bottomChat}/>

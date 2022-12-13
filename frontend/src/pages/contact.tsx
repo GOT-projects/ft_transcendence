@@ -1,4 +1,6 @@
-    import { StyledChat, StyledChatPrive, StyledChatSep, StyledChatSettingButton, StyledChatSwith, StyledChatSwithButton, StyledChatText, StyledContact, StyledContaite, StyledChatSwithTile } from '../components/Styles/StyleChat';
+import { StyledChat, StyledChatPrive, StyledChatSep, StyledChatSettingButton, 
+    StyledChatSwith, StyledChatSwithButton, StyledChatText, StyledContact, StyledContaite, 
+    StyledChatSwithTile, StyledSettingChan, StyledSettingChanP } from '../components/Styles/StyleChat';
 import React, {Dispatch, FunctionComponent, useContext, useEffect, useState } from 'react';
 import BackgroundAnimate from '../components/BackGroundAnimate';
 import Footer from '../components/Footer';
@@ -25,6 +27,11 @@ import PopupOptionExloreChat from '../components/chat/Option/ExploreChan';
 import PopupOptionPrivateChan from '../components/chat/Option/AddChannelPriv';
 import ChannelMsg from '../components/chat/ChannelMsg';
 import ChanUserMenu from '../components/chat/ChanUser';
+import PopupChannelSetting from '../components/chat/Option/SettingChan';
+import { HiArrowCircleRight } from 'react-icons/hi';
+import { FcInvite } from 'react-icons/fc';
+import { AiFillSetting } from 'react-icons/ai';
+import PopupOptionInvite from '../components/chat/Option/ChanInvite';
 
 interface IProps {
    profil: GOT.Profile | undefined;
@@ -38,6 +45,8 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     const [login, setLogin] = useState<string>("");
 
     const [add, setAdd] =  useState("");
+    const [invite, setInvite] =  useState(false);
+    const [setting, setSetting] =  useState(false);
     const [chatSwitch, setChatSwitch] = useState<string>('');
     const [histo, setHisto] = useState<GOT.HistoryParties>();
     const [popuProfil, setPopupProfil] = useState(false);
@@ -129,18 +138,34 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
             const check = friends?.filter((friend) => friend.login === name)
             if (check && check?.length !== 0){
                 handleSelectFriend(check[0].login);
+                setChatSwitch("Private");
                 setAdd("");
             }
+        }else if(codeParam.get("code") === "Private"){
+                setAdd("");
+                setChatSwitch("Private");
         }
+
         const tmp = codeParam.get("code");
-        if (tmp)
+        if (tmp){
             setAdd(tmp);
+            if (codeParam.get("code") === "Channel" && codeParam.get("name")){
+                const name = codeParam.get("name");
+                if (name)
+                    setChatSwitch(name);
+            }
+        }
         else
             setAdd("");
         console.log(tmp)
     }, [codeParam])
 
-    console.log(active)
+    const handleLeaveChan = () => {
+        //TODO socket for user leave channel;
+        console.log(`${props.profil?.userInfos.login} Leave the channel ${chatSwitch}`)
+    }
+
+    console.log(active, add, chatSwitch)
 	return (
 		<React.Fragment>
 			<BackgroundAnimate name="contact"/>
@@ -155,7 +180,8 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
              />
 
             <StyledContaite>
-                <MenuChat  friends={friends} profil={props.profil} setFriends={setFriends} setProfil={props.setProfil} 
+                <MenuChat  friends={friends} profil={props.profil} setFriends={setFriends} 
+                           setProfil={props.setProfil} 
                            chatSwitch={chatSwitch} setChatSwitch={setChatSwitch} 
                            active={active} setActive={setActive} channelIn={channelIn}
                            listUser={usersList} add={add} setAdd={setAdd}/>
@@ -165,26 +191,64 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                     </StyledChatSwith>
                     <StyledChatSep/>
                     <StyledChatPrive >
-                    {add === "Private" ? <PriveUserMenu friends={friends} setFriends={setFriends} selectUser={selectUser} 
-                                                               setActive={setActive} profil={props.profil}
-                                                               setSelectUser={setSelectUser} userFriend={lstFriends}
-                                                               setLogin={setLogin}
-                                                               setPopupProfil={setPopupProfil} popuProfil={popuProfil}/> : <></>}
-                    {add === "Channel" ? <ChanUserMenu profil={props.profil} setPopupProfil={setPopupProfil} chanName={chatSwitch} 
-                                                              popuProfil={popuProfil} setActive={setActive} setLogin={setLogin}/> : <></>}
+                    {add === "Private" ? <PriveUserMenu friends={friends} 
+                                            setFriends={setFriends} selectUser={selectUser} 
+                                            setActive={setActive} profil={props.profil}
+                                            setSelectUser={setSelectUser} userFriend={lstFriends}
+                                            setLogin={setLogin}
+                                            setPopupProfil={setPopupProfil} 
+                                            popuProfil={popuProfil}/> : <></>}
+                    {add === "Channel" ? <ChanUserMenu profil={props.profil} 
+                                            setPopupProfil={setPopupProfil} chanName={chatSwitch} 
+                                            popuProfil={popuProfil} setActive={setActive} 
+                                            setLogin={setLogin}/> : <></>}
                     </StyledChatPrive>
+                    {add === "Channel" ? <StyledSettingChan>
+                        <StyledSettingChanP>Channel setting</StyledSettingChanP>
+                        <AiFillSetting size={30} color={Colors.grey} title="Channel Setting"
+                                            onClick={() => {setSetting(true)}}/>
+                        <FcInvite size={30} title="Invite people tot channel"
+                                            onClick={() => {setInvite(true)}}/>
+                        <HiArrowCircleRight size={30} color={"red"} title="Leave Channel" 
+                                            onClick={handleLeaveChan}/>
+                    </StyledSettingChan> : <></>}
                 </StyledContact>
-                {add === "Private" ? <PriveMsg active={active} profil={props.profil} setProfil={props.setProfil} userSelect={selectUser}/> : <></>}
-                {add === "Channel" ? <ChannelMsg active={active} profil={props.profil} setProfil={props.setProfil} chanName={chatSwitch}/> : <></>}
+
+                {add === "Private" ? <PriveMsg active={active} profil={props.profil} 
+                                            setProfil={props.setProfil} 
+                                            userSelect={selectUser}/> : <></>}
+
+                {add === "Channel" ? <ChannelMsg active={active} profil={props.profil} 
+                                            setProfil={props.setProfil} 
+                                            chanName={chatSwitch}/> : <></>}
             </StyledContaite>
             <Notification notify={notify} setNotify={setNotify}/>
-            {add === "add" ? <PopupAddChannel friends={friends} setFriends={setFriends} profil={props.profil} setProfil={props.setProfil} setAction={setAdd} listUser={usersList}/> : <></>}
+
+            {add === "add" ? <PopupAddChannel friends={friends} setFriends={setFriends} 
+                                            profil={props.profil} setProfil={props.setProfil} 
+                                            setAction={setAdd} listUser={usersList}/> : <></>}
+
             {add === "addUser" ? <PopupOptionAddUser profil={props.profil} friends={friends}
-                                listUser={usersList} setAdd={setAdd} setFriends={setFriends} /> : <></>}
+                                        listUser={usersList} setAdd={setAdd} 
+                                        setFriends={setFriends} /> : <></>}
+            {invite ? <PopupOptionInvite profil={props.profil} friends={friends}
+                                        listUser={usersList} setAdd={setAdd} 
+                                        setInvite={setInvite}
+                                        setFriends={setFriends} chanName={chatSwitch}/> : <></>}
+
             {add === "addChannel" ? <PopupOptionAddChannel /> : <></>}
+
             {add === "joinChannel" ? <PopupOptionJoinChannel /> : <></>}
+
             {add === "explore" ? <PopupOptionExloreChat channelIn={channelIn}/> : <></>}
+
             {add === "privateChan" ? <PopupOptionPrivateChan /> : <></>}
+
+            {setting ? <PopupChannelSetting profil={props.profil} listUser={usersList} 
+                                        setProfil={props.setProfil} setAction={setAdd}
+                                        setFriends={setFriends} friends={friends}
+                                        chanName={chatSwitch} setSetting={setSetting}/>: <></>}
+
             {popuProfil ? <ProfilView login={login} setPopupProfil={setPopupProfil}/> : <> </>}
            <Footer/>
 		</React.Fragment>

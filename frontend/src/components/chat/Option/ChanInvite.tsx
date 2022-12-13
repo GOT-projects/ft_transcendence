@@ -1,7 +1,9 @@
 import { Dispatch, FunctionComponent, useContext, useEffect, useState } from "react";
 import { FaWindowClose } from "react-icons/fa";
 import { GOT } from "../../../shared/types";
-import { StyledContaiteAddUser, StyledContaiteClose, StyledContaiteDivPUser, StyledContaiteDivUser, StyledContaitePUser, StyledContaiteReturn, StyledContaiteReturnDiv, StyledContaiteUser, StyledContaiteViewAddChan, StyledContaiteViewAddP, StyledEmptyDiv } from "../../Styles/StyleViewProfil";
+import { StyledContaiteAddUser, StyledContaiteClose, StyledContaiteDivPUser, StyledContaiteDivUser, 
+        StyledContaitePUser, StyledContaiteReturn, StyledContaiteReturnDiv, 
+        StyledContaiteViewAddChan, StyledContaiteViewAddP, StyledEmptyDiv } from "../../Styles/StyleViewProfil";
 import { motion } from "framer-motion";
 import { Colors } from "../../Colors";
 import { emitSocket } from "../../../socket/socketEmit";
@@ -9,6 +11,7 @@ import { SocketContext } from "../../../socket/socketPovider";
 import { useNavigate } from "react-router-dom";
 import { onSocket } from "../../../socket/socketOn";
 import { v4 as uuid } from "uuid";
+import { offSocket } from "../../../socket/socketOff";
 
 interface IProps {
    listUser:GOT.User[] | undefined;
@@ -16,63 +19,60 @@ interface IProps {
    friends:GOT.User[] | undefined;
    setFriends:Dispatch<React.SetStateAction<GOT.User[] | undefined>> | undefined;
    profil: GOT.Profile | undefined;
+   setInvite:Dispatch<React.SetStateAction<boolean>>;
+   chanName: string;
 }
-const PopupOptionAddUser:FunctionComponent<IProps> = (props: IProps) =>{
+
+const PopupOptionInvite:FunctionComponent<IProps> = (props: IProps) =>{
     const navigate = useNavigate();
     const socket = useContext(SocketContext)
     const [input, setInput] = useState("");
     const [selectUser, setSelectUser] = useState<GOT.User[]>([]);
+    const [userList, setUserlist] = useState<GOT.ChannelUsers>();
 
     const handleClose = () => {
-            navigate("/chat");
+        props.setInvite(false);
     }
+
+    useEffect(() => {
+        onSocket.client_chanmsg_users_not_ban(socket, setUserlist);
+        return () => {
+            offSocket.client_chanmsg_users_not_ban(socket);
+        }
+    }, [socket, setUserlist, userList])
+
+    useEffect(() => {
+        emitSocket.emitChanUserNotBan(socket, props.chanName);
+    }, [socket])
 
     const handleSelect = (user: GOT.User) => {
         const find = selectUser.find((select) => select.login === user.login)
-        if (find !== undefined){
-            setSelectUser((select) => select.filter((use) => use.login !== user.login))
-        }else if (setSelectUser){
-            const tmp:GOT.User[] = [];
-            tmp.push(user);
-            if (setSelectUser)
+        if (find){
+            const tmp = selectUser.filter((filter) => filter.login !== user.login);
+            if (tmp)
                 setSelectUser(tmp);
+        }else{
+            setSelectUser((prev) => [...prev, user]);
         }
 	}	
 
     const handleReturn = () => {
-        if (props.setAdd)
-            navigate("/chat?code=add")
+        props.setInvite(false);
     }
 
-    const handleSend = async () => {
-        console.log("send selection ",selectUser);
-        selectUser.map( async (select ) => {
-            await emitSocket.emitSendPrivmsg(socket, select.login, "👋");
-            if (props.setFriends){
-                if (props.friends)
-                    props.setFriends([...props.friends, select]);
-                }else{
-                    const tmp:GOT.User[] = [];
-                    tmp.push(select);
-                    setSelectUser(tmp)
-                }
-            navigate(`/chat?code=Private`);
-        })
-        navigate(`/chat?`);
+    const handleSend = () => {
+        console.log("invite to channel:", selectUser)
+        props.setInvite(false);
     }
 
     const handleListUser = (login : string) => {
-        if (login === props.profil?.userInfos.login)
-            return (false);
-        const tmp =props.profil?.friends.filter((user) => user.login === login);
-        if (tmp !== undefined && tmp.length !== 0)
-            return (false);
-        const tmp1 =props.friends?.filter((user) => user.login === login);
-        if (tmp1 !== undefined && tmp1.length !== 0)
-            return (false);
-        return (true);
+        const tmp = userList?.users.filter((user) => user.login === login)
+        if (tmp && tmp.length !== 0){
+            return false
+        }
+        return true
     }
-
+    console.log("user list", props.listUser)
     return (
         <StyledContaiteViewAddChan>
             <motion.div
@@ -80,18 +80,18 @@ const PopupOptionAddUser:FunctionComponent<IProps> = (props: IProps) =>{
             animate={{x:0}}
             transition={{duration: 1}}
             >
-            <StyledContaiteClose onClick={handleClose}>
+            <StyledContaiteClose onClick={handleClose} className="invite">
                     <FaWindowClose size={30} color={Colors.dark1}/>
-                    <StyledContaiteViewAddP className="addUserTitle">Add user for message</StyledContaiteViewAddP>
+                    <StyledContaiteViewAddP className="addUserTitle">Invite to channel</StyledContaiteViewAddP>
             </StyledContaiteClose>
             <StyledContaiteAddUser>
-                <StyledContaiteDivUser>
+                <StyledContaiteDivUser key={uuid()}>
                     {props.listUser?.map((user) => (
                             handleListUser(user.login) ? 
                             <StyledContaiteDivPUser key={uuid()} onClick={() => {handleSelect(user)}} 
                                 color={selectUser.find((select) => select.login === user.login) ? Colors.grey : Colors.Bg2faIn}>
                                 <StyledContaitePUser key={uuid()} >{user.login}</StyledContaitePUser>
-                            </StyledContaiteDivPUser> : <StyledEmptyDiv key={uuid()}/>
+                            </StyledContaiteDivPUser> : <StyledEmptyDiv key={uuid()}></StyledEmptyDiv>
                     ))}
                 </StyledContaiteDivUser>
             </StyledContaiteAddUser>
@@ -108,4 +108,4 @@ const PopupOptionAddUser:FunctionComponent<IProps> = (props: IProps) =>{
     )
 }
 
-export default PopupOptionAddUser;
+export default PopupOptionInvite;

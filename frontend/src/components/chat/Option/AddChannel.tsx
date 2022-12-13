@@ -1,4 +1,4 @@
-import { Dispatch, FunctionComponent, useContext, useState } from "react";
+import { Dispatch, FunctionComponent, useContext, useEffect, useState } from "react";
 import { GOT } from "../../../shared/types";
 import { StyledContaiteAddChanDiv, StyledContaiteAddChanOption, StyledContaiteAddChanOptionP, StyledContaiteAddUser, StyledContaiteClose, StyledContaiteReturn, StyledContaiteReturnAddButton, StyledContaiteReturnAddButtonP, StyledContaiteReturnAddChannel, StyledContaiteReturnDiv, StyledContaiteViewAddChan } from "../../Styles/StyleViewProfil";
 import { motion } from "framer-motion";
@@ -8,6 +8,7 @@ import { SocketContext } from "../../../socket/socketPovider";
 import { NotifyInter } from "../../interfaces";
 import { Notification } from "../../Notify";
 import { useNavigate } from "react-router-dom";
+import { accountService } from '../../../services/account.service';
 
 interface IProps {
 }
@@ -25,7 +26,25 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
     const [inputPwd, setInputPwd] = useState("");
     const [selecte, setSelecte] = useState("");
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
+    const codeParam = accountService.getParamsChanCreateOrChange();
+    const [typeChannel, setTypeChannel] = useState("");
+    const [channelName, setChannelName] = useState("");
 
+    useEffect(() => {
+        if (codeParam.get("name") === "change"){
+            setTypeChannel("change");
+            const tmp = codeParam.get("chanName");
+            if (tmp)
+                setChannelName(tmp)
+
+        }else if (codeParam.get("name") === "create"){
+            setTypeChannel("create");
+        }else{
+            navigate("/chat")
+        }
+
+
+    },[]);
     const handleChangeChan = (event: any,) => {
         if (inputChan === "" && event.target.value ==="\n")
             return;
@@ -78,6 +97,11 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
             navigate("/chat");
         }
     }
+    const handleSendChange = () =>{
+        let chan:GOT.Channel | undefined = undefined;
+        navigate(`/chat?code&Channel&name=${channelName}`);
+        //TODO send send change 
+    }
 
     return (
         <StyledContaiteViewAddChan>
@@ -88,10 +112,13 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
             >
             <form>
                 <StyledContaiteAddChanDiv>
-                    <p>Creation Channel</p>
+                    {typeChannel === "change" ? 
+                    <p>Change Channel</p> : <p>Creation Channel</p> }
                 </StyledContaiteAddChanDiv>
                 <StyledContaiteAddChanDiv>
-                    <input type="text" placeholder="Channel name" value={inputChan} onChange={handleChangeChan} autoFocus/>
+                    {typeChannel === "change" ? 
+                    <input type="text" placeholder={channelName} value={inputChan} onChange={handleChangeChan} autoFocus/>:
+                    <input type="text" placeholder="Channel name" value={inputChan} onChange={handleChangeChan} autoFocus/>}
                 </StyledContaiteAddChanDiv>
                 <StyledContaiteAddChanDiv>
                     <p>Options Channel:</p>
@@ -115,9 +142,13 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
                 </StyledContaiteAddChanDiv>
                 <StyledContaiteReturnAddChannel>
                     <StyledContaiteReturnDiv >
+                        {typeChannel === "change" ?
+                        <StyledContaiteReturnAddButton onClick={handleSendChange}>
+                            <StyledContaiteReturnAddButtonP>send</StyledContaiteReturnAddButtonP>
+                        </StyledContaiteReturnAddButton> : 
                         <StyledContaiteReturnAddButton onClick={handleSend}>
                             <StyledContaiteReturnAddButtonP>send</StyledContaiteReturnAddButtonP>
-                        </StyledContaiteReturnAddButton>
+                        </StyledContaiteReturnAddButton> }
                         <StyledContaiteReturnAddButton onClick={handleReturn}>
                             <StyledContaiteReturnAddButtonP>return</StyledContaiteReturnAddButtonP>
                         </StyledContaiteReturnAddButton>

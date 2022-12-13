@@ -15,7 +15,7 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
         let regex:RegExp = /^User with login (.*[a-z]) send you a private message/
         if (regex.test(notify.message)){
             const tab = notify.message.split(" ");
-            navigate(`/chat?code=Priv&name=${tab[3]}`);
+            navigate(`/chat?code=Private&name=${tab[3]}`);
         }
         let regexChan:RegExp = /^Error: Channel (.*[a-z])/
         if (regexChan.test(notify.message)){

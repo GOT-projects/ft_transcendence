@@ -68,7 +68,7 @@ let emitChannelMsg_send = async (socket:Socket<DefaultEventsMap, DefaultEventsMa
 }
 
 let emitChanUserNotBan = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName: string) => {
-    socket.emit('server_chanmsg_users_not_ban', {Authorization: accountService.getToken(), chanName: chanName})
+    socket.emit('server_chan_users', {Authorization: accountService.getToken(), chanName: chanName})
 }
 
 let emitUnBlockUser = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, login:string) => {

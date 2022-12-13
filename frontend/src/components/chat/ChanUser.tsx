@@ -1,17 +1,15 @@
 import { Dispatch, FunctionComponent, useContext, useEffect, useState } from "react";
 import { GOT } from "../../shared/types";
 import { SocketContext } from "../../socket/socketPovider";
-import { StyledAddInput, StyledAddInputdiv, StyledAddInputdivButton, StyledChatDivEmpty, StyledChatDivhandle, StyledChatDivoption, StyledChatPrivAvatar, StyledChatPrivName, StyledChatSettingButton, StyledUser } from "../Styles/StyleChat";
+import {StyledChatDivhandle, StyledChatDivoption, StyledChatPrivAvatar, 
+StyledChatPrivName, StyledChatSettingButton, StyledUser } from "../Styles/StyleChat";
 import { v4 as uuid } from 'uuid';
-import { GrAddCircle } from "react-icons/gr";
 import { SiUblockorigin } from "react-icons/si";
 import { emitSocket } from "../../socket/socketEmit";
 import { Colors } from "../Colors";
 import { CgProfile } from "react-icons/cg";
-import { MdOutlineBlock } from "react-icons/md";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import ProfilView from "../popup/ProfilView";
 import { onSocket } from "../../socket/socketOn";
 import { offSocket } from "../../socket/socketOff";
 
@@ -68,13 +66,6 @@ const ChanUserMenu:FunctionComponent<IProps> = (props: IProps) => {
     useEffect(() => {
         emitSocket.emitChanUserNotBan(socket, props.chanName);
     }, [socket])
-
-    const handleFriend = (login: string) => {
-        const tmp = props.profil?.friends?.filter((user) => user.login === login);
-        if (tmp !== undefined && tmp.length !== 0)
-            return (true);
-        return (false);
-    }
 
     const handleBlock = () => {
     }

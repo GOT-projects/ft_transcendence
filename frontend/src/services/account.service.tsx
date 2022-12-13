@@ -46,6 +46,23 @@ let getParamsPriv = () => {
     }
     return (code);
 }
+let getParamsChanCreateOrChange = () => {
+    const params = (new URL(window.location.href)).searchParams;
+    let code: Map<string, string> = new Map();
+    let tmp = params.get("code");
+    if (tmp){
+        code.set("code", tmp);
+        tmp = params.get("name");
+        if (tmp){
+            code.set("name", tmp);
+        }
+        tmp = params.get("chanName")
+        if (tmp){
+            code.set("chanName", tmp);
+        }
+    }
+    return (code);
+}
 
 let getParamsNotif = () => {
     const params = (new URL(window.location.href)).searchParams;
@@ -92,5 +109,6 @@ let getToken = () => {
 }
 
 export const accountService = {
-    saveToken, removeToken, isLogged, getToken, getParamsPriv, getParamsCode, replaceParamsTo, getParamsNotif
+    saveToken, removeToken, isLogged, getToken, getParamsPriv, getParamsCode, replaceParamsTo, 
+    getParamsNotif, getParamsChanCreateOrChange
 }

@@ -119,6 +119,9 @@ export const StyledContaiteDivPUser = styled.div<BgColor>`
     }
 `
 
+export const StyledEmptyDiv = styled.div`
+    display: none;
+`
 export const StyledContaiteUser = styled.div`
     height: 20px;
 `
@@ -246,8 +249,10 @@ export const StyledMenuTitle = styled.p`
 `
 export const StyledChanDiv = styled.div`
     display: flex;
-    margin: 20px;
+    margin: 10px;
+    margin-top: 5px;
     margin-right: 10px;
+    margin-left: 20px;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
@@ -307,6 +312,10 @@ export const StyledContaiteClose = styled.div`
     }
     &.joinChan{
         gap: 94px;
+    }
+    &.invite{
+        gap: 94px;
+
     }
 `
 

@@ -38,7 +38,7 @@ const PopupListFriends:FunctionComponent<IProps> = (props:IProps) => {
 
     const handleGotoMsg = (user:string) =>{
         props.setFriendsLst(false);
-        navigate(`/chat?code=Priv&name=${user}`);
+        navigate(`/chat?code=Private&name=${user}`);
     }
     return (
         <StyledMenuFriend

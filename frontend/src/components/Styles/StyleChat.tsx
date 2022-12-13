@@ -53,7 +53,6 @@ export const StyledAddInputdiv = styled.div`
 export const StyledAddInputdivAdd = styled.div`
     width: 20px;
     height: 2px;
-    background-color: pink;
 `;
 
 export const StyledAddInputdivButton = styled.div`
@@ -108,8 +107,7 @@ export const StyledContact = styled.div`
     height: 104%;
     margin: 0;
     padding: 0;
-    align-items: space-around;
-    justify-content: center;
+    justify-content: flex-start;
     flex-direction: column;
     background-color: ${Colors.ChatMenu};
     border: 2px solid ${Colors.ChatMenuButton};
@@ -134,7 +132,7 @@ export const StyledChatSep = styled.div`
 export const StyledChatSwith = styled.div`
     display: flex;
     align-items: center;
-    height: 4rem;
+    height: 80px;
     border-radius: 10px 0 0 0;
     background-color: ${Colors.ChatMenu};
 `;
@@ -150,10 +148,24 @@ export const StyledChatPrive = styled.div`
     align-items: center;
     flex-direction: column;
     border-radius: 10px 0 0 10px;
-    height: 90%;
+    height: calc(100% - 80px - 6rem);
     width: 100%;
     overflow: scroll;
 `;
+
+export const StyledSettingChan = styled.div`
+    display: flex;
+    align-items: center;
+    height: 4rem;
+    justify-content: space-between;
+`
+export const StyledSettingChanP = styled.p`
+    color: ${Colors.primary};
+    font-family: "cursive";
+    font-size: 20px;
+    margin: 10px;
+`
+
 
 export const StyledChatSwithButton = styled.button<BgColor>`
     width: 120px;
@@ -252,8 +264,17 @@ export const StyledChatWindow = styled.div`
     height: 100%;
 `;
 
+export const StyledChatNameUser = styled.p`
+    margin-left: 10px;
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 10px;
+    color: ${Colors.grey};
+`
+
 export const StyledChatPlace = styled.div`
     display:flex;
+    flex-direction: column;
     margin: 10px;
     max-width: 45%;
     height: auto;
@@ -261,14 +282,13 @@ export const StyledChatPlace = styled.div`
     overflow-wrap: anywhere;
     hyphens: auto;
     transition: 0.6s;
+    background-color: transparent;
     &.receive{
         justify-content: flex-start;
-        background-color: transparent;
         text-align: left;
     }
     &.send{
         justify-content: flex-end;
-        background-color: transparent;
         transform: translateX(110%)
     }
     &:hover{
