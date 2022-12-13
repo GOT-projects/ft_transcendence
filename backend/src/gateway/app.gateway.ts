@@ -559,14 +559,14 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		client.emit('info_client', `Channel ${chan.name} created`);
 	}
 
-	@SubscribeMessage('server_chan_block_somebody')
+	@SubscribeMessage('server_chan_ban_somebody')
 	async chanBlock(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('chanName') chanName: string, @MessageBody('loginToBlock') loginToBlock: string) {
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
 		const ret = await this.chatGateway.chanBlock(auth.user, chanName, loginToBlock);
 		if (typeof ret === 'string') {
-			client.emit('error_client', 'chan_block_somebody ' + ret);
+			client.emit('error_client', 'chan_ban_somebody ' + ret);
 			return ;
 		}
 		const usersOfChannel = await this.chatGateway.getChanUsers(auth.user, chanName);
@@ -592,14 +592,14 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		}
 	}
 
-	@SubscribeMessage('server_chan_unblock_somebody')
+	@SubscribeMessage('server_chan_unban_somebody')
 	async chanUnblock(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('chanName') chanName: string, @MessageBody('loginToUnblock') loginToUnblock: string) {
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
 		const ret = await this.chatGateway.chanUnblock(auth.user, chanName, loginToUnblock);
 		if (typeof ret === 'string') {
-			client.emit('error_client', 'chan_Unblock_somebody ' + ret);
+			client.emit('error_client', 'chan_unban_somebody ' + ret);
 			return ;
 		}
 		const usersOfChannel = await this.chatGateway.getChanUsers(auth.user, chanName);
