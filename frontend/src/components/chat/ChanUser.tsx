@@ -12,6 +12,7 @@ import { AiOutlineUserAdd } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { onSocket } from "../../socket/socketOn";
 import { offSocket } from "../../socket/socketOff";
+import { StyledEmptyDiv, StyledEmptyDivChat } from "../Styles/StyleViewProfil";
 
 
 interface IProps {
@@ -70,10 +71,11 @@ const ChanUserMenu:FunctionComponent<IProps> = (props: IProps) => {
     const handleBlock = () => {
     }
 
-    console.log(userList)
+    console.info("test because not load", userList, props.chanName)
     return (
-        <>
-            {userList?.users.map((user:GOT.UserChannel) => (
+        <> 
+            {userList ? 
+            userList?.users.map((user:GOT.UserChannel) => (
                 user.status !== UserChannelStatus.BAN  && user.login !== props.profil?.userInfos.login?
                 <StyledUser key={uuid()} color={Colors.ChatMenuButton} >
                     <StyledChatDivhandle >
@@ -92,7 +94,7 @@ const ChanUserMenu:FunctionComponent<IProps> = (props: IProps) => {
                         <AiOutlineUserAdd className='setting' size={30} color={Colors.ChatMenuButtonText} />
                     </StyledChatSettingButton>
                 </StyledChatDivoption>
-                </StyledUser> : <></>))}
+                </StyledUser> : <></>)) : <StyledEmptyDivChat/>}
         </>
     )
 }

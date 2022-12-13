@@ -165,7 +165,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
         console.log(`${props.profil?.userInfos.login} Leave the channel ${chatSwitch}`)
     }
 
-    console.log(active, add, chatSwitch)
+    console.debug(active, add, chatSwitch, channelIn)
 	return (
 		<React.Fragment>
 			<BackgroundAnimate name="contact"/>

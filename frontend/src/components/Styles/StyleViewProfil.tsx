@@ -122,6 +122,10 @@ export const StyledContaiteDivPUser = styled.div<BgColor>`
 export const StyledEmptyDiv = styled.div`
     display: none;
 `
+export const StyledEmptyDivChat = styled.div`
+    width: 400px;
+
+`
 export const StyledContaiteUser = styled.div`
     height: 20px;
 `

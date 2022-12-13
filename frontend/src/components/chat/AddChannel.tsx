@@ -30,7 +30,7 @@ const PopupAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
     const handleAdd = (name: string) => {
         setAdd(name); 
         if (name === "addChannel"){
-            navigate(`/chat?code=${name}&name=Create`)
+            navigate(`/chat?code=${name}&name=create`)
         }else{
             navigate(`/chat?code=${name}`)
         }
