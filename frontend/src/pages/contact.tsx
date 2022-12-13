@@ -170,7 +170,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                                                                setSelectUser={setSelectUser} userFriend={lstFriends}
                                                                setLogin={setLogin}
                                                                setPopupProfil={setPopupProfil} popuProfil={popuProfil}/> : <></>}
-                    {add === "Channel" ? <ChanUserMenu profil={props.profil} setPopupProfil={setPopupProfil} 
+                    {add === "Channel" ? <ChanUserMenu profil={props.profil} setPopupProfil={setPopupProfil} chanName={chatSwitch} 
                                                               popuProfil={popuProfil} setActive={setActive} setLogin={setLogin}/> : <></>}
                     </StyledChatPrive>
                 </StyledContact>
