@@ -735,23 +735,6 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		}
 		client.emit('info_client', `Channel ${chanName} edit`);
-		// actu
-		for (const tmp of this.users) {
-			if (tmp[0] === auth.user.login) {
-				const channelsIn = this.chatGateway.getChannelsIn(auth.user);
-				const channels = this.chatGateway.getChannels(auth.user);
-				this.server.to(tmp[1]).emit('client_channels_in', channelsIn);
-				this.server.to(tmp[1]).emit('client_channels', channels);
-			} else {
-				const userToSend = await this.userService.findLogin(tmp[0]);
-				if (userToSend !== null) {
-					const channelsIn = await this.chatGateway.getChannelsIn(userToSend);
-					const channels = await this.chatGateway.getChannels(userToSend);
-					this.server.to(tmp[1]).emit('client_channels_in', channelsIn);
-					this.server.to(tmp[1]).emit('client_channels', channels);
-				}
-			}
-		}
 	}
 
 	@SubscribeMessage('server_chan_edit_name')
