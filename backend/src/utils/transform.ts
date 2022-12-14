@@ -8,7 +8,7 @@ export namespace MyTransform {
 		return {
 			id: user.id,
 			login: user.login,
-			username: user.username,
+			//username: user.username,
 			urlImg: user.urlImg,
 			wallet: user.wallet,
 			email: user.email,

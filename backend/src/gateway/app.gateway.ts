@@ -155,12 +155,12 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		client.emit('client_profil_login', ret);
 	}
 
-	@SubscribeMessage('server_change_username')
-	async changeUsername(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('username') username: string) {
+	@SubscribeMessage('server_change_login')
+	async changeLogin(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('login') login: string) {
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
-		const ret = await this.generalGateway.changeUsername(auth.user, username);
+		const ret = await this.generalGateway.changeLogin(auth.user, login);
 		if (typeof ret === 'string') {
 			client.emit('error_client', 'change_username' + ret);
 			return ;

@@ -22,7 +22,7 @@ export class GeneralGateway {
 		return {
 			id: user.id,
 			login: user.login,
-			username: user.username,
+			//username: user.username,
 			urlImg: user.urlImg,
 			wallet: user.wallet,
 			email: user.email,
@@ -91,9 +91,10 @@ export class GeneralGateway {
 		}
 	}
 
-	async changeUsername(user: User, username: string): Promise<true | string> {
+	async changeLogin(user: User, login: string): Promise<true | string> {
 		try {
-			user.username = username;
+			user.login = login;
+			//user.username = username;
 			await this.userService.update(user.id, user);
 			return true;
 		} catch (error) {

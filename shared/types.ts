@@ -13,7 +13,7 @@ export namespace GOT {
     export interface User {
         id: number;
         login: string;
-        username: string;
+        //username: string;
         urlImg: string;
         wallet: number;
         email: string;

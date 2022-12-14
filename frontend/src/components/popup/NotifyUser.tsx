@@ -21,7 +21,7 @@ const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
     const navigate = useNavigate();
 
     const handleAdd = (user: GOT.User) =>{
-        let tmp: GOT.NotifChoice = {user:user, accept: true};
+        let tmp: GOT.NotifChoice = {user:user, accept: true, channel: undefined};
         props.setNotify({isOpen: true, message: `Add ${user.login}`, type:'success'});
         emitSocket.emitReplyNotif(socket, tmp)
         console.log(props.profil?.notif.length === 1)
@@ -33,7 +33,7 @@ const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
     }
 
     const handleRemove = (user: GOT.User) =>{
-        let tmp: GOT.NotifChoice = {user:user, accept: false};
+        let tmp: GOT.NotifChoice = {user:user, accept: false, channel: undefined};
         emitSocket.emitReplyNotif(socket, tmp)
         props.setNotify({isOpen: true, message: `Refused invitation of ${user.login}`, type:'success'});
         if (props.profil?.notif.length === 1){
