@@ -149,7 +149,7 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
                         <StyledContaiteReturnAddButton onClick={handleSendChange}>
                             <StyledContaiteReturnAddButtonP>send</StyledContaiteReturnAddButtonP>
                         </StyledContaiteReturnAddButton> : 
-                        <StyledContaiteReturnAddButton onClick={handleSendChange}>
+                        <StyledContaiteReturnAddButton onClick={handleSend}>
                             <StyledContaiteReturnAddButtonP>send</StyledContaiteReturnAddButtonP>
                         </StyledContaiteReturnAddButton> }
                         <StyledContaiteReturnAddButton onClick={handleReturnChan}>
