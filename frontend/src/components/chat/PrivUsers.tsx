@@ -11,6 +11,7 @@ import { MdOutlineBlock } from "react-icons/md";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import ProfilView from "../popup/ProfilView";
+import { StyledEmptyDivChat } from "../Styles/StyleViewProfil";
 
 
 interface IProps {
@@ -86,8 +87,10 @@ const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
 
     return (
         <>
-            {props.friends?.map((user:GOT.User) =>(
-                <StyledUser key={uuid()} color={user.login === props.selectUser?.login ? Colors.ChatMenuButton : Colors.ChatMenu} >
+            {props.friends ? 
+            props.friends?.map((user:GOT.User) =>(
+                <StyledUser key={uuid()} color={user.login === props.selectUser?.login ? 
+                        Colors.ChatMenuButton : Colors.ChatMenu} >
                     <StyledChatDivhandle onClick={() => {handleSelectFriend(user.login)}}>
                         <StyledChatPrivAvatar profil={user.urlImg}/>
                         <StyledChatPrivName key={uuid()}>{user.login}</StyledChatPrivName>
@@ -97,15 +100,16 @@ const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
                         <CgProfile className='setting' size={30} color={Colors.ChatMenuButtonText}/>
                     </StyledChatSettingButton>
                     <StyledChatSettingButton onClick={() => {handleBlockUser(user.login)}}>
-                        <MdOutlineBlock className='setting' size={30} color={handleBlockUserColor(user.login) ? Colors.ChatMenuButtonText : "red"}/>
+                        <MdOutlineBlock className='setting' size={30} color={handleBlockUserColor(user.login) ? 
+                                Colors.ChatMenuButtonText : "red"}/>
                     </StyledChatSettingButton>
                     {handleFriend(user.login) ? <StyledChatDivEmpty/> :
                     <StyledChatSettingButton onClick={() => {handleAddFriend(user.login)}}>
                         <AiOutlineUserAdd className='setting' size={30} color={Colors.ChatMenuButtonText}/>
                     </StyledChatSettingButton>
-                    }
+                }
                 </StyledChatDivoption>
-                </StyledUser>))}
+                </StyledUser>)): <StyledEmptyDivChat key={uuid()}/>}
         </>
     )
 }

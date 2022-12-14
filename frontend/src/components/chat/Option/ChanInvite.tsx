@@ -56,12 +56,11 @@ const PopupOptionInvite:FunctionComponent<IProps> = (props: IProps) =>{
         }
 	}	
 
-    const handleReturn = () => {
-        props.setInvite(false);
-    }
-
     const handleSend = () => {
-        console.log("invite to channel:", selectUser)
+        selectUser.map((user) => {
+            console.log("invite to channel:", props.chanName, user.login)
+            emitSocket.emitInviteSomebody(socket, props.chanName, user.login);
+        })
         props.setInvite(false);
     }
 
@@ -82,25 +81,25 @@ const PopupOptionInvite:FunctionComponent<IProps> = (props: IProps) =>{
             >
             <StyledContaiteClose onClick={handleClose} className="invite">
                     <FaWindowClose size={30} color={Colors.dark1}/>
-                    <StyledContaiteViewAddP className="addUserTitle">Invite to channel</StyledContaiteViewAddP>
+                    <StyledContaiteViewAddP className="addUserTitle">
+                            Invite to channel
+                    </StyledContaiteViewAddP>
             </StyledContaiteClose>
             <StyledContaiteAddUser>
                 <StyledContaiteDivUser key={uuid()}>
                     {props.listUser?.map((user) => (
                             handleListUser(user.login) ? 
                             <StyledContaiteDivPUser key={uuid()} onClick={() => {handleSelect(user)}} 
-                                color={selectUser.find((select) => select.login === user.login) ? Colors.grey : Colors.Bg2faIn}>
+                                color={selectUser.find((select) => select.login === user.login) ? 
+                                Colors.grey : Colors.Bg2faIn}>
                                 <StyledContaitePUser key={uuid()} >{user.login}</StyledContaitePUser>
                             </StyledContaiteDivPUser> : <StyledEmptyDiv key={uuid()}></StyledEmptyDiv>
                     ))}
                 </StyledContaiteDivUser>
             </StyledContaiteAddUser>
             <StyledContaiteReturn className="addUser">
-                <StyledContaiteReturnDiv onClick={handleReturn}>
-                    <p>return</p>
-                </StyledContaiteReturnDiv>
                 <StyledContaiteReturnDiv onClick={handleSend}>
-                    <p>add</p>
+                    <p>Send invitation</p>
                 </StyledContaiteReturnDiv>
             </StyledContaiteReturn>
             </motion.div>

@@ -87,10 +87,13 @@ let emitLeaveChan = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, ch
     socket.emit('server_chan_leave', {Authorization: accountService.getToken(), chanName: chanName})
 }
 
+let emitInviteSomebody = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName:string, loginInvite:string) => {
+    socket.emit('server_chanmsg_invite', {Authorization: accountService.getToken(), chanName: chanName, loginInvite:loginInvite})
+}
 
 export const emitSocket ={
     emitProfil, emitProfilHisto, emitFriends, emitDemandFriend, emitChangeUsername, emitLeaderboard, 
     emitPrivmsg, emitSendPrivmsg, emitUsers, emitBlockUser, emitPrivmsgUsers, emitReplyNotif, emitUnBlockUser, emitCreateChan, 
     emitChannels, emitChannelsIn, emitChannelMsg_send, emitChannelMsg, emitChannelJoin, emitChanUserNotBan,
-    emitLeaveChan
+    emitLeaveChan, emitInviteSomebody
 }

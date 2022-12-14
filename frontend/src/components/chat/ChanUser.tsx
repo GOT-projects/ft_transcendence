@@ -32,7 +32,6 @@ enum UserChannelStatus {
 
 const ChanUserMenu:FunctionComponent<IProps> = (props: IProps) => {
     const socket = useContext(SocketContext)
-    const navigate = useNavigate();
     const [userList, setUserlist] = useState<GOT.ChannelUsers>();
     const [myStatus, setMyStatus] = useState<UserChannelStatus>();
 
