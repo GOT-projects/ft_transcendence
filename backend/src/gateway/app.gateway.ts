@@ -767,6 +767,66 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		}
 	}
 
+	@SubscribeMessage('server_chan_pass_admin')
+	async chanPassAdmin(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('chanName') chanName: string, @MessageBody('loginToPassAdmin') loginToPassAdmin: string) {
+		const auth = await this.connectionSecure(client, jwt);
+		if (!auth)
+			return ;
+		const ret = await this.chatGateway.chanPassAdmin(auth.user, chanName, loginToPassAdmin);
+		if (typeof ret === 'string') {
+			client.emit('error_client', 'chan_pass_admin ' + ret);
+			return ;
+		}
+		client.emit('info_client', `Channel ${chanName}: ${loginToPassAdmin} is now admin`);
+		// actu
+		for (const tmp of this.users) {
+			if (tmp[0] === auth.user.login) {
+				const channelsIn = this.chatGateway.getChannelsIn(auth.user);
+				const channels = this.chatGateway.getChannels(auth.user);
+				this.server.to(tmp[1]).emit('client_channels_in', channelsIn);
+				this.server.to(tmp[1]).emit('client_channels', channels);
+			} else {
+				const userToSend = await this.userService.findLogin(tmp[0]);
+				if (userToSend !== null) {
+					const channelsIn = await this.chatGateway.getChannelsIn(userToSend);
+					const channels = await this.chatGateway.getChannels(userToSend);
+					this.server.to(tmp[1]).emit('client_channels_in', channelsIn);
+					this.server.to(tmp[1]).emit('client_channels', channels);
+				}
+			}
+		}
+	}
+
+	@SubscribeMessage('server_chan_pass_admin')
+	async chanPassMember(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('chanName') chanName: string, @MessageBody('loginToPassMember') loginToPassMember: string) {
+		const auth = await this.connectionSecure(client, jwt);
+		if (!auth)
+			return ;
+		const ret = await this.chatGateway.chanPassAdmin(auth.user, chanName, loginToPassMember);
+		if (typeof ret === 'string') {
+			client.emit('error_client', 'chan_pass_admin ' + ret);
+			return ;
+		}
+		client.emit('info_client', `Channel ${chanName}: ${loginToPassMember} is now member`);
+		// actu
+		for (const tmp of this.users) {
+			if (tmp[0] === auth.user.login) {
+				const channelsIn = this.chatGateway.getChannelsIn(auth.user);
+				const channels = this.chatGateway.getChannels(auth.user);
+				this.server.to(tmp[1]).emit('client_channels_in', channelsIn);
+				this.server.to(tmp[1]).emit('client_channels', channels);
+			} else {
+				const userToSend = await this.userService.findLogin(tmp[0]);
+				if (userToSend !== null) {
+					const channelsIn = await this.chatGateway.getChannelsIn(userToSend);
+					const channels = await this.chatGateway.getChannels(userToSend);
+					this.server.to(tmp[1]).emit('client_channels_in', channelsIn);
+					this.server.to(tmp[1]).emit('client_channels', channels);
+				}
+			}
+		}
+	}
+
 
 
 	/**

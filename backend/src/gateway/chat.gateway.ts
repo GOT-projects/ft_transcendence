@@ -444,8 +444,6 @@ export class ChatGateway {
 		}
 	}
 
-	// TODO admin
-
 	async changeStatusChannel(user: User, chan: GOT.Channel): Promise<string | UpdateResult> {
 		try {
 			let channel = await this.channelService.findChanName(chan.name);
@@ -508,6 +506,60 @@ export class ChatGateway {
 				return await this.channelService.update(channel.id, channel);
 			} else
 				return `You haven't the rights to change name of channel ${chanName}`;
+		} catch (error) {
+			return error.message;
+		}
+	}
+
+	async chanPassAdmin(user: User, chanName: string, loginToPassAdmin: string): Promise<string | UpdateResult> {
+		try {
+			let channel = await this.channelService.findChanName(chanName);
+			if (!channel)
+				return `Channel not found`;
+			const userToGrant = await this.userService.findLogin(loginToPassAdmin);
+			if (!userToGrant)
+				return 'User not found';
+			const rels = await this.relUserChannelService.getChannelRel(user, channel);
+			if (rels.length === 1 && (rels[0].status === GOT.UserChannelStatus.OWNER || rels[0].status === GOT.UserChannelStatus.ADMIN)) {
+				const relsGrant = await this.relUserChannelService.getChannelRel(userToGrant, channel);
+				if (relsGrant.length === 1) {
+					if (relsGrant[0].status === GOT.UserChannelStatus.OWNER)
+						return `User ${loginToPassAdmin} is owner of channel, can't be pass like an admin`;
+					if (relsGrant[0].status === GOT.UserChannelStatus.BAN)
+						return `User ${loginToPassAdmin} is ban of channel, can't be pass like an admin (unblock and add !!)`;
+					relsGrant[0].status = GOT.UserChannelStatus.ADMIN;
+					return await this.relUserChannelService.update(relsGrant[0].id, relsGrant[0]);
+					} else
+					return `User ${loginToPassAdmin} not in channel`;
+			} else
+				return `You haven't the rights to change privileges of channel ${chanName}`;
+		} catch (error) {
+			return error.message;
+		}
+	}
+
+	async chanPassMember(user: User, chanName: string, loginToPassMember: string): Promise<string | UpdateResult> {
+		try {
+			let channel = await this.channelService.findChanName(chanName);
+			if (!channel)
+				return `Channel not found`;
+			const userToGrant = await this.userService.findLogin(loginToPassMember);
+			if (!userToGrant)
+				return 'User not found';
+			const rels = await this.relUserChannelService.getChannelRel(user, channel);
+			if (rels.length === 1 && (rels[0].status === GOT.UserChannelStatus.OWNER || rels[0].status === GOT.UserChannelStatus.ADMIN)) {
+				const relsGrant = await this.relUserChannelService.getChannelRel(userToGrant, channel);
+				if (relsGrant.length === 1) {
+					if (relsGrant[0].status === GOT.UserChannelStatus.OWNER)
+						return `User ${loginToPassMember} is owner of channel, can't be pass like a member`;
+					if (relsGrant[0].status === GOT.UserChannelStatus.BAN)
+						return `User ${loginToPassMember} is ban of channel, can't be pass like a member (unblock and add !!)`;
+					relsGrant[0].status = GOT.UserChannelStatus.MEMBER;
+					return await this.relUserChannelService.update(relsGrant[0].id, relsGrant[0]);
+					} else
+					return `User ${loginToPassMember} not in channel`;
+			} else
+				return `You haven't the rights to change privileges of channel ${chanName}`;
 		} catch (error) {
 			return error.message;
 		}
