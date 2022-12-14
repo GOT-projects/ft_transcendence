@@ -35,10 +35,10 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
     const [notifMenu, setNotifMenu] = useState(false);
     const [profileMenu, setProfileMenu] = useState(false);
     const [otc, setOtc] = useState(false);
-    let [notif, setNotif] = useState(false);
+    let notif = false;
     const codeParam: Map<string, string> = accountService.getParamsNotif();
 
-    if (props.profil?.notif.length !== 0){
+    if (props.profil?.notif.length !== 0 || props.profil.notifChannel.length !== 0){
         notif = true;
     }
 
@@ -55,23 +55,6 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
     //Socket get info from server 
     useEffect(() => {
         onSocket.warning_client(socket, props.setNotify)
-    }, [socket])
-
-    //Socket listen add friend list
-    useEffect(() => {
-        socket.on('client_notif', (rep:GOT.User[]) => {
-            if (rep){
-                console.log('client_notif', rep);
-                const size = rep.length - 1;
-                if (size !== -1){
-                    props.setNotify({isOpen: true, message: `${rep[size].login} add you in Friend`, type:'info'});
-                    emitSocket.emitProfil(socket);
-                    notif = true;
-                }else{
-                    setNotifMenu(false);
-                }
-            }
-        })
     }, [socket])
 
     //Update info user all last data and Update if data are changed

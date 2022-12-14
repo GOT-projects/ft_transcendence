@@ -1,13 +1,16 @@
 import {Snackbar} from "@material-ui/core"
 import {Alert} from "@material-ui/lab"
 import {NotifyInterUse} from "./interfaces"
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { accountService } from "../services/account.service";
+import { emitSocket } from "../socket/socketEmit";
+import { SocketContext } from "../socket/socketPovider";
 
 export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
    const {notify, setNotify} = props;
    const navigate = useNavigate();
+    const socket = useContext(SocketContext);
 
    const handleClose = () =>{
         const params = (new URL(window.location.href));
@@ -22,6 +25,7 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
             const tab = notify.message.split(" ");
             navigate(`/chat?code=Chan=${tab[3]}`)
         }
+        // receive notif friend
         let regexNotif:RegExp = /^Info: User with login (.*[a-z]) invite you to be friend/
         if (regexNotif.test(notify.message)){
             if (params.search === ""){
@@ -31,6 +35,18 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
                 navigate(`${params.pathname}${param}`)
             }
         }
+        // receive notif channel
+        let regexNotifChan:RegExp = /^Info: Invitation to join channel (.*[a-z])/
+        if (regexNotifChan.test(notify.message)){
+            console.log("ok")
+            if (params.search === ""){
+                navigate(`${params.pathname}?notify=true`)
+            }else{
+                const param = accountService.replaceParamsTo("notif", "true");
+                navigate(`${params.pathname}${param}`)
+            }
+        }
+        emitSocket.emitProfil(socket);
         setNotify({...notify, isOpen: false})
    }
    const handleViewPopup = () =>{

@@ -43,6 +43,25 @@ const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
         }
     }
 
+    const handleAddChan = (chan: GOT.Channel) =>{
+        let tmp: GOT.NotifChoice = {user:undefined, accept: true, channel: chan};
+        emitSocket.emitReplyNotif(socket, tmp)
+        console.log(props.profil?.notif.length === 1)
+        if (props.profil?.notif.length === 1){
+            let url = (new URL(window.location.href));
+            const params = accountService.replaceParamsTo("notif", "false");
+            navigate(`${url.pathname}${params}`);
+        }
+    }
+    const handleRemoveChan = (chan: GOT.Channel) =>{
+        let tmp: GOT.NotifChoice = {user:undefined, accept: false, channel: chan};
+        emitSocket.emitReplyNotif(socket, tmp)
+        if (props.profil?.notif.length === 1){
+            let url = (new URL(window.location.href));
+            const params = accountService.replaceParamsTo("notif", "false");
+            navigate(`${url.pathname}${params}`);
+        }
+    }
     return(
         <StyledMenuNotif 
             initial={{x: 300}}
@@ -53,7 +72,7 @@ const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
                     <StyledMenuNotifholder key={uuid()}>
                         <div>
                         <StyledMenuNotifContentUser>
-                            <StyledMenuNotifUser>{user.login}</StyledMenuNotifUser>
+                            <StyledMenuNotifUser title="User">{user.login}</StyledMenuNotifUser>
                         </StyledMenuNotifContentUser>
                         </div>
                         <StyledMenuNotifButton>
@@ -62,6 +81,23 @@ const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
                             </StyledMenuNotifButtonHover>
                             <StyledMenuNotifButtonHover>
                                 <TiUserDelete size={"25px"} onClick={() => handleRemove(user)}/>
+                            </StyledMenuNotifButtonHover>
+                        </StyledMenuNotifButton>
+                </StyledMenuNotifholder>
+                ))}
+                {props.profil?.notifChannel.map((chan) => (
+                    <StyledMenuNotifholder key={uuid()}>
+                        <div>
+                        <StyledMenuNotifContentUser>
+                            <StyledMenuNotifUser title="Channel">{chan.name}</StyledMenuNotifUser>
+                        </StyledMenuNotifContentUser>
+                        </div>
+                        <StyledMenuNotifButton>
+                            <StyledMenuNotifButtonHover>
+                                <RiUserAddFill size={"20px"} onClick={() => handleAddChan(chan)}/>
+                            </StyledMenuNotifButtonHover>
+                            <StyledMenuNotifButtonHover>
+                                <TiUserDelete size={"25px"} onClick={() => handleRemoveChan(chan)}/>
                             </StyledMenuNotifButtonHover>
                         </StyledMenuNotifButton>
                 </StyledMenuNotifholder>

@@ -529,8 +529,10 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const userToInvite = await this.userService.findLogin(loginInvite);
 		if (sock && userToInvite !== null) {
 			const profil = await this.getProfilWithFriends(userToInvite);
-			if (typeof profil !== 'string')
+			if (typeof profil !== 'string'){
 				this.server.to(sock).emit('client_profil', profil);
+				this.server.to(sock).emit('info_client', `Invitation to join channel ${chanName}`);
+            }
 		}
 		client.emit('info_client', `Channel ${chanName} you invite user with login ${loginInvite}`);
 	}
