@@ -4,7 +4,7 @@ import Header from "../components/Header"
 import {Colors} from "../components/Colors"
 import React, { Dispatch, FunctionComponent } from 'react'
 import { useContext, useState, useEffect, useRef} from 'react';
-import { StyledLead, StyledLeadTile, StyledSep, StyledTile, StyledLeadP, StyledLeadTileRank, StyledLeadB, Button, StyledSepController } from "../components/Styles/StyledleaderBoard";
+import { StyledLead, StyledLeadTile, StyledSep, StyledTile, StyledLeadP, StyledLeadTileRank, StyledLeadB, Button, StyledSepController, StyledLeadPHead } from "../components/Styles/StyledleaderBoard";
 import {InfoServer, NotifyInter} from "../components/interfaces"
 import {Notification} from "../components/Notify"
 import { v4 as uuid } from 'uuid';
@@ -91,11 +91,11 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 				<StyledSep/>
 				<StyledLeadTileRank color={Colors.Sep}>
 				<thead>
-					<tr>
-						<StyledLeadP>Name</StyledLeadP>
-						<StyledLeadP>Rank</StyledLeadP>
-						<StyledLeadP>Wins</StyledLeadP>
-						<StyledLeadP>Loses</StyledLeadP>
+					<tr style={{borderCollapse: "collapse"}}>
+						<StyledLeadPHead>Name</StyledLeadPHead>
+						<StyledLeadPHead>Rank</StyledLeadPHead>
+						<StyledLeadPHead>Wins</StyledLeadPHead>
+						<StyledLeadPHead>Loses</StyledLeadPHead>
 					</tr>
 				</thead>
 				<tbody>
@@ -103,10 +103,12 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 					{
 						tab?.map((usr: GOT.ProfileLeaderBoard) => (
 						<tr key={uuid()} >
-							<div>
-								{usr.inGame !== undefined ? <GiRetroController size={"20px"} color="white"/> : <StyledSepController/>}
-								<StyledLeadB onClick={buttonHandler} className="button">{usr.userInfos.login}</StyledLeadB>
-							</div>
+							<td>
+								<div style={{display: "flex", flexDirection: "row" , justifyContent: "space-between"}}>
+									{usr.inGame !== undefined ? <GiRetroController size={"20px"} color="white"/> : <StyledSepController/>}
+									<StyledLeadB onClick={buttonHandler} className="button">{usr.userInfos.login}</StyledLeadB>
+								</div>
+							</td>
 							<StyledLeadP>{usr.stat.rank}</StyledLeadP>
 							<StyledLeadP>{usr.stat.victory}</StyledLeadP>
 							<StyledLeadP>{usr.stat.defeat}</StyledLeadP>

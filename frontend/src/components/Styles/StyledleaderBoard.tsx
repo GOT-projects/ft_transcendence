@@ -93,6 +93,19 @@ export const StyledLeadP = styled.td`
 
 `;
 
+export const StyledLeadPHead = styled.th`
+    margin: 20px;
+    width: 10px;
+    padding: 6px;
+    font-family: "Public Pixel";
+    opacity: 1;
+    color: red;
+    text-align: center;
+    font-size: x-large;
+    border-bottom: 1px solid deeppink;
+    border-collapse: collapse;
+`;
+
 export const StyledLeadB = styled.button`
 background-color: transparent;
 background-opacity: 0;
@@ -106,4 +119,6 @@ background-opacity: 0;
     color: ${Colors.primary};
     cursor: pointer;
     border: none;
+    margin: 1px;
+    overflow: hidden;
 `;
