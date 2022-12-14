@@ -26,7 +26,7 @@ export class RelDemandService {
 		const demands = await this.relDemandRepository.find({
 			select: ["userWhoDemand"],
 			where: [
-				{userIdDemand: user.id,  channelIdWhoDemand: undefined }
+				{userIdDemand: user.id,  channelIdWhoDemand: IsNull() }
 			],
 			relations: ["userWhoDemand"],
 		});

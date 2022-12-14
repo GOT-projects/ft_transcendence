@@ -57,7 +57,6 @@ export class ChatGateway {
 	async getPrivmsgUsers(user: User): Promise<GOT.User[] | string> {
 		try {
 			const msgs = await this.messageService.getPrivmsgUsers(user);
-			console.log('fdfdfdf', msgs)
 			let ret: GOT.User[] = [];
 			for (const msg of msgs) {
 				if (msg.userFrom.id !== user.id) {
@@ -199,7 +198,6 @@ export class ChatGateway {
 				channelIdTo: channel.id,
 				message: msg
 			});
-			console.log("message save in db",newMessage)
 			return {
 				userFrom: this.generalGateway.getGOTUserFromUser(user),
 				channel: MyTransform.channelEntityToGot(channel),
