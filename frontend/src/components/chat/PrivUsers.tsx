@@ -58,10 +58,8 @@ const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
     const handleBlockUser = (name: string) => {
         const filter = props.profil?.blocks.filter((block) => block.login === name);
         if (filter?.length !== 0){
-            console.log("Unblock")
             emitSocket.emitUnBlockUser(socket, name);
         }else{
-            console.log("block")
             emitSocket.emitBlockUser(socket, name);
         }
     }

@@ -14,7 +14,6 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
 
    const handleClose = () =>{
         const params = (new URL(window.location.href));
-        console.log(params);
         let regex:RegExp = /^User with login (.*[a-z]) send you a private message/
         if (regex.test(notify.message)){
             const tab = notify.message.split(" ");
@@ -36,7 +35,6 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
             const code = params.searchParams.get("code");
             if (code === "Priv"){
                 const name = params.searchParams.get("name");
-                console.log(name, tab)
                 if (name === tab[3]){
                     return false;
                 }
@@ -44,7 +42,6 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
             }
         }
         let regexChannel:RegExp = /^Info: Channel (.*[a-z]) have a new member (.*[a-z])/
-        console.debug(regexChannel)
         if (regexChannel.test(notify.message)){
             const tab = notify.message.split(" ");
             const code = params.searchParams.get("code");

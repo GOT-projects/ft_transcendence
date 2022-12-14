@@ -45,7 +45,6 @@ const PopupOptionAddUser:FunctionComponent<IProps> = (props: IProps) =>{
     }
 
     const handleSend = async () => {
-        console.log("send selection ",selectUser);
         selectUser.map( async (select ) => {
             await emitSocket.emitSendPrivmsg(socket, select.login, "👋");
             if (props.setFriends){

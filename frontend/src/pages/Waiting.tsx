@@ -16,7 +16,6 @@ const Waiting = () => {
     useEffect(() => {
         if (!!code && !twoFAPop){
         try{
-            console.log("datafes")
             const response = apiPost.PostConnectIntra(code);
 	        response.then((response:any) => {
 	        	if(response.status === 201){

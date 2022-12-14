@@ -81,7 +81,6 @@ const PopupOptionBlock:FunctionComponent<IProps> = (props: IProps) =>{
         }
         return false
     }
-    console.log("user block", userList)
     return (
         <StyledContaiteViewAddChan>
             <motion.div

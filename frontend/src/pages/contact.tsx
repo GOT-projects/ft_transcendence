@@ -154,7 +154,6 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
         const tmp = codeParam.get("code");
         if (tmp){
             setAdd(tmp);
-            console.debug("map param", codeParam);
             if (codeParam.get("code") === "Channel" && codeParam.get("name") && codeParam.get("setting") === undefined){
                 const name = codeParam.get("name");
                 if (name)
@@ -176,11 +175,8 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
         }
         else
             setAdd("");
-        console.log(tmp)
     }, [codeParam])
 
-
-    console.debug(active, add, chatSwitch, channelIn)
 	return (
 		<React.Fragment>
 			<BackgroundAnimate name="contact"/>

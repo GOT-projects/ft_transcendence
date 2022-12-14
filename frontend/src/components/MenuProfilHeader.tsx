@@ -40,7 +40,6 @@ const ProfileMenu :FunctionComponent<IProps> = (props:IProps) => {
           return;
         }
         event.target.value = null;
-        console.log(fileObj);
         apiPost.PostUpload(fileObj);
         props.setProfileMenu(false);
   };

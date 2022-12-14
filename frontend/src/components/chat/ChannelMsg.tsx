@@ -40,7 +40,6 @@ const ChannelMsg:FunctionComponent<IProps> = (props:IProps)=> {
     useEffect(() => {
         //receive list message
         onSocket.client_channelMsg(socket, setSelectChanMsg);
-        console.log("receive message", selectChanMsg)
         return () => {
             offSocket.client_channelMsg(socket);
         } 
@@ -48,7 +47,6 @@ const ChannelMsg:FunctionComponent<IProps> = (props:IProps)=> {
 
 
     useEffect(() =>{
-        console.log("emit ", props.chanName);
         emitSocket.emitChannelMsg(socket, props.chanName)
     }, [socket])
 

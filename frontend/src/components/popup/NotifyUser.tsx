@@ -23,7 +23,6 @@ const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
     const handleAdd = (user: GOT.User) =>{
         let tmp: GOT.NotifChoice = {user:user, accept: true, channel: undefined};
         props.setNotify({isOpen: true, message: `Add ${user.login}`, type:'success'});
-        console.log(props.profil?.notif.length === 1)
         if (props.profil?.notif.length === 1 && props.profil?.notifChannel.length === 0){
             props.setNotify(false);
             props.setNotifyMenu(false);
