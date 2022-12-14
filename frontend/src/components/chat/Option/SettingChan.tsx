@@ -24,6 +24,7 @@ const PopupChannelSetting:FunctionComponent<IProps> = (props: IProps) =>{
     const navigate = useNavigate();
     const handleClose = () => {
         props.setSetting(false);
+        navigate(`/chat?code=Channel&name=${props.chanName}&Setting=false`);
     }
 
     const handleAdd = (name: string) => {
@@ -31,12 +32,17 @@ const PopupChannelSetting:FunctionComponent<IProps> = (props: IProps) =>{
         props.setSetting(false);
         navigate(`/chat?code=${name}`)
     }
-
-    const handleSettingChannel = (name: string) => {
-        setAdd(name); 
+    
+    const handleSettingInvite = () => {
         props.setSetting(false);
-        navigate(`/chat?code=${name}&name=change&chanName=${props.chanName}`)
+        navigate(`/chat?code=Channel&name=${props.chanName}&Setting=Invite`);
     }
+
+    const handleSettingChannel = () => {
+        props.setSetting(false);
+        navigate(`/chat?code=Channel&name=${props.chanName}&Setting=Change`);
+    }
+
     return (
         <StyledContaiteViewAddChan>
             {add === "" ?
@@ -49,15 +55,19 @@ const PopupChannelSetting:FunctionComponent<IProps> = (props: IProps) =>{
                     <FaWindowClose size={30} color={Colors.dark1}/>
             </StyledContaiteClose>
             <StyledContaiteViewAddP className="addTitle">Setting Channel</StyledContaiteViewAddP>
-            <StyledContaiteViewAddOption onClick={() => {handleSettingChannel("addChannel")}}>
+            <StyledContaiteViewAddOption onClick={() => {handleSettingChannel()}}>
                 <StyledContaiteViewAddP >Status Channel</StyledContaiteViewAddP>
                 <StyledContaiteViewAddP>{">"}</StyledContaiteViewAddP>
             </StyledContaiteViewAddOption>
-            <StyledContaiteViewAddOption onClick={() => {handleAdd("addChannel")}}>
+            <StyledContaiteViewAddOption onClick={() => {handleSettingInvite()}}>
                 <StyledContaiteViewAddP>User status</StyledContaiteViewAddP>
                 <StyledContaiteViewAddP>{">"}</StyledContaiteViewAddP>
             </StyledContaiteViewAddOption>
-            <StyledContaiteViewAddOption onClick={() => {handleAdd("joinChannel")}}>
+            <StyledContaiteViewAddOption onClick={() => {handleAdd("addChannel")}}>
+                <StyledContaiteViewAddP>UnBlock Users</StyledContaiteViewAddP>
+                <StyledContaiteViewAddP>{">"}</StyledContaiteViewAddP>
+            </StyledContaiteViewAddOption>
+            <StyledContaiteViewAddOption onClick={() => {handleSettingInvite()}}>
                 <StyledContaiteViewAddP>Leave</StyledContaiteViewAddP>
                 <StyledContaiteViewAddP>{">"}</StyledContaiteViewAddP>
             </StyledContaiteViewAddOption>

@@ -26,25 +26,23 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
     const [inputPwd, setInputPwd] = useState("");
     const [selecte, setSelecte] = useState("");
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
-    const codeParam = accountService.getParamsChanCreateOrChange();
+    const codeParam = accountService.getParamsPriv();
     const [typeChannel, setTypeChannel] = useState("");
     const [channelName, setChannelName] = useState("");
 
     useEffect(() => {
-        if (codeParam.get("name") === "change"){
+        if (codeParam.get("code") === "Channel" && codeParam.get("setting") === "Change"){
             setTypeChannel("change");
             const tmp = codeParam.get("chanName");
             if (tmp)
                 setChannelName(tmp)
-
         }else if (codeParam.get("name") === "create"){
             setTypeChannel("create");
         }else{
             navigate("/chat")
         }
-
-
     },[]);
+
     const handleChangeChan = (event: any,) => {
         if (inputChan === "" && event.target.value ==="\n")
             return;
@@ -63,6 +61,9 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
         navigate("/chat?code=add");
     }
 
+    const handleReturnChan = () => {
+        navigate(`/chat?code=Channel&name=${codeParam.get("name")}&Setting=Menu`)
+    }
     const handleSelect = (name: string) =>{
         setSelecte(name);
     }
@@ -149,7 +150,7 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
                         <StyledContaiteReturnAddButton onClick={handleSend}>
                             <StyledContaiteReturnAddButtonP>send</StyledContaiteReturnAddButtonP>
                         </StyledContaiteReturnAddButton> }
-                        <StyledContaiteReturnAddButton onClick={handleReturn}>
+                        <StyledContaiteReturnAddButton onClick={handleReturnChan}>
                             <StyledContaiteReturnAddButtonP>return</StyledContaiteReturnAddButtonP>
                         </StyledContaiteReturnAddButton>
                     </StyledContaiteReturnDiv>

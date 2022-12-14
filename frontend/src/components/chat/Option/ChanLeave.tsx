@@ -23,13 +23,23 @@ interface IProps {
    chanName: string;
 }
 
-const PopupOptionInvite:FunctionComponent<IProps> = (props: IProps) =>{
+enum UserChannelStatus {
+    MEMBER = 'MEMBER',
+    OWNER = 'OWNER',
+    ADMIN = 'ADMIN',
+    BAN = 'BAN'
+}
+
+const PopupOptionLeave:FunctionComponent<IProps> = (props: IProps) =>{
+    const navigate = useNavigate();
     const socket = useContext(SocketContext)
+    const [input, setInput] = useState("");
     const [selectUser, setSelectUser] = useState<GOT.User[]>([]);
     const [userList, setUserlist] = useState<GOT.ChannelUsers>();
 
     const handleClose = () => {
         props.setInvite(false);
+        navigate(`/chat?code=Channel&name=${props.chanName}&Setting=false`)
     }
 
     useEffect(() => {
@@ -56,19 +66,21 @@ const PopupOptionInvite:FunctionComponent<IProps> = (props: IProps) =>{
 
     const handleSend = () => {
         selectUser.map((user) => {
-            emitSocket.emitInviteSomebody(socket, props.chanName, user.login);
+            emitSocket.emitLeaveChan(socket, props.chanName, user.login);
         })
         props.setInvite(false);
+        handleClose();
     }
 
     const handleListUser = (login : string) => {
         const tmp = userList?.users.filter((user) => user.login === login)
         if (tmp && tmp.length !== 0){
-            return false
+            if (tmp[0].status === UserChannelStatus.OWNER){
+                return false
+            }
         }
         return true
     }
-
     return (
         <StyledContaiteViewAddChan>
             <motion.div
@@ -76,15 +88,15 @@ const PopupOptionInvite:FunctionComponent<IProps> = (props: IProps) =>{
             animate={{x:0}}
             transition={{duration: 1}}
             >
-            <StyledContaiteClose onClick={handleClose} className="invite">
+            <StyledContaiteClose onClick={handleClose} className="removeUser">
                     <FaWindowClose size={30} color={Colors.dark1}/>
-                    <StyledContaiteViewAddP className="addUserTitle">
-                            Invite to channel
+                    <StyledContaiteViewAddP className="removeUser">
+                            Remove users channel
                     </StyledContaiteViewAddP>
             </StyledContaiteClose>
             <StyledContaiteAddUser>
                 <StyledContaiteDivUser key={uuid()}>
-                    {props.listUser?.map((user) => (
+                    {userList?.users.map((user) => (
                             handleListUser(user.login) ? 
                             <StyledContaiteDivPUser key={uuid()} onClick={() => {handleSelect(user)}} 
                                 color={selectUser.find((select) => select.login === user.login) ? 
@@ -96,7 +108,7 @@ const PopupOptionInvite:FunctionComponent<IProps> = (props: IProps) =>{
             </StyledContaiteAddUser>
             <StyledContaiteReturn className="addUser">
                 <StyledContaiteReturnDiv onClick={handleSend}>
-                    <p>Send invitation</p>
+                    <p>Kick user</p>
                 </StyledContaiteReturnDiv>
             </StyledContaiteReturn>
             </motion.div>
@@ -104,4 +116,4 @@ const PopupOptionInvite:FunctionComponent<IProps> = (props: IProps) =>{
     )
 }
 
-export default PopupOptionInvite;
+export default PopupOptionLeave;

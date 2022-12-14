@@ -43,6 +43,10 @@ let getParamsPriv = () => {
         if (tmp){
             code.set("name", tmp);
         }
+        tmp = params.get("Setting");
+        if (tmp){
+            code.set("setting", tmp);
+        }
     }
     return (code);
 }

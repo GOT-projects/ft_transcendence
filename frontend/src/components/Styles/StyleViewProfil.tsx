@@ -314,6 +314,10 @@ export const StyledContaiteClose = styled.div`
         gap: 90px;
         position: absolute;
     }
+    &.removeUser{
+        gap: 50px;
+        position: absolute;
+    }
     &.joinChan{
         gap: 94px;
     }

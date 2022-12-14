@@ -33,6 +33,7 @@ import { FcInvite } from 'react-icons/fc';
 import { AiFillSetting } from 'react-icons/ai';
 import PopupOptionInvite from '../components/chat/Option/ChanInvite';
 import { useNavigate } from 'react-router-dom';
+import PopupOptionLeave from '../components/chat/Option/ChanLeave';
 
 interface IProps {
    profil: GOT.Profile | undefined;
@@ -49,6 +50,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     const [add, setAdd] =  useState("");
     const [invite, setInvite] =  useState(false);
     const [setting, setSetting] =  useState(false);
+    const [settingInvite, setSettingInvite] =  useState(false);
     const [chatSwitch, setChatSwitch] = useState<string>('');
     const [histo, setHisto] = useState<GOT.HistoryParties>();
     const [popuProfil, setPopupProfil] = useState(false);
@@ -150,10 +152,21 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
         const tmp = codeParam.get("code");
         if (tmp){
             setAdd(tmp);
-            if (codeParam.get("code") === "Channel" && codeParam.get("name")){
+            console.debug("map param", codeParam);
+            if (codeParam.get("code") === "Channel" && codeParam.get("name") && codeParam.get("setting") === undefined){
                 const name = codeParam.get("name");
                 if (name)
                     setChatSwitch(name);
+            }else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "Menu"){
+                setSetting(true);
+            }else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "Change"){
+                setAdd("addChannel");
+            }else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "Invite"){
+                setSettingInvite(true);
+            }else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "false"){
+                setSettingInvite(false);
+                setSetting(false);
+                setAdd("");
             }
         }
         else
@@ -161,10 +174,6 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
         console.log(tmp)
     }, [codeParam])
 
-    const handleLeaveChan = () => {
-        //TODO socket for user leave channel;
-        console.log(`${props.profil?.userInfos.login} Leave the channel ${chatSwitch}`)
-    }
 
     console.debug(active, add, chatSwitch, channelIn)
 	return (
@@ -207,7 +216,9 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                     {add === "Channel" ? <StyledSettingChan>
                         <StyledSettingChanP>Channel setting</StyledSettingChanP>
                         <AiFillSetting size={30} color={Colors.grey} title="Channel Setting"
-                                            onClick={() => {setSetting(true)}}/>
+                                            onClick={() => {
+                                            navigate(`/chat?code=Channel&name=${chatSwitch}&Setting=Menu`)
+                                            }}/>
                         <FcInvite size={30} title="Invite people tot channel"
                                             onClick={() => {setInvite(true)}}/>
                         <HiArrowCircleRight size={30} color={"red"} title="Leave Channel" 
@@ -236,6 +247,10 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                                         listUser={usersList} setAdd={setAdd} 
                                         setFriends={setFriends} /> : <></>}
             {invite ? <PopupOptionInvite profil={props.profil} friends={friends}
+                                        listUser={usersList} setAdd={setAdd} 
+                                        setInvite={setInvite}
+                                        setFriends={setFriends} chanName={chatSwitch}/> : <></>}
+            {settingInvite ? <PopupOptionLeave profil={props.profil} friends={friends}
                                         listUser={usersList} setAdd={setAdd} 
                                         setInvite={setInvite}
                                         setFriends={setFriends} chanName={chatSwitch}/> : <></>}
