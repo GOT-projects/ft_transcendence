@@ -2,6 +2,7 @@ import { GOT } from "shared/types";
 import { Channel } from "src/database/entities/channel.entity";
 import { Message } from "src/database/entities/message.entity";
 import { User } from "src/database/entities/user.entity";
+import { UserService } from "src/database/services/user.service";
 
 export namespace MyTransform {
 	export function userEntityToGot(user: User): GOT.User {
@@ -16,11 +17,11 @@ export namespace MyTransform {
 		}
 	}
 	
-	export async function privmsgEntityToGot(msg: Message): Promise<GOT.msg | false> {
+	export async function privmsgEntityToGot(msg: Message, userService: UserService): Promise<GOT.msg | false> {
 		if (msg.userIdTo === null)
 			return false;
-		const userTo = await this.userService.findOne(msg.userIdTo);
-		const userFrom = await this.userService.findOne(msg.userIdFrom);
+		const userTo = await userService.findOne(msg.userIdTo);
+		const userFrom = await userService.findOne(msg.userIdFrom);
 		if (userTo === null || userFrom === null)
 			return false;
 		return {

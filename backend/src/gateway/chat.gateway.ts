@@ -95,7 +95,7 @@ export class ChatGateway {
 			const block = await this.blockService.getBlock(userTo, user);
 			if (block.length === 1)
 				return `Message not send, you're block`;
-			const ret = await MyTransform.privmsgEntityToGot(tmp);
+			const ret = await MyTransform.privmsgEntityToGot(tmp, this.userService);
 			if (ret === false)
 				return 'Error user transformation'
 			return ret;
