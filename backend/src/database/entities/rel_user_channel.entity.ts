@@ -20,11 +20,11 @@ export class RelUserChannel {
     @Column()
     channelId!: number;
 
-    @ManyToOne(() => User, (user) => user.channelsRel)
+    @ManyToOne(() => User, (user) => user.channelsRel, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'userId' })
     user!: User;
 
-    @ManyToOne(() => Channel, (channel) => channel.usersRel)
+    @ManyToOne(() => Channel, (channel) => channel.usersRel, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'channelId' })
     channel!: Channel;
 

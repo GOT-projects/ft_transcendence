@@ -87,10 +87,10 @@ const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
     return (
         <>
             {props.friends?.map((user:GOT.User) =>(
-                <StyledUser key={uuid()} color={user.username === props.selectUser?.username ? Colors.ChatMenuButton : Colors.ChatMenu} >
-                    <StyledChatDivhandle onClick={() => {handleSelectFriend(user.username)}}>
+                <StyledUser key={uuid()} color={user.login === props.selectUser?.login ? Colors.ChatMenuButton : Colors.ChatMenu} >
+                    <StyledChatDivhandle onClick={() => {handleSelectFriend(user.login)}}>
                         <StyledChatPrivAvatar profil={user.urlImg}/>
-                        <StyledChatPrivName key={uuid()}>{user.username}</StyledChatPrivName>
+                        <StyledChatPrivName key={uuid()}>{user.login}</StyledChatPrivName>
                     </StyledChatDivhandle>
                 <StyledChatDivoption>
                     <StyledChatSettingButton onClick={() => {handleViewProfil(user.login)}}>

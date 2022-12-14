@@ -35,7 +35,7 @@ const ProfilView:FunctionComponent<IProps> = (props:IProps) =>{
             </StyledContaiteClose>
             <StyledContaiteProfil>
                 <StyledViewAvatar profilImg={profil?.userInfos.urlImg}/>
-                <StyledContaiteText size={"18px"}>{profil?.userInfos.username}</StyledContaiteText>
+                <StyledContaiteText size={"18px"}>{profil?.userInfos.login}</StyledContaiteText>
             </StyledContaiteProfil>
             <StyledContaiteRank>
                 <StyledContaiteText size={"12px"}>{`rank ${profil?.stat.rank} victory ${profil?.stat.victory} lose ${profil?.stat.defeat}`}</StyledContaiteText>
@@ -49,13 +49,13 @@ const ProfilView:FunctionComponent<IProps> = (props:IProps) =>{
                             
                             <StyledContaiteHistorylst>
                                 <StyledContaiteHistoryUser>
-                                    <StyledContaiteText size={"12px"}>{party.user1.username}</StyledContaiteText>
+                                    <StyledContaiteText size={"12px"}>{party.user1.login}</StyledContaiteText>
                                 </StyledContaiteHistoryUser>
                                 <StyledContaiteHistoryVs>
                                     <StyledContaiteText size={"12px"}>VS</StyledContaiteText>
                                 </StyledContaiteHistoryVs>
                                 <StyledContaiteHistoryUser>
-                                    <StyledContaiteText size={"12px"}>{party.user2.username}</StyledContaiteText>
+                                    <StyledContaiteText size={"12px"}>{party.user2.login}</StyledContaiteText>
                                 </StyledContaiteHistoryUser>
                                 <StyledContaiteHistoryScore>
                                     <StyledContaiteText size={"10px"}>{party.points1}-{party.points2}</StyledContaiteText>

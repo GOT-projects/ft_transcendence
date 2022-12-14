@@ -102,7 +102,7 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
                     <tr key={uuid()} >
                         <div>
                             {usr.inGame !== undefined ? <GiRetroController size={"20px"} color="white"/> : <StyledSepController/>}
-                            <StyledLeadB onClick={buttonHandler} className="button">{usr.userInfos.username}</StyledLeadB>
+                            <StyledLeadB onClick={buttonHandler} className="button">{usr.userInfos.login}</StyledLeadB>
                         </div>
                         <StyledLeadP>{usr.stat.rank}</StyledLeadP>
                         <StyledLeadP>{usr.stat.victory}</StyledLeadP>

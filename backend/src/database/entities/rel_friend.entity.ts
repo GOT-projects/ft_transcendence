@@ -12,11 +12,11 @@ export class RelFriend {
     @Column()
     user2Id!: number;
 
-    @ManyToOne(() => User, (user) => user.users1Friend)
+    @ManyToOne(() => User, (user) => user.users1Friend, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'user1Id' })
     user1!: User;
 
-    @ManyToOne(() => User, (user) => user.users2Friend)
+    @ManyToOne(() => User, (user) => user.users2Friend, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'user2Id' })
     user2!: User;
 }

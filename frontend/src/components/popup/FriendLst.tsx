@@ -48,10 +48,10 @@ const PopupListFriends:FunctionComponent<IProps> = (props:IProps) => {
             exit={{x: 300, opacity: 0}}>
             <StyledMenuFriendContente>
             {props.profil?.friends?.map((friend) => (
-                    <StyleMenuFriendUser key={uuid()} onClick={ () => handleGotoMsg(friend.username)}>
-                        <StatusProfile img={friend.urlImg} username={friend.username} status={friend.status}></StatusProfile>
+                    <StyleMenuFriendUser key={uuid()} onClick={ () => handleGotoMsg(friend.login)}>
+                        <StatusProfile img={friend.urlImg} username={friend.login} status={friend.status}></StatusProfile>
                         <StyleMenuFriendContenteUsername>
-                            <StyleMenuFriendUsername>{friend.username}</StyleMenuFriendUsername>
+                            <StyleMenuFriendUsername>{friend.login}</StyleMenuFriendUsername>
                         </StyleMenuFriendContenteUsername>
                     </StyleMenuFriendUser>
             ))}

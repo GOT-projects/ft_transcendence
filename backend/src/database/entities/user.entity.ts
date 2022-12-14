@@ -7,67 +7,68 @@ import { RelUserChannel } from "./rel_user_channel.entity";
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn()
-    id!: number;
+	@PrimaryGeneratedColumn()
+	id!: number;
 
-    @Column({nullable: true, default: null})
-    twoFactorAuthenticationSecret?: string;
+	@Column({nullable: true, default: null})
+	twoFactorAuthenticationSecret?: string;
 
-    @Column()
-    isTwoFactorAuthenticationEnabled!: boolean;
+	@Column()
+	isTwoFactorAuthenticationEnabled!: boolean;
 
-    @Column( {unique: true} )
-    login!: string;
+	@Column( {unique: true} )
+	login!: string;
+	/*
+	@Column()
+	username!: string;
+	*/
 
-    @Column()
-    username!: string;
+	@Column()
+	urlImg!: string;
 
-    @Column()
-    urlImg!: string;
+	@Column()
+	wallet!: number;
 
-    @Column()
-    wallet!: number;
-
-    @Column()
-    email!: string;
-
-
-
+	@Column()
+	email!: string;
 
 
-    // Messages
 
-    @OneToMany(() => Message, (message) => message.userFrom)
-    messageFrom: Message[];
 
-    @OneToMany(() => Message, (message) => message.userTo)
-    messageTo: Message[];
 
-    // Games
+	// Messages
 
-    @OneToMany(() => Game, (game) => game.user1)
-    gamesPlayer1: Game[];
+	@OneToMany(() => Message, (message) => message.userFrom)
+	messageFrom: Message[];
 
-    @OneToMany(() => Game, (game) => game.user2)
-    gamesPlayer2: Game[];
+	@OneToMany(() => Message, (message) => message.userTo)
+	messageTo: Message[];
 
-    // Channels
+	// Games
 
-    @OneToMany(() => RelUserChannel, (rel) => rel.user)
-    channelsRel: RelUserChannel[];
+	@OneToMany(() => Game, (game) => game.user1)
+	gamesPlayer1: Game[];
 
-    // Friends
+	@OneToMany(() => Game, (game) => game.user2)
+	gamesPlayer2: Game[];
 
-    @OneToMany(() => RelFriend, (rel) => rel.user1)
-    users1Friend: RelFriend[];
-    @OneToMany(() => RelFriend, (rel) => rel.user2)
-    users2Friend: RelFriend[];
+	// Channels
 
-    // Block
+	@OneToMany(() => RelUserChannel, (rel) => rel.user)
+	channelsRel: RelUserChannel[];
 
-    @OneToMany(() => RelBlock, (rel) => rel.userWhoBlock)
-    userWhoBlock: RelBlock[];
-    @OneToMany(() => RelBlock, (rel) => rel.userIdIsBlock)
-    userIdIsBlock: RelBlock[];
+	// Friends
+
+	@OneToMany(() => RelFriend, (rel) => rel.user1)
+	users1Friend: RelFriend[];
+	@OneToMany(() => RelFriend, (rel) => rel.user2)
+	users2Friend: RelFriend[];
+
+	// Block
+
+	@OneToMany(() => RelBlock, (rel) => rel.userWhoBlock)
+	userWhoBlock: RelBlock[];
+	@OneToMany(() => RelBlock, (rel) => rel.userIdIsBlock)
+	userIdIsBlock: RelBlock[];
 
 }

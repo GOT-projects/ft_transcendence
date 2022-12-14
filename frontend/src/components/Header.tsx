@@ -64,7 +64,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                 console.log('client_notif', rep);
                 const size = rep.length - 1;
                 if (size !== -1){
-                    props.setNotify({isOpen: true, message: `${rep[size].username} add you in Friend`, type:'info'});
+                    props.setNotify({isOpen: true, message: `${rep[size].login} add you in Friend`, type:'info'});
                     emitSocket.emitProfil(socket);
                     notif = true;
                 }else{
