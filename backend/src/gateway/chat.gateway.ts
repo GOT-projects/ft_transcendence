@@ -130,7 +130,6 @@ export class ChatGateway {
 			if (rels[0].status === GOT.UserChannelStatus.BAN)
 				return `You can't get messages of channel ${chanName} because BAN`;
 			const msgs = await this.messageService.getChanmsg(user, channel);
-			console.log("all msgs in db",msgs)
 			let ret: GOT.MsgChannel[] = [];
 			for (const msg of msgs) {
 				const tmp = MyTransform.chanmsgEntityToGotNoId(msg);
@@ -273,7 +272,7 @@ export class ChatGateway {
 			// Déjà dans le channel
 			if (relUserInvite.length === 1 && relUserInvite[0].status !== GOT.UserChannelStatus.BAN)
 				return `User with login ${loginInvite} already in channel ${chanName}`;
-			if (relUserInvite[0].status === GOT.UserChannelStatus.BAN && relUser[0].status !== GOT.UserChannelStatus.MEMBER)
+			if (relUserInvite.length === 1 && relUserInvite[0].status === GOT.UserChannelStatus.BAN && relUser[0].status !== GOT.UserChannelStatus.MEMBER)
 				return `You can't invite user in channel because the user with login ${loginInvite} is ban of the channel ${chanName}`;
 			const alreadyDemand = await this.demandService.getChannel(userInvite, channel);
 			if (alreadyDemand.length === 1)
