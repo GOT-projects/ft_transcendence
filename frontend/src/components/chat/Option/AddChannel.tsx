@@ -99,9 +99,11 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
         }
     }
     const handleSendChange = () =>{
-        let chan:GOT.Channel | undefined = undefined;
-        navigate(`/chat?code&Channel&name=${channelName}`);
-        //TODO send send change 
+        const chanName = codeParam.get("name");
+        if (chanName && inputChan !== ""){
+            emitSocket.emitChanChangeName(socket, chanName, inputChan);
+        }
+        // navigate("/chat");
     }
 
     return (
@@ -147,7 +149,7 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
                         <StyledContaiteReturnAddButton onClick={handleSendChange}>
                             <StyledContaiteReturnAddButtonP>send</StyledContaiteReturnAddButtonP>
                         </StyledContaiteReturnAddButton> : 
-                        <StyledContaiteReturnAddButton onClick={handleSend}>
+                        <StyledContaiteReturnAddButton onClick={handleSendChange}>
                             <StyledContaiteReturnAddButtonP>send</StyledContaiteReturnAddButtonP>
                         </StyledContaiteReturnAddButton> }
                         <StyledContaiteReturnAddButton onClick={handleReturnChan}>
