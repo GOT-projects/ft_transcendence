@@ -49,7 +49,7 @@ const ChanUserMenu:FunctionComponent<IProps> = (props: IProps) => {
     useEffect(() => {
         onSocket.client_chanmsg_users_not_ban(socket, setUserlist);
         const tmp = userList?.users.filter((ls) => props.profil?.userInfos.login === ls.login); 
-        if (tmp){
+        if (tmp && tmp.length !== 0){
             setMyStatus(tmp[0].status);
         }else{
             setMyStatus(undefined);
@@ -67,7 +67,8 @@ const ChanUserMenu:FunctionComponent<IProps> = (props: IProps) => {
         emitSocket.emitChanUserNotBan(socket, props.chanName);
     }, [socket])
 
-    const handleBlock = () => {
+    const handleBlock = (login:string) => {
+        emitSocket.emitChanBlock(socket, props.chanName, login)
     }
 
     return (
@@ -85,7 +86,7 @@ const ChanUserMenu:FunctionComponent<IProps> = (props: IProps) => {
                         <CgProfile className='setting' size={30} color={Colors.ChatMenuButtonText}/>
                     </StyledChatSettingButton>
                     {myStatus === UserChannelStatus.OWNER || (myStatus === UserChannelStatus.ADMIN && user.status !== UserChannelStatus.OWNER) ? 
-                    <StyledChatSettingButton onClick={() => {handleBlock()}} title="Ban user">
+                    <StyledChatSettingButton onClick={() => {handleBlock(user.login)}} title="Ban user">
                         <SiUblockorigin size={30} color={Colors.ChatMenuButtonText}/>
                     </StyledChatSettingButton> : <></>}
                     <StyledChatSettingButton onClick={() => {handleAddFriend(user.login)}} title="add friend">

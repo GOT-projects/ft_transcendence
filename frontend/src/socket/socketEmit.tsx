@@ -91,9 +91,16 @@ let emitInviteSomebody = async (socket:Socket<DefaultEventsMap, DefaultEventsMap
     socket.emit('server_chanmsg_invite', {Authorization: accountService.getToken(), chanName: chanName, loginInvite:loginInvite})
 }
 
+let emitChanUnBlock = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName:string, loginUnblock:string) => {
+    socket.emit('server_chan_unban_somebody', {Authorization: accountService.getToken(), chanName: chanName, loginToUnban:loginUnblock})
+}
+
+let emitChanBlock = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName:string, loginBlock:string) => {
+    socket.emit('server_chan_ban_somebody', {Authorization: accountService.getToken(), chanName: chanName, loginToBan:loginBlock})
+}
 export const emitSocket ={
     emitProfil, emitProfilHisto, emitFriends, emitDemandFriend, emitChangeUsername, emitLeaderboard, 
     emitPrivmsg, emitSendPrivmsg, emitUsers, emitBlockUser, emitPrivmsgUsers, emitReplyNotif, emitUnBlockUser, emitCreateChan, 
     emitChannels, emitChannelsIn, emitChannelMsg_send, emitChannelMsg, emitChannelJoin, emitChanUserNotBan,
-    emitLeaveChan, emitInviteSomebody
+    emitLeaveChan, emitInviteSomebody, emitChanBlock, emitChanUnBlock
 }
