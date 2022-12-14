@@ -265,7 +265,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 					}
 				}
 				if(ret.status) {
-					this.server.to(sock).emit('client_chanmsg_users_not_ban', users);
+					this.server.to(sock).emit('client_chan_users', users);
 					this.server.to(sock).emit('info_client', `User with login ${auth.user.login} join the channel ${reply.channel.name}`);
 				}
 				else
@@ -276,7 +276,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 				const channelsIn = await this.chatGateway.getChannelsIn(auth.user);
 				if (typeof channelsIn !== 'string')
 					this.server.to(mySock).emit('client_channels_in', channelsIn);
-				this.server.to(mySock).emit('client_chanmsg_users_not_ban', users);
+				this.server.to(mySock).emit('client_chan_users', users);
 			}
 			if (mySock) {
 				const profil = await this.getProfilWithFriends(auth.user);
@@ -285,19 +285,6 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			}
 		} else
 			client.emit('error_client', 'reply_notification reply bad format');
-	}
-
-	@SubscribeMessage('server_friends')
-	async getFriendsFor(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string) {
-		const auth = await this.connectionSecure(client, jwt);
-		if (!auth)
-			return ;
-		const profil = await this.getProfilWithFriends(auth.user);
-		if (typeof profil === 'string') {
-			client.emit('error_client', 'friends' + profil);
-			return ;
-		}
-		client.emit('client_profil', profil);
 	}
 
 	@SubscribeMessage('server_block_somebody')
@@ -395,7 +382,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		}
 		const user = this.users.get(ret.userTo.login);
 		if (user) {
-			this.server.to(user).emit('client_privmsg_send', ret);
+			//this.server.to(user).emit('client_privmsg_send', ret);
 			this.server.to(user).emit('info_client', `User with login ${auth.user.login} send you a private message`);
 		}
 		const actuUser = this.users.get(auth.user.login);
@@ -473,8 +460,6 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		}
 		const users = await this.chatGateway.getChanUsers(auth.user, chanName);
 		const actu = await this.chatGateway.getChanmsg(auth.user, chanName);
-		console.log(users);
-		
 		if (typeof users !== 'string') {
 			let sock: string[] = [];
 			for (const tmp of users.users) {
@@ -520,11 +505,14 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 					sock = [...sock, ...tmp2];
 			}
 			this.server.to(sock).emit('info_client', `Channel ${chanName} have a new member ${auth.user.login}`);
-			this.server.to(sock).emit('server_chanmsg_users_not_ban', users);
+			this.server.to(sock).emit('server_chan_users', users);
 		}
-		const back = await this.chatGateway.getChannelsIn(auth.user);
-		if (typeof back !== 'string')
-			client.emit('client_channels_in', back);
+		const sock = this.users.get(auth.user.login);
+		if (sock) {
+			const back = await this.chatGateway.getChannelsIn(auth.user);
+			if (typeof back !== 'string')
+				this.server.to(sock).emit('client_channels_in', back);
+		}
 	}
 
 	@SubscribeMessage('server_chanmsg_invite')
@@ -537,9 +525,13 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			client.emit('error_client', 'chan_invite' + ret);
 			return ;
 		}
-		const back = await this.chatGateway.getChannelsIn(auth.user);
-		if (typeof ret !== 'string')
-			client.emit('client_channels_in', back);
+		const sock = this.users.get(loginInvite);
+		const userToInvite = await this.userService.findLogin(loginInvite);
+		if (sock && userToInvite !== null) {
+			const profil = await this.getProfilWithFriends(userToInvite);
+			if (typeof profil !== 'string')
+				this.server.to(sock).emit('client_profil', profil);
+		}
 		client.emit('info_client', `Channel ${chanName} you invite user with login ${loginInvite}`);
 	}
 
@@ -553,18 +545,32 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			client.emit('error_client', 'chan_create' + ret);
 			return ;
 		}
-		const back = await this.chatGateway.getChannelsIn(auth.user);
-		if (typeof ret !== 'string')
-			client.emit('client_channels_in', back);
 		client.emit('info_client', `Channel ${chan.name} created`);
+		for (const us of this.users) {
+			if (us[0] === auth.user.login) {
+				const tmp = await this.chatGateway.getChannelsIn(auth.user);
+				if (typeof tmp !== 'string')
+					this.server.to(us[1]).emit('client_channels_in', tmp);
+				const tmp2 = await this.chatGateway.getChannels(auth.user);
+				if (typeof tmp2 !== 'string')
+					this.server.to(us[1]).emit('client_channels', tmp2);
+			} else {
+				const tmpUser = await this.userService.findLogin(us[0]);
+				if (tmpUser !== null) {
+					const tmp2 = await this.chatGateway.getChannels(tmpUser);
+					if (typeof tmp2 !== 'string')
+						this.server.to(us[1]).emit('client_channels', tmp2);
+				}
+			}
+		}
 	}
 
 	@SubscribeMessage('server_chan_ban_somebody')
-	async chanBlock(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('chanName') chanName: string, @MessageBody('loginToBlock') loginToBlock: string) {
+	async chanBlock(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('chanName') chanName: string, @MessageBody('loginToBan') loginToBan: string) {
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
-		const ret = await this.chatGateway.chanBlock(auth.user, chanName, loginToBlock);
+		const ret = await this.chatGateway.chanBlock(auth.user, chanName, loginToBan);
 		if (typeof ret === 'string') {
 			client.emit('error_client', 'chan_ban_somebody ' + ret);
 			return ;
@@ -577,9 +583,9 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 				if (auth.user.login === userOfChannel.login) {
 						if (sock)
 							this.server.to(sock).emit('client_chan_users', usersOfChannel);
-						client.emit('info_client', `You ban from channel ${chanName} user with login ${loginToBlock}`);
+						client.emit('info_client', `You ban from channel ${chanName} user with login ${loginToBan}`);
 				} else {
-					if (userOfChannel.login === loginToBlock && sock) {
+					if (userOfChannel.login === loginToBan && sock) {
 						this.server.to(sock).emit('info_client', `You're ban from the channel ${chanName}`);
 						this.server.to(sock).emit('client_chan_users', usersOfChannel);
 					}
@@ -587,17 +593,27 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 						socks = [...socks, ...sock];
 				}
 			}
-			this.server.to(socks).emit('info_client', `User with login ${loginToBlock} is now ban from channel ${chanName}`);
+			this.server.to(socks).emit('info_client', `User with login ${loginToBan} is now ban from channel ${chanName}`);
 			this.server.to(socks).emit('client_chan_users', usersOfChannel);
+			const sock = this.users.get(loginToBan);
+			const userToBan = await this.userService.findLogin(loginToBan);
+			if (sock && userToBan !== null) {
+				const inChan = await this.chatGateway.getChannelsIn(userToBan);
+				if (typeof inChan !== 'string')
+					this.server.to(sock).emit('client_channels_in', inChan);
+				const chans = await this.chatGateway.getChannels(userToBan);
+				if (typeof chans !== 'string')
+					this.server.to(sock).emit('client_channels', chans);
+			}
 		}
 	}
 
 	@SubscribeMessage('server_chan_unban_somebody')
-	async chanUnblock(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('chanName') chanName: string, @MessageBody('loginToUnblock') loginToUnblock: string) {
+	async chanUnblock(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('chanName') chanName: string, @MessageBody('loginToUnban') loginToUnban: string) {
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
-		const ret = await this.chatGateway.chanUnblock(auth.user, chanName, loginToUnblock);
+		const ret = await this.chatGateway.chanUnblock(auth.user, chanName, loginToUnban);
 		if (typeof ret === 'string') {
 			client.emit('error_client', 'chan_unban_somebody ' + ret);
 			return ;
@@ -610,9 +626,9 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 				if (auth.user.login === userOfChannel.login) {
 						if (sock)
 							this.server.to(sock).emit('client_chan_users', usersOfChannel);
-						client.emit('info_client', `You unban from channel ${chanName} user with login ${loginToUnblock}`);
+						client.emit('info_client', `You unban from channel ${chanName} user with login ${loginToUnban}`);
 				} else {
-					if (userOfChannel.login === loginToUnblock && sock) {
+					if (userOfChannel.login === loginToUnban && sock) {
 						this.server.to(sock).emit('info_client', `You're unban from the channel ${chanName}`);
 						this.server.to(sock).emit('client_chan_users', usersOfChannel);
 					}
@@ -621,6 +637,16 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 				}
 			}
 			this.server.to(socks).emit('client_chan_users', usersOfChannel);
+		}
+		const sock = this.users.get(loginToUnban);
+		const userToUnban = await this.userService.findLogin(loginToUnban);
+		if (sock && userToUnban !== null) {
+			const inChan = await this.chatGateway.getChannelsIn(userToUnban);
+			if (typeof inChan !== 'string')
+				this.server.to(sock).emit('client_channels_in', inChan);
+			const chans = await this.chatGateway.getChannels(userToUnban);
+			if (typeof chans !== 'string')
+				this.server.to(sock).emit('client_channels', chans);
 		}
 	}
 
@@ -635,39 +661,36 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			client.emit('error_client', 'chan_Unblock_somebody ' + ret);
 			return ;
 		}
-		const usersOfChannel = await this.chatGateway.getChanUsers(auth.user, chanName);
-		if (typeof usersOfChannel !== 'string') {
-			let socks: string[] = [];
-			for (const userOfChannel of usersOfChannel.users) {
-				const sock = this.users.get(userOfChannel.login);
-				if (sock)
-					socks = [...socks, ...sock];
-			}
-			this.server.to(socks).emit('client_chan_users', usersOfChannel);
-		}
-		if (typeof usersOfChannelBegin !== 'string') {
-			let socks: string[] = [];
-			for (const userOfChannel of usersOfChannelBegin.users) {
-				const sock = this.users.get(userOfChannel.login);
-				if (sock) {
-					socks = [...socks, ...sock];
-
-				}
-			}
-			this.server.to(socks).emit('warning_client', `Channel ${chanName} destroyed because owner gone`);
-		}
 		if (ret === true) {
+			let socks: string[] = [];
 			for (const us of this.users) {
+				socks = [...socks, ...us[1]];
 				const tmpUser = await this.userService.findLogin(us[0]);
 				if (tmpUser !== null) {
 					const tmp = await this.chatGateway.getChannelsIn(tmpUser);
 					if (typeof tmp !== 'string')
-						this.server.to(us[1]).emit('client_channels_in', tmp);
-					const tmp2 = await this.chatGateway.getChannels(auth.user);
+					this.server.to(us[1]).emit('client_channels_in', tmp);
+					const tmp2 = await this.chatGateway.getChannels(tmpUser);
 					if (typeof tmp2 !== 'string')
-						this.server.to(us[1]).emit('client_channels', tmp2);
+					this.server.to(us[1]).emit('client_channels', tmp2);
 				}
 			}
+			this.server.to(socks).emit('warning_client', `Channel ${chanName} destroyed because owner gone`);
+		} else {
+			const usersOfChannel = await this.chatGateway.getChanUsers(auth.user, chanName);
+			if (typeof usersOfChannel !== 'string') {
+				let socks: string[] = [];
+				for (const userOfChannel of usersOfChannel.users) {
+					const sock = this.users.get(userOfChannel.login);
+					if (sock)
+						socks = [...socks, ...sock];
+				}
+				this.server.to(socks).emit('client_chan_users', usersOfChannel);
+			}
+			const tmp = await this.chatGateway.getChannelsIn(auth.user);
+			const sock = this.users.get(auth.user.login);
+			if (typeof tmp !== 'string' && sock)
+				this.server.to(sock).emit('client_channels_in', tmp);
 		}
 	}
 
@@ -731,7 +754,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		}
 	}
 
-	@SubscribeMessage('server_chan_edit_password')
+	@SubscribeMessage('server_chan_edit_name')
 	async changeNameChannel(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('chanName') chanName: string, @MessageBody('newChanName') newChanName: string) {
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
