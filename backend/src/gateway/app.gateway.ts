@@ -651,12 +651,12 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 	}
 
 	@SubscribeMessage('server_chan_leave')
-	async leaveChan(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('chanName') chanName: string) {
+	async leaveChan(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('chanName') chanName: string, @MessageBody('loginWhoLeave') loginWhoLeave: string) {
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
 		const usersOfChannelBegin = await this.chatGateway.getChanUsers(auth.user, chanName);
-		const ret = await this.chatGateway.leaveChan(auth.user, chanName);
+		const ret = await this.chatGateway.leaveChan(auth.user, chanName, loginWhoLeave);
 		if (typeof ret === 'string') {
 			client.emit('error_client', 'chan_Unblock_somebody ' + ret);
 			return ;

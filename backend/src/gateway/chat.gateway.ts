@@ -412,19 +412,30 @@ export class ChatGateway {
 		}
 	}
 
-	async leaveChan(user: User, chanName: string) {
+	async leaveChan(user: User, chanName: string, loginWhoLeave: string) {
 		try {
 			const channel = await this.channelService.findChanName(chanName);
 			if (channel === null)
 				return 'Channel not found';
+			const userWhoLeave = await this.userService.findLogin(loginWhoLeave);
+			if (!userWhoLeave)
+				return 'User not found';
 			const rels = await this.relUserChannelService.getChannelRel(user, channel);
+			const relsLeave = await this.relUserChannelService.getChannelRel(userWhoLeave, channel);
 			if (rels.length === 1) {
-				if (rels[0].status === GOT.UserChannelStatus.OWNER) {
-					await this.channelService.remove(channel.id);
-					return true;
+				if (relsLeave.length === 1) {
+					if (rels[0].status === GOT.UserChannelStatus.OWNER || (rels[0].status === GOT.UserChannelStatus.ADMIN && relsLeave[0].status !== GOT.UserChannelStatus.OWNER) || user.id === userWhoLeave.id) {
+						if (relsLeave[0].status === GOT.UserChannelStatus.OWNER) {
+							await this.channelService.remove(channel.id);
+							return true;
+						}
+						else
+							return await this.relUserChannelService.remove(rels[0].id);
+					} else
+						return `You haven't right to eject user ${loginWhoLeave} of channel ${chanName}`;
+				} else {
+					return 'User you want eject of channel not found';
 				}
-				else
-					return await this.relUserChannelService.remove(rels[0].id);
 			}
 			else
 				return `You're not in the channel ${chanName}`;
@@ -432,6 +443,8 @@ export class ChatGateway {
 			return error.message;
 		}
 	}
+
+	// TODO admin
 
 	async changeStatusChannel(user: User, chan: GOT.Channel): Promise<string | UpdateResult> {
 		try {
