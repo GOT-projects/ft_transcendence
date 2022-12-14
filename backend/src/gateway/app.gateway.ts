@@ -710,8 +710,8 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		// actu
 		for (const tmp of this.users) {
 			if (tmp[0] === auth.user.login) {
-				const channelsIn = this.chatGateway.getChannelsIn(auth.user);
-				const channels = this.chatGateway.getChannels(auth.user);
+				const channelsIn = await this.chatGateway.getChannelsIn(auth.user);
+				const channels = await this.chatGateway.getChannels(auth.user);
 				this.server.to(tmp[1]).emit('client_channels_in', channelsIn);
 				this.server.to(tmp[1]).emit('client_channels', channels);
 			} else {
@@ -744,6 +744,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
+		console.log('edit name', chanName, newChanName)
 		const ret = await this.chatGateway.changeNameChannel(auth.user, chanName, newChanName);
 		if (typeof ret === 'string') {
 			client.emit('error_client', 'chan_create' + ret);
@@ -753,8 +754,8 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		// actu
 		for (const tmp of this.users) {
 			if (tmp[0] === auth.user.login) {
-				const channelsIn = this.chatGateway.getChannelsIn(auth.user);
-				const channels = this.chatGateway.getChannels(auth.user);
+				const channelsIn = await this.chatGateway.getChannelsIn(auth.user);
+				const channels = await this.chatGateway.getChannels(auth.user);
 				this.server.to(tmp[1]).emit('client_channels_in', channelsIn);
 				this.server.to(tmp[1]).emit('client_channels', channels);
 			} else {
@@ -783,8 +784,8 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		// actu
 		for (const tmp of this.users) {
 			if (tmp[0] === auth.user.login) {
-				const channelsIn = this.chatGateway.getChannelsIn(auth.user);
-				const channels = this.chatGateway.getChannels(auth.user);
+				const channelsIn = await this.chatGateway.getChannelsIn(auth.user);
+				const channels = await this.chatGateway.getChannels(auth.user);
 				this.server.to(tmp[1]).emit('client_channels_in', channelsIn);
 				this.server.to(tmp[1]).emit('client_channels', channels);
 			} else {
@@ -813,8 +814,8 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		// actu
 		for (const tmp of this.users) {
 			if (tmp[0] === auth.user.login) {
-				const channelsIn = this.chatGateway.getChannelsIn(auth.user);
-				const channels = this.chatGateway.getChannels(auth.user);
+				const channelsIn = await this.chatGateway.getChannelsIn(auth.user);
+				const channels = await this.chatGateway.getChannels(auth.user);
 				this.server.to(tmp[1]).emit('client_channels_in', channelsIn);
 				this.server.to(tmp[1]).emit('client_channels', channels);
 			} else {
