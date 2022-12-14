@@ -797,7 +797,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		}
 	}
 
-	@SubscribeMessage('server_chan_pass_admin')
+	@SubscribeMessage('server_chan_pass_member')
 	async chanPassMember(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('chanName') chanName: string, @MessageBody('loginToPassMember') loginToPassMember: string) {
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
