@@ -679,13 +679,19 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			}
 			this.server.to(socks).emit('warning_client', `Channel ${chanName} destroyed because owner gone`);
 		} else {
-			const usersOfChannel = await this.chatGateway.getChanUsers(auth.user, chanName);
-			if (typeof usersOfChannel !== 'string') {
+			if (typeof usersOfChannelBegin !== 'string') {
 				let socks: string[] = [];
-				for (const userOfChannel of usersOfChannel.users) {
-					const sock = this.users.get(userOfChannel.login);
-					if (sock)
-						socks = [...socks, ...sock];
+				let usersOfChannel: GOT.ChannelUsers = {
+					channel: usersOfChannelBegin.channel,
+					users: []
+				};
+				for (const userOfChannel of usersOfChannelBegin.users) {
+					if (userOfChannel.login !== loginWhoLeave) {
+						const sock = this.users.get(userOfChannel.login);
+						if (sock)
+							socks = [...socks, ...sock];
+						usersOfChannel.users.push(userOfChannel);
+					}
 				}
 				this.server.to(socks).emit('client_chan_users', usersOfChannel);
 			}
@@ -703,7 +709,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		const ret = await this.chatGateway.changeStatusChannel(auth.user, chan);
 		if (typeof ret === 'string') {
-			client.emit('error_client', 'chan_create' + ret);
+			client.emit('error_client', 'edit_status' + ret);
 			return ;
 		}
 		client.emit('info_client', `Channel ${chan.name} edit`);
@@ -733,7 +739,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		const ret = await this.chatGateway.changePasswordChannel(auth.user, chanName, password);
 		if (typeof ret === 'string') {
-			client.emit('error_client', 'chan_create' + ret);
+			client.emit('error_client', 'edit_password' + ret);
 			return ;
 		}
 		client.emit('info_client', `Channel ${chanName} edit`);
@@ -744,10 +750,9 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
-		console.log('edit name', chanName, newChanName)
 		const ret = await this.chatGateway.changeNameChannel(auth.user, chanName, newChanName);
 		if (typeof ret === 'string') {
-			client.emit('error_client', 'chan_create' + ret);
+			client.emit('error_client', 'edit_name' + ret);
 			return ;
 		}
 		client.emit('info_client', `Channel ${newChanName} edit`);
