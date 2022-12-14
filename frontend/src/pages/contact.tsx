@@ -32,6 +32,7 @@ import { HiArrowCircleRight } from 'react-icons/hi';
 import { FcInvite } from 'react-icons/fc';
 import { AiFillSetting } from 'react-icons/ai';
 import PopupOptionInvite from '../components/chat/Option/ChanInvite';
+import { useNavigate } from 'react-router-dom';
 
 interface IProps {
    profil: GOT.Profile | undefined;
@@ -40,6 +41,7 @@ interface IProps {
 
 const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     const socket = useContext(SocketContext);
+    const navigate = useNavigate();
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
     const [active, setActive] = useState("UnActiveMenu");
     const [login, setLogin] = useState<string>("");
@@ -131,7 +133,6 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
         }
     }
 
-
     useEffect(() =>{
         if (codeParam.get("code") === "Private" && codeParam.get("name")){
             const name = codeParam.get("name");
@@ -210,7 +211,10 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                         <FcInvite size={30} title="Invite people tot channel"
                                             onClick={() => {setInvite(true)}}/>
                         <HiArrowCircleRight size={30} color={"red"} title="Leave Channel" 
-                                            onClick={handleLeaveChan}/>
+                                            onClick={() => {
+                                                emitSocket.emitLeaveChan(socket, chatSwitch)
+                                                setChatSwitch("")
+                                                navigate("/chat")}}/>
                     </StyledSettingChan> : <></>}
                 </StyledContact>
 

@@ -43,7 +43,7 @@ let client_channelMsg = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>
 }
 
 let client_chanmsg_users_not_ban = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setUser:React.Dispatch<React.SetStateAction<GOT.ChannelUsers | undefined>>) => {
-    socket.on('client_chanmsg_users_not_ban', (rep:GOT.ChannelUsers) => {
+    socket.on('client_chan_users', (rep:GOT.ChannelUsers) => {
         console.log('client_chan_users', rep);
         if (rep){
             setUser(rep);

@@ -71,7 +71,6 @@ const ChanUserMenu:FunctionComponent<IProps> = (props: IProps) => {
     const handleBlock = () => {
     }
 
-    console.info("test because not load", userList, props.chanName)
     return (
         <> 
             {userList ? 
@@ -94,7 +93,7 @@ const ChanUserMenu:FunctionComponent<IProps> = (props: IProps) => {
                         <AiOutlineUserAdd className='setting' size={30} color={Colors.ChatMenuButtonText} />
                     </StyledChatSettingButton>
                 </StyledChatDivoption>
-                </StyledUser> : <></>)) : <StyledEmptyDivChat/>}
+                </StyledUser> : <StyledEmptyDivChat key={uuid()}/>)) : <StyledEmptyDivChat key={uuid()}/>}
         </>
     )
 }

@@ -83,8 +83,14 @@ let emitReplyNotif = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, r
     socket.emit('server_reply_notification', {Authorization: accountService.getToken(), reply :  reply})
 }
 
+let emitLeaveChan = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName:string) => {
+    socket.emit('server_chan_leave', {Authorization: accountService.getToken(), chanName: chanName})
+}
+
+
 export const emitSocket ={
     emitProfil, emitProfilHisto, emitFriends, emitDemandFriend, emitChangeUsername, emitLeaderboard, 
     emitPrivmsg, emitSendPrivmsg, emitUsers, emitBlockUser, emitPrivmsgUsers, emitReplyNotif, emitUnBlockUser, emitCreateChan, 
-    emitChannels, emitChannelsIn, emitChannelMsg_send, emitChannelMsg, emitChannelJoin, emitChanUserNotBan
+    emitChannels, emitChannelsIn, emitChannelMsg_send, emitChannelMsg, emitChannelJoin, emitChanUserNotBan,
+    emitLeaveChan
 }
