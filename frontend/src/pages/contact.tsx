@@ -34,6 +34,7 @@ import { AiFillSetting } from 'react-icons/ai';
 import PopupOptionInvite from '../components/chat/Option/ChanInvite';
 import { useNavigate } from 'react-router-dom';
 import PopupOptionLeave from '../components/chat/Option/ChanLeave';
+import PopupOptionBlock from '../components/chat/Option/ChanBlock';
 
 interface IProps {
    profil: GOT.Profile | undefined;
@@ -51,6 +52,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     const [invite, setInvite] =  useState(false);
     const [setting, setSetting] =  useState(false);
     const [settingInvite, setSettingInvite] =  useState(false);
+    const [settingBlock, setSettingBlock] =  useState(false);
     const [chatSwitch, setChatSwitch] = useState<string>('');
     const [histo, setHisto] = useState<GOT.HistoryParties>();
     const [popuProfil, setPopupProfil] = useState(false);
@@ -163,8 +165,11 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                 setAdd("addChannel");
             }else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "Invite"){
                 setSettingInvite(true);
+            }else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "Block"){
+                setSettingBlock(true);
             }else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "false"){
                 setSettingInvite(false);
+                setSettingBlock(false);
                 setSetting(false);
                 setAdd("");
             }
@@ -250,11 +255,19 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                                         listUser={usersList} setAdd={setAdd} 
                                         setInvite={setInvite}
                                         setFriends={setFriends} chanName={chatSwitch}/> : <></>}
+
+            {setting ? <PopupChannelSetting profil={props.profil} listUser={usersList} 
+                                        setProfil={props.setProfil} setAction={setAdd}
+                                        setFriends={setFriends} friends={friends}
+                                        chanName={chatSwitch} setSetting={setSetting}/>: <></>}
             {settingInvite ? <PopupOptionLeave profil={props.profil} friends={friends}
                                         listUser={usersList} setAdd={setAdd} 
                                         setInvite={setInvite}
                                         setFriends={setFriends} chanName={chatSwitch}/> : <></>}
-
+            {settingBlock ? <PopupOptionBlock profil={props.profil} friends={friends}
+                                        listUser={usersList} setAdd={setAdd} 
+                                        setInvite={setInvite}
+                                        setFriends={setFriends} chanName={chatSwitch}/> : <></>}
             {add === "addChannel" ? <PopupOptionAddChannel /> : <></>}
 
             {add === "joinChannel" ? <PopupOptionJoinChannel /> : <></>}
@@ -263,10 +276,6 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
 
             {add === "privateChan" ? <PopupOptionPrivateChan /> : <></>}
 
-            {setting ? <PopupChannelSetting profil={props.profil} listUser={usersList} 
-                                        setProfil={props.setProfil} setAction={setAdd}
-                                        setFriends={setFriends} friends={friends}
-                                        chanName={chatSwitch} setSetting={setSetting}/>: <></>}
 
             {popuProfil ? <ProfilView login={login} setPopupProfil={setPopupProfil}/> : <> </>}
            <Footer/>

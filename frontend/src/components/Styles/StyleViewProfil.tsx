@@ -321,6 +321,9 @@ export const StyledContaiteClose = styled.div`
     &.joinChan{
         gap: 94px;
     }
+    &.unBlock{
+        gap: 115px;
+    }
     &.invite{
         gap: 94px;
 
