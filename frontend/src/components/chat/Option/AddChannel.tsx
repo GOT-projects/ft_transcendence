@@ -100,8 +100,36 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
     }
     const handleSendChange = () =>{
         const chanName = codeParam.get("name");
-        if (chanName && inputChan !== ""){
-            emitSocket.emitChanChangeName(socket, chanName, inputChan);
+        console.log(selecte)
+        if (chanName && inputChan !== "" && selecte !== ""){
+            if (chanName && selecte === "public"){
+                console.log(selecte, inputChan)
+                const tmp:GOT.Channel = {name: inputChan, status: ChannelStatus.PUBLIC, password:undefined}
+                emitSocket.emitChanChangeStatus(socket, tmp);
+            }else if (chanName && selecte === "private"){
+                const tmp:GOT.Channel = {name: inputChan, status: ChannelStatus.PRIVATE, password:undefined}
+                emitSocket.emitChanChangeStatus(socket, tmp);
+            }else if (chanName && selecte === "protected" && inputPwd !== ""){
+                const tmp:GOT.Channel = {name: inputChan, status: ChannelStatus.PROTECTED, password:inputPwd}
+                emitSocket.emitChanChangeStatus(socket, tmp);
+            }
+        } 
+        if(chanName && selecte === "public" && inputChan === ""){
+            const tmp:GOT.Channel = {name: chanName, status: ChannelStatus.PUBLIC, password:undefined}
+            emitSocket.emitChanChangeStatus(socket, tmp);
+        }else if (chanName && selecte === "private" && inputChan === ""){
+            const tmp:GOT.Channel = {name: chanName, status: ChannelStatus.PRIVATE, password:undefined}
+            emitSocket.emitChanChangeStatus(socket, tmp);
+        }else if (chanName && selecte === "protected" && inputPwd !== ""){
+            const tmp:GOT.Channel = {name: chanName, status: ChannelStatus.PROTECTED, password:inputPwd}
+            emitSocket.emitChanChangeStatus(socket, tmp);
+        }else if (selecte === "protected" && inputPwd === ""){
+            console.log("error need pwd")
+            setNotify({isOpen: true, message: "Please choose password to your channel", type: "error"})
+        }else{
+            console.log("error need pwd djfkwqsjak" )
+            if (chanName)
+                emitSocket.emitChanChangeName(socket, chanName, inputChan);
         }
         // navigate("/chat");
     }
