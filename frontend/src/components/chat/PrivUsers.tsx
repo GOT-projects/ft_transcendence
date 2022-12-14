@@ -31,6 +31,10 @@ const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
     const socket = useContext(SocketContext)
     const navigate = useNavigate();
 
+    useEffect(() => {
+        emitSocket.emitFriends(socket);
+    }, [socket])
+
     const handleSelectFriend = (name:string) => {
         const user = props.friends?.filter((user) => user.login === name);
         if (user){

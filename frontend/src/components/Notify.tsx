@@ -25,27 +25,6 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
             const tab = notify.message.split(" ");
             navigate(`/chat?code=Chan=${tab[3]}`)
         }
-        // receive notif friend
-        let regexNotif:RegExp = /^Info: User with login (.*[a-z]) invite you to be friend/
-        if (regexNotif.test(notify.message)){
-            if (params.search === ""){
-                navigate(`${params.pathname}&notify=true`)
-            }else{
-                const param = accountService.replaceParamsTo("notif", "true");
-                navigate(`${params.pathname}${param}`)
-            }
-        }
-        // receive notif channel
-        let regexNotifChan:RegExp = /^Info: Invitation to join channel (.*[a-z])/
-        if (regexNotifChan.test(notify.message)){
-            console.log("ok")
-            if (params.search === ""){
-                navigate(`${params.pathname}?notify=true`)
-            }else{
-                const param = accountService.replaceParamsTo("notif", "true");
-                navigate(`${params.pathname}${param}`)
-            }
-        }
         emitSocket.emitProfil(socket);
         setNotify({...notify, isOpen: false})
    }
@@ -62,6 +41,18 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
                     return false;
                 }
                 
+            }
+        }
+        let regexChannel:RegExp = /^Info: Channel (.*[a-z]) have a new member (.*[a-z])/
+        console.debug(regexChannel)
+        if (regexChannel.test(notify.message)){
+            const tab = notify.message.split(" ");
+            const code = params.searchParams.get("code");
+            if (code === "Channel"){
+                const name = params.searchParams.get("name");
+                if (tab && tab[2] === name){
+                    emitSocket.emitChanUserNotBan(socket, tab[2]);
+                }
             }
         }
         return true;

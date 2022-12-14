@@ -13,55 +13,52 @@ import { accountService } from '../../services/account.service';
 interface IProps {
    notify: NotifyInter;
    setNotify: Dispatch<any>;
+   setNotifyMenu: Dispatch<any>;
    profil: GOT.Profile | undefined;
 }
 
 const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
     const socket = useContext(SocketContext);
-    const navigate = useNavigate();
 
     const handleAdd = (user: GOT.User) =>{
         let tmp: GOT.NotifChoice = {user:user, accept: true, channel: undefined};
         props.setNotify({isOpen: true, message: `Add ${user.login}`, type:'success'});
-        emitSocket.emitReplyNotif(socket, tmp)
         console.log(props.profil?.notif.length === 1)
-        if (props.profil?.notif.length === 1){
-            let url = (new URL(window.location.href));
-            const params = accountService.replaceParamsTo("notif", "false");
-            navigate(`${url.pathname}${params}`);
+        if (props.profil?.notif.length === 1 && props.profil?.notifChannel.length === 0){
+            props.setNotify(false);
+            props.setNotifyMenu(false);
         }
+        emitSocket.emitReplyNotif(socket, tmp)
     }
 
     const handleRemove = (user: GOT.User) =>{
         let tmp: GOT.NotifChoice = {user:user, accept: false, channel: undefined};
-        emitSocket.emitReplyNotif(socket, tmp)
         props.setNotify({isOpen: true, message: `Refused invitation of ${user.login}`, type:'success'});
-        if (props.profil?.notif.length === 1){
-            let url = (new URL(window.location.href));
-            const params = accountService.replaceParamsTo("notif", "false");
-            navigate(`${url.pathname}${params}`);
+        if (props.profil?.notif.length === 1 && props.profil?.notifChannel.length === 0){
+            props.setNotify(false);
+            props.setNotifyMenu(false);
         }
+        emitSocket.emitReplyNotif(socket, tmp)
     }
 
     const handleAddChan = (chan: GOT.Channel) =>{
         let tmp: GOT.NotifChoice = {user:undefined, accept: true, channel: chan};
-        emitSocket.emitReplyNotif(socket, tmp)
-        console.log(props.profil?.notif.length === 1)
-        if (props.profil?.notif.length === 1){
-            let url = (new URL(window.location.href));
-            const params = accountService.replaceParamsTo("notif", "false");
-            navigate(`${url.pathname}${params}`);
+        if (props.profil?.notif.length === 0 && props.profil?.notifChannel.length === 1){
+            props.setNotify(false);
+            props.setNotifyMenu(false);
         }
+        emitSocket.emitReplyNotif(socket, tmp)
     }
+
     const handleRemoveChan = (chan: GOT.Channel) =>{
         let tmp: GOT.NotifChoice = {user:undefined, accept: false, channel: chan};
-        emitSocket.emitReplyNotif(socket, tmp)
-        if (props.profil?.notif.length === 1){
-            let url = (new URL(window.location.href));
-            const params = accountService.replaceParamsTo("notif", "false");
-            navigate(`${url.pathname}${params}`);
+        if (props.profil?.notif.length === 0 && props.profil?.notifChannel.length === 1){
+            props.setNotify(false);
+            props.setNotifyMenu(false);
         }
+        emitSocket.emitReplyNotif(socket, tmp)
     }
+
     return(
         <StyledMenuNotif 
             initial={{x: 300}}

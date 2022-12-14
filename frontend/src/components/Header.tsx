@@ -139,13 +139,6 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
         }
     }
 
-    useEffect(() => {
-        if (codeParam.get("notif") === "true" && props.profil?.notif !== undefined && props.profil?.notif.length !== 0){
-            setNotifMenu(true);
-        }else if (codeParam.get("notif") === "false"){
-            setNotifMenu(false);
-        }
-    }, [])
 	return (
         <StyledHeader>
             <StyleMenusHeader className={active}>
@@ -167,6 +160,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                 {notifMenu ? <PopupNotifUser notify={props.notify} 
                                              setNotify={props.setNotify} 
                                              profil={props.profil}
+                                             setNotifyMenu={setNotifMenu}
                                              /> : <></>}
                 </StyleMenusHeader>
             <StyleNav>
@@ -189,6 +183,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                 {notifMenu ? <PopupNotifUser notify={props.notify} 
                                              setNotify={props.setNotify} 
                                              profil={props.profil}
+                                             setNotifyMenu={setNotifMenu}
                                              /> : <></>}
                 {friendList ? <PopupListFriends setFriendsLst={setFriendList} profil={props.profil}/> : <></>}
             </StyleNav>

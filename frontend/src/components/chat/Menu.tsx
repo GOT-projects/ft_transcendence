@@ -1,7 +1,9 @@
-import { Dispatch, FunctionComponent } from "react";
+import { Dispatch, FunctionComponent, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { GOT } from "../../shared/types";
+import { emitSocket } from "../../socket/socketEmit";
+import { SocketContext } from "../../socket/socketPovider";
 import { StyleNavToggler, StyleNavTogglerIcon } from "../Styles/StyledHeader";
 import { StyledChanDiv, StyledChanPadd, StyledChanSep, StyledContaiteChannel, StyledContaiteMenu, StyledMenuTitle } from "../Styles/StyleViewProfil";
 
@@ -24,9 +26,11 @@ interface IProps {
 
 const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
     const navigate = useNavigate();
+    const socket = useContext(SocketContext);
 
     const handlePriveMsg = (name:string) => {
         if (props.setChatSwitch){
+            emitSocket.emitProfil(socket);
             props.setChatSwitch(name);
             navigate("/chat?code=Private")
         }
@@ -34,6 +38,7 @@ const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
 
     const handleChan = (name:string) => {
         if (props.setChatSwitch){
+            emitSocket.emitProfil(socket);
             props.setChatSwitch(name);
             navigate(`/chat?code=Channel&name=${name}`)
         }

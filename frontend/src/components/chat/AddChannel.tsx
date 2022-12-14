@@ -1,10 +1,12 @@
-import { Dispatch, FunctionComponent, useState } from "react";
+import { Dispatch, FunctionComponent, useContext, useEffect, useState } from "react";
 import { FaWindowClose } from "react-icons/fa";
 import { GOT } from "../../shared/types";
 import { Colors } from "../Colors";
 import {StyledContaiteClose, StyledContaiteViewAddChan, StyledContaiteViewAddOption, StyledContaiteViewAddP } from "../Styles/StyleViewProfil";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { SocketContext } from "../../socket/socketPovider";
+import { emitSocket } from "../../socket/socketEmit";
 
 
 interface IProps {
@@ -20,6 +22,12 @@ interface IProps {
 const PopupAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
     const [add, setAdd] = useState("");
     const navigate = useNavigate();
+    const socket = useContext(SocketContext);
+
+    useEffect(() => {
+        emitSocket.emitUsers(socket);
+    }, [socket])
+
     const handleClose = () => {
         if (props.setAction){
             props.setAction("");

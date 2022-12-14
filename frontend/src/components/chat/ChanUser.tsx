@@ -35,6 +35,9 @@ const ChanUserMenu:FunctionComponent<IProps> = (props: IProps) => {
     const [userList, setUserlist] = useState<GOT.ChannelUsers>();
     const [myStatus, setMyStatus] = useState<UserChannelStatus>();
 
+    useEffect(() => {
+        emitSocket.emitChannelsIn(socket);
+    }, [socket])
     const handleViewProfil = (name: string) =>{
         if (props.setLogin && props.setPopupProfil){
             props.setLogin(name);

@@ -212,7 +212,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                                             onClick={() => {setInvite(true)}}/>
                         <HiArrowCircleRight size={30} color={"red"} title="Leave Channel" 
                                             onClick={() => {
-                                                emitSocket.emitLeaveChan(socket, chatSwitch)
+                                                emitSocket.emitLeaveChan(socket, chatSwitch, props.profil?.userInfos.login)
                                                 setChatSwitch("")
                                                 navigate("/chat")}}/>
                     </StyledSettingChan> : <></>}

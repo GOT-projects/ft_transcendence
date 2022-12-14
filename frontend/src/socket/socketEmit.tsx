@@ -83,8 +83,8 @@ let emitReplyNotif = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, r
     socket.emit('server_reply_notification', {Authorization: accountService.getToken(), reply :  reply})
 }
 
-let emitLeaveChan = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName:string) => {
-    socket.emit('server_chan_leave', {Authorization: accountService.getToken(), chanName: chanName})
+let emitLeaveChan = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName:string, login:string | undefined) => {
+    socket.emit('server_chan_leave', {Authorization: accountService.getToken(), chanName: chanName, loginWhoLeave:login})
 }
 
 let emitInviteSomebody = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName:string, loginInvite:string) => {
