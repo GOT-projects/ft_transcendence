@@ -131,7 +131,12 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
             if (chanName)
                 emitSocket.emitChanChangeName(socket, chanName, inputChan);
         }
-        // navigate("/chat");
+        if (inputChan !== ""){
+            navigate(`chat?code=Channel&name=${inputChan}`);
+        }
+        else{
+            navigate(`chat?code=Channel&name=${chanName}`);
+        }
     }
 
     return (
