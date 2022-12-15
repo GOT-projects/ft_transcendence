@@ -671,10 +671,10 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 				if (tmpUser !== null) {
 					const tmp = await this.chatGateway.getChannelsIn(tmpUser);
 					if (typeof tmp !== 'string')
-					this.server.to(us[1]).emit('client_channels_in', tmp);
+						this.server.to(us[1]).emit('client_channels_in', tmp);
 					const tmp2 = await this.chatGateway.getChannels(tmpUser);
 					if (typeof tmp2 !== 'string')
-					this.server.to(us[1]).emit('client_channels', tmp2);
+						this.server.to(us[1]).emit('client_channels', tmp2);
 				}
 			}
 			this.server.to(socks).emit('warning_client', `Channel ${chanName} destroyed because owner gone`);
@@ -695,10 +695,15 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 				}
 				this.server.to(socks).emit('client_chan_users', usersOfChannel);
 			}
-			const tmp = await this.chatGateway.getChannelsIn(auth.user);
-			const sock = this.users.get(auth.user.login);
-			if (typeof tmp !== 'string' && sock)
-				this.server.to(sock).emit('client_channels_in', tmp);
+			const sock = this.users.get(loginWhoLeave);
+			if (sock) {
+				const tmpUser = await this.userService.findLogin(loginWhoLeave);
+				if (tmpUser) {
+					const tmp = await this.chatGateway.getChannelsIn(tmpUser);
+					if (typeof tmp !== 'string')
+						this.server.to(sock).emit('client_channels_in', tmp);
+				}
+			}
 		}
 	}
 
@@ -787,22 +792,12 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		}
 		client.emit('info_client', `Channel ${chanName}: ${loginToPassAdmin} is now admin`);
 		// actu
-		for (const tmp of this.users) {
-			if (tmp[0] === auth.user.login) {
-				const channelsIn = await this.chatGateway.getChannelsIn(auth.user);
-				const channels = await this.chatGateway.getChannels(auth.user);
-				this.server.to(tmp[1]).emit('client_channels_in', channelsIn);
-				this.server.to(tmp[1]).emit('client_channels', channels);
-				this.server.to(tmp[1]).emit('client_chan_users', channels);
-			} else {
-				const userToSend = await this.userService.findLogin(tmp[0]);
-				if (userToSend !== null) {
-					const channelsIn = await this.chatGateway.getChannelsIn(userToSend);
-					const channels = await this.chatGateway.getChannels(userToSend);
-					this.server.to(tmp[1]).emit('client_channels_in', channelsIn);
-					this.server.to(tmp[1]).emit('client_channels', channels);
-					this.server.to(tmp[1]).emit('client_chan_users', channels);
-				}
+		const users = await this.chatGateway.getChanUsers(auth.user, chanName);
+		if (typeof users !== 'string') {
+			for (const tmp of users.users) {
+				const sock = this.users.get(tmp.login);
+				if (sock)
+					this.server.to(sock).emit('server_chan_users', users);
 			}
 		}
 	}
@@ -819,20 +814,12 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		}
 		client.emit('info_client', `Channel ${chanName}: ${loginToPassMember} is now member`);
 		// actu
-		for (const tmp of this.users) {
-			if (tmp[0] === auth.user.login) {
-				const channelsIn = await this.chatGateway.getChannelsIn(auth.user);
-				const channels = await this.chatGateway.getChannels(auth.user);
-				this.server.to(tmp[1]).emit('client_channels_in', channelsIn);
-				this.server.to(tmp[1]).emit('client_channels', channels);
-			} else {
-				const userToSend = await this.userService.findLogin(tmp[0]);
-				if (userToSend !== null) {
-					const channelsIn = await this.chatGateway.getChannelsIn(userToSend);
-					const channels = await this.chatGateway.getChannels(userToSend);
-					this.server.to(tmp[1]).emit('client_channels_in', channelsIn);
-					this.server.to(tmp[1]).emit('client_channels', channels);
-				}
+		const users = await this.chatGateway.getChanUsers(auth.user, chanName);
+		if (typeof users !== 'string') {
+			for (const tmp of users.users) {
+				const sock = this.users.get(tmp.login);
+				if (sock)
+					this.server.to(sock).emit('server_chan_users', users);
 			}
 		}
 	}
