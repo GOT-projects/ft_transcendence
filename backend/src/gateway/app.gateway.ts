@@ -166,7 +166,9 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		}
 		auth.user.login = login;
-		client.emit('client_jwt', await this.jwtService.signAsync(auth));
+		try {
+			client.emit('client_jwt', await this.jwtService.signAsync(auth));
+		} catch (error) {}
 		this.getProfil(client, jwt);
 	}
 
