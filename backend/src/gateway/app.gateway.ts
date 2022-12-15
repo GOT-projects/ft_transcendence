@@ -67,14 +67,14 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 				client.emit('error_client', 'User not valid / authorized');
 				return false;
 			}
-			const val = this.users.get(data.userEmail);
+			const val = this.users.get(data.userLogin);
 			if (!val) {
-				this.users.set(data.userEmail, [client.id]);
-				this.logger.verbose(`Client add ${data.userEmail}: ${client.id}`);
+				this.users.set(data.userLogin, [client.id]);
+				this.logger.verbose(`Client add ${data.userLogin}: ${client.id}`);
 			}
 			else if (val.indexOf(client.id) === -1) {
 				val.push(client.id);
-				this.logger.log(`Client add ${data.userEmail}: ${client.id}`);
+				this.logger.log(`Client add ${data.userLogin}: ${client.id}`);
 			}
 			const infos: JwtContent = {
 				user: user,
@@ -160,11 +160,15 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
+		const socks = this.users.get(auth.user.login);
 		const ret = await this.generalGateway.changeLogin(auth.user, login);
 		if (typeof ret === 'string') {
 			client.emit('error_client', 'change_username' + ret);
 			return ;
 		}
+		if (socks)
+			this.users.set(login, socks);
+		this.users.delete(auth.user.login);
 		try {
 			client.emit('client_jwt', await this.jwtService.signAsync({
 				userId: auth.user.id,
