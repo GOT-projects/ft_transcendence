@@ -600,9 +600,6 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			const sock = this.users.get(loginToBan);
 			const userToBan = await this.userService.findLogin(loginToBan);
 			if (sock && userToBan !== null) {
-				const inChan = await this.chatGateway.getChannelsIn(userToBan);
-				if (typeof inChan !== 'string')
-					this.server.to(sock).emit('client_channels_in', inChan);
 				const chans = await this.chatGateway.getChannels(userToBan);
 				if (typeof chans !== 'string')
 					this.server.to(sock).emit('client_channels', chans);
