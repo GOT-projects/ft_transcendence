@@ -116,9 +116,9 @@ export class UserService {
 	/**
 	 * Add a user to the database if not exist, else UPDATE the user
 	 */
-	async create_or_return(login: string, createUserDto: CreateUserDto) : Promise<User> {
+	async create_or_return(email: string, createUserDto: CreateUserDto) : Promise<User> {
 		try {
-			const user = await this.userRepository.findOneBy({ login, });
+			const user = await this.userRepository.findOneBy({ email, });
 			if (!user)
 				return await this.create(createUserDto);
 			return user;

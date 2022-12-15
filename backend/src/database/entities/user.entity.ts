@@ -16,7 +16,7 @@ export class User {
 	@Column()
 	isTwoFactorAuthenticationEnabled!: boolean;
 
-	@Column( {unique: true} )
+	@Column( {unique: true, nullable: false} )
 	login!: string;
 	/*
 	@Column()
@@ -29,7 +29,7 @@ export class User {
 	@Column()
 	wallet!: number;
 
-	@Column()
+	@Column( {unique: true, nullable: false} )
 	email!: string;
 
 

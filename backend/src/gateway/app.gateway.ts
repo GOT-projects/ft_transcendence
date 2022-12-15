@@ -155,8 +155,8 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		client.emit('client_profil_login', ret);
 	}
 
-	@SubscribeMessage('server_change_login')
-	async changeLogin(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('login') login: string) {
+	@SubscribeMessage('server_change_username')
+	async changeLogin(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string, @MessageBody('username') login: string) {
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
@@ -165,6 +165,10 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			client.emit('error_client', 'change_username' + ret);
 			return ;
 		}
+		auth.user.login = login;
+		try {
+			client.emit('client_jwt', await this.jwtService.signAsync(auth));
+		} catch (error) {}
 		this.getProfil(client, jwt);
 	}
 
