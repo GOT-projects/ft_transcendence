@@ -51,6 +51,14 @@ let client_chanmsg_users_not_ban = async (socket:Socket<DefaultEventsMap, Defaul
     })
 }
 
+let client_jwt = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>) => {
+    socket.on('client_jwt', (rep:string) => {
+        console.log('client_jwt', rep);
+        if (rep){
+            accountService.saveToken(rep);
+        } 
+    })
+}
 let client_channel_send = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setChannelMsg:React.Dispatch<React.SetStateAction<GOT.MsgChannel | undefined>>) => {
     socket.on('client_channels', (rep:GOT.MsgChannel) => {
         console.log('client_channels', rep);
@@ -151,6 +159,6 @@ let info_client = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setN
 export const onSocket = {
     profil_login, client_privmsg_users, client_friends, client_privmsg_send, error_client, client_channel_send, 
     info_client, warning_client, client_profil ,client_users, client_privmsg, client_channels, client_channels_in,
-    client_channelMsg, client_chanmsg_users_not_ban
+    client_channelMsg, client_chanmsg_users_not_ban, client_jwt
 
 }

@@ -41,6 +41,10 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
     if (props.profil?.notif.length !== 0 || props.profil.notifChannel.length !== 0){
         notif = true;
     }
+    //Socket refresh token
+    useEffect(() => {
+        onSocket.client_jwt(socket);
+    }, [socket])
 
     //Socket get erreur from server 
     useEffect(() => {

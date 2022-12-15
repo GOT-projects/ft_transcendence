@@ -88,7 +88,7 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
             if (inputChan === ""){
                 setNotify({isOpen: true, message: "Please choose name to your channel", type: "error"})
             }else{
-                chan = {name:inputChan, status: ChannelStatus.PRIVATE, password:inputPwd}; 
+                chan = {name:inputChan, status: ChannelStatus.PRIVATE, password:undefined}; 
             }
         }else{
             setNotify({isOpen: true, message: "Please select type of Channel", type: "error"})

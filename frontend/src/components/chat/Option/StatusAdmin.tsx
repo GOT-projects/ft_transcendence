@@ -43,7 +43,6 @@ const PopupOptionStatusAdmin:FunctionComponent<IProps> = (props: IProps) =>{
     }
 
     useEffect(() => {
-        console.log("actualisation user list")
         onSocket.client_chanmsg_users_not_ban(socket, setUserlist);
     }, [socket, setUserlist, userList])
 
@@ -76,7 +75,7 @@ const PopupOptionStatusAdmin:FunctionComponent<IProps> = (props: IProps) =>{
         return true
     }
 
-    console.log(userList)
+    console.log("userlist", userList)
     return (
         <StyledContaiteViewAddChan>
             <motion.div
