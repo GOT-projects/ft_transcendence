@@ -47,6 +47,10 @@ const PopupChannelSetting:FunctionComponent<IProps> = (props: IProps) =>{
         props.setSetting(false);
         navigate(`/chat?code=Channel&name=${props.chanName}&Setting=Block`);
     }
+    const handleSettingAdmin = () => {
+        props.setSetting(false);
+        navigate(`/chat?code=Channel&name=${props.chanName}&Setting=Admin`);
+    }
 
     return (
         <StyledContaiteViewAddChan>
@@ -64,7 +68,7 @@ const PopupChannelSetting:FunctionComponent<IProps> = (props: IProps) =>{
                 <StyledContaiteViewAddP >Status Channel</StyledContaiteViewAddP>
                 <StyledContaiteViewAddP>{">"}</StyledContaiteViewAddP>
             </StyledContaiteViewAddOption>
-            <StyledContaiteViewAddOption onClick={() => {handleSettingInvite()}}>
+            <StyledContaiteViewAddOption onClick={() => {handleSettingAdmin()}}>
                 <StyledContaiteViewAddP>User status</StyledContaiteViewAddP>
                 <StyledContaiteViewAddP>{">"}</StyledContaiteViewAddP>
             </StyledContaiteViewAddOption>

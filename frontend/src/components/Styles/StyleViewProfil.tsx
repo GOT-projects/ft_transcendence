@@ -113,6 +113,11 @@ export const StyledContaitePUser = styled.p`
 export const StyledContaiteDivPUser = styled.div<BgColor>`
     background-color: ${p => p.color};
     cursor: pointer;
+    &.statusAdmin{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
     &:hover{
         transition: 0.6s;
         background-color: ${Colors.grey};
@@ -309,6 +314,9 @@ export const StyledContaiteClose = styled.div`
     cursor: pointer;
     &.addUser{
         position: absolute;
+    }
+    &.statusAdmin{
+        gap: 126px;
     }
     &.explore{
         gap: 90px;

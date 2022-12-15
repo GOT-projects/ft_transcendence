@@ -35,6 +35,7 @@ import PopupOptionInvite from '../components/chat/Option/ChanInvite';
 import { useNavigate } from 'react-router-dom';
 import PopupOptionLeave from '../components/chat/Option/ChanLeave';
 import PopupOptionBlock from '../components/chat/Option/ChanBlock';
+import PopupOptionStatusAdmin from '../components/chat/Option/StatusAdmin';
 
 interface IProps {
    profil: GOT.Profile | undefined;
@@ -53,6 +54,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     const [setting, setSetting] =  useState(false);
     const [settingInvite, setSettingInvite] =  useState(false);
     const [settingBlock, setSettingBlock] =  useState(false);
+    const [settingAdmin, setSettingAdmin] =  useState(false);
     const [chatSwitch, setChatSwitch] = useState<string>('');
     const [histo, setHisto] = useState<GOT.HistoryParties>();
     const [popuProfil, setPopupProfil] = useState(false);
@@ -166,9 +168,12 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                 setSettingInvite(true);
             }else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "Block"){
                 setSettingBlock(true);
+            }else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "Admin"){
+                setSettingAdmin(true);
             }else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "false"){
                 setSettingInvite(false);
                 setSettingBlock(false);
+                setSettingAdmin(false);
                 setSetting(false);
                 setAdd("");
             }
@@ -257,6 +262,10 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                                         setFriends={setFriends} friends={friends}
                                         chanName={chatSwitch} setSetting={setSetting}/>: <></>}
             {settingInvite ? <PopupOptionLeave profil={props.profil} friends={friends}
+                                        listUser={usersList} setAdd={setAdd} 
+                                        setInvite={setInvite}
+                                        setFriends={setFriends} chanName={chatSwitch}/> : <></>}
+            {settingAdmin ? <PopupOptionStatusAdmin profil={props.profil} friends={friends}
                                         listUser={usersList} setAdd={setAdd} 
                                         setInvite={setInvite}
                                         setFriends={setFriends} chanName={chatSwitch}/> : <></>}

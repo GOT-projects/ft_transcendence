@@ -793,6 +793,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 				const channels = await this.chatGateway.getChannels(auth.user);
 				this.server.to(tmp[1]).emit('client_channels_in', channelsIn);
 				this.server.to(tmp[1]).emit('client_channels', channels);
+				this.server.to(tmp[1]).emit('client_chan_users', channels);
 			} else {
 				const userToSend = await this.userService.findLogin(tmp[0]);
 				if (userToSend !== null) {
@@ -800,6 +801,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 					const channels = await this.chatGateway.getChannels(userToSend);
 					this.server.to(tmp[1]).emit('client_channels_in', channelsIn);
 					this.server.to(tmp[1]).emit('client_channels', channels);
+					this.server.to(tmp[1]).emit('client_chan_users', channels);
 				}
 			}
 		}

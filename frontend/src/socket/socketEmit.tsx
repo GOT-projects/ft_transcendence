@@ -105,9 +105,16 @@ let emitChanChangeName = async (socket:Socket<DefaultEventsMap, DefaultEventsMap
 let emitChanChangeStatus = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chan:GOT.Channel) => {
     socket.emit('server_chan_edit_status', {Authorization: accountService.getToken(), chan:chan})
 }
+let emitChanPassAdmin = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName: string, loginToPassAdmin:string) => {
+    socket.emit('server_chan_pass_admin', {Authorization: accountService.getToken(), chanName:chanName, loginToPassAdmin: loginToPassAdmin})
+}
+let emitChanPassMember = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName: string, loginToPassMember:string) => {
+    socket.emit('server_chan_pass_member', {Authorization: accountService.getToken(), chanName:chanName, loginToPassMember: loginToPassMember})
+}
 export const emitSocket ={
     emitProfil, emitProfilHisto, emitFriends, emitDemandFriend, emitChangeUsername, emitLeaderboard, 
     emitPrivmsg, emitSendPrivmsg, emitUsers, emitBlockUser, emitPrivmsgUsers, emitReplyNotif, emitUnBlockUser, emitCreateChan, 
     emitChannels, emitChannelsIn, emitChannelMsg_send, emitChannelMsg, emitChannelJoin, emitChanUserNotBan,
-    emitLeaveChan, emitInviteSomebody, emitChanBlock, emitChanUnBlock, emitChanChangeName, emitChanChangeStatus
+    emitLeaveChan, emitInviteSomebody, emitChanBlock, emitChanUnBlock, emitChanChangeName, emitChanChangeStatus,
+    emitChanPassMember, emitChanPassAdmin
 }
