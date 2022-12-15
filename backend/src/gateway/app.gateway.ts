@@ -819,9 +819,9 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
-		const ret = await this.chatGateway.chanPassAdmin(auth.user, chanName, loginToPassMember);
+		const ret = await this.chatGateway.chanPassMember(auth.user, chanName, loginToPassMember);
 		if (typeof ret === 'string') {
-			client.emit('error_client', 'chan_pass_admin ' + ret);
+			client.emit('error_client', 'chan_pass_member ' + ret);
 			return ;
 		}
 		client.emit('info_client', `Channel ${chanName}: ${loginToPassMember} is now member`);
