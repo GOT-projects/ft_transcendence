@@ -85,6 +85,7 @@ export class AuthService {
 			const jwt: string = await this.jwtService.signAsync({
 				userId: user.id,
 				userLogin: user.login,
+				userEmail: user.email,
 				isTwoFactorAuthenticationEnabled: user.isTwoFactorAuthenticationEnabled,
 				isTwoFactorAuthenticated: false,
 			});
@@ -138,6 +139,7 @@ export class AuthService {
 		const payload: jwtContent = {
 			userId: userWithoutPsw.id,
 			userLogin: userWithoutPsw.login,
+			userEmail: userWithoutPsw.email,
 			isTwoFactorAuthenticationEnabled: !!userWithoutPsw.isTwoFactorAuthenticationEnabled,
 			isTwoFactorAuthenticated: true,
 		};

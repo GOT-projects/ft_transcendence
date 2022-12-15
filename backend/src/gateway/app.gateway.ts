@@ -62,19 +62,19 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 				client.emit('error_client', 'Need 2fa');
 				return false;
 			}
-			const user = await this.userService.findUnique(data.userId, data.userLogin);
+			const user = await this.userService.findUniqueMail(data.userId, data.userEmail);
 			if (!user) {
 				client.emit('error_client', 'User not valid / authorized');
 				return false;
 			}
-			const val = this.users.get(data.userLogin);
+			const val = this.users.get(data.userEmail);
 			if (!val) {
-				this.users.set(data.userLogin, [client.id]);
-				this.logger.verbose(`Client add ${data.userLogin}: ${client.id}`);
+				this.users.set(data.userEmail, [client.id]);
+				this.logger.verbose(`Client add ${data.userEmail}: ${client.id}`);
 			}
 			else if (val.indexOf(client.id) === -1) {
 				val.push(client.id);
-				this.logger.log(`Client add ${data.userLogin}: ${client.id}`);
+				this.logger.log(`Client add ${data.userEmail}: ${client.id}`);
 			}
 			const infos: JwtContent = {
 				user: user,
@@ -165,9 +165,14 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			client.emit('error_client', 'change_username' + ret);
 			return ;
 		}
-		auth.user.login = login;
 		try {
-			client.emit('client_jwt', await this.jwtService.signAsync(auth));
+			client.emit('client_jwt', await this.jwtService.signAsync({
+				userId: auth.user.id,
+				userLogin: login,
+				userEmail: auth.user.email,
+				isTwoFactorAuthenticationEnabled: auth.isTwoFactorAuthenticationEnabled,
+				isTwoFactorAuthenticated: auth.isTwoFactorAuthenticated,
+			}));
 		} catch (error) {}
 		this.getProfil(client, jwt);
 	}

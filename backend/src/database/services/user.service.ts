@@ -77,6 +77,20 @@ export class UserService {
 		}
 	}
 
+	async findUniqueMail(id: number, email: string): Promise<User | null> {
+		if (!id || !email) {
+			throw new HttpException('Need id', HttpStatus.BAD_REQUEST);
+		}
+		try {
+			return await this.userRepository.findOneBy({
+				id,
+				email
+			});
+		} catch (error) {
+			throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+		}
+	}
+
 	  async findLogin(login: string): Promise<User | null> {
 		if (!login) {
 		  throw new HttpException('Need id', HttpStatus.BAD_REQUEST);

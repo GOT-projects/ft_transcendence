@@ -3,6 +3,7 @@ import { User } from "src/database/entities/user.entity";
 export interface jwtContent {
     userId: number;
     userLogin: string;
+    userEmail: string;
     isTwoFactorAuthenticationEnabled?: boolean;
     isTwoFactorAuthenticated?: boolean;
 }
