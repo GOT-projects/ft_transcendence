@@ -169,15 +169,17 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		if (socks)
 			this.users.set(login, socks);
 		this.users.delete(auth.user.login);
-		try {
-			client.emit('client_jwt', await this.jwtService.signAsync({
-				userId: auth.user.id,
-				userLogin: login,
-				userEmail: auth.user.email,
-				isTwoFactorAuthenticationEnabled: auth.isTwoFactorAuthenticationEnabled,
-				isTwoFactorAuthenticated: auth.isTwoFactorAuthenticated,
-			}));
-		} catch (error) {}
+		if (socks) {
+			try {
+				this.server.to(socks).emit('client_jwt', (jwt = await this.jwtService.signAsync({
+					userId: auth.user.id,
+					userLogin: login,
+					userEmail: auth.user.email,
+					isTwoFactorAuthenticationEnabled: auth.isTwoFactorAuthenticationEnabled,
+					isTwoFactorAuthenticated: auth.isTwoFactorAuthenticated,
+				})));
+			} catch (error) {}
+		}
 		this.getProfil(client, jwt);
 	}
 
