@@ -14,7 +14,7 @@ TOFIX
     - chat pwd join
     - popup2fa add notif (code error, try again)
  - Back
-    - send jwt
+
 ---
 TODO
  - Front
