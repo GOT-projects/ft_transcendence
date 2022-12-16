@@ -12,4 +12,5 @@ export interface JwtContent {
     user: User,
     isTwoFactorAuthenticationEnabled?: boolean;
     isTwoFactorAuthenticated?: boolean;
+    newUser: boolean;
 }

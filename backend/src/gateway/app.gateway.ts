@@ -52,8 +52,42 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 					const i = ids.indexOf(client.id);
 					if (i !== -1)
 						ids.splice(i, 1);
-					if (ids.length === 0)
+					if (ids.length === 0) {
 						this.users.delete(login);
+						try {
+							const user = await this.userService.findLogin(login);
+							if (user) {
+								const friends = await this.friendGateway.getFriends(user);
+								if (typeof friends !== 'string') {
+									for (const friend of friends) {
+										const sock = this.users.get(friend.login);
+										if (sock !== undefined) {
+											const friendUser: User = {
+												id: friend.id,
+												login: friend.login,
+												urlImg: friend.urlImg,
+												wallet: friend.wallet,
+												email: friend.email,
+												isTwoFactorAuthenticationEnabled: friend.isTwoFactorAuthenticationEnabled,
+												userIdIsBlock: [],
+												users1Friend: [],
+												users2Friend: [],
+												userWhoBlock: [],
+												messageFrom: [],
+												messageTo: [],
+												channelsRel: [],
+												gamesPlayer1: [],
+												gamesPlayer2: []
+											};
+											const tmpProfil = await this.getProfilWithFriends(friendUser);
+											if (typeof tmpProfil !== 'string')
+												this.server.to(sock).emit('client_profil', tmpProfil)
+										}
+									}
+								}
+							}
+						} catch (error) {}
+					}
 				}
 				return false;
 			}
@@ -67,10 +101,12 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 				client.emit('error_client', 'User not valid / authorized');
 				return false;
 			}
+			let newUser: boolean = false;
 			const val = this.users.get(data.userLogin);
 			if (!val) {
 				this.users.set(data.userLogin, [client.id]);
 				this.logger.verbose(`Client add ${data.userLogin}: ${client.id}`);
+				newUser = true;
 			}
 			else if (val.indexOf(client.id) === -1) {
 				val.push(client.id);
@@ -79,7 +115,8 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			const infos: JwtContent = {
 				user: user,
 				isTwoFactorAuthenticationEnabled: data.isTwoFactorAuthenticationEnabled,
-				isTwoFactorAuthenticated: data.isTwoFactorAuthenticated
+				isTwoFactorAuthenticated: data.isTwoFactorAuthenticated,
+				newUser
 			};
 			return infos;
 		} catch (error) {
@@ -91,8 +128,42 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 				const i = ids.indexOf(client.id);
 				if (i !== -1)
 					ids.splice(i, 1);
-				if (ids.length === 0)
+				if (ids.length === 0) {
 					this.users.delete(login);
+					try {
+						const user = await this.userService.findLogin(login);
+						if (user) {
+							const friends = await this.friendGateway.getFriends(user);
+							if (typeof friends !== 'string') {
+								for (const friend of friends) {
+									const sock = this.users.get(friend.login);
+									if (sock !== undefined) {
+										const friendUser: User = {
+											id: friend.id,
+											login: friend.login,
+											urlImg: friend.urlImg,
+											wallet: friend.wallet,
+											email: friend.email,
+											isTwoFactorAuthenticationEnabled: friend.isTwoFactorAuthenticationEnabled,
+											userIdIsBlock: [],
+											users1Friend: [],
+											users2Friend: [],
+											userWhoBlock: [],
+											messageFrom: [],
+											messageTo: [],
+											channelsRel: [],
+											gamesPlayer1: [],
+											gamesPlayer2: []
+										};
+										const tmpProfil = await this.getProfilWithFriends(friendUser);
+										if (typeof tmpProfil !== 'string')
+											this.server.to(sock).emit('client_profil', tmpProfil)
+									}
+								}
+							}
+						}
+					} catch (error) {}
+				}
 			}
 			client.emit('error_client', error.message);
 			return false;
@@ -107,6 +178,36 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const auth = await this.connectUserBody(client, jwt);
 		if (!auth)
 			return false;
+		if (auth.newUser) {
+			const friends = await this.friendGateway.getFriends(auth.user);
+			if (typeof friends !== 'string') {
+				for (const friend of friends) {
+					const sock = this.users.get(friend.login);
+					if (sock !== undefined) {
+						const friendUser: User = {
+							id: friend.id,
+							login: friend.login,
+							urlImg: friend.urlImg,
+							wallet: friend.wallet,
+							email: friend.email,
+							isTwoFactorAuthenticationEnabled: friend.isTwoFactorAuthenticationEnabled,
+							userIdIsBlock: [],
+							users1Friend: [],
+							users2Friend: [],
+							userWhoBlock: [],
+							messageFrom: [],
+							messageTo: [],
+							channelsRel: [],
+							gamesPlayer1: [],
+							gamesPlayer2: []
+						};
+						const tmpProfil = await this.getProfilWithFriends(friendUser);
+						if (typeof tmpProfil !== 'string')
+							this.server.to(sock).emit('client_profil', tmpProfil)
+					}
+				}
+			}
+		}
 		return auth;
 	}
 
@@ -847,19 +948,53 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		this.logger.log('Init');
 	}
 
-	handleDisconnect(client: Socket) {
+	async handleDisconnect(client: Socket) {
 		let status = true;
-		this.users.forEach((ids, login) => {
+		for (const [login, ids] of this.users) {
 			const i = ids.indexOf(client.id);
 			if (i > -1) {
 				ids.splice(i, 1);
-				if (ids.length === 0)
+				if (ids.length === 0) {
 					this.users.delete(login);
+					try {
+						const user = await this.userService.findLogin(login);
+						if (user) {
+							const friends = await this.friendGateway.getFriends(user);
+							if (typeof friends !== 'string') {
+								for (const friend of friends) {
+									const sock = this.users.get(friend.login);
+									if (sock !== undefined) {
+										const friendUser: User = {
+											id: friend.id,
+											login: friend.login,
+											urlImg: friend.urlImg,
+											wallet: friend.wallet,
+											email: friend.email,
+											isTwoFactorAuthenticationEnabled: friend.isTwoFactorAuthenticationEnabled,
+											userIdIsBlock: [],
+											users1Friend: [],
+											users2Friend: [],
+											userWhoBlock: [],
+											messageFrom: [],
+											messageTo: [],
+											channelsRel: [],
+											gamesPlayer1: [],
+											gamesPlayer2: []
+										};
+										const tmpProfil = await this.getProfilWithFriends(friendUser);
+										if (typeof tmpProfil !== 'string')
+											this.server.to(sock).emit('client_profil', tmpProfil)
+									}
+								}
+							}
+						}
+					} catch (error) {}
+				}
 				this.logger.verbose(`Client disconnected ${login}: ${client.id}`);
 				status = false;
 				return ;
 			}
-		});
+		};
 		if (status)
 			this.logger.verbose(`Client disconnected anonymous: ${client.id}`);
 	}
