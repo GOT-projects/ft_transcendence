@@ -15,8 +15,10 @@ services:
     hostname: postgres
     # build
     image: postgres:latest
-    env_file:
-      - .env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     # runtime
     expose:
       - "5432"
@@ -84,9 +86,14 @@ services:
       - ./shared:/usr/src/app/shared
 
   adminer:
-    image: adminer
+    image: michalhosna/adminer
     container_name: adminer
     restart: always
+    environment:
+      - ADMINER_DRIVER=pgsql
+      - ADMINER_SERVER=postgres
+      - ADMINER_USERNAME=${POSTGRES_USER}
+      - ADMINER_DB=${POSTGRES_DB}
     ports:
       - "80:8080"
     networks:
