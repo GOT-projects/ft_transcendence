@@ -83,16 +83,11 @@ services:
       - ./frontend/public:/usr/src/app/frontend/public
       - ./shared:/usr/src/app/shared
 
-  # pgadmin:
-  #   image: dpage/pgadmin4
-  #   container_name: pgadmin4_container
-  #   restart: always
-  #   ports:
-  #     - "80:80"
-  #   networks:
-  #     - back
-  #   environment:
-  #     PGADMIN_DEFAULT_EMAIL: admin@local.com
-  #     PGADMIN_DEFAULT_PASSWORD: admin
-  #     PGADMIN_CONFIG_CONSOLE_LOG_LEVEL: 10
-  #     DEBUG: 'False'
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - "80:8080"
+    networks:
+      - back
