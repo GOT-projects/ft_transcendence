@@ -19,11 +19,10 @@ export const StyledContaite = styled.div`
     overflow: hidden;
     border: 2px solid ${Colors.border};
     border-radius: 20px;
-    background-color: ${Colors.dark1};
+    background-color: ${Colors.Bg2fa};
     opacity: 0.6;
     cursor: pointer;
     @media screen and (max-width: 768px){
-        display: block;
         width: 100%;
         height: 100%;
         overflow: hidden;
@@ -54,7 +53,6 @@ export const StyledAddInputdiv = styled.div`
 export const StyledAddInputdivAdd = styled.div`
     width: 20px;
     height: 2px;
-    background-color: pink;
 `;
 
 export const StyledAddInputdivButton = styled.div`
@@ -101,26 +99,27 @@ background-color: ${Colors.MenuActive}
     }
 `;
 
+//Par list user Privmsg
 export const StyledContact = styled.div`
     display: flex;
-    width: 40%;
+    max-width:  400px;
+    min-width:  200px;
     height: 104%;
     margin: 0;
     padding: 0;
-    align-items: space-around;
-    justify-content: center;
+    justify-content: flex-start;
     flex-direction: column;
     background-color: ${Colors.ChatMenu};
     border: 2px solid ${Colors.ChatMenuButton};
+    transition: 0.6s;
     @media screen and (max-width: 768px){
         &.UnActiveMenu{
-            display: none;
-         }
-         &.ActiveMenu{
-            display: flex;
-            width: 100%;
-            height: 100%;
-         }
+            z-index: 18;
+            width: 500px;
+            height: calc(100% - 6rem);
+            transform: translate(-800px);
+            transition: 0.6s;
+        }
     }
 `;
 export const StyledChatSep = styled.div`
@@ -133,47 +132,41 @@ export const StyledChatSep = styled.div`
 export const StyledChatSwith = styled.div`
     display: flex;
     align-items: center;
-    justify-content: space-around;
-    height: 4rem;
+    height: 80px;
     border-radius: 10px 0 0 0;
     background-color: ${Colors.ChatMenu};
-    @media screen and (max-width: 768px){
-        display: none;
-    }
 `;
+export const StyledChatSwithTile = styled.div`
+    font-size: 20px;
+    font-family: "Public Pixel";
+    margin: 10px;
+    color: ${Colors.primary};
+`
 
 export const StyledChatPrive = styled.div`
     display: flex;
     align-items: center;
     flex-direction: column;
     border-radius: 10px 0 0 10px;
-    height: 90%;
+    height: calc(100% - 80px - 6rem);
     width: 100%;
     overflow: scroll;
-    @media screen and (max-width: 768px){
-        display: block;
-        height: 90%;
-        width: 100%;
-    }
 `;
 
-export const DisplayPrive = styled.div`
-    &.prive{
-        display: block;
-    }
-    &.channel{
-        display: none;
-    }
-`;
+export const StyledSettingChan = styled.div`
+    display: flex;
+    align-items: center;
+    height: 4rem;
+    justify-content: space-between;
+`
+export const StyledSettingChanP = styled.p`
+    color: ${Colors.primary};
+    font-family: "cursive";
+    font-size: 20px;
+    margin: 10px;
+`
 
-export const DisplayChannel = styled.div`
-    &.prive{
-        display: none;
-    }
-    &.channel{
-        display: block;
-    }
-`;
+
 export const StyledChatSwithButton = styled.button<BgColor>`
     width: 120px;
     height: 30px;
@@ -188,12 +181,26 @@ export const StyledChatSwithButton = styled.button<BgColor>`
         background-color: ${Colors.ChatMenuButtonHover};
         transition: 0.4s;
     }
-    @media screen and (max-width: 768px){
-        width: 40%;
-        margin: 8px;
-        font-size: 8px;
-    }
 `;
+export const StyledChatDivhandle = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    cursor: pointer;
+`
+export const StyledChatDivoption = styled.div`
+    display: flex;
+    gap: 3px;
+    cursor: pointer;
+`
+export const StyledChatDivEmpty = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    width: 50px;
+    height: 50px;
+`
 
 export const StyledChatSettingButton = styled.div`
     display: flex;
@@ -210,10 +217,8 @@ export const StyledChatSettingButton = styled.div`
         transition: 0.4s;
     }
     @media screen and (max-width: 768px){
-        background-color: transparent;
-        &:hover{
-            background-color: transparent;
-        }
+        width: 40px;
+        height: 40px;
     }
 `;
 
@@ -221,20 +226,31 @@ export const StyledChatTextArea = styled.div`
     overflow: scroll;
 `;
 
+//Privmsg 
 export const StyledChat = styled.div`
     position: relative;
     display: flex;
     flex-direction: column;
-    width: 67%;
+    width: calc(100% - 450px);
     margin: 0;
     height: 100%;
     margin-left: 10px;
     padding: 0px;
     background-color: ${Colors.ChatMenu};
+    transition: 0.9s;
     @media screen and (max-width: 768px){
-        width: 100%;
-        height: calc(100% - 6rem - 50px);
-        margin: 0;
+        &.UnActiveMenu{
+            position: absolute;
+            width: 80%;
+            height: calc(100% - 6rem);
+            transition: 0.9s;
+            left: 90px;
+        }
+        &.ActiveMenu{
+            display: none;
+            transform: translate(400px);
+            transition: 0.9s;
+        }
     }
 `;
 
@@ -248,40 +264,54 @@ export const StyledChatWindow = styled.div`
     height: 100%;
 `;
 
+export const StyledChatNameUser = styled.p`
+    margin-left: 10px;
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 10px;
+    color: ${Colors.grey};
+`
+
 export const StyledChatPlace = styled.div`
     display:flex;
+    flex-direction: column;
     margin: 10px;
     max-width: 45%;
     height: auto;
-    border-radius: 20px;
+    border-radius: 4px;
     overflow-wrap: anywhere;
     hyphens: auto;
+    transition: 0.6s;
+    background-color: transparent;
     &.receive{
         justify-content: flex-start;
-        background-color: blue;
         text-align: left;
     }
     &.send{
         justify-content: flex-end;
-        background-color: red;
-        transform: translateX(110%)
+        transform: translateX(110%);
+        align-items: flex-end;
+    }
+    &:hover{
+        &.send{
+            transition: 0.6s;
+            background-color: ${Colors.hoverTextChat};
+        }
+        &.receive{
+            transition: 0.6s;
+            background-color: ${Colors.hoverTextChat};
+        }
     }
     @media screen and (max-width: 768px){
-        transform: translateX(0%)
-        max-width: 90%;
-        color: ${Colors.primary};
     }
 `;
 
-export const StyledChatText = styled.p`
+export const StyledChatText = styled.pre`
     margin: 10px;
     font-size:14px; 
     font-family: "Public Pixel";
-    color: ${Colors.primary}
+    color: ${Colors.primary};
     @media screen and (max-width: 768px){
-        margin: 10px;
-        font-size:8px; 
-        font-family: "Public Pixel";
     }
 `;
 
@@ -305,13 +335,12 @@ export const StyledChatInput = styled.textarea`
     font-family: "Public Pixel";
     padding: 6px;
     width: 100%;
+    margin: 10px;
     font-size: 14px;
     height: auto;
     margin-bottom: 40px;
     border-radius: 10px;
     @media screen and (max-width: 768px){
-        margin-bottom: 20px;
-        font-size: 8px;
     }
 `;
 
@@ -336,12 +365,13 @@ export const StyledSender = styled.button`
 export const StyledUser = styled.button<BgColor>`
     display: flex;
     margin: 10px;
-    width: 100%;
     height: 60px;
-    border-radius: 0;
+    width: 400px;
+    border-radius: 20px;
     border: 0;
     align-items: center;
-    justify-content: space-between;
+    justify-content: row;
+    flex-flow: column wrap;
     background-color: ${p => p.color};
     justify-content: space-around;
     transition: 0.4s;
@@ -350,8 +380,7 @@ export const StyledUser = styled.button<BgColor>`
         transition: 0.4s;
     }
     @media screen and (max-width: 768px){
-        margin: 6px;
-        font-size: 16px;
+        width: 350px;
     }
 `;
 
@@ -363,15 +392,24 @@ export const StyledChatPrivAvatar = styled.div<Ibg>`
     margin: 10px;
     width: 50px;
     height: 50px;
+    border-radius: 50%;
     background: url(${p => p.profil});
     background-size: 100% 100%;
+    @media screen and (max-width: 768px){
+        margin-left: 25px;
+    }
 `;
 
 export const StyledChatPrivName = styled.p`
     margin: 10px;
-	width: 200px;
+	width: 100px;
 	text-align: left;
     font-family: 'Public Pixel', cursive;
+    font-size: 20px;
 	overflow: hidden;
-    color: ${Colors.ChatMenuButtonText}
+    color: ${Colors.ChatMenuButtonText};
+    @media screen and (max-width: 768px){
+	    width: 70px;
+        font-size: 14px;
+    }
 `;

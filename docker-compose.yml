@@ -15,8 +15,10 @@ services:
     hostname: postgres
     # build
     image: postgres:latest
-    env_file:
-      - .env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     # runtime
     expose:
       - "5432"
@@ -83,16 +85,16 @@ services:
       - ./frontend/public:/usr/src/app/frontend/public
       - ./shared:/usr/src/app/shared
 
-  # pgadmin:
-  #   image: dpage/pgadmin4
-  #   container_name: pgadmin4_container
-  #   restart: always
-  #   ports:
-  #     - "80:80"
-  #   networks:
-  #     - back
-  #   environment:
-  #     PGADMIN_DEFAULT_EMAIL: admin@local.com
-  #     PGADMIN_DEFAULT_PASSWORD: admin
-  #     PGADMIN_CONFIG_CONSOLE_LOG_LEVEL: 10
-  #     DEBUG: 'False'
+  adminer:
+    image: michalhosna/adminer
+    container_name: adminer
+    restart: always
+    environment:
+      - ADMINER_DRIVER=pgsql
+      - ADMINER_SERVER=postgres
+      - ADMINER_USERNAME=${POSTGRES_USER}
+      - ADMINER_DB=${POSTGRES_DB}
+    ports:
+      - "80:8080"
+    networks:
+      - back

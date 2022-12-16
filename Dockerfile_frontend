@@ -1,16 +1,22 @@
 FROM node:latest
-
+ENV NPM_CONFIG_PREFIX=/usr/node/.npm-global
+ENV PATH=$PATH:/usr/node/.npm-global/bin
 WORKDIR /usr/src/app/frontend
 
 COPY --chown=node:node ./frontend/package.json	./
 COPY --chown=node:node ./frontend/tsconfig.json	./
+COPY --chown=node:node ./frontend/craco.config.js ./
+COPY --chown=node:node ./frontend/public/ ./
+COPY --chown=node:node ./entrypoint/entrypoint.sh ./
 
-RUN yarn install
 
 VOLUME [ "/usr/src/app/frontend/src" ]
 VOLUME [ "/usr/src/app/frontend/public" ]
 VOLUME [ "/usr/src/app/shared" ]
 
+RUN yarn install
 EXPOSE 80
 
-CMD npm start
+CMD yarn run dev
+
+#ENTRYPOINT ["bash", "./entrypoint.sh"]

@@ -3,13 +3,19 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Channel } from './entities/channel.entity';
 import { Game } from './entities/game.entity';
 import { Message } from './entities/message.entity';
-import { RelUser } from './entities/rel_user.entity';
+import { RelBlock } from './entities/rel_block.entity';
+import { RelDemand } from './entities/rel_demand.entity';
+import { RelFriend } from './entities/rel_friend.entity';
 import { RelUserChannel } from './entities/rel_user_channel.entity';
 import { User } from './entities/user.entity';
+import { BlockService } from './services/block.service';
+import { ChannelService } from './services/channel.service';
+import { RelDemandService } from './services/demand.service';
+import { RelFriendService } from './services/friend.service';
 import { GameService } from './services/game.service';
 import { MessageService } from './services/message.service';
-import { RelUserService } from './services/rel_user.service';
 import { UserService } from './services/user.service';
+import { RelUserChannelService } from './services/user_channel.service';
 
 @Module({
 	imports: [
@@ -23,26 +29,36 @@ import { UserService } from './services/user.service';
 			synchronize: true, // TODO rm for prod
 		}),
 		TypeOrmModule.forFeature([
-			User,
 			Channel,
 			Game,
 			Message,
-			RelUser,
-			RelUserChannel
+			RelBlock,
+			RelDemand,
+			RelFriend,
+			RelUserChannel,
+			User
 		]),
 	],
 	controllers: [],
 	providers: [
 		UserService,
 		GameService,
-		RelUserService,
-		MessageService
+		RelDemandService,
+		RelFriendService,
+		BlockService,
+		MessageService,
+		ChannelService,
+		RelUserChannelService,
 	  ],
 	exports: [
 		UserService,
 		GameService,
-		RelUserService,
-		MessageService
+		RelDemandService,
+		RelFriendService,
+		BlockService,
+		MessageService,
+		ChannelService,
+		RelUserChannelService,
 	],
 })
 export class DatabaseModule {};

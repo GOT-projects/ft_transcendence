@@ -2,6 +2,7 @@ import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColu
 import { Channel } from "./channel.entity";
 import { User } from "./user.entity";
 
+
 @Entity()
 export class Message {
     @PrimaryGeneratedColumn()
@@ -14,20 +15,20 @@ export class Message {
     userIdFrom!: number;
 
     @Column({nullable: true})
-    userIdTo!: number | null;
+    userIdTo: number | null;
 
     @Column({nullable: true})
-    channelIdTo!: number | null;
+    channelIdTo: number | null;
 
-    @ManyToOne(() => User, (user) => user.messageFrom)
+    @ManyToOne(() => User, (user) => user.messageFrom, { onDelete: 'CASCADE' })
     @JoinColumn({name: 'userIdFrom'})
     userFrom!: User;
 
-    @ManyToOne(() => User, (user) => user.messageTo)
+    @ManyToOne(() => User, (user) => user.messageTo, { onDelete: 'CASCADE' })
     @JoinColumn({name: 'userIdTo'})
     userTo?: User;
 
-    @ManyToOne(() => Channel, (channel) => channel.messages)
+    @ManyToOne(() => Channel, (channel) => channel.messages, { onDelete: 'CASCADE' })
     @JoinColumn({name: 'channelIdTo'})
     channelTo?: Channel;
 }

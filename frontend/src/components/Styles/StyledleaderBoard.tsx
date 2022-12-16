@@ -5,10 +5,12 @@ import {Link} from 'react-router-dom'
 
 export const Button = styled.button`
 postion: absolute;
+  width: 400%;
   background-color: black;
   color: white;
   font-size: 20px;
-  padding: 10px 60px;
+  display: auto;
+  text-align: center;
   border-radius: 5px;
   margin: 10px 0px;
   cursor: pointer;
@@ -74,6 +76,11 @@ export const StyledLeadBorder = styled.div`
     border-radius: 4px;
 `;
 
+export const StyledSepController = styled.div`
+    width: 20px;
+    height: 20px;
+`
+
 
 export const StyledLeadP = styled.td`
     margin: 20px;
@@ -83,4 +90,35 @@ export const StyledLeadP = styled.td`
     text-align: left;
     opacity: 1;
     color: ${Colors.primary};
+
+`;
+
+export const StyledLeadPHead = styled.th`
+    margin: 20px;
+    width: 10px;
+    padding: 6px;
+    font-family: "Public Pixel";
+    opacity: 1;
+    color: red;
+    text-align: center;
+    font-size: x-large;
+    border-bottom: 1px solid deeppink;
+    border-collapse: collapse;
+`;
+
+export const StyledLeadB = styled.div`
+background-color: transparent;
+background-opacity: 0;
+    margin: 20px;
+    width: 75%;
+    padding: 6px;
+    font-family: "Public Pixel";
+    color: black;
+    text-align: left;
+    opacity: 1;
+    color: ${Colors.primary};
+    cursor: pointer;
+    border: none;
+    margin: 1px;
+    overflow: hidden;
 `;

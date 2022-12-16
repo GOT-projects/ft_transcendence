@@ -28,17 +28,6 @@ export class AppController {
 
     @Get('images/:file')
     async getProfilImage(@Req() req: Request, @Param('file') file: string, @Res() res: Response) {
-        //if (!req?.headers?.authorization || !file)
-        //    throw new HttpException('No authorization header or no file', HttpStatus.BAD_REQUEST);
-        //const jwt = req.headers.authorization.split(' ')[1];
-        return await this.appService.getProfilImage(/*jwt, */file, res);
+        return await this.appService.getProfilImage(file, res);
     }
-    
-    /*@Get('allLeaderBoard')
-    async allLeaderBoard(@Req() req: Request, @Body('username') username: string) {
-        if (!req?.headers?.authorization || !username)
-            throw new HttpException('No authorization header or no username', HttpStatus.BAD_REQUEST);
-        const jwt = req.headers.authorization.split(' ')[1];
-        return await this.appService.allLeaderBoard(jwt);
-    }*/
 }

@@ -6,9 +6,10 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
 import { multerModule } from './ressources';
-import { GatewayService } from './gateway/gateway.service';
-import { FriendService } from './gateway/friend.service';
-import { ChatService } from './gateway/chat.service';
+import { GeneralGateway } from './gateway/general.gateway';
+import { FriendGateway } from './gateway/friend.gateway';
+import { ChatGateway } from './gateway/chat.gateway';
+import { GameGateway } from './gateway/game.gateway';
 
 @Module({
   imports: [
@@ -21,9 +22,10 @@ import { ChatService } from './gateway/chat.service';
   providers: [
     AppService,
     AppGateway,
-    GatewayService,
-    FriendService,
-    ChatService
+    GeneralGateway,
+    FriendGateway,
+    ChatGateway,
+    GameGateway
   ],
 })
 export class AppModule {}

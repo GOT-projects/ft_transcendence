@@ -1,5 +1,5 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { UserChannelStatus } from "../types/user_channel.types";
+import { GOT } from "shared/types";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Channel } from "./channel.entity";
 import { User } from "./user.entity";
 
@@ -10,15 +10,22 @@ export class RelUserChannel {
 
     @Column({
         type: "enum",
-        enum: UserChannelStatus,
-        default: UserChannelStatus.MEMBER
+        enum: GOT.UserChannelStatus,
+        default: GOT.UserChannelStatus.MEMBER
     })
-    status!: UserChannelStatus;
+    status!: GOT.UserChannelStatus;
 
-    @ManyToOne(() => User, (user) => user.channelsRel)
+    @Column()
+    userId!: number;
+    @Column()
+    channelId!: number;
+
+    @ManyToOne(() => User, (user) => user.channelsRel, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'userId' })
     user!: User;
 
-    @ManyToOne(() => Channel, (channel) => channel.usersRel)
+    @ManyToOne(() => Channel, (channel) => channel.usersRel, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'channelId' })
     channel!: Channel;
 
 }

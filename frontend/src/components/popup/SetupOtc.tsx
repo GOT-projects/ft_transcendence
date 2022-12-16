@@ -9,13 +9,16 @@ interface IProps {
 const SetupOtc:FunctionComponent<IProps> = (props: IProps) => {
     //todo request post get qrcode
     const [gcode, setGcode] = useState<string>();
+    const [code, setCode] = useState<string>();
     const [inputOtc, setInputOtc] = useState<string>();
     useEffect(() => {
         try{
             const rep = apiPost.Post2FAGenerate();
             if (rep){
                 rep.then((response:any) =>{
-                    setGcode(response.data)
+                    console.log(response)
+                    setGcode(response.data.qrcode)
+                    setCode(response.data.secret)
                 })
             }
 
@@ -60,7 +63,7 @@ const SetupOtc:FunctionComponent<IProps> = (props: IProps) => {
             <StyledContaiteDescriptionH3>Scan the QR code</StyledContaiteDescriptionH3>
             <StyledContaiteDescriptionP>Use an authenticator app from your phone to scan. If you are unable to scan,</StyledContaiteDescriptionP>
             <StyledContaiteDescriptionH3>Entry this text code</StyledContaiteDescriptionH3>
-            <StyledContaiteDescriptionP>CODE GET BY SERVER</StyledContaiteDescriptionP>
+            <StyledContaiteDescriptionP>{ code }</StyledContaiteDescriptionP>
         </StyledContaiteDescription>
         <StyledContaiteQrcode>
             <img src={gcode}/>

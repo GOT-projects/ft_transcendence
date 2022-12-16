@@ -13,7 +13,7 @@ export namespace GOT {
     export interface User {
         id: number;
         login: string;
-        username: string;
+        //username: string;
         urlImg: string;
         wallet: number;
         email: string;
@@ -74,54 +74,26 @@ export namespace GOT {
     /*******************        HTTP       ********************/
     /**********************************************************/
 
-    /**
-     * Information after connection
-     * 
-     * Route: POST /auth/connect_intra
-     * Front: NaN
-     */
     export interface Login {
         access_token: Token;
         user: User;
     }
     
-    /**
-     * Information of user who is connected (scrolling menu in header)
-     * 
-     * Route: Get /profil
-     * Front: Header (Profil)
-     */
     export interface Profile {
         userInfos: User;
         stat: StatUser;
         notif: User[];  // users waiting responce to be friend
+        notifChannel: Channel[];
+        friends: Friend[];
+        blocks: User[];
     }
-    
-    /**
-     * Get user information and his information about game
-     * 
-     * Route: GET /profil/:login
-     * Front: UserProfil (leaderboard)
-     */
+
     export interface HistoryParties {
         userInfos: User;
         stat: StatUser;
         parties: Party[];
     }
 
-    /**
-     * Route: PATCH /change_username
-     * @param: {username: string}
-     * Front: Header (menu)
-     */
-
-    /**
-     * Route: PUT /change_image
-     * @param: { ... } //TODO image
-     * Front: Header (menu)
-     */
-
-    //TODO route 2FA CRUD
 
     /**********************************************************/
     /*******************       Socket      ********************/
@@ -131,80 +103,55 @@ export namespace GOT {
     /**************** Server to clients *****************/
     /****************************************************/
 
-    /**
-     * Get all friends
-     * Route:
-     *  WS: /get_friends
-     * Front: Header (friend)
-     * @return Friend[]
-     */
-
-    /**
-     * Get a new friend or update
-     * Route:
-     *  WS: /get_friend
-     * Front: Header (friend)
-     * @return Friend
-     */
-
-    /**
-     * Get a new notif
-     * Route:
-     *  WS: /get_notif
-     * Front: Notification
-     * @return User
-     */
-
-    /**
-     * Get the leaderboard (print or refresh)
-     * Route:
-     *  WS: /get_leaderboard
-     * Front: Leaderboard
-     */
     export type LeaderBoard = ProfileLeaderBoard[];
 
     /****************************************************/
     /**************** Clients to server *****************/
     /****************************************************/
 
-    /**
-     * Send the choice of the friend demand
-     * Route:
-     *  WS: /set_new_friend
-     * Front: Notification
-     */
     export interface NotifChoice {
-        user: User;
+        user: User| undefined;
+        channel: Channel | undefined;
         accept: boolean;
     }
-
-    /**
-     * Demand user as a friend
-     * Route:
-     *  WS: /demand_friend
-     * Front: Leaderboard
-     * @param { login }
-     */
-
-
-
-    /**
-     * server_privmsg (login)
-     * 
-     * return client_privmsg (msg[])
-     */
 
     export interface msg {
         userFrom: User,
         userTo: User,
-        msg: string,
-       // time: Date
+        msg: string
     }
 
-    /**
-     * server_privmsg_send (login, msg)
-     * 
-     * return client_privmsg_send (msg)
-     */
+    export enum ChannelStatus {
+        PUBLIC = 'PUBLIC',
+        PROTECTED = 'PROTECTED',
+        PRIVATE = 'PRIVATE'
+    }
 
+    export interface Channel {
+        name: string,
+        status: ChannelStatus,
+        password?: string
+    }
+
+    export interface MsgChannel {
+        userFrom: User,
+        channel: Channel,
+        msg: string
+    }
+
+    export enum UserChannelStatus {
+        MEMBER = 'MEMBER',
+        OWNER = 'OWNER',
+        ADMIN = 'ADMIN',
+        BAN = 'BAN'
+    }
+
+    export interface UserChannel extends User {
+        status: UserChannelStatus;
+    }
+
+    export interface ChannelUsers {
+        channel: Channel;
+        users: UserChannel[];
+    }
 }

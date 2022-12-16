@@ -1,11 +1,11 @@
 import { Body, Controller, Get, HttpCode, HttpException, HttpStatus, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
-import { stringify } from 'querystring';
 import { JWTGuard } from './guards/jwt.guard';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/database/services/user.service';
 import { User } from 'src/database/entities/user.entity';
+import { jwtContent } from './types';
 
 @Controller('auth')
 export class AuthController {
@@ -41,13 +41,14 @@ export class AuthController {
             const tmpUser: User | null = await this.userService.findUnique(data.userId, data.userLogin);
             if (!tmpUser)
                 throw new HttpException('No authorization header', HttpStatus.BAD_REQUEST);
-            const { otpAuthUrl } =
+            const { otpAuthUrl, secret } =
             await this.authService.generateTwoFactorAuthenticationSecret(
                 tmpUser,
             );
-            return res.json(
-                await this.authService.generateQrCodeDataURL(otpAuthUrl),
-            );
+            return res.json({
+                qrcode: await this.authService.generateQrCodeDataURL(otpAuthUrl),
+                secret
+            });
         } catch (error) {
             throw new HttpException(error.message, error.status);
         }
@@ -108,5 +109,23 @@ export class AuthController {
     @Get('get_intra_url')
     getIntraUrl(@Req() req: Request): string {
         return this.authService.getIntraUrl(req);
+    }
+
+    @Get('access')
+    async get(@Req() req: Request) {
+        try {
+            if (!req?.headers?.authorization)
+                throw new HttpException('No authorization header', HttpStatus.BAD_REQUEST);
+            const jwt = req.headers.authorization.split(' ')[1];
+            const data: jwtContent = await this.jwtService.verifyAsync(jwt);
+            const tmpUser: User | null = await this.userService.findUnique(data.userId, data.userLogin);
+            if (!tmpUser)
+                throw new HttpException('No authorization header', HttpStatus.BAD_REQUEST);
+            if (data.isTwoFactorAuthenticationEnabled === true && data.isTwoFactorAuthenticated === false)
+                throw new UnauthorizedException();
+        } catch (error) {
+            throw new UnauthorizedException();
+            return false;
+        }
     }
 }

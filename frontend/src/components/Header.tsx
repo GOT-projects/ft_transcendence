@@ -10,6 +10,11 @@ import { SocketContext } from "../socket/socketPovider";
 import { GOT } from "../shared/types";
 import { emitSocket } from "../socket/socketEmit";
 import SetupOtc from "./popup/SetupOtc";
+import { onSocket } from "../socket/socketOn";
+import { offSocket } from "../socket/socketOff";
+import { useNavigate } from "react-router-dom";
+import { query } from "express";
+import { accountService } from "../services/account.service";
 
 interface IProps {
    notify: NotifyInter;
@@ -25,73 +30,44 @@ interface IProps {
 const Header:FunctionComponent<IProps> = (props:IProps)=> {
     //call socket; 
     const socket = useContext(SocketContext);
+    const navigate = useNavigate();
     const [friendList, setFriendList] = useState(false);
     const [notifMenu, setNotifMenu] = useState(false);
     const [profileMenu, setProfileMenu] = useState(false);
     const [otc, setOtc] = useState(false);
-    let [notif, setNotif] = useState(false);
+    let notif = false;
+    const codeParam: Map<string, string> = accountService.getParamsNotif();
 
-    if (props.profil?.notif.length !== 0){
+    if (props.profil?.notif.length !== 0 || props.profil.notifChannel.length !== 0){
         notif = true;
     }
+    //Socket refresh token
+    useEffect(() => {
+        onSocket.client_jwt(socket);
+    }, [socket])
 
     //Socket get erreur from server 
     useEffect(() => {
-        socket.on('error_client', (rep:any) => {
-            if (typeof rep === "string")
-                props.setNotify({isOpen: true, message: `Error: ${rep}`, type:'error'});
-        })
+        onSocket.error_client(socket, props.setNotify);
     }, [socket])
 
     //Socket get info from server 
     useEffect(() => {
-        socket.on('info_client', (rep:any) => {
-            if (typeof rep === "string")
-                props.setNotify({isOpen: true, message: `Info: ${rep}`, type:'info'});
-        })
+        onSocket.info_client(socket, props.setNotify);
     }, [socket])
 
     //Socket get info from server 
     useEffect(() => {
-        socket.on('warning', (rep:any) => {
-            if (typeof rep === "string")
-                props.setNotify({isOpen: true, message: `Warning: ${rep}`, type:'warning'});
-        })
-    }, [socket])
-    //Socket listen add friend list
-    useEffect(() => {
-        socket.on('client_notif', (rep:GOT.User[]) => {
-            if (rep){
-                const size = rep.length - 1;
-                if (size !== -1){
-                    props.setNotify({isOpen: true, message: `${rep[size].username} add you in Friend`, type:'info'});
-                    emitSocket.emitProfil(socket);
-                    notif = true;
-                }else{
-                    setNotifMenu(false);
-                }
-            }
-        })
+        onSocket.warning_client(socket, props.setNotify)
     }, [socket])
 
     //Update info user all last data and Update if data are changed
     useEffect(() => {
-        socket.on('client_profil', (rep:GOT.Profile) =>{
-            console.log("Profil:", rep);
-            if (rep && props.setProfil){
-                if (rep.userInfos.urlImg.split('')[0] === '/'){
-                    console.log("url start with /")
-                    rep.userInfos.urlImg = `${InfoServer.HttpServer}${rep.userInfos.urlImg}`;
-                    props.setProfil(rep);
-                }else{
-                    props.setProfil(rep);
-                }
-            }
-        })
+        onSocket.client_profil(socket, props.setProfil)
         return () => {
-            socket.off('client_profil');
+            offSocket.client_profil(socket);
         }
-    }, [props.profil, socket])
+    }, [socket])
 
     //get profile info
     useEffect(() => {
@@ -151,23 +127,29 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
     }
 
     const handleMenuNotif = () => {
+        let url = (new URL(window.location.href));
         if (notifMenu === true){
+            const param = accountService.replaceParamsTo("notif", "false");
             setNotifMenu(false);
+            navigate(`${url.pathname}${param}`);
         }else if (notifMenu === false){
+            const param = accountService.replaceParamsTo("notif", "true");
             setActive("UnActiveMenu");
             setNotifMenu(true);
             setProfileMenu(false);
             setFriendList(false);
             setOtc(false);
+            navigate(`${url.pathname}${param}`);
         }
     }
+
 	return (
         <StyledHeader>
             <StyleMenusHeader className={active}>
                 <StyleMenuHeader colortext={props.colorHome} text={"Home"} to='/'>Home</StyleMenuHeader>
                 <StyleMenuHeader colortext={props.colorGame}text={"Game"}to="/game">Game</StyleMenuHeader>
                 <StyleMenuHeader colortext={props.colorLeadBoard}text={"LeaderBoard"} to='/leaderboard'>LeaderBoard</StyleMenuHeader>
-                <StyleMenuHeader colortext={props.colorChat} text={"Chat"}to='/chat'>Chat</StyleMenuHeader>
+                <StyleMenuHeader colortext={props.colorChat} text={"Chat"}to='/chat?code=Priv'>Chat</StyleMenuHeader>
                 <StyleMenuHeaderNotity colorIcon={notif ? Colors.NotifActive : Colors.NotifUnactive}>
                     {notif ? <IoIosNotifications size={"22px"} onClick={handleMenuNotif}/> : <IoMdNotificationsOff size={"22px"}/>}
                 </StyleMenuHeaderNotity>
@@ -182,6 +164,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                 {notifMenu ? <PopupNotifUser notify={props.notify} 
                                              setNotify={props.setNotify} 
                                              profil={props.profil}
+                                             setNotifyMenu={setNotifMenu}
                                              /> : <></>}
                 </StyleMenusHeader>
             <StyleNav>
@@ -204,8 +187,9 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                 {notifMenu ? <PopupNotifUser notify={props.notify} 
                                              setNotify={props.setNotify} 
                                              profil={props.profil}
+                                             setNotifyMenu={setNotifMenu}
                                              /> : <></>}
-                {friendList ? <PopupListFriends setFriendList={setFriendList} profil={props.profil}/> : <></>}
+                {friendList ? <PopupListFriends setFriendsLst={setFriendList} profil={props.profil}/> : <></>}
             </StyleNav>
                 {otc ? <SetupOtc setOtc={setOtc}/> : <></>}
         </StyledHeader>
