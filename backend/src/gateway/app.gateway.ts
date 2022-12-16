@@ -3,7 +3,7 @@ import { JwtService } from "@nestjs/jwt";
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { GOT } from "shared/types";
 import { Server, Socket } from "socket.io";
-import { JwtContent, jwtContent } from "src/auth/types";
+import { JwtContent, jwtContent, jwtContentComplete } from "src/auth/types";
 import { User } from "src/database/entities/user.entity";
 import { UserService } from "src/database/services/user.service";
 import { ChatGateway } from "./chat.gateway";
@@ -91,7 +91,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 				}
 				return false;
 			}
-			const data: jwtContent = await this.jwtService.verifyAsync(jwt);
+			const data: jwtContentComplete = await this.jwtService.verifyAsync(jwt);
 			if (data.isTwoFactorAuthenticationEnabled === true && !(data.isTwoFactorAuthenticated)) {
 				client.emit('error_client', 'Need 2fa');
 				return false;
@@ -118,6 +118,21 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 				isTwoFactorAuthenticated: data.isTwoFactorAuthenticated,
 				newUser
 			};
+			if (process.env.TTL_REGENERATE && data.iat + parseInt(process.env.TTL_REGENERATE) < Date.now() / 1000) {
+				console.log('deb', data.iat)
+				console.log('dec', parseInt(process.env.TTL_REGENERATE))
+				console.log('ref', data.iat + parseInt(process.env.TTL_REGENERATE))
+				console.log('now', Date.now() / 1000)
+				console.log('fin', data.exp)
+				this.logger.debug(`Refresh jwt for ${client.id} - ${infos.user.login}`);
+				client.emit('client_jwt', await this.jwtService.signAsync({
+					userId: data.userId,
+					userLogin: data.userLogin,
+					userEmail: data.userEmail,
+					isTwoFactorAuthenticationEnabled: data.isTwoFactorAuthenticationEnabled,
+					isTwoFactorAuthenticated: data.isTwoFactorAuthenticated,
+				}));
+			}
 			return infos;
 		} catch (error) {
 			const login: string | undefined = this.getUser(client);

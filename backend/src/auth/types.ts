@@ -8,6 +8,16 @@ export interface jwtContent {
     isTwoFactorAuthenticated?: boolean;
 }
 
+export interface jwtContentComplete {
+    userId: number;
+    userLogin: string;
+    userEmail: string;
+    isTwoFactorAuthenticationEnabled?: boolean;
+    isTwoFactorAuthenticated?: boolean;
+    iat: number;
+    exp: number;
+}
+
 export interface JwtContent {
     user: User,
     isTwoFactorAuthenticationEnabled?: boolean;
