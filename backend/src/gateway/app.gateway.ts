@@ -396,12 +396,13 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		}
 		const user = this.users.get(ret.userTo.login);
+		const actu = await this.chatGateway.getPrivmsg(auth.user, login);
 		if (user) {
-			//this.server.to(user).emit('client_privmsg_send', ret);
+			if (typeof actu !== 'string')
+				this.server.to(user).emit('client_privmsg', actu);
 			this.server.to(user).emit('info_client', `User with login ${auth.user.login} send you a private message`);
 		}
 		const actuUser = this.users.get(auth.user.login);
-		const actu = await this.chatGateway.getPrivmsg(auth.user, login);
 		if (typeof actu !== 'string' && actuUser) {
 			this.server.to(actuUser).emit('client_privmsg', actu);
 		}
@@ -875,3 +876,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			this.server.emit('client_users', ret);
 	}
 }
+
+// TODO profil co deco, test photo, leaderboard profil, chat pwd, actu droit user, jwt, popup2fa add notif
+
+// TODO invite partie pop up view profil, jeu, waiting, custom 

@@ -7,6 +7,7 @@ import { StyledWaiting2FAForm, StyledWaiting2FAInput, StyledWaitingButton, Style
 
 const Popup2FA = () => {
     const navigate = useNavigate();
+    const [notifMenu, setNotifMenu] = useState(false);
     const handleInputEvent = (e: any) => {
         const t = e.currentTarget.nextSibling
         if (t && e.currentTarget.value){
@@ -31,6 +32,7 @@ const Popup2FA = () => {
         }).catch((rep) => {
             console.log(rep.status);
             e.target[0].value = e.target[1].value = e.target[2].value = e.target[3].value = e.target[4].value = e.target[5].value = '';
+            //setNotify({isOpen: true, message: `Warning: ${rep}`, type:'warning'});
         })
         //send to server
     } 

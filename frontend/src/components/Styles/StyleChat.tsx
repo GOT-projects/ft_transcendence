@@ -289,7 +289,8 @@ export const StyledChatPlace = styled.div`
     }
     &.send{
         justify-content: flex-end;
-        transform: translateX(110%)
+        transform: translateX(110%);
+        align-items: flex-end;
     }
     &:hover{
         &.send{
@@ -305,7 +306,7 @@ export const StyledChatPlace = styled.div`
     }
 `;
 
-export const StyledChatText = styled.p`
+export const StyledChatText = styled.pre`
     margin: 10px;
     font-size:14px; 
     font-family: "Public Pixel";

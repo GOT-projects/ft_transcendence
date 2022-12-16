@@ -154,7 +154,7 @@ export class ChatGateway {
 			const allRels = await this.relUserChannelService.getChanUsersNotBan(user, channel);
 			let ret: GOT.ChannelUsers = {
 				users: [],
-				channel: channel
+				channel: MyTransform.channelEntityToGot(channel)
 			};
 			for (const rel of allRels) {
 				const tmp = this.generalGateway.getGOTUserFromUser(rel.user);
