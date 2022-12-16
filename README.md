@@ -10,7 +10,6 @@ TOFIX
 
  - Front
     - leaderboard pop up profil warning console
-    - url photo
     - chat pwd join
  - Back
 
