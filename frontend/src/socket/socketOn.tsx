@@ -17,7 +17,6 @@ let profil_login = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, set
 
 let client_privmsg_users = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setFriends:React.Dispatch<React.SetStateAction<GOT.User[] | undefined>>) => {
     socket.on('client_privmsg_users', (rep:GOT.User[]) => {
-        console.log('client_privmsg_users', rep);
         if (rep){
             setFriends(rep);
         } 
@@ -26,7 +25,6 @@ let client_privmsg_users = async (socket:Socket<DefaultEventsMap, DefaultEventsM
 
 let client_channels = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setChannel:React.Dispatch<React.SetStateAction<GOT.Channel[] | undefined>>) => {
     socket.on('client_channels', (rep:GOT.Channel[]) => {
-        console.log('client_channels', rep);
         if (rep){
             setChannel(rep);
         } 
@@ -35,7 +33,6 @@ let client_channels = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, 
 
 let client_channelMsg = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setMsgChannel:React.Dispatch<React.SetStateAction<GOT.MsgChannel[] | undefined>>) => {
     socket.on('client_chanmsg', (rep:GOT.MsgChannel[]) => {
-        console.log('client_Msgchannels', rep);
         if (rep){
             setMsgChannel(rep);
         } 
@@ -44,7 +41,6 @@ let client_channelMsg = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>
 
 let client_chanmsg_users_not_ban = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setUser:React.Dispatch<React.SetStateAction<GOT.ChannelUsers | undefined>>) => {
     socket.on('client_chan_users', (rep:GOT.ChannelUsers) => {
-        console.log('client_chan_users', rep);
         if (rep){
             setUser(rep);
         } 
@@ -53,7 +49,7 @@ let client_chanmsg_users_not_ban = async (socket:Socket<DefaultEventsMap, Defaul
 
 let client_jwt = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>) => {
     socket.on('client_jwt', (rep:string) => {
-        console.log('client_jwt', rep);
+        console.log("new jwt")
         if (rep){
             accountService.saveToken(rep);
         } 
@@ -70,7 +66,6 @@ let client_channel_send = async (socket:Socket<DefaultEventsMap, DefaultEventsMa
 
 let client_channels_in = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setChannel:React.Dispatch<React.SetStateAction<GOT.Channel[] | undefined>>) => {
     socket.on('client_channels_in', (rep:GOT.Channel[]) => {
-        console.log('client_channels_in', rep);
         if (rep){
             setChannel(rep);
         } 
@@ -78,7 +73,6 @@ let client_channels_in = async (socket:Socket<DefaultEventsMap, DefaultEventsMap
 }
 let client_friends = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setLstFriends:React.Dispatch<React.SetStateAction<GOT.Friend[] | undefined>>) => {
     socket.on('client_friends', (rep:GOT.Friend[]) => {
-        console.log('client_friends', rep);
         if (rep){
             setLstFriends(rep);
         } 
@@ -87,7 +81,6 @@ let client_friends = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, s
 
 let client_privmsg_send = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, selectUser:GOT.User | undefined) => {
         socket.on('client_privmsg_send', (rep:GOT.msg) => {
-            console.log('client_privmsg_send', rep);
             if (selectUser?.login === rep.userFrom.login){
                 emitSocket.emitPrivmsg(socket, rep.userFrom.login);
             }
@@ -110,7 +103,6 @@ let client_profil = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, se
 
 let client_users = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setUsersList:React.Dispatch<React.SetStateAction<GOT.User[] | undefined>>) => {
     socket.on('client_users', (rep:GOT.User[]) => {
-        console.log('client_users', rep);
         if (rep){
             setUsersList(rep);
         }
@@ -119,7 +111,6 @@ let client_users = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, set
 
 let client_privmsg = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setSelectUserMsg:React.Dispatch<React.SetStateAction<GOT.msg[] | undefined>>) => {
     socket.on('client_privmsg', (rep:GOT.msg[]) => {
-        console.log('client_privmsg', rep);
         if (rep){
             setSelectUserMsg(rep);
         }

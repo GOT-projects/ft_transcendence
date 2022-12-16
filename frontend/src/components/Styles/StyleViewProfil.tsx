@@ -110,7 +110,18 @@ export const StyledContaitePUser = styled.p`
     color: ${Colors.primary};
 `
 
+export const StylePwdProtected = styled.div`
+    position: relative;
+    border: solid 2px ${Colors.border};
+    width: 100%;
+    border-radius: 20px;
+    background-color: ${Colors.grey};
+    z-index: 999;
+`
+
 export const StyledContaiteDivPUser = styled.div<BgColor>`
+    display: flex;
+    align-items: center;
     background-color: ${p => p.color};
     cursor: pointer;
     &.statusAdmin{
@@ -334,8 +345,15 @@ export const StyledContaiteClose = styled.div`
     }
     &.invite{
         gap: 94px;
-
     }
+    &.pwd{
+        gap: 37px;
+    }
+`
+export const StyledInputPwdProtected = styled.input`
+    margin: 16px;
+    margin-bottom: 25px;
+    color: ${Colors.grey};
 `
 
 export const StyledContaiteRank = styled.div`

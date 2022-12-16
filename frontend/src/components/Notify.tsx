@@ -52,6 +52,11 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
                 }
             }
         }
+        let regexJwt:RegExp = /^Error: jwt expired/
+        if (regexJwt.test(notify.message)){
+            accountService.removeToken();
+            navigate("/");
+        }
         return true;
    }
    return(
