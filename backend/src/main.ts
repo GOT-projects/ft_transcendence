@@ -17,15 +17,17 @@ class A implements GOT.User {
 
 async function bootstrap() {
 	const logger = new Logger('main.ts - server');
-	if (process.env.POSTGRES_USER === undefined
-		|| process.env.POSTGRES_PASSWORD === undefined
-		|| process.env.POSTGRES_DB === undefined
-		|| process.env.PORT_SERVER === undefined
-		|| process.env.JWT_SECRET === undefined
-		|| process.env.JWT_TTL === undefined
-		|| process.env.API_UID === undefined
-		|| process.env.API_SECRET === undefined
-		|| process.env.APP_NAME === undefined) {
+	if (
+		process.env.POSTGRES_USER === undefined || process.env.POSTGRES_USER === ''
+		|| process.env.POSTGRES_PASSWORD === undefined || process.env.POSTGRES_PASSWORD === ''
+		|| process.env.POSTGRES_DB === undefined || process.env.POSTGRES_DB === ''
+		|| process.env.PORT_SERVER === undefined || process.env.PORT_SERVER === '' || parseInt(process.env.PORT_SERVER) === Number.NaN || parseInt(process.env.PORT_SERVER) < 80
+		|| process.env.JWT_SECRET === undefined || process.env.JWT_SECRET === ''
+		|| process.env.JWT_TTL === undefined || process.env.JWT_TTL === '' || parseInt(process.env.JWT_TTL) === Number.NaN || parseInt(process.env.JWT_TTL)< 60
+		|| process.env.API_UID === undefined || process.env.API_UID === ''
+		|| process.env.API_SECRET === undefined || process.env.API_SECRET === ''
+		|| process.env.APP_NAME === undefined || process.env.APP_NAME === ''
+	) {
 		logger.error(`Incomplete environment`);
 		exit(1);
 	}
