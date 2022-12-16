@@ -9,8 +9,6 @@ ___
 FIXME
 
  - Front
-    - leaderboard pop up profil warning console
-    - chat pwd join
  - Back
 
 ---

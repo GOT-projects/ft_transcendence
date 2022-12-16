@@ -47,7 +47,7 @@ const ProfilView:FunctionComponent<IProps> = (props:IProps) =>{
                     {
                         profil?.parties.map( (party: GOT.Party) => (
                             
-                            <StyledContaiteHistorylst>
+                            <StyledContaiteHistorylst key={uuid()}>
                                 <StyledContaiteHistoryUser>
                                     <StyledContaiteText size={"12px"}>{party.user1.login}</StyledContaiteText>
                                 </StyledContaiteHistoryUser>

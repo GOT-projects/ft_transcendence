@@ -47,24 +47,22 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 		}
 	}, [tab]);
 	
-	useEffect(() => {
-		socket.on("client_profil_login", (e: GOT.HistoryParties) => {
-			console.log(e);
-			e.parties[0] = {user1: e.userInfos, user2: e.userInfos, points1: 102, points2: 205};
-			e.parties[1] = {user1: e.userInfos, user2: e.userInfos, points1: 220, points2: 105};
-			if (e)
-				setHisto(e);
-		});
-		return () => {
-			socket.off('client_profil_login');
-		}
-	}, [histo]);
+	// useEffect(() => {
+	// 	socket.on("client_profil_login", (e: GOT.HistoryParties) => {
+	// 		console.log(e);
+	// 		// e.parties[0] = {user1: e.userInfos, user2: e.userInfos, points1: 102, points2: 205};
+	// 		// e.parties[1] = {user1: e.userInfos, user2: e.userInfos, points1: 220, points2: 105};
+	// 		if (e)
+	// 			setHisto(e);
+	// 	});
+	// 	return () => {
+	// 		socket.off('client_profil_login');
+	// 	}
+	// }, [histo]);
 
-	const buttonHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
-		event.preventDefault();
-		const button: HTMLButtonElement = event.currentTarget;
+	const buttonHandler = (handleLogin: string) => {
 		if (popuProfil === false){
-			setLogin(button.innerText);
+			setLogin(handleLogin);
 			setPopupProfil(true);
 		}
 		else{
@@ -104,7 +102,7 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 							<td>
 								<div style={{display: "flex", flexDirection: "row" , justifyContent: "space-between"}}>
 									{usr.inGame !== undefined ? <GiRetroController size={"20px"} color="white"/> : <StyledSepController/>}
-									<StyledLeadB onClick={buttonHandler} className="button">{usr.userInfos.login}</StyledLeadB>
+									<StyledLeadB onClick={() => {buttonHandler(usr.userInfos.login)}} className="button">{usr.userInfos.login}</StyledLeadB>
 								</div>
 							</td>
 							<StyledLeadP>{usr.stat.rank}</StyledLeadP>

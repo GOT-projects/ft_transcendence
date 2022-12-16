@@ -106,7 +106,7 @@ export const StyledLeadPHead = styled.th`
     border-collapse: collapse;
 `;
 
-export const StyledLeadB = styled.button`
+export const StyledLeadB = styled.div`
 background-color: transparent;
 background-opacity: 0;
     margin: 20px;
