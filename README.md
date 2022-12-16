@@ -6,7 +6,7 @@
 [draw](https://excalidraw.com/#room=abaf3fe998bb25b4e653,leo5BnA3X1O4sU7JC70sTA)
 
 ___
-TOFIX
+FIXME
 
  - Front
     - leaderboard pop up profil warning console

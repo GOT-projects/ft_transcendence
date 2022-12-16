@@ -119,11 +119,11 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 				newUser
 			};
 			if (process.env.TTL_REGENERATE && data.iat + parseInt(process.env.TTL_REGENERATE) < Date.now() / 1000) {
-				console.log('deb', data.iat)
+				/*console.log('deb', data.iat)
 				console.log('dec', parseInt(process.env.TTL_REGENERATE))
 				console.log('ref', data.iat + parseInt(process.env.TTL_REGENERATE))
 				console.log('now', Date.now() / 1000)
-				console.log('fin', data.exp)
+				console.log('fin', data.exp)*/
 				this.logger.debug(`Refresh jwt for ${client.id} - ${infos.user.login}`);
 				client.emit('client_jwt', await this.jwtService.signAsync({
 					userId: data.userId,
@@ -963,7 +963,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		this.logger.log('Init');
 	}
 
-	async handleDisconnect(client: Socket) {
+	async handleDisconnect(@ConnectedSocket() client: Socket) {
 		let status = true;
 		for (const [login, ids] of this.users) {
 			const i = ids.indexOf(client.id);
@@ -1014,7 +1014,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			this.logger.verbose(`Client disconnected anonymous: ${client.id}`);
 	}
 
-	async handleConnection(client: Socket, @MessageBody('Authorization') jwt: string) {
+	async handleConnection(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string) {
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth) {
 			this.logger.verbose(`Client connected anonymous: ${client.id}`);

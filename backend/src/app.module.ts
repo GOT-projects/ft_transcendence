@@ -9,6 +9,7 @@ import { multerModule } from './ressources';
 import { GeneralGateway } from './gateway/general.gateway';
 import { FriendGateway } from './gateway/friend.gateway';
 import { ChatGateway } from './gateway/chat.gateway';
+import { GameGateway } from './gateway/game.gateway';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ChatGateway } from './gateway/chat.gateway';
     GeneralGateway,
     FriendGateway,
     ChatGateway,
+    GameGateway
   ],
 })
 export class AppModule {}
