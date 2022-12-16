@@ -78,7 +78,7 @@ let client_jwt = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>) => {
             accountService.saveToken(rep);
         } 
     })
-}
+}/*
 let client_channel_send = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setChannelMsg:React.Dispatch<React.SetStateAction<GOT.MsgChannel | undefined>>) => {
     socket.on('client_channels', (rep:GOT.MsgChannel) => {
         console.log('client_channels', rep);
@@ -86,14 +86,14 @@ let client_channel_send = async (socket:Socket<DefaultEventsMap, DefaultEventsMa
             setChannelMsg(rep);
         } 
     })// TODO BIG PB client_channels return GOT.Channel[] list des channels visible (incoherent nom)
-}
+}*/
 
 let client_channels_in = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setChannel:React.Dispatch<React.SetStateAction<GOT.Channel[] | undefined>>) => {
     socket.on('client_channels_in', (rep:GOT.Channel[]) => {
         console.log('client_channels_in', rep);
         if (rep){
             setChannel(rep);
-        } 
+        }
     })
 }
 /*
@@ -193,7 +193,7 @@ let info_client = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setN
 }
 
 export const onSocket = {
-    profil_login, client_privmsg_users, /*client_friends, client_privmsg_send,*/ error_client, client_channel_send, 
+    profil_login, client_privmsg_users, /*client_friends, client_privmsg_send,*/ error_client, /*client_channel_send, */
     info_client, warning_client, client_profil ,client_users, client_privmsg, client_channels, client_channels_in,
     client_channelMsg, client_chanmsg_users_not_ban, client_jwt
 

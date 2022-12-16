@@ -3,7 +3,14 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Message } from "./message.entity";
 import { RelDemand } from "./rel_demand.entity";
 import { RelUserChannel } from "./rel_user_channel.entity";
+import * as bcrypt from 'bcrypt';
 
+export async function hashChannelPass(pass?: string) {
+    if (pass === undefined) {
+        return undefined;
+    }
+    return await bcrypt.hash(pass, 10);
+}
 
 @Entity()
 export class Channel {
@@ -41,4 +48,23 @@ export class Channel {
 
     @OneToMany(() => RelUserChannel, (rel) => rel.channel)
     demands: RelDemand[];
+
+
+    async setPassword(pass?: string) {
+        this.password = await hashChannelPass(pass);
+    }
+
+    async checkPassword(pass?: string) {
+        if (pass === undefined) {
+            if (pass === this.password)
+                return true;
+            return false;
+        }
+        if (this.password === undefined) {
+            if (pass === this.password)
+                return true;
+            return false;
+        }
+        return await bcrypt.compare(pass, this.password);
+    }
 }
