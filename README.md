@@ -9,10 +9,9 @@ ___
 TOFIX
 
  - Front
+    - leaderboard pop up profil warning console
     - url photo
-    - leaderboard pop up profil
     - chat pwd join
-    - popup2fa add notif (code error, try again)
  - Back
 
 ---
