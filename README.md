@@ -5,6 +5,31 @@
 
 [draw](https://excalidraw.com/#room=abaf3fe998bb25b4e653,leo5BnA3X1O4sU7JC70sTA)
 
+___
+TOFIX
+
+ - Front
+    - url photo
+    - leaderboard pop up profil
+    - chat pwd join
+    - popup2fa add notif (code error, try again)
+ - Back
+    - send jwt
+---
+TODO
+ - Front
+    - invite partie pop up view profil
+    - custom game
+    - waiting page game
+    - jeu
+ - Back
+    - jeu
+    - list waiting game
+    - custom game
+    - hash password
+
+___
+
 ### TS
 
 [doc officiel](https://www.typescriptlang.org/docs/handbook/intro.html)

@@ -911,7 +911,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			for (const tmp of users.users) {
 				const sock = this.users.get(tmp.login);
 				if (sock)
-					this.server.to(sock).emit('server_chan_users', users);
+					this.server.to(sock).emit('client_chan_users', users);
 			}
 		}
 	}
@@ -933,7 +933,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			for (const tmp of users.users) {
 				const sock = this.users.get(tmp.login);
 				if (sock)
-					this.server.to(sock).emit('server_chan_users', users);
+					this.server.to(sock).emit('client_chan_users', users);
 			}
 		}
 	}
@@ -1011,7 +1011,3 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			this.server.emit('client_users', ret);
 	}
 }
-
-// TODO profil co deco, test photo, leaderboard profil, chat pwd, actu droit user, jwt, popup2fa add notif
-
-// TODO invite partie pop up view profil, jeu, waiting, custom 
