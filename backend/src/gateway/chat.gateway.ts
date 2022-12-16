@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { GOT } from "shared/types";
-import { Channel } from "src/database/entities/channel.entity";
+import { Channel, hashChannelPass } from "src/database/entities/channel.entity";
 import { Message } from "src/database/entities/message.entity";
 import { RelUserChannel } from "src/database/entities/rel_user_channel.entity";
 import { User } from "src/database/entities/user.entity";
@@ -241,7 +241,7 @@ export class ChatGateway {
 				});
 			}
 			if (channel.status === GOT.ChannelStatus.PUBLIC || 
-				(channel.status === GOT.ChannelStatus.PROTECTED && password === channel.password)) {
+				(channel.status === GOT.ChannelStatus.PROTECTED && await channel.checkPassword(password))) {
 				return await this.relUserChannelService.create({
 					userId: user.id,
 					channelId: channel.id,
@@ -303,11 +303,17 @@ export class ChatGateway {
 				else if (chan.password !== undefined)
 					return 'No password need when the channel is PRIVATE';
 			}
+			if (chan.status === GOT.ChannelStatus.PROTECTED)
+				chan.password = await hashChannelPass(chan.password);
+			console.log('tototototototo');
+			
 			channel = await this.channelService.create({
 				name: chan.name,
 				status: chan.status,
 				password: ((chan.status === GOT.ChannelStatus.PROTECTED) ? chan.password : undefined)
 			});
+			console.log(channel);
+			
 			await this.relUserChannelService.create({
 				userId: user.id,
 				channelId: channel.id,
@@ -466,7 +472,7 @@ export class ChatGateway {
 			const rels = await this.relUserChannelService.getChannelRel(user, channel);
 			if (rels.length === 1 && (rels[0].status === GOT.UserChannelStatus.OWNER || rels[0].status === GOT.UserChannelStatus.ADMIN)) {
 				channel.status = chan.status;
-				channel.password = chan.password;
+				channel.password = await hashChannelPass(chan.password);
 				return await this.channelService.update(channel.id, channel);
 			} else
 				return `You haven't the rights to change status of channel ${chan.name}`;
@@ -486,7 +492,7 @@ export class ChatGateway {
 				return `Password is set only for protected channel`;
 			const rels = await this.relUserChannelService.getChannelRel(user, channel);
 			if (rels.length === 1 && (rels[0].status === GOT.UserChannelStatus.OWNER || rels[0].status === GOT.UserChannelStatus.ADMIN)) {
-				channel.password = password;
+				await channel.setPassword(password);
 				return await this.channelService.update(channel.id, channel);
 			} else
 				return `You haven't the rights to change password of channel ${chanName}`;

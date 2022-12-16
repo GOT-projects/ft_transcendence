@@ -63,13 +63,11 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 	const buttonHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
 		event.preventDefault();
 		const button: HTMLButtonElement = event.currentTarget;
-		emitSocket.emitProfilHisto(socket, button.name);
 		if (popuProfil === false){
+			setLogin(button.innerText);
 			setPopupProfil(true);
-			setLogin(button.name);
 		}
 		else{
-			setLogin(button.name);
 			setPopupProfil(false);
 		}
 	};

@@ -6,8 +6,11 @@ import { apiPost } from '../api/post';
 import { useNavigate } from 'react-router-dom';
 import Popup2FA from '../components/popup/Popup2FA';
 import { StyledWaitingContente, StyledWaitingTitle } from '../components/Styles/StylesLogin';
+import { Notification } from '../components/Notify';
+import { NotifyInter } from '../components/interfaces';
 
 const Waiting = () => {
+    const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
     const [twoFAPop, setTwoFAPop] = useState(false);
 	const url = window.location.href;
     let navigate = useNavigate();
@@ -46,8 +49,9 @@ const Waiting = () => {
             <StyledWaitingContente>
                 <StyledWaitingTitle>Waiting...</StyledWaitingTitle>
             </StyledWaitingContente> : <></>}
-            {twoFAPop ? <Popup2FA/> : <></>}
+            {twoFAPop ? <Popup2FA setNotify={setNotify}/> : <></>}
             <Footer/>
+            <Notification notify={notify} setNotify={setNotify}/>
         </React.Fragment>
 	)
 }

@@ -82,7 +82,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
             await onSocket.client_privmsg_users(socket, setFriends);
         })();
     },[socket, friends, setFriends])
-    
+/*
     useEffect(() => {
         onSocket.client_friends(socket, setLstFriends);
         return () => {
@@ -96,7 +96,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
             offSocket.client_privmsg_send(socket);
         } 
     },[socket])
-
+*/
     useEffect(() => {
         onSocket.client_channels_in(socket, setChannelIn)
         return () => {

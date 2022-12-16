@@ -6,15 +6,13 @@
 [draw](https://excalidraw.com/#room=abaf3fe998bb25b4e653,leo5BnA3X1O4sU7JC70sTA)
 
 ___
-TOFIX
+FIXME
 
  - Front
-    - url photo
-    - leaderboard pop up profil
+    - leaderboard pop up profil warning console
     - chat pwd join
-    - popup2fa add notif (code error, try again)
  - Back
-    - send jwt
+
 ---
 TODO
  - Front
