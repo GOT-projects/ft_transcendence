@@ -117,10 +117,28 @@ export const StyledWaiting2FAForm = styled.form`
 export const StyledWaiting2FAInput = styled.input`
 
 `
+export const StyledContenteGame = styled.div`
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+    align-items: center;
+    justify-content: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 200px;
+    overflow: hidden;
+    border: 0;
+    letter-spacing: 3px;
+    outline: transparent;
+`
 
 export const StyledWaitingContente = styled.div`
     position: absolute;
     display: flex;
+    flex-direction: column;
     z-index: 10;
     align-items: center;
     justify-content: center;
@@ -212,7 +230,9 @@ export const StyledWaitingTitle = styled.h1`
 `
 
 export const StyledLoginButton = styled.a`
+    position: absolute;
     width: 380px;
+    z-index: 999;
     height: 86px;
     margin-top: 20px; 
     font-size: 28px;
@@ -225,6 +245,7 @@ export const StyledLoginButton = styled.a`
     color: #fff;
     letter-spacing: 3px;
     line-height: 88px;
+    cursor: pointer;
     box-shadow: 6px 0px 0px ${Colors.border};
     outline: transparent;
     position: relative;
