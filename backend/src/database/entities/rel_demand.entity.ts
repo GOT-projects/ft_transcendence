@@ -16,15 +16,15 @@ export class RelDemand {
     @Column({nullable: true})
     channelIdWhoDemand: number | null;
 
-    @ManyToOne(() => User, (user) => user.channelsRel)
+    @ManyToOne(() => User, (user) => user.channelsRel, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'userIdDemand' })
     userDemand!: User;
 
-    @ManyToOne(() => User, (user) => user.channelsRel)
+    @ManyToOne(() => User, (user) => user.channelsRel, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'userIdWhoDemand' })
     userWhoDemand!: User;
 
-    @ManyToOne(() => Channel, (channel) => channel.demands)
+    @ManyToOne(() => Channel, (channel) => channel.demands, { onDelete: 'CASCADE' })
     @JoinColumn({name: 'channelIdWhoDemand'})
     channelWhoDemand?: Channel;
 }

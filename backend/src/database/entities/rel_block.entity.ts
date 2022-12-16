@@ -18,11 +18,11 @@ export class RelBlock {
 
 
 
-    @ManyToOne(() => User, (user) => user.userWhoBlock)
+    @ManyToOne(() => User, (user) => user.userWhoBlock, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'userIdWhoBlock' })
     userWhoBlock!: User;
 
-    @ManyToOne(() => User, (user) => user.userIdIsBlock)
+    @ManyToOne(() => User, (user) => user.userIdIsBlock, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'userIdIsBlock' })
     userIsBlock!: User;
 }

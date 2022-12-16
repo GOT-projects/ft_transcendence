@@ -6,8 +6,11 @@ import { apiPost } from '../api/post';
 import { useNavigate } from 'react-router-dom';
 import Popup2FA from '../components/popup/Popup2FA';
 import { StyledWaitingContente, StyledWaitingTitle } from '../components/Styles/StylesLogin';
+import { Notification } from '../components/Notify';
+import { NotifyInter } from '../components/interfaces';
 
 const Waiting = () => {
+    const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
     const [twoFAPop, setTwoFAPop] = useState(false);
 	const url = window.location.href;
     let navigate = useNavigate();
@@ -16,7 +19,6 @@ const Waiting = () => {
     useEffect(() => {
         if (!!code && !twoFAPop){
         try{
-            console.log("datafes")
             const response = apiPost.PostConnectIntra(code);
 	        response.then((response:any) => {
 	        	if(response.status === 201){
@@ -47,8 +49,9 @@ const Waiting = () => {
             <StyledWaitingContente>
                 <StyledWaitingTitle>Waiting...</StyledWaitingTitle>
             </StyledWaitingContente> : <></>}
-            {twoFAPop ? <Popup2FA/> : <></>}
+            {twoFAPop ? <Popup2FA setNotify={setNotify}/> : <></>}
             <Footer/>
+            <Notification notify={notify} setNotify={setNotify}/>
         </React.Fragment>
 	)
 }

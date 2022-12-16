@@ -3,8 +3,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { Request, Response } from "express";
 import { stringify } from "querystring";
-import { UserService } from "src/database/services/user.service";
-import { CreateUserDto } from 'src/database/dtos/user.dto';
+import { CreateUserDto, UserService } from "src/database/services/user.service";
 import { User } from 'src/database/entities/user.entity';
 import { GOT } from 'shared/types';
 import { authenticator } from 'otplib';
@@ -81,11 +80,12 @@ export class AuthService {
 	private async connect(res: Response, createUserDto: CreateUserDto) {
 		try {
 			// Update database
-			const user: User = await this.usersService.create_or_return(createUserDto.login, createUserDto);
+			const user: User = await this.usersService.create_or_return(createUserDto.email, createUserDto);
 			// Create JWT
 			const jwt: string = await this.jwtService.signAsync({
 				userId: user.id,
 				userLogin: user.login,
+				userEmail: user.email,
 				isTwoFactorAuthenticationEnabled: user.isTwoFactorAuthenticationEnabled,
 				isTwoFactorAuthenticated: false,
 			});
@@ -139,6 +139,7 @@ export class AuthService {
 		const payload: jwtContent = {
 			userId: userWithoutPsw.id,
 			userLogin: userWithoutPsw.login,
+			userEmail: userWithoutPsw.email,
 			isTwoFactorAuthenticationEnabled: !!userWithoutPsw.isTwoFactorAuthenticationEnabled,
 			isTwoFactorAuthenticated: true,
 		};

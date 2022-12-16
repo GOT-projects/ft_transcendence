@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { DeleteResult, Repository } from "typeorm";
+import { DeleteResult, IsNull, Repository } from "typeorm";
 import { Channel } from "../entities/channel.entity";
 import { RelDemand } from "../entities/rel_demand.entity";
 import { User } from "../entities/user.entity";
@@ -26,7 +26,7 @@ export class RelDemandService {
 		const demands = await this.relDemandRepository.find({
 			select: ["userWhoDemand"],
 			where: [
-				{userIdDemand: user.id,  channelIdWhoDemand: undefined }
+				{userIdDemand: user.id,  channelIdWhoDemand: IsNull() }
 			],
 			relations: ["userWhoDemand"],
 		});
@@ -58,6 +58,16 @@ export class RelDemandService {
 			where: [
 				{userIdDemand: user.id, channelIdWhoDemand: channel.id}
 			]
+		});
+	}
+
+	async getChannelDemands(user: User) {
+		return await this.relDemandRepository.find({
+			select: ["channelWhoDemand"],
+			where: [
+				{userIdDemand: user.id, userIdWhoDemand: IsNull()}
+			],
+			relations: ["channelWhoDemand"]
 		});
 	}
 

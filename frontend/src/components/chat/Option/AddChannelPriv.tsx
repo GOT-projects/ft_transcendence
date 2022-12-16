@@ -11,7 +11,9 @@ import { useNavigate } from "react-router-dom";
 interface IProps {
 }
 
-const PopupOptionJoinChannel:FunctionComponent<IProps> = (props: IProps) =>{
+const PopupOptionPrivateChan:FunctionComponent<IProps> = (props: IProps) =>{
+    const [inputName, setInputName] = useState("");
+    const [inputPwd, setInputPwd] = useState("");
     const navigate = useNavigate();
 
     const handleClose = () => {
@@ -20,7 +22,7 @@ const PopupOptionJoinChannel:FunctionComponent<IProps> = (props: IProps) =>{
     }
 
     const handleReturn = () => {
-        navigate("/chat?code=add")
+        navigate("/chat?code=joinChannel")
     }
 
     const handleAdd = (name: string) => {
@@ -39,12 +41,12 @@ const PopupOptionJoinChannel:FunctionComponent<IProps> = (props: IProps) =>{
             </StyledContaiteClose>
             <StyledContaiteViewoptionChan>
                 <StyledContaiteViewAddOption onClick={() => {handleAdd("explore")}}>
-                    <StyledContaiteViewAddP>Explore channel</StyledContaiteViewAddP>
-                    <StyledContaiteViewAddP>{">"}</StyledContaiteViewAddP>
+                    <StyledContaiteViewAddP>Channel name:</StyledContaiteViewAddP>
+                    <input/>
                 </StyledContaiteViewAddOption>
                 <StyledContaiteViewAddOption onClick={() => {handleAdd("privateChan")}}>
-                    <StyledContaiteViewAddP>Join channel private</StyledContaiteViewAddP>
-                    <StyledContaiteViewAddP>{">"}</StyledContaiteViewAddP>
+                    <StyledContaiteViewAddP>Password:</StyledContaiteViewAddP>
+                    <input/>
                 </StyledContaiteViewAddOption>
             </StyledContaiteViewoptionChan> 
                 <StyledContaiteReturnDiv className="joinChan" onClick={handleReturn}>
@@ -55,4 +57,4 @@ const PopupOptionJoinChannel:FunctionComponent<IProps> = (props: IProps) =>{
     )
 }
 
-export default PopupOptionJoinChannel;
+export default PopupOptionPrivateChan;

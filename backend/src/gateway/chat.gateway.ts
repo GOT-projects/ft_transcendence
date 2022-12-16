@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { GOT } from "shared/types";
-import { Channel } from "src/database/entities/channel.entity";
+import { Channel, hashChannelPass } from "src/database/entities/channel.entity";
 import { Message } from "src/database/entities/message.entity";
-import { RelUserChannel, UserChannelStatus } from "src/database/entities/rel_user_channel.entity";
+import { RelUserChannel } from "src/database/entities/rel_user_channel.entity";
 import { User } from "src/database/entities/user.entity";
 import { BlockService } from "src/database/services/block.service";
 import { ChannelService } from "src/database/services/channel.service";
@@ -11,7 +11,14 @@ import { GameService } from "src/database/services/game.service";
 import { MessageService } from "src/database/services/message.service";
 import { UserService } from "src/database/services/user.service";
 import { RelUserChannelService } from "src/database/services/user_channel.service";
+import { MyTransform } from "src/utils/transform";
+import { UpdateResult } from "typeorm";
 import { GeneralGateway } from "./general.gateway";
+
+export interface ChannelAndStatus {
+	channel: Channel;
+	status: boolean
+}
 
 @Injectable()
 export class ChatGateway {
@@ -20,52 +27,10 @@ export class ChatGateway {
 		private readonly generalGateway: GeneralGateway,
 		private readonly messageService: MessageService,
 		private readonly channelService: ChannelService,
-		private readonly gameService: GameService,
 		private readonly demandService: RelDemandService,
 		private readonly relUserChannelService: RelUserChannelService,
 		private readonly blockService: BlockService,
 	) {}
-
-	async messageToGOTPriv(msg: Message): Promise<GOT.msg | false> {
-		if (msg.userIdTo === null)
-			return false;
-		const userTo = await this.userService.findOne(msg.userIdTo);
-		const userFrom = await this.userService.findOne(msg.userIdFrom);
-		if (userTo === null || userFrom === null)
-			return false;
-		return {
-			userFrom: this.generalGateway.getGOTUserFromUser(userFrom),
-			userTo: this.generalGateway.getGOTUserFromUser(userTo),
-			msg: msg.message
-		};
-	}
-
-	messageToGOTPrivNOId(msg: Message): GOT.msg | false {
-		if (msg.userTo === undefined || msg.userFrom === undefined)
-			return false;
-		return {
-			userFrom: this.generalGateway.getGOTUserFromUser(msg.userFrom),
-			userTo: this.generalGateway.getGOTUserFromUser(msg.userTo),
-			msg: msg.message
-		};
-	}
-
-	GOTChannel(channel: Channel): GOT.Channel {
-		return {
-			name: channel.name,
-			status: channel.status
-		}
-	}
-
-	messageToGOTMsgChannel(msg: Message): GOT.MsgChannel | false {
-		if (msg.channelTo === undefined || msg.userFrom === undefined)
-			return false;
-		return {
-			userFrom: this.generalGateway.getGOTUserFromUser(msg.userFrom),
-			channel: this.GOTChannel(msg.channelTo),
-			msg: msg.message
-		};
-	}
 
 	/**
 	 * Privmsg
@@ -79,7 +44,7 @@ export class ChatGateway {
 			const msgs = await this.messageService.getPrivmsg(user, userTo);
 			let ret: GOT.msg[] = [];
 			for (const msg of msgs) {
-				const tmp = this.messageToGOTPrivNOId(msg);
+				const tmp = MyTransform.privmsgEntityToGotNoId(msg);
 				if (tmp !== false)
 					ret.push(tmp);
 			}
@@ -129,7 +94,7 @@ export class ChatGateway {
 			const block = await this.blockService.getBlock(userTo, user);
 			if (block.length === 1)
 				return `Message not send, you're block`;
-			const ret = await this.messageToGOTPriv(tmp);
+			const ret = await MyTransform.privmsgEntityToGot(tmp, this.userService);
 			if (ret === false)
 				return 'Error user transformation'
 			return ret;
@@ -161,14 +126,42 @@ export class ChatGateway {
 			const rels = await this.relUserChannelService.getChannelRel(user, channel);
 			if (rels.length === 0)
 				return `You're not in the channel ${chanName}`;
-			if (rels[0].status === UserChannelStatus.BAN)
+			if (rels[0].status === GOT.UserChannelStatus.BAN)
 				return `You can't get messages of channel ${chanName} because BAN`;
 			const msgs = await this.messageService.getChanmsg(user, channel);
 			let ret: GOT.MsgChannel[] = [];
 			for (const msg of msgs) {
-				const tmp = this.messageToGOTMsgChannel(msg);
+				const tmp = MyTransform.chanmsgEntityToGotNoId(msg);
 				if (tmp !== false)
 					ret.push(tmp);
+			}
+			return ret;
+		} catch (error) {
+			return error.message;
+		}
+	}
+
+	async getChanUsers(user: User, chanName: string): Promise<GOT.ChannelUsers | string> {
+		try {
+			const channel = await this.channelService.findChanName(chanName);
+			if (!channel)
+				return `Channel ${chanName} not found`;
+			const rels = await this.relUserChannelService.getChannelRel(user, channel);
+			if (rels.length === 0)
+				return `You're not in the channel ${chanName}`;
+			if (rels[0].status === GOT.UserChannelStatus.BAN)
+				return `You can't get messages of channel ${chanName} because BAN`;
+			const allRels = await this.relUserChannelService.getChanUsersNotBan(user, channel);
+			let ret: GOT.ChannelUsers = {
+				users: [],
+				channel: MyTransform.channelEntityToGot(channel)
+			};
+			for (const rel of allRels) {
+				const tmp = this.generalGateway.getGOTUserFromUser(rel.user);
+				ret.users.push({
+					...tmp,
+					status: rel.status
+				});
 			}
 			return ret;
 		} catch (error) {
@@ -181,7 +174,7 @@ export class ChatGateway {
 			const channels = await this.relUserChannelService.getChannelInNOTBan(user);
 			let ret: GOT.Channel[] = [];
 			for (const channel of channels) {
-				ret.push(this.GOTChannel(channel));
+				ret.push(MyTransform.channelEntityToGot(channel));
 			}
 			return ret;
 		} catch (error) {
@@ -197,7 +190,7 @@ export class ChatGateway {
 			const rels = await this.relUserChannelService.getChannelRel(user, channel);
 			if (rels.length === 0)
 				return `You're not in the channel ${chanName}`;
-			if (rels[0].status === UserChannelStatus.BAN)
+			if (rels[0].status === GOT.UserChannelStatus.BAN)
 				return `You can't send messages on channel ${chanName} because BAN`;
 			const newMessage = await this.messageService.create({
 				userIdFrom: user.id,
@@ -207,7 +200,7 @@ export class ChatGateway {
 			});
 			return {
 				userFrom: this.generalGateway.getGOTUserFromUser(user),
-				channel: this.GOTChannel(channel),
+				channel: MyTransform.channelEntityToGot(channel),
 				msg: newMessage.message
 			}
 		} catch (error) {
@@ -220,7 +213,7 @@ export class ChatGateway {
 			const channels = await this.channelService.getVisibleChannel(user);
 			let ret: GOT.Channel[] = [];
 			for (const channel of channels) {
-				ret.push(this.GOTChannel(channel));
+				ret.push(MyTransform.channelEntityToGot(channel));
 			}
 			return ret;
 		} catch (error) {
@@ -234,7 +227,7 @@ export class ChatGateway {
 			if (!channel)
 				return `Channel ${chanName} not found`;
 			const rels = await this.relUserChannelService.getChannelRel(user, channel);
-			if (rels.length !== 0 && rels[0].status === UserChannelStatus.BAN)
+			if (rels.length !== 0 && rels[0].status === GOT.UserChannelStatus.BAN)
 				return `You can't join channel ${chanName} because BAN`;
 			if (rels.length === 1)
 				return 'You already are in the channel'
@@ -244,15 +237,15 @@ export class ChatGateway {
 				return await this.relUserChannelService.create({
 					userId: user.id,
 					channelId: channel.id,
-					status: UserChannelStatus.MEMBER
+					status: GOT.UserChannelStatus.MEMBER
 				});
 			}
 			if (channel.status === GOT.ChannelStatus.PUBLIC || 
-				(channel.status === GOT.ChannelStatus.PROTECTED && password === channel.password)) {
+				(channel.status === GOT.ChannelStatus.PROTECTED && await channel.checkPassword(password))) {
 				return await this.relUserChannelService.create({
 					userId: user.id,
 					channelId: channel.id,
-					status: UserChannelStatus.MEMBER
+					status: GOT.UserChannelStatus.MEMBER
 				});
 			}
 			return 'Bad password or private channel';
@@ -271,12 +264,14 @@ export class ChatGateway {
 				return `User with login ${loginInvite} not found`;
 			const relUser = await this.relUserChannelService.getChannelRel(user, channel);
 			// Pas le droit d'inviter
-			if (relUser.length === 0 || (relUser[0].status === UserChannelStatus.BAN))
+			if (relUser.length === 0 || (relUser[0].status === GOT.UserChannelStatus.BAN))
 				return `You have not rights to invite people on channel ${chanName}`;
 			const relUserInvite = await this.relUserChannelService.getChannelRel(userInvite, channel);
 			// Déjà dans le channel
-			if (relUserInvite.length === 1 && relUserInvite[0].status !== UserChannelStatus.BAN)
+			if (relUserInvite.length === 1 && relUserInvite[0].status !== GOT.UserChannelStatus.BAN)
 				return `User with login ${loginInvite} already in channel ${chanName}`;
+			if (relUserInvite.length === 1 && relUserInvite[0].status === GOT.UserChannelStatus.BAN && relUser[0].status !== GOT.UserChannelStatus.MEMBER)
+				return `You can't invite user in channel because the user with login ${loginInvite} is ban of the channel ${chanName}`;
 			const alreadyDemand = await this.demandService.getChannel(userInvite, channel);
 			if (alreadyDemand.length === 1)
 				return `User with login ${loginInvite} already invite in channel ${chanName}`;
@@ -294,18 +289,283 @@ export class ChatGateway {
 	async createChannel(user: User, chan: GOT.Channel) {
 		try {
 			let channel = await this.channelService.findChanName(chan.name);
-			if (!channel)
+			if (channel)
 				return `Channel ${chan.name} already exist`;
+			if (chan.status === GOT.ChannelStatus.PUBLIC) {
+				if (chan.password !== undefined)
+					return 'No password need when the channel is PUBLIC';
+			} else if (chan.status === GOT.ChannelStatus.PROTECTED) {
+				if (chan.password === undefined)
+					return 'Password need when the channel is PROTECTED';
+			} else {
+				if (chan.status !== GOT.ChannelStatus.PRIVATE)
+					return `The channel status send is unknow - ${chan.status}`;
+				else if (chan.password !== undefined)
+					return 'No password need when the channel is PRIVATE';
+			}
+			if (chan.status === GOT.ChannelStatus.PROTECTED)
+				chan.password = await hashChannelPass(chan.password);
+			console.log('tototototototo');
+			
 			channel = await this.channelService.create({
 				name: chan.name,
 				status: chan.status,
-				password: chan.password
+				password: ((chan.status === GOT.ChannelStatus.PROTECTED) ? chan.password : undefined)
 			});
+			console.log(channel);
+			
 			await this.relUserChannelService.create({
 				userId: user.id,
 				channelId: channel.id,
-				status: UserChannelStatus.OWNER
+				status: GOT.UserChannelStatus.OWNER
 			});
+			
+		} catch (error) {
+			return error.message;
+		}
+	}
+
+	async replyNotif(user: User, reply: GOT.NotifChoice): Promise<string | ChannelAndStatus> {
+		try {
+			if (!reply.channel)
+				return 'channel not defined';
+			const channelReply = await this.channelService.findChanName(reply.channel.name);
+			if (channelReply === null)
+				return 'channel not found';
+			const demands = await this.demandService.getChannel(user, channelReply);
+			if (demands.length === 1) {
+				await this.demandService.delete(demands[0].id);
+				if (reply.accept) {
+					await this.relUserChannelService.create({
+						userId: user.id,
+						channelId: channelReply.id,
+						status: GOT.UserChannelStatus.MEMBER
+					});
+					return {channel: channelReply, status: true};
+				}
+			} else {
+				return "You're reply is refused";
+			}
+			return {channel: channelReply, status: false};
+		} catch (error) {
+			return error.message;
+		}
+	}
+
+	async chanBlock(user:User, chanName: string, loginToBlock: string): Promise<UpdateResult | RelUserChannel | string> {
+		try {
+			if (user.login === loginToBlock)
+				return `You can ban you`;
+			const channel = await this.channelService.findChanName(chanName);
+			if (channel === null)
+				return 'Channel not found';
+			const rels = await this.relUserChannelService.getChannelRel(user, channel);
+			if (rels.length === 0)
+				return `You can ban anybody in channel ${channel.name}, you're not in`;
+			if (rels[0].status === GOT.UserChannelStatus.BAN)
+				return `You can ban anybody in channel ${channel.name}, you're ban`;
+			if (rels[0].status === GOT.UserChannelStatus.MEMBER)
+				return `You can ban anybody in channel ${channel.name}, LOW level access`;
+			const userToBlock = await this.userService.findLogin(loginToBlock);
+			if (userToBlock === null)
+				return 'User not found';
+			const relTochange = await this.relUserChannelService.getChannelRel(userToBlock, channel);
+			if (relTochange.length === 1) {
+				if (rels[0].status === GOT.UserChannelStatus.ADMIN && relTochange[0].status === GOT.UserChannelStatus.OWNER)
+					return `You can ban owner in channel ${channel.name}, LOW level access, you're admin`;
+				relTochange[0].status = GOT.UserChannelStatus.BAN;
+				return await this.relUserChannelService.update(relTochange[0].id, relTochange[0]);
+			} else {
+				return await this.relUserChannelService.create({
+					userId: userToBlock.id,
+					channelId: channel.id,
+					status: GOT.UserChannelStatus.BAN
+				});
+			}
+		} catch (error) {
+			return error.message;
+		}
+	}
+
+	async chanUnblock(user: User, chanName: string, loginToUnblock: string) {
+		try {
+			if (user.login === loginToUnblock)
+				return `You can unblock you`;
+			const channel = await this.channelService.findChanName(chanName);
+			if (channel === null)
+				return 'Channel not found';
+			const rels = await this.relUserChannelService.getChannelRel(user, channel);
+			if (rels.length === 0)
+				return `You can unblock anybody in channel ${channel.name}, you're not in`;
+			if (rels[0].status === GOT.UserChannelStatus.BAN)
+				return `You can unblock anybody in channel ${channel.name}, you're ban`;
+			if (rels[0].status === GOT.UserChannelStatus.MEMBER)
+				return `You can unblock anybody in channel ${channel.name}, LOW level access`;
+			const userToUnblock = await this.userService.findLogin(loginToUnblock);
+			if (userToUnblock === null)
+				return 'User not found';
+			const relTochange = await this.relUserChannelService.getChannelRel(userToUnblock, channel);
+			if (relTochange.length === 1) {
+				if (relTochange[0].status === GOT.UserChannelStatus.BAN) {
+					return await this.relUserChannelService.remove(relTochange[0].id);
+				} else {
+					return 'User you want to unban is not ban';
+				}
+			} else
+				return `User you want to ban is not in channel ${chanName}`;
+		} catch (error) {
+			return error.message;
+		}
+	}
+
+	async leaveChan(user: User, chanName: string, loginWhoLeave: string) {
+		try {
+			const channel = await this.channelService.findChanName(chanName);
+			if (channel === null)
+				return 'Channel not found';
+			const userWhoLeave = await this.userService.findLogin(loginWhoLeave);
+			if (!userWhoLeave)
+				return 'User not found';
+			const rels = await this.relUserChannelService.getChannelRel(user, channel);
+			const relsLeave = await this.relUserChannelService.getChannelRel(userWhoLeave, channel);
+			if (rels.length === 1) {
+				if (relsLeave.length === 1) {
+					if (rels[0].status === GOT.UserChannelStatus.OWNER || (rels[0].status === GOT.UserChannelStatus.ADMIN && relsLeave[0].status !== GOT.UserChannelStatus.OWNER) || user.id === userWhoLeave.id) {
+						if (relsLeave[0].status === GOT.UserChannelStatus.OWNER) {
+							await this.channelService.remove(channel.id);
+							return true;
+						}
+						else
+							return await this.relUserChannelService.remove(rels[0].id);
+					} else
+						return `You haven't right to eject user ${loginWhoLeave} of channel ${chanName}`;
+				} else {
+					return 'User you want eject of channel not found';
+				}
+			}
+			else
+				return `You're not in the channel ${chanName}`;
+		} catch (error) {
+			return error.message;
+		}
+	}
+
+	async changeStatusChannel(user: User, chan: GOT.Channel): Promise<string | UpdateResult> {
+		try {
+			let channel = await this.channelService.findChanName(chan.name);
+			if (!channel)
+				return `Channel not found`;
+			if (channel.status === chan.status)
+				return `Status unchanged (same)`;
+			if (chan.status === GOT.ChannelStatus.PUBLIC) {
+				if (chan.password !== undefined)
+					return 'No password need when the channel is PUBLIC';
+			} else if (chan.status === GOT.ChannelStatus.PROTECTED) {
+				if (chan.password === undefined)
+					return 'Password need when the channel is PROTECTED';
+			} else {
+				if (chan.status !== GOT.ChannelStatus.PRIVATE)
+					return `The channel status send is unknow - ${chan.status}`;
+				else if (chan.password !== undefined)
+					return 'No password need when the channel is PRIVATE';
+			}
+			const rels = await this.relUserChannelService.getChannelRel(user, channel);
+			if (rels.length === 1 && (rels[0].status === GOT.UserChannelStatus.OWNER || rels[0].status === GOT.UserChannelStatus.ADMIN)) {
+				channel.status = chan.status;
+				channel.password = await hashChannelPass(chan.password);
+				return await this.channelService.update(channel.id, channel);
+			} else
+				return `You haven't the rights to change status of channel ${chan.name}`;
+		} catch (error) {
+			return error.message;
+		}
+	}
+
+	async changePasswordChannel(user: User, chanName: string, password: string): Promise<string | UpdateResult> {
+		try {
+			let channel = await this.channelService.findChanName(chanName);
+			if (!channel)
+				return `Channel not found`;
+			if (password === undefined)
+				return `Password done is undefined`;
+			if (channel.status !== GOT.ChannelStatus.PROTECTED)
+				return `Password is set only for protected channel`;
+			const rels = await this.relUserChannelService.getChannelRel(user, channel);
+			if (rels.length === 1 && (rels[0].status === GOT.UserChannelStatus.OWNER || rels[0].status === GOT.UserChannelStatus.ADMIN)) {
+				await channel.setPassword(password);
+				return await this.channelService.update(channel.id, channel);
+			} else
+				return `You haven't the rights to change password of channel ${chanName}`;
+		} catch (error) {
+			return error.message;
+		}
+	}
+
+	async changeNameChannel(user: User, chanName: string, newChanName: string): Promise<string | UpdateResult> {
+		try {
+			let channel = await this.channelService.findChanName(chanName);
+			if (!channel)
+				return `Channel not found`;
+			const rels = await this.relUserChannelService.getChannelRel(user, channel);
+			if (rels.length === 1 && (rels[0].status === GOT.UserChannelStatus.OWNER || rels[0].status === GOT.UserChannelStatus.ADMIN)) {
+				channel.name = newChanName;
+				return await this.channelService.update(channel.id, channel);
+			} else
+				return `You haven't the rights to change name of channel ${chanName}`;
+		} catch (error) {
+			return error.message;
+		}
+	}
+
+	async chanPassAdmin(user: User, chanName: string, loginToPassAdmin: string): Promise<string | UpdateResult> {
+		try {
+			let channel = await this.channelService.findChanName(chanName);
+			if (!channel)
+				return `Channel not found`;
+			const userToGrant = await this.userService.findLogin(loginToPassAdmin);
+			if (!userToGrant)
+				return 'User not found';
+			const rels = await this.relUserChannelService.getChannelRel(user, channel);
+			if (rels.length === 1 && (rels[0].status === GOT.UserChannelStatus.OWNER || rels[0].status === GOT.UserChannelStatus.ADMIN)) {
+				const relsGrant = await this.relUserChannelService.getChannelRel(userToGrant, channel);
+				if (relsGrant.length === 1) {
+					if (relsGrant[0].status === GOT.UserChannelStatus.OWNER)
+						return `User ${loginToPassAdmin} is owner of channel, can't be pass like an admin`;
+					if (relsGrant[0].status === GOT.UserChannelStatus.BAN)
+						return `User ${loginToPassAdmin} is ban of channel, can't be pass like an admin (unblock and add !!)`;
+					relsGrant[0].status = GOT.UserChannelStatus.ADMIN;
+					return await this.relUserChannelService.update(relsGrant[0].id, relsGrant[0]);
+					} else
+					return `User ${loginToPassAdmin} not in channel`;
+			} else
+				return `You haven't the rights to change privileges of channel ${chanName}`;
+		} catch (error) {
+			return error.message;
+		}
+	}
+
+	async chanPassMember(user: User, chanName: string, loginToPassMember: string): Promise<string | UpdateResult> {
+		try {
+			let channel = await this.channelService.findChanName(chanName);
+			if (!channel)
+				return `Channel not found`;
+			const userToGrant = await this.userService.findLogin(loginToPassMember);
+			if (!userToGrant)
+				return 'User not found';
+			const rels = await this.relUserChannelService.getChannelRel(user, channel);
+			if (rels.length === 1 && (rels[0].status === GOT.UserChannelStatus.OWNER || rels[0].status === GOT.UserChannelStatus.ADMIN)) {
+				const relsGrant = await this.relUserChannelService.getChannelRel(userToGrant, channel);
+				if (relsGrant.length === 1) {
+					if (relsGrant[0].status === GOT.UserChannelStatus.OWNER)
+						return `User ${loginToPassMember} is owner of channel, can't be pass like a member`;
+					if (relsGrant[0].status === GOT.UserChannelStatus.BAN)
+						return `User ${loginToPassMember} is ban of channel, can't be pass like a member (unblock and add !!)`;
+					relsGrant[0].status = GOT.UserChannelStatus.MEMBER;
+					return await this.relUserChannelService.update(relsGrant[0].id, relsGrant[0]);
+					} else
+					return `User ${loginToPassMember} not in channel`;
+			} else
+				return `You haven't the rights to change privileges of channel ${chanName}`;
 		} catch (error) {
 			return error.message;
 		}

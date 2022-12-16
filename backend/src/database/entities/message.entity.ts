@@ -20,15 +20,15 @@ export class Message {
     @Column({nullable: true})
     channelIdTo: number | null;
 
-    @ManyToOne(() => User, (user) => user.messageFrom)
+    @ManyToOne(() => User, (user) => user.messageFrom, { onDelete: 'CASCADE' })
     @JoinColumn({name: 'userIdFrom'})
     userFrom!: User;
 
-    @ManyToOne(() => User, (user) => user.messageTo)
+    @ManyToOne(() => User, (user) => user.messageTo, { onDelete: 'CASCADE' })
     @JoinColumn({name: 'userIdTo'})
     userTo?: User;
 
-    @ManyToOne(() => Channel, (channel) => channel.messages)
+    @ManyToOne(() => Channel, (channel) => channel.messages, { onDelete: 'CASCADE' })
     @JoinColumn({name: 'channelIdTo'})
     channelTo?: Channel;
 }

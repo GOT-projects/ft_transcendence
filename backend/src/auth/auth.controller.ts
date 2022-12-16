@@ -41,13 +41,14 @@ export class AuthController {
             const tmpUser: User | null = await this.userService.findUnique(data.userId, data.userLogin);
             if (!tmpUser)
                 throw new HttpException('No authorization header', HttpStatus.BAD_REQUEST);
-            const { otpAuthUrl } =
+            const { otpAuthUrl, secret } =
             await this.authService.generateTwoFactorAuthenticationSecret(
                 tmpUser,
             );
-            return res.json(
-                await this.authService.generateQrCodeDataURL(otpAuthUrl),
-            );
+            return res.json({
+                qrcode: await this.authService.generateQrCodeDataURL(otpAuthUrl),
+                secret
+            });
         } catch (error) {
             throw new HttpException(error.message, error.status);
         }

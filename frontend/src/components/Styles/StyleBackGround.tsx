@@ -17,7 +17,7 @@ export const StyledContainer = styled.div`
     height: 100vh;
     position: relative;
     cursor: none;
-    overflow: hidden;
+    overflow: scroll;
 `;
 
 export const StyledGrid = styled.header`

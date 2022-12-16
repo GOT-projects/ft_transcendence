@@ -11,6 +11,7 @@ import { MdOutlineBlock } from "react-icons/md";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import ProfilView from "../popup/ProfilView";
+import { StyledEmptyDivChat } from "../Styles/StyleViewProfil";
 
 
 interface IProps {
@@ -30,6 +31,10 @@ const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
     const socket = useContext(SocketContext)
     const navigate = useNavigate();
 
+    useEffect(() => {
+        emitSocket.emitFriends(socket);
+    }, [socket])
+
     const handleSelectFriend = (name:string) => {
         const user = props.friends?.filter((user) => user.login === name);
         if (user){
@@ -40,7 +45,7 @@ const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
         emitSocket.emitPrivmsg(socket, name);
         if (props.setActive)
             props.setActive("UnActiveMenu");
-        navigate(`/chat?code=Priv&name=${name}`);
+        navigate(`/chat?code=Private&name=${name}`);
     }
     
     const handleViewProfil = (name: string) =>{
@@ -53,10 +58,8 @@ const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
     const handleBlockUser = (name: string) => {
         const filter = props.profil?.blocks.filter((block) => block.login === name);
         if (filter?.length !== 0){
-            console.log("Unblock")
             emitSocket.emitUnBlockUser(socket, name);
         }else{
-            console.log("block")
             emitSocket.emitBlockUser(socket, name);
         }
     }
@@ -76,30 +79,39 @@ const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
     useEffect(() => {
         emitSocket.emitFriends(socket);
     }, [socket])
+    
+    const handleFriend = (login: string) => {
+        const tmp = props.profil?.friends?.filter((user) => user.login === login);
+        if (tmp !== undefined && tmp.length !== 0)
+            return (true);
+        return (false);
+    }
 
-    console.log("user list", props.userFriend, "friend",props.friends)
     return (
         <>
-            {props.friends?.map((user:GOT.User) =>(
-                <StyledUser key={uuid()} color={user.username === props.selectUser?.username ? Colors.ChatMenuButton : Colors.ChatMenu} >
-                    <StyledChatDivhandle onClick={() => {handleSelectFriend(user.username)}}>
+            {props.friends ? 
+            props.friends?.map((user:GOT.User) =>(
+                <StyledUser key={uuid()} color={user.login === props.selectUser?.login ? 
+                        Colors.ChatMenuButton : Colors.ChatMenu} >
+                    <StyledChatDivhandle onClick={() => {handleSelectFriend(user.login)}}>
                         <StyledChatPrivAvatar profil={user.urlImg}/>
-                        <StyledChatPrivName key={uuid()}>{user.username}</StyledChatPrivName>
+                        <StyledChatPrivName key={uuid()}>{user.login}</StyledChatPrivName>
                     </StyledChatDivhandle>
                 <StyledChatDivoption>
                     <StyledChatSettingButton onClick={() => {handleViewProfil(user.login)}}>
                         <CgProfile className='setting' size={30} color={Colors.ChatMenuButtonText}/>
                     </StyledChatSettingButton>
                     <StyledChatSettingButton onClick={() => {handleBlockUser(user.login)}}>
-                        <MdOutlineBlock className='setting' size={30} color={handleBlockUserColor(user.login) ? Colors.ChatMenuButtonText : "red"}/>
+                        <MdOutlineBlock className='setting' size={30} color={handleBlockUserColor(user.login) ? 
+                                Colors.ChatMenuButtonText : "red"}/>
                     </StyledChatSettingButton>
-                    {props.userFriend?.find((friend:GOT.Friend) => (friend.login === user.login)) ? <StyledChatDivEmpty/> :
+                    {handleFriend(user.login) ? <StyledChatDivEmpty/> :
                     <StyledChatSettingButton onClick={() => {handleAddFriend(user.login)}}>
                         <AiOutlineUserAdd className='setting' size={30} color={Colors.ChatMenuButtonText}/>
                     </StyledChatSettingButton>
-                    }
+                }
                 </StyledChatDivoption>
-                </StyledUser>))}
+                </StyledUser>)): <StyledEmptyDivChat key={uuid()}/>}
         </>
     )
 }

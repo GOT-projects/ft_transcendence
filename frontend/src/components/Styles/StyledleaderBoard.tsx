@@ -76,6 +76,11 @@ export const StyledLeadBorder = styled.div`
     border-radius: 4px;
 `;
 
+export const StyledSepController = styled.div`
+    width: 20px;
+    height: 20px;
+`
+
 
 export const StyledLeadP = styled.td`
     margin: 20px;
@@ -88,7 +93,20 @@ export const StyledLeadP = styled.td`
 
 `;
 
-export const StyledLeadB = styled.button`
+export const StyledLeadPHead = styled.th`
+    margin: 20px;
+    width: 10px;
+    padding: 6px;
+    font-family: "Public Pixel";
+    opacity: 1;
+    color: red;
+    text-align: center;
+    font-size: x-large;
+    border-bottom: 1px solid deeppink;
+    border-collapse: collapse;
+`;
+
+export const StyledLeadB = styled.div`
 background-color: transparent;
 background-opacity: 0;
     margin: 20px;
@@ -101,4 +119,6 @@ background-opacity: 0;
     color: ${Colors.primary};
     cursor: pointer;
     border: none;
+    margin: 1px;
+    overflow: hidden;
 `;

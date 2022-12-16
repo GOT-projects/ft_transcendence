@@ -1,20 +1,19 @@
-import { Dispatch, FunctionComponent, useState } from "react";
+import { Dispatch, FunctionComponent, useContext, useEffect, useState } from "react";
 import { FaWindowClose } from "react-icons/fa";
 import { GOT } from "../../shared/types";
 import { Colors } from "../Colors";
-import { StyledChanDiv, StyledChanSep, StyledContaiteChannel, StyledContaiteClose, StyledContaiteMenu, StyledContaiteViewAddChan, StyledContaiteViewAddOption, StyledContaiteViewAddP } from "../Styles/StyleViewProfil";
+import {StyledContaiteClose, StyledContaiteViewAddChan, StyledContaiteViewAddOption, StyledContaiteViewAddP } from "../Styles/StyleViewProfil";
 import { motion } from "framer-motion";
-import PopupOptionAddUser from "./Option/AddUser";
-import PopupOptionAddChannel from "./Option/AddChannel";
-import PopupOptionJoinChannel from "./Option/JoinChannel";
 import { useNavigate } from "react-router-dom";
+import { SocketContext } from "../../socket/socketPovider";
+import { emitSocket } from "../../socket/socketEmit";
 
 
 interface IProps {
    profil: GOT.Profile | undefined;
    listUser:GOT.User[] | undefined;
    setProfil:Dispatch<React.SetStateAction<GOT.Profile | undefined>> | undefined;
-   setAction:Dispatch<React.SetStateAction<boolean>> | undefined;
+   setAction:Dispatch<React.SetStateAction<string>>;
    setFriends:Dispatch<React.SetStateAction<GOT.User[] | undefined>> | undefined;
    friends:GOT.User[] | undefined;
 }
@@ -23,15 +22,26 @@ interface IProps {
 const PopupAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
     const [add, setAdd] = useState("");
     const navigate = useNavigate();
+    const socket = useContext(SocketContext);
+
+    useEffect(() => {
+        emitSocket.emitUsers(socket);
+    }, [socket])
+
     const handleClose = () => {
         if (props.setAction){
-            props.setAction(false);
+            props.setAction("");
             navigate("/chat");
         }
     }
 
     const handleAdd = (name: string) => {
-       setAdd(name); 
+        setAdd(name); 
+        if (name === "addChannel"){
+            navigate(`/chat?code=${name}&name=create`)
+        }else{
+            navigate(`/chat?code=${name}`)
+        }
     }
 
     return (
@@ -45,7 +55,7 @@ const PopupAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
             <StyledContaiteClose onClick={handleClose}>
                     <FaWindowClose size={30} color={Colors.dark1}/>
             </StyledContaiteClose>
-            <StyledContaiteViewAddP>Add</StyledContaiteViewAddP>
+            <StyledContaiteViewAddP className="addTitle">Add</StyledContaiteViewAddP>
             <StyledContaiteViewAddOption onClick={() => {handleAdd("addUser")}}>
                 <StyledContaiteViewAddP >Add user for prive msg</StyledContaiteViewAddP>
                 <StyledContaiteViewAddP>{">"}</StyledContaiteViewAddP>
@@ -59,12 +69,6 @@ const PopupAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
                 <StyledContaiteViewAddP>{">"}</StyledContaiteViewAddP>
             </StyledContaiteViewAddOption>
             </motion.div> : <></>}
-            {add === "addUser" ? <PopupOptionAddUser setAction={props.setAction} friends={props.friends}
-                                listUser={props.listUser} setAdd={setAdd} setFriends={props.setFriends} userList={props.listUser}/> : <></>}
-            {add === "addChannel" ? <PopupOptionAddChannel setAction={props.setAction} 
-                                listUser={props.listUser} setAdd={setAdd}/> : <></>}
-            {add === "joinChannel" ? <PopupOptionJoinChannel setAction={props.setAction} 
-                                listUser={props.listUser} setAdd={setAdd}/> : <></>}
         </StyledContaiteViewAddChan>
     )
 }

@@ -1,11 +1,15 @@
-import { FormEvent, useState } from "react";
+import { Dispatch, FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiPost } from "../../api/post";
 import { accountService } from "../../services/account.service";
 import { StyledWaiting2FAForm, StyledWaiting2FAInput, StyledWaitingButton, StyledWaitingContente2FA } from "../Styles/StylesLogin";
 
 
-const Popup2FA = () => {
+interface IProps {
+    setNotify: Dispatch<any>;
+ }
+
+const Popup2FA = (props: IProps) => {
     const navigate = useNavigate();
     const handleInputEvent = (e: any) => {
         const t = e.currentTarget.nextSibling
@@ -17,20 +21,19 @@ const Popup2FA = () => {
     const handleSubmit = (e:any) => {
         e.preventDefault();
         const code = e.target[0].value + e.target[1].value + e.target[2].value + e.target[3].value + e.target[4].value + e.target[5].value;
-        console.log(code);
         const resp = apiPost.Post2FAAuth(code);
         resp.then((rep) => {
-            console.log(rep.status);
             if (rep.status === 200) {
                 accountService.saveToken(rep.data.access_token);
                 navigate("/game");
             }
             else{
                 e.target[0].value = e.target[1].value = e.target[2].value = e.target[3].value = e.target[4].value = e.target[5].value = '';
+                props.setNotify({isOpen: true, message: `Warning: invalid code`, type:'warning'});
             }
         }).catch((rep) => {
-            console.log(rep.status);
             e.target[0].value = e.target[1].value = e.target[2].value = e.target[3].value = e.target[4].value = e.target[5].value = '';
+            props.setNotify({isOpen: true, message: `Warning: invalid code`, type:'warning'});
         })
         //send to server
     } 

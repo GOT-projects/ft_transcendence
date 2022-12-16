@@ -1,13 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { PartialType } from "@nestjs/swagger";
 import { InjectRepository } from "@nestjs/typeorm";
+import { GOT } from "shared/types";
 import { DeleteResult, Repository, UpdateResult } from "typeorm";
 import { Channel } from "../entities/channel.entity";
-import { RelUserChannel, UserChannelStatus } from "../entities/rel_user_channel.entity";
+import { RelUserChannel } from "../entities/rel_user_channel.entity";
 import { User } from "../entities/user.entity";
 
 export class CreateRelUserChannelDto {
-	status!: UserChannelStatus;
+	status!: GOT.UserChannelStatus;
 	userId!: number;
 	channelId!: number;
 }
@@ -43,14 +44,15 @@ export class RelUserChannelService {
 
 	async getChannelInNOTBan(user: User) {
 		const rels = await this.relUserChannelRepository.find({
-			select: ["channel", "status", "user", "id"],
+			select: ["channel", "status", "id", "userId"],
 			where: [
 				{userId: user.id}
-			]
+			],
+			relations: ["channel"]
 		});
 		let ret: Channel[] = [];
 		for (const rel of rels) {
-			if (rel.status !== UserChannelStatus.BAN)
+			if (rel.status !== GOT.UserChannelStatus.BAN)
 				ret.push(rel.channel);
 		}
 		return ret;
@@ -61,6 +63,17 @@ export class RelUserChannelService {
 			where: [
 				{userId: user.id, channelId: channel.id}
 			]
+		});
+		return rels;
+	}
+
+	async getChanUsersNotBan(user: User, channel: Channel) {
+		const rels = await this.relUserChannelRepository.find({
+			select: ["user", "status"],
+			where: [
+				{channelId: channel.id},
+			],
+			relations: ["user"]
 		});
 		return rels;
 	}

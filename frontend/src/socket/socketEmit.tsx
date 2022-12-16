@@ -47,6 +47,30 @@ let emitBlockUser = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, lo
     socket.emit('server_block_somebody', {Authorization: accountService.getToken(), login:login})
 }
 
+let emitChannels = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>) => {
+    socket.emit('server_channels', {Authorization: accountService.getToken()})
+}
+
+let emitChannelJoin = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName: string, password: string | undefined) => {
+    socket.emit('server_chan_join', {Authorization: accountService.getToken(), chanName:chanName, password:password})
+}
+
+let emitChannelsIn = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>) => {
+    socket.emit('server_channels_in', {Authorization: accountService.getToken()})
+}
+
+let emitChannelMsg = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, channelName: string) => {
+    socket.emit('server_chanmsg', {Authorization: accountService.getToken(), chanName: channelName})
+}
+
+let emitChannelMsg_send = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName: string, msg:string) => {
+    socket.emit('server_chanmsg_send', {Authorization: accountService.getToken(), chanName: chanName, msg:msg})
+}
+
+let emitChanUserNotBan = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName: string) => {
+    socket.emit('server_chan_users', {Authorization: accountService.getToken(), chanName: chanName})
+}
+
 let emitUnBlockUser = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, login:string) => {
     socket.emit('server_unblock_somebody', {Authorization: accountService.getToken(), login:login})
 }
@@ -59,7 +83,38 @@ let emitReplyNotif = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, r
     socket.emit('server_reply_notification', {Authorization: accountService.getToken(), reply :  reply})
 }
 
+let emitLeaveChan = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName:string, login:string | undefined) => {
+    socket.emit('server_chan_leave', {Authorization: accountService.getToken(), chanName: chanName, loginWhoLeave:login})
+}
+
+let emitInviteSomebody = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName:string, loginInvite:string) => {
+    socket.emit('server_chanmsg_invite', {Authorization: accountService.getToken(), chanName: chanName, loginInvite:loginInvite})
+}
+
+let emitChanUnBlock = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName:string, loginUnblock:string) => {
+    socket.emit('server_chan_unban_somebody', {Authorization: accountService.getToken(), chanName: chanName, loginToUnban:loginUnblock})
+}
+
+let emitChanBlock = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName:string, loginBlock:string) => {
+    socket.emit('server_chan_ban_somebody', {Authorization: accountService.getToken(), chanName: chanName, loginToBan:loginBlock})
+}
+
+let emitChanChangeName = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName:string, newName:string) => {
+    socket.emit('server_chan_edit_name', {Authorization: accountService.getToken(), chanName: chanName, newChanName:newName})
+}
+let emitChanChangeStatus = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chan:GOT.Channel) => {
+    socket.emit('server_chan_edit_status', {Authorization: accountService.getToken(), chan:chan})
+}
+let emitChanPassAdmin = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName: string, loginToPassAdmin:string) => {
+    socket.emit('server_chan_pass_admin', {Authorization: accountService.getToken(), chanName:chanName, loginToPassAdmin: loginToPassAdmin})
+}
+let emitChanPassMember = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName: string, loginToPassMember:string) => {
+    socket.emit('server_chan_pass_member', {Authorization: accountService.getToken(), chanName:chanName, loginToPassMember: loginToPassMember})
+}
 export const emitSocket ={
     emitProfil, emitProfilHisto, emitFriends, emitDemandFriend, emitChangeUsername, emitLeaderboard, 
-    emitPrivmsg, emitSendPrivmsg, emitUsers, emitBlockUser, emitPrivmsgUsers, emitReplyNotif, emitUnBlockUser, emitCreateChan
+    emitPrivmsg, emitSendPrivmsg, emitUsers, emitBlockUser, emitPrivmsgUsers, emitReplyNotif, emitUnBlockUser, emitCreateChan, 
+    emitChannels, emitChannelsIn, emitChannelMsg_send, emitChannelMsg, emitChannelJoin, emitChanUserNotBan,
+    emitLeaveChan, emitInviteSomebody, emitChanBlock, emitChanUnBlock, emitChanChangeName, emitChanChangeStatus,
+    emitChanPassMember, emitChanPassAdmin
 }
