@@ -3,7 +3,8 @@ import { User } from "./user.entity";
 
 export enum gameStatus {
 	IN_PROGRESS = 'IN_PROGRESS',
-	FINISH = 'FINISH'
+	FINISH = 'FINISH',
+	DEMAND = `DEMAND`
 }
 
 export interface Rank {
@@ -24,10 +25,10 @@ export class Game {
 	user2Id!: number;
 
 	@Column({ default: 0 })
-	points1: number;
+	points1!: number;
 
 	@Column({ default: 0 })
-	points2: number;
+	points2!: number;
 
 	@Column({
 		type: "enum",

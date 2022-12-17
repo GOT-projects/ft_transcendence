@@ -32,7 +32,12 @@ export class GameService {
 		const allUsers = await this.userService.findAll();
 		for (const user of allUsers)
 			map.set(user.id, {victory: 0, defeat: 0, rank: -1});
-		const allGames = await this.gameRepository.find();
+		const allGames = await this.gameRepository.find({
+			where: [
+				{status: gameStatus.FINISH},
+				{status: gameStatus.IN_PROGRESS},
+			],
+		});
 		// Récupération des défaites et des victoires
 		for (const game of allGames) {
 			const idVictory = game.points1 > game.points2 ? game.user1Id : game.user2Id;

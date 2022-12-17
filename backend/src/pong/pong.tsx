@@ -1,5 +1,5 @@
 import { GOT } from '../../shared/types';
-
+/*
 interface ball{
 	x: number,
 	y: number, 
@@ -194,3 +194,4 @@ const PartyPlaying = (party: GOT.Party) => {
 
 	return ;
 }
+*/
