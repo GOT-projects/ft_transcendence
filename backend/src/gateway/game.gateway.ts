@@ -51,7 +51,20 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		
 	}
 
-	async handleConnection(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string) {
-		
+	async handleConnection(@ConnectedSocket() client: Socket) {
+		let jwt: string | undefined = undefined;
+		const authorizationHeader = client.handshake.headers.authorization;
+        // Not connected
+        if (!authorizationHeader) {
+			this.logger.verbose(`Client connected anonymous: ${client.id}`);
+			return ;
+        }
+        const bearer : string[] = authorizationHeader.split(' ');
+        if (bearer.length !== 2) {
+			this.logger.verbose(`Client connected anonymous: ${client.id}`);
+			return ;
+        }
+        // Verify token
+        jwt = bearer[1];
 	}
 }
