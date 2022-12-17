@@ -1014,7 +1014,21 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			this.logger.verbose(`Client disconnected anonymous: ${client.id}`);
 	}
 
-	async handleConnection(@ConnectedSocket() client: Socket, @MessageBody('Authorization') jwt: string) {
+	async handleConnection(@ConnectedSocket() client: Socket) {
+		let jwt: string | undefined = undefined;
+		const authorizationHeader = client.handshake.headers.authorization;
+        // Not connected
+        if (!authorizationHeader) {
+			this.logger.verbose(`Client connected anonymous: ${client.id}`);
+			return ;
+        }
+        const bearer : string[] = authorizationHeader.split(' ');
+        if (bearer.length !== 2) {
+			this.logger.verbose(`Client connected anonymous: ${client.id}`);
+			return ;
+        }
+        // Verify token
+        jwt = bearer[1];
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth) {
 			this.logger.verbose(`Client connected anonymous: ${client.id}`);
