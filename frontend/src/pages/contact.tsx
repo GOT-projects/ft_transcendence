@@ -243,7 +243,6 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                                             setProfil={props.setProfil} 
                                             chanName={chatSwitch}/> : <></>}
             </StyledContaite>
-            <Notification notify={notify} setNotify={setNotify}/>
 
             {add === "add" ? <PopupAddChannel friends={friends} setFriends={setFriends} 
                                             profil={props.profil} setProfil={props.setProfil} 
@@ -283,6 +282,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
 
 
             {popuProfil ? <ProfilView login={login} setPopupProfil={setPopupProfil}/> : <> </>}
+            <Notification notify={notify} setNotify={setNotify}/>
            <Footer/>
 		</React.Fragment>
 	)

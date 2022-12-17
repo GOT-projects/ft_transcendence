@@ -263,7 +263,7 @@ export const StyledChanPadd = styled.p`
     font-size: 20px;
 `
 
-export const StyledMenuTitle = styled.p`
+export const StyledMenuTitle = styled.div`
     font-size: 20px;
     color: ${Colors.primary};
 `

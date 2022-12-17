@@ -6,6 +6,9 @@ import { emitSocket } from "../../socket/socketEmit";
 import { SocketContext } from "../../socket/socketPovider";
 import { StyleNavToggler, StyleNavTogglerIcon } from "../Styles/StyledHeader";
 import { StyledChanDiv, StyledChanPadd, StyledChanSep, StyledContaiteChannel, StyledContaiteMenu, StyledMenuTitle } from "../Styles/StyleViewProfil";
+import { TiMessages} from 'react-icons/ti';
+import { colors } from "@material-ui/core";
+import { Colors } from "../Colors";
 
 
 interface IProps {
@@ -68,7 +71,7 @@ const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
             </StyleNavToggler>
         <StyledContaiteMenu className={props.active}>
             <StyledChanDiv onClick={() => {handlePriveMsg("private")}}>
-                <StyledMenuTitle>Prive</StyledMenuTitle>
+                <TiMessages size={30} color={Colors.primary}/>
             </StyledChanDiv>
             <StyledChanSep/>
             <StyledContaiteChannel>
