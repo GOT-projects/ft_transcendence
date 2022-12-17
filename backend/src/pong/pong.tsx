@@ -1,15 +1,4 @@
-import {Dispatch, SetStateAction, FunctionComponent} from 'react';
 import { GOT } from '../../shared/types';
-import { SocketContext } from '../src/socket/socketPovider';
-import { emitSocket } from '../src/socket/socketEmit';
-import React, { useContext, useState, useEffect, useRef } from 'react';
-
-
-
-interface IProps {
-	party: GOT.Party;
-	setNotify: Dispatch<any>;
-}
 
 interface ball{
 	x: number,
@@ -78,27 +67,27 @@ const ball: ball = {
 }
 
 
-//UTILS
-async function useInterval(callback: any, delay: number) {
-	const savedCallback: any = useRef();
+// //UTILS
+// async function useInterval(callback: any, delay: number) {
+// 	const savedCallback: any = useRef();
 	
-	// Remember the latest callback.
-	useEffect(() => {
-		savedCallback.current = callback;
-	}, [callback]);
+// 	// Remember the latest callback.
+// 	useEffect(() => {
+// 		savedCallback.current = callback;
+// 	}, [callback]);
 	
-	// Set up the interval.
-	useEffect(() => {
-		function tick() {
-			if (savedCallback.current)
-			savedCallback.current();
-		}
-		if (delay !== null) {
-			let id = setInterval(tick, delay);
-			return () => clearInterval(id);
-		}
-	}, [delay]);
-}
+// 	// Set up the interval.
+// 	useEffect(() => {
+// 		function tick() {
+// 			if (savedCallback.current)
+// 			savedCallback.current();
+// 		}
+// 		if (delay !== null) {
+// 			let id = setInterval(tick, delay);
+// 			return () => clearInterval(id);
+// 		}
+// 	}, [delay]);
+// }
 
 
 
@@ -128,7 +117,7 @@ function collision(b: ball, p: player){
 }
 
 function update(props: GOT.Party){
-	
+	//TODO socket receive pos pad 1 and 2
 	if( ball.x - ball.radius < 0 ){
 		props.points2++;
 		resetBall();
@@ -170,6 +159,9 @@ function update(props: GOT.Party){
 		// speed up the ball everytime a paddle hits it.
 		ball.speed += 0.1;
 	}
+	//TODO trad to ratio
+
+	//TODO socket emit pos des pad et de la ball
 }
 
 
@@ -184,21 +176,17 @@ function delay(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms) );
 }
 
-const PartyPlaying: FunctionComponent<IProps> = (props:IProps) => {
-	const socket = useContext(SocketContext);
+const PartyPlaying = (party: GOT.Party) => {
+
+	// useInterval(() => {
+	 	update(party);
+	// //	emitSocket.emitSendPlayerPos(socket, ball.x, ball.y, user1.y, user2.y, props.party.user1.username, props.party.user2.username);
+	// }, 50); //ttes les 0.05s
 
 
 
 
-	useInterval(() => {
-		update(props.party);
-	//	emitSocket.emitSendPlayerPos(socket, ball.x, ball.y, user1.y, user2.y, props.party.user1.username, props.party.user2.username);
-	}, 50); //ttes les 0.05s
-
-
-
-
-	while (props.party.points1 != 5 || props.party.points2 != 5){
+	while (party.points1 != 5 || party.points2 != 5){
 		(async () => { 
 			await delay(3000);
 		})();
