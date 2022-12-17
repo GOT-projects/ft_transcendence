@@ -3,6 +3,7 @@ import {NotifyInter} from "../../components/interfaces"
 import { StyledMenuNotif, StyledMenuNotifButton, StyledMenuNotifButtonHover, StyledMenuNotifContentUser, StyledMenuNotifholder, StyledMenuNotifUser } from '../Styles/StyleNotifUser';
 import {RiUserAddFill} from 'react-icons/ri';
 import {TiUserDelete} from 'react-icons/ti';
+import {MdGroupOff, MdGroup} from 'react-icons/md';
 import { v4 as uuid } from 'uuid';
 import { GOT } from '../../shared/types';
 import { SocketContext } from '../../socket/socketPovider';
@@ -90,10 +91,10 @@ const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
                         </div>
                         <StyledMenuNotifButton>
                             <StyledMenuNotifButtonHover>
-                                <RiUserAddFill size={"20px"} onClick={() => handleAddChan(chan)}/>
+                                <MdGroup size={"30px"} onClick={() => handleAddChan(chan)}/>
                             </StyledMenuNotifButtonHover>
                             <StyledMenuNotifButtonHover>
-                                <TiUserDelete size={"25px"} onClick={() => handleRemoveChan(chan)}/>
+                                <MdGroupOff size={"25px"} onClick={() => handleRemoveChan(chan)}/>
                             </StyledMenuNotifButtonHover>
                         </StyledMenuNotifButton>
                 </StyledMenuNotifholder>
