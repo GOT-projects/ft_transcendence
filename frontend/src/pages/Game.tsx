@@ -26,10 +26,10 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
     const [startGame, setStartGame] = useState(false);
     const [game, setGame] = useState(false);
     const navigate = useNavigate();
-    const socketGame = io(InfoServer.SocketServer ,{withCredentials:false, extraHeaders: {
+    const socketGame = io(`${InfoServer.SocketServer}/game` ,{
+                withCredentials:false, extraHeaders: {
                 "Authorization": "bearer " + localStorage.getItem("token_access"),
     }});
-
     useEffect(() => {
         console.log("actual")
         if (code == "waiting"){
