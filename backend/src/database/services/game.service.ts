@@ -2,10 +2,23 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { GOT } from "shared/types";
 import internal from "stream";
-import { Repository } from "typeorm";
+import { DeleteResult, Repository, UpdateResult } from "typeorm";
 import { Game, gameStatus } from "../entities/game.entity";
 import { User } from "../entities/user.entity";
 import { UserService } from "./user.service";
+import { PartialType } from "@nestjs/swagger";
+
+export class CreateGameDto {
+	user1Id!: number;
+	user2Id!: number;
+	status!: gameStatus;
+}
+
+export class UpdateGameDto extends PartialType(CreateGameDto)  {
+	id: number;
+	points1: number;
+	points2: number;
+}
 
 @Injectable()
 export class GameService {
@@ -13,6 +26,17 @@ export class GameService {
 		@InjectRepository(Game) private gameRepository: Repository<Game>,
 		private readonly userService: UserService,
 	) {}
+
+	async create(createGameDto: CreateGameDto): Promise<Game> {
+		if (createGameDto.user1Id > createGameDto.user2Id) {
+			const tmp = createGameDto.user1Id;
+			createGameDto.user1Id = createGameDto.user2Id;
+			createGameDto.user2Id = tmp;
+			return await this.create(createGameDto);
+		}
+		const newGame = this.gameRepository.create(createGameDto);
+		return await this.gameRepository.save(newGame);
+	}
 
 	async isInParty(user: User): Promise<Game | undefined> {
 		const inProgress = await this.gameRepository.find({
@@ -84,5 +108,55 @@ export class GameService {
 		if (statUser === undefined)
 			return 'User statistic problem';
 		return statUser;
+	}
+
+	async getGameDemands(): Promise<Game[]> {
+		return this.gameRepository.find({
+			where: [
+				{status: gameStatus.DEMAND}
+			]
+		});
+	}
+
+	async getGameUserWhoDemand(user: User): Promise<Game[]> {
+		return this.gameRepository.find({
+			select: ["id", "points1", "points2", "status", "user1", "user2", "user1Id", "user2Id"],
+			where: [
+				{user1Id: user.id, status: gameStatus.DEMAND}
+			],
+			relations: ["user1", "user2"]
+		});
+	}
+
+	async getGamesInProgress(): Promise<Game[]> {
+		return this.gameRepository.find({
+			where: [
+				{status: gameStatus.IN_PROGRESS}
+			]
+		});
+	}
+
+	async findCompleteGame(createGameDto: CreateGameDto): Promise<Game[]> {
+		if (createGameDto.user1Id > createGameDto.user2Id) {
+			const tmp = createGameDto.user1Id;
+			createGameDto.user1Id = createGameDto.user2Id;
+			createGameDto.user2Id = tmp;
+			return await this.findCompleteGame(createGameDto);
+		}
+		return await this.gameRepository.find({
+			select: ["id", "points1", "points2", "status", "user1", "user2", "user1Id", "user2Id"],
+			where: createGameDto,
+			relations: ["user1", "user2"]
+		});
+	}
+
+	async update(id: number, updateGameDto: UpdateGameDto): Promise<UpdateResult> {
+		return await this.gameRepository.update(id, updateGameDto);
+	}
+
+	async delete(id: number): Promise<DeleteResult> {
+		return await this.gameRepository.delete({
+			id
+		});
 	}
 }

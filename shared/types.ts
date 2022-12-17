@@ -154,4 +154,8 @@ export namespace GOT {
         channel: Channel;
         users: UserChannel[];
     }
+
+    export interface InitGame extends Party {
+        codeParty: string;
+    }
 }
