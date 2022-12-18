@@ -1,4 +1,4 @@
-import React, { Dispatch, FunctionComponent, useContext, useEffect, useState } from 'react';
+import React, { Dispatch, FunctionComponent, useEffect, useState } from 'react';
 import BackgroundAnimate from '../components/BackGroundAnimate';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
@@ -6,12 +6,12 @@ import {Colors} from "../components/Colors"
 import MousePadLeft from '../components/LeftPad';
 import {InfoServer, NotifyInter} from "../components/interfaces"
 import {Notification} from "../components/Notify"
-import { SocketContext } from '../socket/socketPovider';
 import { StyledContenteGame, StyledLoginButton, StyledWaitingContente, StyledWaitingTitle } from '../components/Styles/StylesLogin';
 import { GOT } from '../shared/types';
 import { useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { onSocketGame } from '../socket/socketOnGame';
+import {  emitGame } from '../socket/socketEmitGame';
 
 interface IProps {
    profil: GOT.Profile | undefined;
@@ -48,11 +48,11 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
     }, [socketGame])
 
     useEffect(() => {
-        console.log("actual")
         if (code == "waiting"){
             setWating(true);
             setStartGame(false);
             setGame(false);
+            emitGame.emitGameJoinWaing(socketGame);
         }else if (code == "inGame"){
             setStartGame(false);
             setWating(false);

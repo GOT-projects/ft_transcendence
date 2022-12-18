@@ -2,7 +2,7 @@ import {StyledHeader, StyleMenusHeader ,StyleMenuHeader, StyleNavToggler, StyleN
 import {Dispatch, FunctionComponent, useState, useEffect, useCallback, useContext } from "react";
 import { IoIosNotifications, IoMdNotificationsOff } from 'react-icons/io';
 import ProfileMenu from "./MenuProfilHeader";
-import {InfoServer, NotifyInter} from "../components/interfaces"
+import {NotifyInter} from "../components/interfaces"
 import { Colors } from "./Colors";
 import PopupNotifUser from "./popup/NotifyUser";
 import PopupListFriends from "./popup/FriendLst";
@@ -13,7 +13,6 @@ import SetupOtc from "./popup/SetupOtc";
 import { onSocket } from "../socket/socketOn";
 import { offSocket } from "../socket/socketOff";
 import { useNavigate } from "react-router-dom";
-import { query } from "express";
 import { accountService } from "../services/account.service";
 
 interface IProps {
@@ -36,7 +35,6 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
     const [profileMenu, setProfileMenu] = useState(false);
     const [otc, setOtc] = useState(false);
     let notif = false;
-    const codeParam: Map<string, string> = accountService.getParamsNotif();
 
     if (props.profil?.notif.length !== 0 || props.profil.notifChannel.length !== 0){
         notif = true;
