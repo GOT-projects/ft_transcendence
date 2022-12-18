@@ -78,39 +78,43 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		};
 	}
 
-	private async deleteSocketData(client: Socket) {
-		this.waiting.delete(client.id);
-		const invite = this.waitingInvite.get(client.id);
-		if (invite !== undefined) {
-			this.gameService.delete(invite.id);
-			this.waitingInvite.delete(client.id);
-		}
-		let codeGame: string | undefined = undefined;
-		let codeSpectator: string[] = [];
-		for (const [code, games] of this.games) {
-			if (games.spectators.lastIndexOf(client.id) !== -1)
-				codeSpectator.push(code);
-			if (games.socketUser1 === client.id || games.socketUser2 === client.id)
-				codeGame = code;
-		}
-		for (const code of codeSpectator) {
-			const spectators = this.games.get(code)?.spectators;
-			if (spectators) {
-				const i = spectators.lastIndexOf(client.id);
-				if (i !== -1)
-					this.games.get(code)?.spectators.splice(i, 1);
+	private async deleteSocketData(client: Socket): Promise<void> {
+		try {
+			this.waiting.delete(client.id);
+			const invite = this.waitingInvite.get(client.id);
+			if (invite !== undefined) {
+				this.gameService.delete(invite.id);
+				this.waitingInvite.delete(client.id);
 			}
-		}
-		if (codeGame) {
-			const game = this.games.get(codeGame);
-			if (game) {
-				if (client.id === game.socketUser1)
-					game.game.points1 = 0;
-				else
-					game.game.points2 = 0;
-				game.game.status = gameStatus.FINISH;
-				this.gameService.update(game.game.id, game.game);
+			let codeGame: string | undefined = undefined;
+			let codeSpectator: string[] = [];
+			for (const [code, games] of this.games) {
+				if (games.spectators.lastIndexOf(client.id) !== -1)
+					codeSpectator.push(code);
+				if (games.socketUser1 === client.id || games.socketUser2 === client.id)
+					codeGame = code;
 			}
+			for (const code of codeSpectator) {
+				const spectators = this.games.get(code)?.spectators;
+				if (spectators) {
+					const i = spectators.lastIndexOf(client.id);
+					if (i !== -1)
+						this.games.get(code)?.spectators.splice(i, 1);
+				}
+			}
+			if (codeGame) {
+				const game = this.games.get(codeGame);
+				if (game) {
+					if (client.id === game.socketUser1)
+						game.game.points1 = 0;
+					else
+						game.game.points2 = 0;
+					game.game.status = gameStatus.FINISH;
+					this.gameService.update(game.game.id, game.game);
+				}
+			}
+		} catch (error) {
+			client.emit('error_client', error.message);
 		}
 	}
 
@@ -150,8 +154,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			}
 			return infos;
 		} catch (error) {
-				this.deleteSocketData(client);
-				client.emit('error_client', error.message);
+			this.deleteSocketData(client);
+			client.emit('error_client', error.message);
 			return false;
 		}
 	}
@@ -178,7 +182,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}
 
 	private algoGame(codeParty: string) {
-		// 
+		// TODO
 	}
 
 	/**
@@ -203,27 +207,31 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 				user2Id: user2.id,
 				status: gameStatus.IN_PROGRESS
 			};
-			const tmp = await this.gameService.create(dto);
-			const completeGame = await this.gameService.findCompleteGame(dto);
-			const code = uuidv4();
-			if (completeGame.length === 1) {
-				this.games.set(code, {
-					game: completeGame[0],
-					spectators: [],
-					socketUser1: (completeGame[0].user1.id === user1.id ? assoc[0] : client.id),
-					socketUser2: (completeGame[0].user1.id === user1.id ? client.id: assoc[0]),
-				});
-				const start: GOT.InitGame = {
-					user1: MyTransform.userEntityToGot(completeGame[0].user1),
-					user2: MyTransform.userEntityToGot(completeGame[0].user2),
-					points1: 0,
-					points2: 0,
-					codeParty: code
-				};
-				this.server.to([client.id, assoc[0]]).emit('init_game', start);
-				//TODO tout doux lancer game
-			} else {
-				client.emit('error_client', 'Game not created')
+			try {
+				const tmp = await this.gameService.create(dto);
+				const completeGame = await this.gameService.findCompleteGame(dto);
+				const code = uuidv4();
+				if (completeGame.length === 1) {
+					this.games.set(code, {
+						game: completeGame[0],
+						spectators: [],
+						socketUser1: (completeGame[0].user1.id === user1.id ? assoc[0] : client.id),
+						socketUser2: (completeGame[0].user1.id === user1.id ? client.id: assoc[0]),
+					});
+					const start: GOT.InitGame = {
+						user1: MyTransform.userEntityToGot(completeGame[0].user1),
+						user2: MyTransform.userEntityToGot(completeGame[0].user2),
+						points1: 0,
+						points2: 0,
+						codeParty: code
+					};
+					this.server.to([client.id, assoc[0]]).emit('init_game', start);
+					this.algoGame(code);
+				} else {
+					client.emit('error_client', 'Game not created');
+				}
+			} catch (error) {
+				client.emit('error_client', error.message);
 			}
 		} else
 			this.waiting.set(client.id, auth.user);
@@ -238,24 +246,28 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			client.emit("error_client", "Cannot add in waiting list");
 			return ;
 		}
-		const user = await this.userService.findLogin(login);
-		if (user === null){
-			client.emit("error_client", "user not found");
-			return ;
-		}
-		const demands = await this.gameService.getGameUserWhoDemand(auth.user);
-		if (demands.length === 0) {
-			const game = await this.gameService.create({
-				user1Id: auth.user.id,
-				user2Id: user.id,
-				status: gameStatus.DEMAND
-			});
-			this.waitingInvite.set(client.id, game);
-			client.emit("info_client", `User waiting ${user.login} response`);
-			client.emit('client_join_demand', true);
-		} else {
-			client.emit('error_client', 'User already in demand');
-			client.emit('client_join_demand', false);
+		try {
+			const user = await this.userService.findLogin(login);
+			if (user === null){
+				client.emit("error_client", "user not found");
+				return ;
+			}
+			const demands = await this.gameService.getGameUserWhoDemand(auth.user);
+			if (demands.length === 0) {
+				const game = await this.gameService.create({
+					user1Id: auth.user.id,
+					user2Id: user.id,
+					status: gameStatus.DEMAND
+				});
+				this.waitingInvite.set(client.id, game);
+				client.emit("info_client", `User waiting ${user.login} response`);
+				client.emit('client_join_demand', true);
+			} else {
+				client.emit('error_client', 'User already in demand');
+				client.emit('client_join_demand', false);
+			}
+		} catch (error) {
+			client.emit('error_client', error.message);
 		}
 	}
 
@@ -268,44 +280,63 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			client.emit("error_client", "Cannot add in waiting list");
 			return ;
 		}
-		const user = await this.userService.findLogin(login);
-		if (user === null){
-			client.emit("error_client", "user not found");
-			return ;
-		}
-		const demands = await this.gameService.getGameUserWhoDemand(user);
-		if (demands.length === 1) {
-			let socketClient: string | undefined = undefined;
-			for (const [key, value] of this.waitingInvite.entries()) {
-				if (value.id === demands[0].id)
-					socketClient = key;
-					break;
-			}
-			if (socketClient === undefined) {
-				client.emit('error_client', `Demand found, but not the client`);
+		try {
+			const user = await this.userService.findLogin(login);
+			if (user === null){
+				client.emit("error_client", "user not found");
 				return ;
 			}
-			demands[0].status = gameStatus.IN_PROGRESS;
-			const game = await this.gameService.update(demands[0].id, demands[0]);
-			this.waitingInvite.delete(socketClient);
-			const code = uuidv4();
-			this.games.set(code, {
-				game: demands[0],
-				spectators: [],
-				socketUser1: (demands[0].user1.id === auth.user.id ? client.id : socketClient),
-				socketUser2: (demands[0].user1.id === auth.user.id ? socketClient : client.id),
-			});
-			const start: GOT.InitGame = {
-				user1: MyTransform.userEntityToGot(demands[0].user1),
-				user2: MyTransform.userEntityToGot(demands[0].user2),
-				points1: 0,
-				points2: 0,
-				codeParty: code
-			};
-			this.server.to([client.id, socketClient]).emit('init_game', start);
-			//TODO tout doux lancer game
-		} else
-			client.emit('error_client', 'User already in demand')
+			const demands = await this.gameService.getGameUserWhoDemand(user);
+			if (demands.length === 1) {
+				let socketClient: string | undefined = undefined;
+				for (const [key, value] of this.waitingInvite.entries()) {
+					if (value.id === demands[0].id)
+						socketClient = key;
+						break;
+				}
+				if (socketClient === undefined) {
+					client.emit('error_client', `Demand found, but not the client`);
+					return ;
+				}
+				demands[0].status = gameStatus.IN_PROGRESS;
+				const game = await this.gameService.update(demands[0].id, demands[0]);
+				this.waitingInvite.delete(socketClient);
+				const code = uuidv4();
+				this.games.set(code, {
+					game: demands[0],
+					spectators: [],
+					socketUser1: (demands[0].user1.id === auth.user.id ? client.id : socketClient),
+					socketUser2: (demands[0].user1.id === auth.user.id ? socketClient : client.id),
+				});
+				const start: GOT.InitGame = {
+					user1: MyTransform.userEntityToGot(demands[0].user1),
+					user2: MyTransform.userEntityToGot(demands[0].user2),
+					points1: 0,
+					points2: 0,
+					codeParty: code
+				};
+				this.server.to([client.id, socketClient]).emit('init_game', start);
+				this.algoGame(code);
+			} else
+				client.emit('error_client', 'User already in demand')
+		} catch (error) {
+			client.emit('error_client', error.message);
+		}
+	}
+
+	@SubscribeMessage("server_join_spectator")
+	async joinSpectator(@ConnectedSocket()client: Socket, @MessageBody("Authorization") jwt: string, @MessageBody("codeParty") codeParty: string){
+		const auth = await this.connectionSecure(client, jwt);
+		if (!auth)
+			return ;
+		if (auth.targetList.game || auth.targetList.spectator || auth.targetList.waitingInvite || auth.targetList.waitingUser){
+			client.emit("error_client", "Cannot visualize");
+			return ;
+		}
+		const party = this.games.get(codeParty);
+		if (party && party.spectators.lastIndexOf(client.id) === -1) {
+			party.spectators.push(client.id);
+		}
 	}
 
 	/**
