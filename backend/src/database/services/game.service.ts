@@ -15,9 +15,9 @@ export class CreateGameDto {
 }
 
 export class UpdateGameDto extends PartialType(CreateGameDto)  {
-	id: number;
-	points1: number;
-	points2: number;
+	id?: number | undefined;
+	points1?: number | undefined;
+	points2?: number| undefined;
 }
 
 @Injectable()

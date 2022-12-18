@@ -250,16 +250,27 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		//TODO socket receive pos pad 1 and 2
 		if( party.ball.x - party.ball.radius < 0 ){
 			party.game.points2++;
-			this.gameService.update(party.game.id, party.game);
+			try {
+				await this.gameService.update(party.game.id, {points2: party.game.points2});
+			} catch (error) {
+				this.logger.error(`Update party point2 ${error.message}`);
+			}
 			this.resetBall(party.ball);
 		}else if( party.ball.x + party.ball.radius > 2000){
 			party.game.points1++;
-			this.gameService.update(party.game.id, party.game);
+			try {
+				await this.gameService.update(party.game.id, {points1: party.game.points1});
+			} catch (error) {
+				this.logger.error(`Update party point1 ${error.message}`);
+			}
 			this.resetBall(party.ball);
 		}
 		if (party.game.points1 === 5 || party.game.points2 === 5) {
-			party.game.status = gameStatus.FINISH;
-			await this.gameService.update(party.game.id, party.game);
+			try {
+				await this.gameService.update(party.game.id, {status: gameStatus.FINISH});
+			} catch (error) {
+				this.logger.error(`Update finish party ${error.message}`);
+			}
 			return 1;
 		}
 		
@@ -296,6 +307,9 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			// speed up the ball everytime a paddle hits it.
 			party.ball.speed += 0.1;
 		}
+		// x [0, 2000]
+		// y [0, 1000]
+		
 		//TODO trad to ratio
 	
 		//TODO socket emit pos des pad et de la ball
@@ -308,6 +322,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		if (party) {
 			while ((await this.update(party)) === 0) {}
 			const users = [...(party.spectators), party.socketUser1, party.socketUser2];
+			this.games.delete(codeParty);
 			if (party.game.points1 > party.game.points2)
 				this.server.to(users).emit('info_client', `User ${party.game.user1.login} win the game`);
 			else
