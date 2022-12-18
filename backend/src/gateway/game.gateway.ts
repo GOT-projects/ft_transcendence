@@ -17,11 +17,48 @@ import {v4 as uuidv4} from 'uuid';
 import { MyTransform } from "src/utils/transform";
 import { AppGateway } from "./app.gateway";
 
+/**
+ * Game types
+ */
+
+interface ball{
+	x: number,
+	y: number, 
+	radius : number,
+	velocityX : number,
+	velocityY : number,
+	speed : number,
+	top: number | undefined,
+	bottom: number | undefined,
+	left : number | undefined,
+	right : number | undefined
+}
+
+interface player {
+	x: number,
+	y : number,
+	width : number,
+	height : number,
+	score : number,
+	top: number | undefined,
+	bottom: number | undefined,
+	left : number | undefined,
+	right : number | undefined
+}
+
+
+/**
+ * Gateway types
+ */
+
 export interface Games {
 	game: Game;
 	spectators: string[];
 	socketUser1: string;
 	socketUser2: string;
+	player1: player;
+	player2: player;
+	ball: ball;
 }
 
 export interface StatusGateway {
@@ -57,6 +94,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	private waiting: Map<string, User> = new Map<string, User>();
 	private waitingInvite: Map<string, Game> = new Map<string, Game>();
 	private games: Map<string, Games> = new  Map<string, Games>();
+
+	private waitUpdate = 50;
 
 	/**
 	 * Utils
@@ -171,6 +210,27 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		return auth;
 	}
 
+	private resetBall(ball: ball){
+		ball.x = 1000;
+		ball.y = 500;
+		ball.velocityX = - ball.velocityX;
+		ball.speed = 7;
+	}
+
+	private collision(b: ball, p: player){
+		p.top = p.y;
+		p.bottom = p.y + p.height;
+		p.left = p.x;
+		p.right = p.x + p.width;
+		
+		b.top = b.y - b.radius;
+		b.bottom = b.y + b.radius;
+		b.left = b.x - b.radius;
+		b.right = b.x + b.radius;
+		
+		return p.left < b.right && p.top < b.bottom && p.right > b.left && p.bottom > b.top;
+	}
+
 	private algoGameSendData(codeParty: string) {
 		const party = this.games.get(codeParty);
 		if (party) {
@@ -181,8 +241,85 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		}
 	}
 
-	private algoGame(codeParty: string) {
+	private delay(ms: number) {
+		return new Promise( resolve => setTimeout(resolve, ms) );
+	}
+
+	private async update(party: Games): Promise<number>{
+		await this.delay(this.waitUpdate);
+		//TODO socket receive pos pad 1 and 2
+		if( party.ball.x - party.ball.radius < 0 ){
+			party.game.points2++;
+			this.gameService.update(party.game.id, party.game);
+			this.resetBall(party.ball);
+		}else if( party.ball.x + party.ball.radius > 2000){
+			party.game.points1++;
+			this.gameService.update(party.game.id, party.game);
+			this.resetBall(party.ball);
+		}
+		if (party.game.points1 === 5 || party.game.points2 === 5) {
+			party.game.status = gameStatus.FINISH;
+			await this.gameService.update(party.game.id, party.game);
+			return 1;
+		}
+		
+		// the ball has a velocity
+		party.ball.x += party.ball.velocityX;
+		party.ball.y += party.ball.velocityY;
+			
+		// when the ball collides with bottom and top walls we inverse the y velocity.
+		if(party.ball.y - party.ball.radius < 0 || party.ball.y + party.ball.radius > 1000){
+			party.ball.velocityY = -party.ball.velocityY;
+		}
+		// we check if the paddle hit the user or the com paddle
+		let player = (party.ball.x + party.ball.radius < 2000 / 2) ? party.player1 : party.player2;
+		
+		// if the ball hits a paddle
+		if(this.collision(party.ball, player)){
+			// we check where the ball hits the paddle
+			let collidePoint = (party.ball.y - (player.y + player.height/2));
+			// normalize the value of collidePoint, we need to get numbers between -1 and 1.
+			// -player.height/2 < collide Point < player.height/2
+			collidePoint = collidePoint / (player.height/2);
+			
+			// when the ball hits the top of a paddle we want the ball, to take a -45degees angle
+			// when the ball hits the center of the paddle we want the ball to take a 0degrees angle
+			// when the ball hits the bottom of the paddle we want the ball to take a 45degrees
+			// Math.PI/4 = 45degrees
+			let angleRad = (Math.PI/4) * collidePoint;
+			
+			// change the X and Y velocity direction
+			let direction = (party.ball.x + party.ball.radius < 2000/2) ? 1 : -1;
+			party.ball.velocityX = direction * party.ball.speed * Math.cos(angleRad);
+			party.ball.velocityY = party.ball.speed * Math.sin(angleRad);
+			
+			// speed up the ball everytime a paddle hits it.
+			party.ball.speed += 0.1;
+		}
+		//TODO trad to ratio
+	
+		//TODO socket emit pos des pad et de la ball
+		return 0;
+	}
+
+	private async algoGame(client: Socket, codeParty: string) {
 		// TODO
+		let party = this.games.get(codeParty);
+		if (party) {
+			while ((await this.update(party)) === 0) {}
+			const users = [...(party.spectators), party.socketUser1, party.socketUser2];
+			if (party.game.points1 > party.game.points2)
+				this.server.to(users).emit('info_client', `User ${party.game.user1.login} win the game`);
+			else
+				this.server.to(users).emit('info_client', `User ${party.game.user2.login} win the game`);
+			await this.delay(3000);
+			this.server.to(users).emit('client_redir', {
+				codeParty,
+				to: '/leaderboard',
+			})
+		} else {
+			client.emit('error_client', `Party with code ${codeParty} not found`);
+		}
 	}
 
 	/**
@@ -217,6 +354,12 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 						spectators: [],
 						socketUser1: (completeGame[0].user1.id === user1.id ? assoc[0] : client.id),
 						socketUser2: (completeGame[0].user1.id === user1.id ? client.id: assoc[0]),
+						player1: {x: 0, y : 500, width : 40, height : 200, score : 0,
+							top: undefined, bottom: undefined, left : undefined, right : undefined},
+						player2: {x : 2000 - 40, y : 500, width : 40, height : 200, score : 0,
+							top: undefined, bottom: undefined, left : undefined, right : undefined},
+						ball: {x: 1000, y: 500,  radius : 31.25, velocityX : 5, velocityY : 5, speed : 7,
+							top: undefined, bottom: undefined, left : undefined, right : undefined},
 					});
 					const start: GOT.InitGame = {
 						user1: MyTransform.userEntityToGot(completeGame[0].user1),
@@ -226,7 +369,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 						codeParty: code
 					};
 					this.server.to([client.id, assoc[0]]).emit('init_game', start);
-					this.algoGame(code);
+					this.algoGame(client, code);
 				} else {
 					client.emit('error_client', 'Game not created');
 				}
@@ -307,6 +450,12 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 					spectators: [],
 					socketUser1: (demands[0].user1.id === auth.user.id ? client.id : socketClient),
 					socketUser2: (demands[0].user1.id === auth.user.id ? socketClient : client.id),
+					player1: {x: 0, y : 500, width : 40, height : 200, score : 0,
+						top: undefined, bottom: undefined, left : undefined, right : undefined},
+					player2: {x : 2000 - 40, y : 500, width : 40, height : 200, score : 0,
+						top: undefined, bottom: undefined, left : undefined, right : undefined},
+					ball: {x: 1000, y: 500,  radius : 31.25, velocityX : 5, velocityY : 5, speed : 7,
+						top: undefined, bottom: undefined, left : undefined, right : undefined},
 				});
 				const start: GOT.InitGame = {
 					user1: MyTransform.userEntityToGot(demands[0].user1),
@@ -316,7 +465,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 					codeParty: code
 				};
 				this.server.to([client.id, socketClient]).emit('init_game', start);
-				this.algoGame(code);
+				this.algoGame(client, code);
 			} else
 				client.emit('error_client', 'User already in demand')
 		} catch (error) {
