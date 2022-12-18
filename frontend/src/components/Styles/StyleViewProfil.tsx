@@ -388,9 +388,20 @@ export const StyledContaiteHistorylst = styled.div`
 `
 export const StyledContaiteHistoryUser = styled.div`
     display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin: 10px;
     width: 100px;
     overflow: hidden;
+`
+export const StyledContaiteHistoryUserButton = styled.div`
+    position: absolute;
+    display: flex;
+    align-items: center;
+    right: 10px;
+    justify-content: flex-end;
+    gap: 10px;
+    
 `
 
 export const StyledContaiteHistoryScore = styled.div`

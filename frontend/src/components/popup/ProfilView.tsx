@@ -1,12 +1,16 @@
 import { Dispatch, FunctionComponent, useContext, useEffect, useState } from "react";
 import { GOT } from "../../shared/types";
-import { StyledContaiteClose, StyledContaiteHistory, StyledContaiteHistorylst, StyledContaiteHistoryScore, StyledContaiteHistorytile, StyledContaiteHistoryUser, StyledContaiteHistoryVs, StyledContaiteProfil, StyledContaiteRank, StyledContaiteText, StyledContaiteView, StyledViewAvatar } from "../Styles/StyleViewProfil";
+import { StyledContaiteClose, StyledContaiteHistory, StyledContaiteHistorylst, StyledContaiteHistoryScore, StyledContaiteHistorytile, StyledContaiteHistoryUser, StyledContaiteHistoryUserButton, StyledContaiteHistoryVs, StyledContaiteProfil, StyledContaiteRank, StyledContaiteText, StyledContaiteView, StyledViewAvatar } from "../Styles/StyleViewProfil";
 import { FaWindowClose } from 'react-icons/fa';
 import { Colors } from "../Colors";
 import { v4 as uuid } from 'uuid';
 import { SocketContext } from "../../socket/socketPovider";
 import { emitSocket } from "../../socket/socketEmit";
 import { onSocket } from "../../socket/socketOn";
+import { GiRetroController } from "react-icons/gi";
+import { GrFormView } from "react-icons/gr";
+import { MdOutlineViewInAr } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 
 interface IProps {
@@ -15,6 +19,7 @@ interface IProps {
 }
 
 const ProfilView:FunctionComponent<IProps> = (props:IProps) =>{
+    const navigate = useNavigate();
     const socket = useContext(SocketContext);
     const [profil, setProfil] = useState<GOT.HistoryParties>();
     const handleClose = ( ) => {
@@ -28,6 +33,11 @@ const ProfilView:FunctionComponent<IProps> = (props:IProps) =>{
     useEffect(() => {
         emitSocket.emitProfilHisto(socket, props.login);
     }, [socket]);
+
+    const handleInviteGame = ()=>{
+        navigate(`/game?code=waiting&id=${profil?.userInfos.login}`)
+    }
+
     return(
         <StyledContaiteView>
             <StyledContaiteClose>
@@ -36,6 +46,10 @@ const ProfilView:FunctionComponent<IProps> = (props:IProps) =>{
             <StyledContaiteProfil>
                 <StyledViewAvatar profilImg={profil?.userInfos.urlImg}/>
                 <StyledContaiteText size={"18px"}>{profil?.userInfos.login}</StyledContaiteText>
+                <StyledContaiteHistoryUserButton>
+                    <GiRetroController size={30} color={Colors.primary} title={"invite game"} onClick={handleInviteGame}/>
+                    <MdOutlineViewInAr size={30} color={Colors.primary} title={"View game"}/>
+                </StyledContaiteHistoryUserButton>
             </StyledContaiteProfil>
             <StyledContaiteRank>
                 <StyledContaiteText size={"12px"}>{`rank ${profil?.stat.rank} victory ${profil?.stat.victory} lose ${profil?.stat.defeat}`}</StyledContaiteText>
