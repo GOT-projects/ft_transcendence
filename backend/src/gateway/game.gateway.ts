@@ -363,8 +363,13 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 				status: gameStatus.IN_PROGRESS
 			};
 			try {
+				let completeGame = await this.gameService.findCompleteGame(dto); // TODO in progress user
+				if (completeGame.length === 1) {
+					client.emit('error_client', `You're already in game`);
+					return ;
+				}
 				const tmp = await this.gameService.create(dto);
-				const completeGame = await this.gameService.findCompleteGame(dto);
+				completeGame = await this.gameService.findCompleteGame(dto);
 				const code = uuidv4();
 				if (completeGame.length === 1) {
 					this.games.set(code, {
@@ -395,8 +400,10 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			} catch (error) {
 				client.emit('error_client', error.message);
 			}
-		} else
+		} else {
 			this.waiting.set(client.id, auth.user);
+			client.emit('info_client', `You're in waiting list`);
+		}
 	}
 
 	@SubscribeMessage("server_left_waiting")
