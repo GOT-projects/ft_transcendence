@@ -14,6 +14,9 @@ let emitLeftWaiting = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>) 
 let emitJoinDemand = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, login :string) =>{
     socket.emit('server_join_demand', {Authorization: accountService.getToken(), login : login});
 }
+let emitJoinResp = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, login :string, status:boolean) =>{
+    socket.emit('server_join_response', {Authorization: accountService.getToken(), login : login, status: status});
+}
 export const emitGame = {
-    emitGameJoinWaing, emitLeftWaiting, emitJoinDemand
+    emitGameJoinWaing, emitLeftWaiting, emitJoinDemand, emitJoinResp
 }

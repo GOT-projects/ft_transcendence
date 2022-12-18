@@ -24,6 +24,9 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
 	let params = (new URL(url)).searchParams;
     const code = params.get("code");
     const id = params.get("id");
+    const invite = params.get("invite");
+    const lastUrl = params.get("lastUrl");
+    //TODO need add param last url
     const [waiting, setWating] = useState(false);
     const [startGame, setStartGame] = useState(false);
     const [game, setGame] = useState(false);
@@ -55,12 +58,27 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
             setStartGame(false);
             setGame(false);
             emitGame.emitGameJoinWaing(socketGame);
-        }else if (code == "waiting" && id != null){
+        }else if (code == "waiting" && id != null && invite == null){
             console.log("emit join demande")
             setWating(true);
             setStartGame(false);
             setGame(false);
             emitGame.emitJoinDemand(socketGame, id);
+        }else if (code == "waiting" && id != null && invite != null){
+            if (invite == "approuve"){
+                console.log("emit accept")
+                setWating(true);
+                setStartGame(false);
+                setGame(false);
+                emitGame.emitJoinResp(socketGame, id, true);
+            }else if (invite == "refused"){
+                console.log("emit refused")
+                setWating(true);
+                setStartGame(false);
+                setGame(false);
+                emitGame.emitJoinResp(socketGame, id, false);
+                navigate("/game");
+            }
         }else if (code == "inGame"){
             console.log("in game")
             setStartGame(false);
@@ -71,7 +89,7 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
             setStartGame(true);
             setGame(false);
         }
-    }, [code])
+    }, [code, invite, id])
 
     const handlereturn = () => {
         emitGame.emitLeftWaiting(socketGame);

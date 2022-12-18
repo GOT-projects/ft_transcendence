@@ -20,6 +20,7 @@ interface IProps {
 
 const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
     const socket = useContext(SocketContext);
+    const navigate = useNavigate();
 
     const handleAdd = (user: GOT.User) =>{
         let tmp: GOT.NotifChoice = {user:user, accept: true, channel: undefined};
@@ -59,6 +60,23 @@ const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
         emitSocket.emitReplyNotif(socket, tmp)
     }
 
+    const handleAddInvitegame = (login: string) =>{
+        if (props.profil?.notif.length === 0 && props.profil?.notifChannel.length === 1){
+            props.setNotify(false);
+            props.setNotifyMenu(false);
+        }
+        navigate(`/game?code=waiting&invite=approuve&id=${login}`)
+
+    }
+
+    const handleRemoveInviteGame = (login:string) =>{
+        if (props.profil?.notif.length === 0 && props.profil?.notifChannel.length === 1){
+            props.setNotify(false);
+            props.setNotifyMenu(false);
+        }
+        navigate(`/game?code=waiting&invite=refused&id=${login}`)
+    }
+
     return(
         <StyledMenuNotif 
             initial={{x: 300}}
@@ -95,6 +113,23 @@ const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
                             </StyledMenuNotifButtonHover>
                             <StyledMenuNotifButtonHover>
                                 <MdGroupOff size={"25px"} onClick={() => handleRemoveChan(chan)}/>
+                            </StyledMenuNotifButtonHover>
+                        </StyledMenuNotifButton>
+                </StyledMenuNotifholder>
+                ))}
+                {props.profil?.gameDemands.map((game) => (
+                    <StyledMenuNotifholder key={uuid()}>
+                        <div>
+                        <StyledMenuNotifContentUser>
+                            <StyledMenuNotifUser title="Game">{game.login}</StyledMenuNotifUser>
+                        </StyledMenuNotifContentUser>
+                        </div>
+                        <StyledMenuNotifButton>
+                            <StyledMenuNotifButtonHover>
+                                <MdGroup size={"30px"} onClick={() => handleAddInvitegame(game.login)}/>
+                            </StyledMenuNotifButtonHover>
+                            <StyledMenuNotifButtonHover>
+                                <MdGroupOff size={"25px"} onClick={() => handleRemoveInviteGame(game.login)}/>
                             </StyledMenuNotifButtonHover>
                         </StyledMenuNotifButton>
                 </StyledMenuNotifholder>

@@ -36,7 +36,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
     const [otc, setOtc] = useState(false);
     let notif = false;
 
-    if (props.profil?.notif.length !== 0 || props.profil.notifChannel.length !== 0){
+    if (props.profil?.notif.length !== 0 || props.profil.notifChannel.length !== 0 || props.profil.gameDemands.length !== 0){
         notif = true;
     }
     //Socket refresh token
