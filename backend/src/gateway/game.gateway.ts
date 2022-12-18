@@ -436,11 +436,13 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 					const start: GOT.InitGame = {
 						user1: MyTransform.userEntityToGot(completeGame[0].user1),
 						user2: MyTransform.userEntityToGot(completeGame[0].user2),
-						points1: 0,
-						points2: 0,
 						codeParty: completeGame[0].id
 					};
 					this.server.to([client.id, assoc[0]]).emit('client_init_game', start);
+					this.server.to([client.id, assoc[0]]).emit('client_game_points', {
+						points1: 0,
+						points2: 0
+					});
 					this.algoGame(client, completeGame[0].id);
 				} else {
 					client.emit('error_client', 'Game not created');
@@ -597,11 +599,13 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 					const start: GOT.InitGame = {
 						user1: MyTransform.userEntityToGot(demands[0].user1),
 						user2: MyTransform.userEntityToGot(demands[0].user2),
-						points1: 0,
-						points2: 0,
 						codeParty: demands[0].id
 					};
 					this.server.to([client.id, socketClient]).emit('client_init_game', start);
+					this.server.to([client.id, socketClient]).emit('client_game_points', {
+						points1: 0,
+						points2: 0
+					});
 					this.algoGame(client, demands[0].id);
 				} else
 					client.emit('error_client', `Any demand found`)
@@ -642,11 +646,13 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			const start: GOT.InitGame = {
 				user1: MyTransform.userEntityToGot(party.game.user1),
 				user2: MyTransform.userEntityToGot(party.game.user2),
-				points1: party.game.points1,
-				points2: party.game.points2,
 				codeParty: party.game.id
 			};
 			client.emit('client_init_game', start);
+			client.emit('client_game_points', {
+				points1: party.game.points1,
+				points2: party.game.points2
+			});
 			party.spectators.push(client.id);
 		} else {
 			client.emit('error_client', `User already spectator`);

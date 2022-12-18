@@ -157,7 +157,9 @@ export namespace GOT {
         users: UserChannel[];
     }
 
-    export interface InitGame extends Party {
+    export interface InitGame {
+        user1: User;
+        user2: User;
         codeParty: number;
     }
 
