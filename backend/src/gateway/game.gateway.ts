@@ -380,6 +380,28 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			client.emit("error_client", "Cannot add in waiting list");
 			return ;
 		}
+		for (const [_, user] of this.waiting) {
+			if (user.id === auth.user.id) {
+				client.emit('error_client', `You're already waiting somebody`);
+				return ;
+			}
+		}
+		for (const [_, game] of this.waitingInvite) {
+			if (game.user1Id === auth.user.id) {
+				client.emit('error_client', `You're already waiting for ${game.user2.login}`);
+				return ;
+			}
+		}
+		for (const [_, game] of this.games) {
+			if (game.game.user1Id === auth.user.id) {
+				client.emit('error_client', `You're already in game with ${game.game.user2.login}`);
+				return ;
+			}
+			if (game.game.user2Id === auth.user.id) {
+				client.emit('error_client', `You're already in game with ${game.game.user1.login}`);
+				return ;
+			}
+		}
 		try {
 			const gameIn = await this.gameService.findUserInGame(auth.user);
 			if (gameIn.length !== 0) {
@@ -454,6 +476,32 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			client.emit("error_client", "Cannot add in waiting list");
 			return ;
 		}
+		if (login === auth.user.login) {
+			client.emit('error_client', `You can't demand yourself to play`);
+			return ;
+		}
+		for (const [sock, user] of this.waiting) {
+			if (user.id === auth.user.id) {
+				client.emit('error_client', `You're already waiting somebody`);
+				return ;
+			}
+		}
+		for (const [sock, game] of this.waitingInvite) {
+			if (game.user1Id === auth.user.id) {
+				client.emit('error_client', `You're already waiting for ${game.user2.login}`);
+				return ;
+			}
+		}
+		for (const [_, game] of this.games) {
+			if (game.game.user1Id === auth.user.id) {
+				client.emit('error_client', `You're already in game with ${game.game.user2.login}`);
+				return ;
+			}
+			if (game.game.user2Id === auth.user.id) {
+				client.emit('error_client', `You're already in game with ${game.game.user1.login}`);
+				return ;
+			}
+		}
 		try {
 			const user = await this.userService.findLogin(login);
 			if (user === null){
@@ -486,6 +534,32 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		if (auth.targetList.game || auth.targetList.spectator || auth.targetList.waitingInvite || auth.targetList.waitingUser){
 			client.emit("error_client", "Cannot add in waiting list");
 			return ;
+		}
+		if (login === auth.user.login) {
+			client.emit('error_client', `You can't demand yourself to play`);
+			return ;
+		}
+		for (const [sock, user] of this.waiting) {
+			if (user.id === auth.user.id) {
+				client.emit('error_client', `You're already waiting somebody`);
+				return ;
+			}
+		}
+		for (const [sock, game] of this.waitingInvite) {
+			if (game.user1Id === auth.user.id) {
+				client.emit('error_client', `You're already waiting for ${game.user2.login}`);
+				return ;
+			}
+		}
+		for (const [_, game] of this.games) {
+			if (game.game.user1Id === auth.user.id) {
+				client.emit('error_client', `You're already in game with ${game.game.user2.login}`);
+				return ;
+			}
+			if (game.game.user2Id === auth.user.id) {
+				client.emit('error_client', `You're already in game with ${game.game.user1.login}`);
+				return ;
+			}
 		}
 		try {
 			const user = await this.userService.findLogin(login);
