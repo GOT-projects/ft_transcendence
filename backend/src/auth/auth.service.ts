@@ -60,7 +60,6 @@ export class AuthService {
 			wallet: request.data.wallet,
 			email: request.data.email,
 		}
-		// TODO 2FA
 		this.connect(res, createUserDto);
 	}
 

@@ -233,6 +233,10 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	private algoGameSendData(game: Games) {
 		// TODO send datas
+		// x [0, 2000]
+		// y [0, 1000]
+
+		//TODO trad to ratio
 		/*const party = this.games.get(codeParty);
 		if (party) {
 			if (party.spectators.length !== 0)
@@ -247,7 +251,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}
 
 	private async update(party: Games): Promise<number>{
-		//TODO socket receive pos pad 1 and 2
 		if( party.ball.x - party.ball.radius < 0 ){
 			party.game.points2++;
 			try {
@@ -307,12 +310,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			// speed up the ball everytime a paddle hits it.
 			party.ball.speed += 0.1;
 		}
-		// x [0, 2000]
-		// y [0, 1000]
-
-		//TODO trad to ratio
-	
-		//TODO socket emit pos des pad et de la ball
 		return 0;
 	}
 
@@ -320,6 +317,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		// TODO
 		let party = this.games.get(codeParty);
 		if (party) {
+			// TODO send infos start
 			await this.delay(3000);
 			while ((await this.update(party)) === 0) {
 				this.algoGameSendData(party);
@@ -504,6 +502,25 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		const party = this.games.get(codeParty);
 		if (party && party.spectators.lastIndexOf(client.id) === -1) {
 			party.spectators.push(client.id);
+			// TODO send infos start
+		}
+	}
+
+	@SubscribeMessage("server_change_pad")
+	async changePad(@ConnectedSocket()client: Socket, @MessageBody("Authorization") jwt: string, @MessageBody("codeParty") codeParty: string,  @MessageBody("padInfo") padInfo: any){
+		const auth = await this.connectionSecure(client, jwt);
+		if (!auth)
+			return ;
+		if (auth.targetList.spectator || auth.targetList.waitingInvite || auth.targetList.waitingUser){
+			client.emit("error_client", "Cannot visualize");
+			return ;
+		}
+		const party = this.games.get(codeParty);
+		if (party) {
+			if (party.socketUser1 === client.id)
+				return ; // TODO change pad left
+			else if (party.socketUser2 === client.id)
+				return ; // TODO change pad right
 		}
 	}
 
