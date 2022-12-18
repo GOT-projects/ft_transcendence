@@ -17,6 +17,14 @@ let emitJoinDemand = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, l
 let emitJoinResp = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, login :string, status:boolean) =>{
     socket.emit('server_join_response', {Authorization: accountService.getToken(), login : login, status: status});
 }
+
+let emitjoinSpec = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, login :string, codeParty:number) =>{
+    socket.emit('server_join_spectator', {Authorization: accountService.getToken(), login : login, codeParty: codeParty});
+}
+
+let emit_change_pad = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, login :string, padInfo:number) =>{
+    socket.emit('server_change_pad', {Authorization: accountService.getToken(), login : login, padInfo: padInfo});
+}
 export const emitGame = {
-    emitGameJoinWaing, emitLeftWaiting, emitJoinDemand, emitJoinResp
+    emitGameJoinWaing, emitLeftWaiting, emitJoinDemand, emitJoinResp, emitjoinSpec, emit_change_pad
 }
