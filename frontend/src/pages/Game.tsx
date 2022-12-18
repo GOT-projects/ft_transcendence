@@ -11,6 +11,7 @@ import { StyledContenteGame, StyledLoginButton, StyledWaitingContente, StyledWai
 import { GOT } from '../shared/types';
 import { useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
+import { onSocketGame } from '../socket/socketOnGame';
 
 interface IProps {
    profil: GOT.Profile | undefined;
@@ -30,6 +31,22 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
                 withCredentials:false, extraHeaders: {
                 "Authorization": "bearer " + localStorage.getItem("token_access"),
     }});
+
+    //Socket get erreur from server 
+    useEffect(() => {
+        onSocketGame.error_client(socketGame, setNotify);
+    }, [socketGame])
+
+    //Socket get info from server 
+    useEffect(() => {
+        onSocketGame.info_client(socketGame, setNotify);
+    }, [socketGame])
+
+    //Socket get info from server 
+    useEffect(() => {
+        onSocketGame.warning_client(socketGame, setNotify)
+    }, [socketGame])
+
     useEffect(() => {
         console.log("actual")
         if (code == "waiting"){
@@ -79,6 +96,4 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
 	)
 }
 export default Game;
-
-  
 // <MousePadLeft />

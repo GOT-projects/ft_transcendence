@@ -6,5 +6,3 @@ import { GOT } from "../shared/types";
 let emitGame = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>) =>{
     // socket.emit('server_game', {Authorization: accountService.getToken()});
 }
-export const emitSocketGame ={
-}
