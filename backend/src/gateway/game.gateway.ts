@@ -395,8 +395,10 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			} catch (error) {
 				client.emit('error_client', error.message);
 			}
-		} else
+		} else {
 			this.waiting.set(client.id, auth.user);
+			client.emit('info_client', `You're in waiting list`);
+		}
 	}
 
 	@SubscribeMessage("server_left_waiting")
