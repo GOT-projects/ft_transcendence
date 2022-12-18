@@ -386,7 +386,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 						points2: 0,
 						codeParty: code
 					};
-					this.server.to([client.id, assoc[0]]).emit('init_game', start);
+					this.server.to([client.id, assoc[0]]).emit('client_init_game', start);
 					console.log('waiting', this.waiting, 'games', this.games);
 					this.algoGame(client, code);
 				} else {
@@ -496,7 +496,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 					points2: 0,
 					codeParty: code
 				};
-				this.server.to([client.id, socketClient]).emit('init_game', start);
+				this.server.to([client.id, socketClient]).emit('client_init_game', start);
 				this.algoGame(client, code);
 			} else
 				client.emit('error_client', 'User already in demand')
