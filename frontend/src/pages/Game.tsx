@@ -36,6 +36,10 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
                 "Authorization": "bearer " + localStorage.getItem("token_access"),
     }});
 
+    useEffect(() => {
+        onSocketGame.client_jwt(socketGame)
+    }, [socketGame])
+
     //Socket get erreur from server 
     useEffect(() => {
         onSocketGame.error_client(socketGame, setNotify);

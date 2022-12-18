@@ -36,6 +36,14 @@ let info_client = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setN
     })
 }
 
+let client_jwt = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>) => {
+    socket.on('client_jwt', (rep:string) => {
+        console.log("new jwt")
+        if (rep){
+            accountService.saveToken(rep);
+        } 
+    })
+}
 export const onSocketGame = {
-    info_client, warning_client, error_client,
+    info_client, warning_client, error_client, client_jwt
 }
