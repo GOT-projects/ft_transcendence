@@ -351,6 +351,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			client.emit("error_client", "Cannot add in waiting list");
 			return ;
 		}
+		console.log('waiting', this.waiting, 'games', this.games);
 		if (this.waiting.size !== 0) {
 			const assoc = [...this.waiting][0];
 			this.waiting.delete(assoc[0]);
@@ -386,6 +387,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 						codeParty: code
 					};
 					this.server.to([client.id, assoc[0]]).emit('init_game', start);
+					console.log('waiting', this.waiting, 'games', this.games);
 					this.algoGame(client, code);
 				} else {
 					client.emit('error_client', 'Game not created');
@@ -395,6 +397,19 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			}
 		} else
 			this.waiting.set(client.id, auth.user);
+	}
+
+	@SubscribeMessage("server_left_waiting")
+	async leftWaiting(@ConnectedSocket()client: Socket, @MessageBody("Authorization") jwt: string){
+		const auth = await this.connectionSecure(client, jwt);
+		if (!auth)
+			return ;
+		if (auth.targetList.game || auth.targetList.spectator || auth.targetList.waitingInvite){
+			client.emit("error_client", "No in waiting list");
+			return ;
+		}
+		this.waiting.delete(client.id);
+		client.emit('info_client', `You left the waiting list`);
 	}
 
 	@SubscribeMessage("server_join_demand")
@@ -421,10 +436,10 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 				});
 				this.waitingInvite.set(client.id, game);
 				client.emit("info_client", `User waiting ${user.login} response`);
-				client.emit('client_join_demand', true);
+				//client.emit('client_join_demand', true);
 			} else {
 				client.emit('error_client', 'User already in demand');
-				client.emit('client_join_demand', false);
+				//client.emit('client_join_demand', false);
 			}
 		} catch (error) {
 			client.emit('error_client', error.message);
@@ -512,7 +527,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		if (!auth)
 			return ;
 		if (auth.targetList.spectator || auth.targetList.waitingInvite || auth.targetList.waitingUser){
-			client.emit("error_client", "Cannot visualize");
+			client.emit("error_client", "Cannot send send pad information");
 			return ;
 		}
 		const party = this.games.get(codeParty);
@@ -546,6 +561,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}
 
 	async handleConnection(@ConnectedSocket() client: Socket) {
+		this.logger.debug('Connection');
 		let jwt: string | undefined = undefined;
 		const authorizationHeader = client.handshake.headers.authorization;
 		// Not connected
