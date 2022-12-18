@@ -21,7 +21,7 @@ interface IProps {
 
 const Game:FunctionComponent<IProps> = (props:IProps)=> {
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
-	const url = window.location.href;
+    let url = (new URL(window.location.href));
 	let params = (new URL(url)).searchParams;
     const code = params.get("code");
     const id = params.get("id");
@@ -30,6 +30,7 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
     //TODO need add param last url
     const [waiting, setWating] = useState(false);
     const [startGame, setStartGame] = useState(false);
+    const [startInit, setStartInit] = useState(false);
     const [game, setGame] = useState(false);
     const [inviteRequest, setInviteRequest] = useState(false);
     const [endGame, setEndGame] = useState(false);
@@ -49,11 +50,15 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
 
     // socket init game
     useEffect(() => {
-        onSocketGame.client_init(socketGame, setInitGame);
+        onSocketGame.client_init(socketGame, setInitGame, setStartInit);
+        if (startInit){
+            setStartInit(false);
+            navigate(`/game?code=game&id=${initGame?.codeParty}`)
+        }
         return () => {
             offSocketGame.client_init(socketGame);
         }
-    }, [socketGame])
+    }, [socketGame, setInitGame])
 
     // socket when invite is accepte
     useEffect(() => {
@@ -146,8 +151,8 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
                 emitGame.emitJoinResp(socketGame, id, false);
                 navigate("/game");
             }
-        }else if (code == "inGame"){
-            console.log("in game")
+        }else if (code == "game" && id != undefined){
+            console.log("game", initGame)
             setStartGame(false);
             setWating(false);
             setGame(true);
@@ -185,10 +190,10 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
             {startGame ?  <StyledContenteGame>
                             <StyledLoginButton onClick={handleStartGame}>Start</StyledLoginButton>
                         </StyledContenteGame> : <></>}
+            {game ? <MousePadLeft/> : <></>}
             <Notification notify={notify} setNotify={setNotify}/>
 			<Footer/>
 		</React.Fragment>
 	)
 }
 export default Game;
-// <MousePadLeft />

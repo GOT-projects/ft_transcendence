@@ -46,11 +46,14 @@ let client_jwt = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>) => {
 }
 
 // game
-let client_init = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setInitGame:React.Dispatch<React.SetStateAction<GOT.InitGame | undefined>> ) => {
+let client_init = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, 
+    setInitGame:React.Dispatch<React.SetStateAction<GOT.InitGame | undefined>>,
+    setStartGame:React.Dispatch<React.SetStateAction<boolean>> ) => {
     socket.on('client_init_game', (rep:GOT.InitGame) => {
         console.log("client_init_game", rep)
         if (rep){
             setInitGame(rep);
+            setStartGame(true);
         } 
     })
 }
