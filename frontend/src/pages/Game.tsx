@@ -65,6 +65,7 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
     }, [code])
 
     const handlereturn = () => {
+        emitGame.emitLeftWaiting(socketGame);
         navigate("/game");
     }
     const handleStartGame = () => {
