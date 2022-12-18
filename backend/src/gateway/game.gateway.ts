@@ -151,6 +151,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 					this.gameService.update(game.game.id, game.game);
 				}
 			}
+			this.appGateway.sendLeaderboard();
 		} catch (error) {
 			client.emit('error_client', error.message);
 		}
@@ -346,6 +347,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		let party = this.games.get(codeParty);
 		if (party) {
 			// TODO send infos start
+			this.appGateway.sendLeaderboard();
 			await this.delay(3000);
 			this.algoGameSendPoints(party);
 			while ((await this.update(party)) === 0) {
@@ -359,7 +361,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			else
 				this.server.to(users).emit('info_client', `User ${party.game.user2.login} win the game`);
 			await this.delay(3000);
-			this.server.to(users).emit('client_game_finish', true)
+			this.server.to(users).emit('client_game_finish', true);
+			this.appGateway.sendLeaderboard();
 		} else {
 			client.emit('error_client', `Party with code ${codeParty} not found`);
 		}

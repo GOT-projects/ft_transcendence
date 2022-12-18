@@ -235,6 +235,12 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		}
 	}
 
+	async sendLeaderboard() {
+		const ret = await this.generalGateway.getLeaderboard();
+		if (typeof ret !== 'string')
+			this.server.emit('client_leaderboard', ret);
+	}
+
 	/**
 	 * Socket routes General
 	 */
@@ -318,7 +324,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			client.emit('error_client', 'leaderboard' + ret);
 			return ;
 		}
-		client.emit('client_leaderboard', ret);
+		this.server.emit('client_leaderboard', ret);
 	}
 
 	/**
