@@ -8,7 +8,6 @@ import { GOT } from "shared/types";
 import { Game, gameStatus } from "src/database/entities/game.entity";
 import { jwtContentComplete } from "src/auth/types";
 import { GameService } from "src/database/services/game.service";
-import {v4 as uuidv4} from 'uuid';
 import { MyTransform } from "src/utils/transform";
 import { AppGateway } from "./app.gateway";
 
@@ -118,7 +117,9 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			const invite = this.waitingInvite.get(client.id);
 			if (invite !== undefined) {
 				this.gameService.delete(invite.id);
-				this.appGateway.sendProfilOfUser(invite.user2);
+				const user = await this.userService.findOne(invite.user2Id);
+				if (user !== null)
+					this.appGateway.sendProfilOfUser(user);
 				this.waitingInvite.delete(client.id);
 			}
 			let codeGame: number | undefined = undefined;
