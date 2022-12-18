@@ -93,6 +93,7 @@ export namespace GOT {
         userInfos: User;
         stat: StatUser;
         parties: Party[];
+        inGame: number | undefined; // id de la game ou pas visualiser
     }
 
 

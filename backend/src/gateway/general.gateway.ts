@@ -76,7 +76,8 @@ export class GeneralGateway {
 			return {
 				userInfos: MyTransform.userEntityToGot(user),
 				stat,
-				parties 
+				parties,
+				inGame: (await this.gameService.isInParty(user))?.id
 			};
 		} catch (error) {
 			return error.message;

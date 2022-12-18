@@ -156,11 +156,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		}
 	}
 
-	/**
-	 * Need
-	 * client_jwt
-	 * error_client
-	 */
 	private async connectUserBody(client: Socket, jwt: string, emit: boolean): Promise<ClientInfos | false> {
 		try {
 			const data: jwtContentComplete = await this.jwtService.verifyAsync(jwt);
@@ -364,7 +359,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			else
 				this.server.to(users).emit('info_client', `User ${party.game.user2.login} win the game`);
 			await this.delay(3000);
-			this.server.to(users).emit('client_game_finish', {codeParty})
+			this.server.to(users).emit('client_game_finish', true)
 		} else {
 			client.emit('error_client', `Party with code ${codeParty} not found`);
 		}
@@ -582,7 +577,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}
 
 	@SubscribeMessage("server_change_pad")
-	async changePad(@ConnectedSocket()client: Socket, @MessageBody("Authorization") jwt: string, @MessageBody("codeParty") codeParty: number,  @MessageBody("padInfo") padInfo: number){
+	async changePad(@ConnectedSocket()client: Socket, @MessageBody("Authorization") jwt: string, @MessageBody("padInfo") padInfo: number){
 		const auth = await this.connectionSecure(client, jwt, true);
 		if (!auth)
 			return ;
@@ -590,12 +585,13 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			client.emit("error_client", "Cannot send send pad information");
 			return ;
 		}
-		const party = this.games.get(codeParty);
-		if (party) {
-			if (party.socketUser1 === client.id)
-				party.player1.y = padInfo * this.dimY;
-			else if (party.socketUser2 === client.id)
-				party.player2.y = padInfo * this.dimY;
+		if (auth.targetList.game) {
+			if (auth.targetList.game.socketUser1 === client.id)
+				auth.targetList.game.player1.y = padInfo * this.dimY;
+			else if (auth.targetList.game.socketUser2 === client.id)
+				auth.targetList.game.player2.y = padInfo * this.dimY;
+		} else {
+			client.emit("warning_client", "Pad info not send");
 		}
 	}
 
