@@ -116,6 +116,15 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
             setStartGame(false);
             setGame(false);
             emitGame.emitGameJoinWaing(socketGame);
+        }else if (code == "spectator" && id != null){
+            console.log("emit join spec")
+            setWating(true);
+            setStartGame(false);
+            setGame(false);
+            const parse = parseInt(id);
+            if (!isNaN(parse)){
+                emitGame.emitjoinSpec(socketGame, parse);
+            }
         }else if (code == "waiting" && id != null && invite == null){
             console.log("emit join demande")
             setWating(true);

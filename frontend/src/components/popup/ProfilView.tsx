@@ -11,6 +11,7 @@ import { GiRetroController } from "react-icons/gi";
 import { GrFormView } from "react-icons/gr";
 import { MdOutlineViewInAr } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { emitGame } from "../../socket/socketEmitGame";
 
 
 interface IProps {
@@ -38,6 +39,10 @@ const ProfilView:FunctionComponent<IProps> = (props:IProps) =>{
         navigate(`/game?code=waiting&id=${profil?.userInfos.login}`)
     }
 
+    const handleSpect = () => {
+        navigate(`/game?code=spectator&id=${profil?.inGame}`)
+    }
+
     return(
         <StyledContaiteView>
             <StyledContaiteClose>
@@ -48,7 +53,8 @@ const ProfilView:FunctionComponent<IProps> = (props:IProps) =>{
                 <StyledContaiteText size={"18px"}>{profil?.userInfos.login}</StyledContaiteText>
                 <StyledContaiteHistoryUserButton>
                     <GiRetroController size={30} color={Colors.primary} title={"invite game"} onClick={handleInviteGame}/>
-                    <MdOutlineViewInAr size={30} color={Colors.primary} title={"View game"}/>
+                    {profil?.inGame !== undefined ?
+                    <MdOutlineViewInAr size={30} color={Colors.primary} title={"View game"} onClick={handleSpect}/>:<></>}
                 </StyledContaiteHistoryUserButton>
             </StyledContaiteProfil>
             <StyledContaiteRank>

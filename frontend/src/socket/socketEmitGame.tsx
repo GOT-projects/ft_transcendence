@@ -18,8 +18,8 @@ let emitJoinResp = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, log
     socket.emit('server_join_response', {Authorization: accountService.getToken(), login : login, status: status});
 }
 
-let emitjoinSpec = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, login :string, codeParty:number) =>{
-    socket.emit('server_join_spectator', {Authorization: accountService.getToken(), login : login, codeParty: codeParty});
+let emitjoinSpec = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, codeParty:number) =>{
+    socket.emit('server_join_spectator', {Authorization: accountService.getToken(), codeParty: codeParty});
 }
 
 let emit_change_pad = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, login :string, padInfo:number) =>{
