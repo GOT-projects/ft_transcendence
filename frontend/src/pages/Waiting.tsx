@@ -27,7 +27,7 @@ const Waiting = () => {
                     if (response.data.user.isTwoFactorAuthenticationEnabled){
                             setTwoFAPop(true);
                     }else{
-                        navigate('/game');
+                        navigate('/leaderboard');
                     }
 	        	}
 	        }).catch((e) =>{
