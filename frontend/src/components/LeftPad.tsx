@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
+import React, { useContext, useState, useEffect, useRef, FunctionComponent } from 'react';
 import { StyledLeftPad, StyledLeftPad1alias, StyledLeftPad2, StyledBall, StyledBallalias, StyledRightPadalias } from './game/StyleLeftPad';
 import {User} from "./game/User"
 import {StyledCursor} from "./Styles/StyleMouse"
@@ -17,6 +17,8 @@ import { TiArrowMaximiseOutline } from 'react-icons/ti';
 import { accountService } from '../services/account.service';
 import { ResultType } from '@remix-run/router/dist/utils';
 import { SocketContext, useSocket } from '../socket/socketPovider';
+import { DefaultEventsMap } from 'socket.io/dist/typed-events';
+import { Socket } from "socket.io-client";
 
 
 async function useInterval(callback: any, delay: number) {
@@ -42,8 +44,11 @@ async function useInterval(callback: any, delay: number) {
 
 
 
+interface IProps {
+    socketGame : Socket<DefaultEventsMap, DefaultEventsMap>
+}
 
-const MousePadLeft = () => {
+const MousePadLeft:FunctionComponent<IProps> = (prosp:IProps) => {
 
 	const socket = useContext(SocketContext);
 	
