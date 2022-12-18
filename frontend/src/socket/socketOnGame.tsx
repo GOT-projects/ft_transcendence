@@ -44,6 +44,56 @@ let client_jwt = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>) => {
         } 
     })
 }
+
+// game
+let client_init = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setInitGame:React.Dispatch<React.SetStateAction<GOT.InitGame | undefined>> ) => {
+    socket.on('client_init_game', (rep:GOT.InitGame) => {
+        console.log("client_init_game", rep)
+        if (rep){
+            setInitGame(rep);
+        } 
+    })
+}
+
+let client_invite = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setInviteRequest: React.Dispatch<React.SetStateAction<boolean>>) => {
+    socket.on('client_invite', (rep:boolean) => {
+        console.log("client_invite", rep)
+        setInviteRequest(rep);
+    })
+}
+
+let client_game_finish = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setEndGame: React.Dispatch<React.SetStateAction<boolean>>) => {
+    socket.on('client_game_finish', (rep:boolean) => {
+        console.log("client_game_finish", rep)
+        setEndGame(rep);
+    })
+}
+
+let client_game_player = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setPlayer: React.Dispatch<React.SetStateAction<GOT.ActuGamePlayer| undefined>>) => {
+    socket.on('client_game_player', (rep:GOT.ActuGamePlayer) => {
+        console.log("client_game_finish", rep)
+        if (rep)
+            setPlayer(rep);
+    })
+}
+
+let client_game_spec = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setSpec: React.Dispatch<React.SetStateAction<GOT.ActuGameSpectator| undefined>>) => {
+    socket.on('client_game_player', (rep:GOT.ActuGameSpectator) => {
+        console.log("client_game_finish", rep)
+        if (rep)
+            setSpec(rep);
+    })
+}
+
+let client_game_points = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setPoints: React.Dispatch<React.SetStateAction<GOT.ActuGamePoints| undefined>>) => {
+    socket.on('client_game_points', (rep:GOT.ActuGamePoints) => {
+        console.log("client_game_finish", rep)
+        if (rep)
+            setPoints(rep);
+    })
+}
+
 export const onSocketGame = {
-    info_client, warning_client, error_client, client_jwt
+    info_client, warning_client, error_client, client_jwt, client_init, client_invite, 
+    client_game_finish, client_game_player, client_game_spec, client_game_points
 }

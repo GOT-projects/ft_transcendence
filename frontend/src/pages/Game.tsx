@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { onSocketGame } from '../socket/socketOnGame';
 import {  emitGame } from '../socket/socketEmitGame';
+import { offSocketGame } from '../socket/socketOffGame';
 
 interface IProps {
    profil: GOT.Profile | undefined;
@@ -30,6 +31,12 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
     const [waiting, setWating] = useState(false);
     const [startGame, setStartGame] = useState(false);
     const [game, setGame] = useState(false);
+    const [inviteRequest, setInviteRequest] = useState(false);
+    const [endGame, setEndGame] = useState(false);
+    const [initGame, setInitGame] = useState<GOT.InitGame>()
+    const [player, setPlayer] = useState<GOT.ActuGamePlayer>();
+    const [spec, setSpec] = useState<GOT.ActuGameSpectator>();
+    const [point, setPoints] = useState<GOT.ActuGamePoints>();
     const navigate = useNavigate();
     const socketGame = io(`${InfoServer.SocketServer}/game` ,{
                 withCredentials:false, extraHeaders: {
@@ -40,6 +47,53 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
         onSocketGame.client_jwt(socketGame)
     }, [socketGame])
 
+    // socket init game
+    useEffect(() => {
+        onSocketGame.client_init(socketGame, setInitGame);
+        return () => {
+            offSocketGame.client_init(socketGame);
+        }
+    }, [socketGame])
+
+    // socket when invite is accepte
+    useEffect(() => {
+        onSocketGame.client_invite(socketGame, setInviteRequest);
+        return () => {
+            offSocketGame.client_invite(socketGame);
+        }
+    }, [socketGame])
+
+    // socket when invite is accepte
+    useEffect(() => {
+        onSocketGame.client_game_finish(socketGame, setEndGame);
+        return () => {
+            offSocketGame.client_game_finish(socketGame);
+        }
+    }, [socketGame])
+
+    // socket in game actualise data enemy 
+    useEffect(() => {
+        onSocketGame.client_game_player(socketGame, setPlayer);
+        return () => {
+            offSocketGame.client_game_player(socketGame);
+        }
+    }, [socketGame])
+
+    // socket in game actualise data for spec 
+    useEffect(() => {
+        onSocketGame.client_game_spec(socketGame, setSpec);
+        return () => {
+            offSocketGame.client_game_spec(socketGame);
+        }
+    }, [socketGame])
+
+    // socket in game actualise point 
+    useEffect(() => {
+        onSocketGame.client_game_points(socketGame, setPoints);
+        return () => {
+            offSocketGame.client_game_points(socketGame);
+        }
+    }, [socketGame])
     //Socket get erreur from server 
     useEffect(() => {
         onSocketGame.error_client(socketGame, setNotify);
