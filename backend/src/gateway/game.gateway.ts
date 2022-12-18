@@ -231,14 +231,15 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		return p.left < b.right && p.top < b.bottom && p.right > b.left && p.bottom > b.top;
 	}
 
-	private algoGameSendData(codeParty: string) {
-		const party = this.games.get(codeParty);
+	private algoGameSendData(game: Games) {
+		// TODO send datas
+		/*const party = this.games.get(codeParty);
 		if (party) {
 			if (party.spectators.length !== 0)
 				this.server.to(party.spectators).emit('client_spectator', party); // FIXME value send
 			this.server.to([party.socketUser1, party.socketUser2]).emit('client_pads', 'send pads if necessary') // FIXME value send
 			this.server.to([party.socketUser1, party.socketUser2]).emit('client_ball', 'send pads if necessary') // FIXME value send
-		}
+		}*/
 	}
 
 	private delay(ms: number) {
@@ -246,7 +247,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}
 
 	private async update(party: Games): Promise<number>{
-		await this.delay(this.waitUpdate);
 		//TODO socket receive pos pad 1 and 2
 		if( party.ball.x - party.ball.radius < 0 ){
 			party.game.points2++;
@@ -309,7 +309,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		}
 		// x [0, 2000]
 		// y [0, 1000]
-		
+
 		//TODO trad to ratio
 	
 		//TODO socket emit pos des pad et de la ball
@@ -320,7 +320,11 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		// TODO
 		let party = this.games.get(codeParty);
 		if (party) {
-			while ((await this.update(party)) === 0) {}
+			await this.delay(3000);
+			while ((await this.update(party)) === 0) {
+				this.algoGameSendData(party);
+				await this.delay(this.waitUpdate);
+			}
 			const users = [...(party.spectators), party.socketUser1, party.socketUser2];
 			this.games.delete(codeParty);
 			if (party.game.points1 > party.game.points2)
