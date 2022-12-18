@@ -19,6 +19,7 @@ import { ResultType } from '@remix-run/router/dist/utils';
 import { SocketContext, useSocket } from '../socket/socketPovider';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { Socket } from "socket.io-client";
+import { GOT } from '../shared/types';
 
 
 async function useInterval(callback: any, delay: number) {
@@ -46,6 +47,7 @@ async function useInterval(callback: any, delay: number) {
 
 interface IProps {
     socketGame : Socket<DefaultEventsMap, DefaultEventsMap>
+    profil: GOT.Profile | undefined;
 }
 
 const MousePadLeft:FunctionComponent<IProps> = (prosp:IProps) => {
