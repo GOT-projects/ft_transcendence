@@ -45,7 +45,7 @@ interface player {
  * Gateway types
  */
 
-export interface Games {
+interface Games {
 	game: Game;
 	spectators: string[];
 	socketUser1: string;
@@ -55,14 +55,14 @@ export interface Games {
 	ball: ball;
 }
 
-export interface StatusGateway {
+interface StatusGateway {
 	waitingUser: User | undefined; 
 	waitingInvite: Game | undefined;
 	game: Games | undefined;
 	spectator: Games | undefined;
 }
 
-export interface ClientInfos {
+interface ClientInfos {
 	user: User;
 	targetList: StatusGateway,
 }
@@ -161,18 +161,20 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	 * client_jwt
 	 * error_client
 	 */
-	private async connectUserBody(client: Socket, jwt: string): Promise<ClientInfos | false> {
+	private async connectUserBody(client: Socket, jwt: string, emit: boolean): Promise<ClientInfos | false> {
 		try {
 			const data: jwtContentComplete = await this.jwtService.verifyAsync(jwt);
 			if (data.isTwoFactorAuthenticationEnabled === true && !(data.isTwoFactorAuthenticated)) {
 				this.deleteSocketData(client);
-				client.emit('error_client', 'Need 2fa');
+				if (emit)
+					client.emit('error_client', 'Need 2fa');
 				return false;
 			}
 			const user = await this.userService.findUniqueMail(data.userId, data.userEmail);
 			if (!user) {
 				this.deleteSocketData(client);
-				client.emit('error_client', 'User not valid / authorized');
+				if (emit)
+					client.emit('error_client', 'User not valid / authorized');
 				return false;
 			}
 			const val = this.getValue(client);
@@ -193,17 +195,18 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			return infos;
 		} catch (error) {
 			this.deleteSocketData(client);
-			client.emit('error_client', error.message);
+			if (emit)
+				client.emit('error_client', error.message);
 			return false;
 		}
 	}
 
-	private async connectionSecure(client: Socket, jwt: string): Promise<false |ClientInfos> {
+	private async connectionSecure(client: Socket, jwt: string, emit: boolean): Promise<false |ClientInfos> {
 		if (jwt === undefined){
 			this.logger.debug("JWT not found");
 			return false;
 		}
-		const auth = await this.connectUserBody(client, jwt);
+		const auth = await this.connectUserBody(client, jwt, emit);
 		if (!auth)
 			return false;
 		return auth;
@@ -372,32 +375,31 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	 */
 	@SubscribeMessage("server_join_waiting")
 	async joinWaiting(@ConnectedSocket()client: Socket, @MessageBody("Authorization") jwt: string){
-		const auth = await this.connectionSecure(client, jwt);
+		const auth = await this.connectionSecure(client, jwt, true);
 		if (!auth)
 			return ;
 		if (auth.targetList.game || auth.targetList.spectator || auth.targetList.waitingInvite || auth.targetList.waitingUser){
 			client.emit("error_client", "Cannot add in waiting list");
 			return ;
 		}
-		console.log('waiting', this.waiting, 'games', this.games);
-		if (this.waiting.size !== 0) {
-			const assoc = [...this.waiting][0];
-			this.waiting.delete(assoc[0]);
-			const user1 = assoc[1];
-			const user2 = auth.user;
-			const dto = {
-				user1Id:user1.id,
-				user2Id: user2.id,
-				status: gameStatus.IN_PROGRESS
-			};
-			try {
-				let completeGame = await this.gameService.findCompleteGame(dto); // TODO in progress user
-				if (completeGame.length === 1) {
-					client.emit('error_client', `You're already in game`);
-					return ;
-				}
+		try {
+			const gameIn = await this.gameService.findUserInGame(auth.user);
+			if (gameIn.length !== 0) {
+				client.emit('error_client', `You're in game, you cannot join waiting list`);
+				return ;
+			}
+			if (this.waiting.size !== 0) {
+				const assoc = [...this.waiting][0];
+				this.waiting.delete(assoc[0]);
+				const user1 = assoc[1];
+				const user2 = auth.user;
+				const dto = {
+					user1Id:user1.id,
+					user2Id: user2.id,
+					status: gameStatus.IN_PROGRESS
+				};
 				const tmp = await this.gameService.create(dto);
-				completeGame = await this.gameService.findCompleteGame(dto);
+				const completeGame = await this.gameService.findCompleteGame(dto);
 				if (completeGame.length === 1) {
 					this.games.set(completeGame[0].id, {
 						game: completeGame[0],
@@ -419,23 +421,22 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 						codeParty: completeGame[0].id
 					};
 					this.server.to([client.id, assoc[0]]).emit('client_init_game', start);
-					console.log('waiting', this.waiting, 'games', this.games);
 					this.algoGame(client, completeGame[0].id);
 				} else {
 					client.emit('error_client', 'Game not created');
 				}
-			} catch (error) {
-				client.emit('error_client', error.message);
+			} else {
+				this.waiting.set(client.id, auth.user);
+				client.emit('info_client', `You're in waiting list`);
 			}
-		} else {
-			this.waiting.set(client.id, auth.user);
-			client.emit('info_client', `You're in waiting list`);
+		} catch (error) {
+			client.emit('error_client', error.message);
 		}
 	}
 
 	@SubscribeMessage("server_left_waiting")
 	async leftWaiting(@ConnectedSocket()client: Socket, @MessageBody("Authorization") jwt: string){
-		const auth = await this.connectionSecure(client, jwt);
+		const auth = await this.connectionSecure(client, jwt, true);
 		if (!auth)
 			return ;
 		if (auth.targetList.game || auth.targetList.spectator || auth.targetList.waitingInvite){
@@ -448,7 +449,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	@SubscribeMessage("server_join_demand")
 	async joinDemand(@ConnectedSocket()client: Socket, @MessageBody("Authorization") jwt: string, @MessageBody("login") login: string){
-		const auth = await this.connectionSecure(client, jwt);
+		const auth = await this.connectionSecure(client, jwt, true);
 		if (!auth)
 			return ;
 		if (auth.targetList.game || auth.targetList.spectator || auth.targetList.waitingInvite || auth.targetList.waitingUser){
@@ -471,10 +472,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 				this.waitingInvite.set(client.id, game);
 				client.emit("info_client", `Waiting ${user.login} response`);
 				await this.appGateway.sendProfilOfUser(user);
-				//client.emit('client_join_demand', true);
 			} else {
-				client.emit('error_client', 'User already in demand');
-				//client.emit('client_join_demand', false);
+				client.emit('error_client', 'User already demand someone');
 			}
 		} catch (error) {
 			client.emit('error_client', error.message);
@@ -483,7 +482,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	@SubscribeMessage("server_join_response")
 	async joinResponse(@ConnectedSocket()client: Socket, @MessageBody("Authorization") jwt: string, @MessageBody("login") login: string, @MessageBody("status") status: boolean){
-		const auth = await this.connectionSecure(client, jwt);
+		const auth = await this.connectionSecure(client, jwt, true);
 		if (!auth)
 			return ;
 		if (auth.targetList.game || auth.targetList.spectator || auth.targetList.waitingInvite || auth.targetList.waitingUser){
@@ -496,7 +495,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 				client.emit("error_client", "user not found");
 				return ;
 			}
-			const demands = await this.gameService.getGameUserWhoDemand(user);
+			const demands = await this.gameService.getGameUserWhoIsDemand(user, auth.user);
 			if (status) {
 				if (demands.length === 1) {
 					let socketClient: string | undefined = undefined;
@@ -509,8 +508,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 						client.emit('error_client', `Demand found, but not the client`);
 						return ;
 					}
-					demands[0].status = gameStatus.IN_PROGRESS;
-					const game = await this.gameService.update(demands[0].id, demands[0]);
+					const game = await this.gameService.update(demands[0].id, {status: gameStatus.IN_PROGRESS});
 					this.waitingInvite.delete(socketClient);
 					this.games.set(demands[0].id, {
 						game: demands[0],
@@ -534,7 +532,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 					this.server.to([client.id, socketClient]).emit('client_init_game', start);
 					this.algoGame(client, demands[0].id);
 				} else
-					client.emit('error_client', 'User already in demand')
+					client.emit('error_client', `Any demand found`)
 			} else {
 				if (demands.length === 1)
 					this.gameService.delete(demands[0].id);
@@ -556,7 +554,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	@SubscribeMessage("server_join_spectator")
 	async joinSpectator(@ConnectedSocket()client: Socket, @MessageBody("Authorization") jwt: string, @MessageBody("codeParty") codeParty: number){
-		const auth = await this.connectionSecure(client, jwt);
+		const auth = await this.connectionSecure(client, jwt, true);
 		if (!auth)
 			return ;
 		if (auth.targetList.game || auth.targetList.spectator || auth.targetList.waitingInvite || auth.targetList.waitingUser){
@@ -569,8 +567,15 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			return ;
 		}
 		if (party.spectators.lastIndexOf(client.id) === -1) {
+			const start: GOT.InitGame = {
+				user1: MyTransform.userEntityToGot(party.game.user1),
+				user2: MyTransform.userEntityToGot(party.game.user2),
+				points1: party.game.points1,
+				points2: party.game.points2,
+				codeParty: party.game.id
+			};
+			client.emit('client_init_game', start);
 			party.spectators.push(client.id);
-			// TODO send infos start
 		} else {
 			client.emit('error_client', `User already spectator`);
 		}
@@ -578,7 +583,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	@SubscribeMessage("server_change_pad")
 	async changePad(@ConnectedSocket()client: Socket, @MessageBody("Authorization") jwt: string, @MessageBody("codeParty") codeParty: number,  @MessageBody("padInfo") padInfo: number){
-		const auth = await this.connectionSecure(client, jwt);
+		const auth = await this.connectionSecure(client, jwt, true);
 		if (!auth)
 			return ;
 		if (auth.targetList.spectator || auth.targetList.waitingInvite || auth.targetList.waitingUser){
@@ -631,9 +636,9 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		}
 		// Verify token
 		jwt = bearer[1];
-		console.log('ll', jwt);
+		console.log('jwt', jwt);
 		
-		const auth = await this.connectionSecure(client, jwt);
+		const auth = await this.connectionSecure(client, jwt, false);
 		if (!auth)
 			return await this.handleDisconnect(client);
 		this.logger.verbose(`Client connected: ${client.id}`);

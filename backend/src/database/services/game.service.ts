@@ -27,12 +27,6 @@ export class GameService {
 	) {}
 
 	async create(createGameDto: CreateGameDto): Promise<Game> {
-		if (createGameDto.user1Id > createGameDto.user2Id) {
-			const tmp = createGameDto.user1Id;
-			createGameDto.user1Id = createGameDto.user2Id;
-			createGameDto.user2Id = tmp;
-			return await this.create(createGameDto);
-		}
 		const newGame = this.gameRepository.create(createGameDto);
 		return await this.gameRepository.save(newGame);
 	}
@@ -127,6 +121,16 @@ export class GameService {
 		});
 	}
 
+	async getGameUserWhoIsDemand(userWho: User, userIs: User): Promise<Game[]> {
+		return this.gameRepository.find({
+			select: ["id", "points1", "points2", "status", "user1", "user2", "user1Id", "user2Id"],
+			where: [
+				{user1Id: userWho.id, user2Id: userIs.id, status: gameStatus.DEMAND}
+			],
+			relations: ["user1", "user2"]
+		});
+	}
+
 
 	async getGameUserIsDemand(user: User): Promise<Game[]> {
 		return this.gameRepository.find({
@@ -147,15 +151,20 @@ export class GameService {
 	}
 
 	async findCompleteGame(createGameDto: CreateGameDto): Promise<Game[]> {
-		if (createGameDto.user1Id > createGameDto.user2Id) {
-			const tmp = createGameDto.user1Id;
-			createGameDto.user1Id = createGameDto.user2Id;
-			createGameDto.user2Id = tmp;
-			return await this.findCompleteGame(createGameDto);
-		}
 		return await this.gameRepository.find({
 			select: ["id", "points1", "points2", "status", "user1", "user2", "user1Id", "user2Id"],
 			where: createGameDto,
+			relations: ["user1", "user2"]
+		});
+	}
+
+	async findUserInGame(user: User) {
+		return await this.gameRepository.find({
+			select: ["id", "points1", "points2", "status", "user1", "user2", "user1Id", "user2Id"],
+			where: [
+				{user1Id: user.id, status: gameStatus.IN_PROGRESS},
+				{user2Id: user.id, status: gameStatus.IN_PROGRESS},
+			],
 			relations: ["user1", "user2"]
 		});
 	}
