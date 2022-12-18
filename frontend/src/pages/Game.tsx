@@ -23,6 +23,7 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
 	const url = window.location.href;
 	let params = (new URL(url)).searchParams;
     const code = params.get("code");
+    const id = params.get("id");
     const [waiting, setWating] = useState(false);
     const [startGame, setStartGame] = useState(false);
     const [game, setGame] = useState(false);
@@ -48,12 +49,20 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
     }, [socketGame])
 
     useEffect(() => {
-        if (code == "waiting"){
+        if (code == "waiting" && id == null){
+            console.log("emit join game waiting")
             setWating(true);
             setStartGame(false);
             setGame(false);
             emitGame.emitGameJoinWaing(socketGame);
+        }else if (code == "waiting" && id != null){
+            console.log("emit join demande")
+            setWating(true);
+            setStartGame(false);
+            setGame(false);
+            emitGame.emitJoinDemand(socketGame, id);
         }else if (code == "inGame"){
+            console.log("in game")
             setStartGame(false);
             setWating(false);
             setGame(true);
@@ -84,8 +93,8 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
                     profil={props.profil}
                     setProfil={props.setProfil}
                     />
-            {waiting ?  <StyledWaitingContente>
-                            <StyledWaitingTitle>Waiting...</StyledWaitingTitle>
+            {waiting ?  <StyledWaitingContente className="Return">
+                            <StyledWaitingTitle >Waiting...</StyledWaitingTitle>
                             <StyledLoginButton onClick={handlereturn}>Return</StyledLoginButton>
                         </StyledWaitingContente> : <></>}
             {startGame ?  <StyledContenteGame>
