@@ -363,8 +363,13 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 				status: gameStatus.IN_PROGRESS
 			};
 			try {
+				let completeGame = await this.gameService.findCompleteGame(dto); // TODO in progress user
+				if (completeGame.length === 1) {
+					client.emit('error_client', `You're already in game`);
+					return ;
+				}
 				const tmp = await this.gameService.create(dto);
-				const completeGame = await this.gameService.findCompleteGame(dto);
+				completeGame = await this.gameService.findCompleteGame(dto);
 				const code = uuidv4();
 				if (completeGame.length === 1) {
 					this.games.set(code, {
