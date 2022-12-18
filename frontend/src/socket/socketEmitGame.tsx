@@ -22,8 +22,8 @@ let emitjoinSpec = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, cod
     socket.emit('server_join_spectator', {Authorization: accountService.getToken(), codeParty: codeParty});
 }
 
-let emit_change_pad = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, login :string, padInfo:number) =>{
-    socket.emit('server_change_pad', {Authorization: accountService.getToken(), login : login, padInfo: padInfo});
+let emit_change_pad = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>,padInfo:number) =>{
+    socket.emit('server_change_pad', {Authorization: accountService.getToken(), padInfo: padInfo});
 }
 export const emitGame = {
     emitGameJoinWaing, emitLeftWaiting, emitJoinDemand, emitJoinResp, emitjoinSpec, emit_change_pad
