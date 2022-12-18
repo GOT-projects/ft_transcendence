@@ -3,7 +3,7 @@ import { JwtService } from "@nestjs/jwt";
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { GOT } from "shared/types";
 import { Server, Socket } from "socket.io";
-import { JwtContent, jwtContent, jwtContentComplete } from "src/auth/types";
+import { JwtContent, jwtContentComplete } from "src/auth/types";
 import { User } from "src/database/entities/user.entity";
 import { UserService } from "src/database/services/user.service";
 import { ChatGateway } from "./chat.gateway";
@@ -224,6 +224,15 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			}
 		}
 		return auth;
+	}
+
+	async sendProfilOfUser(user: User) {
+		const sock = this.users.get(user.login);
+		if (sock) {
+			const ret = await this.getProfilWithFriends(user);
+			if (typeof ret !== 'string')
+				this.server.to(sock).emit('client_profil', ret);
+		}
 	}
 
 	/**

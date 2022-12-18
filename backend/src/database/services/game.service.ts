@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { GOT } from "shared/types";
-import internal from "stream";
 import { DeleteResult, Repository, UpdateResult } from "typeorm";
 import { Game, gameStatus } from "../entities/game.entity";
 import { User } from "../entities/user.entity";
@@ -82,7 +81,7 @@ export class GameService {
 			}
 		}
 		let newMap: Map<number, GOT.StatUser> = new Map<number, GOT.StatUser>([...map].sort((a: any , b: any) => {
-			return (a[1].victory - a[1].defeat) - (b[1].victory - b[1].defeat);
+			return (b[1].victory - b[1].defeat) - (a[1].victory - a[1].defeat);
 		}));
 		let i: number = 1;
 		for (const elem of newMap) {
@@ -123,6 +122,17 @@ export class GameService {
 			select: ["id", "points1", "points2", "status", "user1", "user2", "user1Id", "user2Id"],
 			where: [
 				{user1Id: user.id, status: gameStatus.DEMAND}
+			],
+			relations: ["user1", "user2"]
+		});
+	}
+
+
+	async getGameUserIsDemand(user: User): Promise<Game[]> {
+		return this.gameRepository.find({
+			select: ["id", "points1", "points2", "status", "user1", "user2", "user1Id", "user2Id"],
+			where: [
+				{user2Id: user.id, status: gameStatus.DEMAND}
 			],
 			relations: ["user1", "user2"]
 		});

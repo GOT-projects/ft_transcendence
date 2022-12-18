@@ -66,7 +66,7 @@ export class ChatGateway {
 							status = false;
 					}
 					if (status)
-						ret.push(this.generalGateway.getGOTUserFromUser(msg.userFrom));
+						ret.push(MyTransform.userEntityToGot(msg.userFrom));
 				} else {
 					if (msg.userTo !== undefined) {
 						let status = true;
@@ -75,7 +75,7 @@ export class ChatGateway {
 								status = false;
 						}
 						if (status)
-							ret.push(this.generalGateway.getGOTUserFromUser(msg.userTo));
+							ret.push(MyTransform.userEntityToGot(msg.userTo));
 					}
 				}
 			}
@@ -108,7 +108,7 @@ export class ChatGateway {
 			const allUsers = await this.userService.findAll();
 			let ret: GOT.User[] = [];
 			for (const tmp of allUsers) {
-				ret.push(this.generalGateway.getGOTUserFromUser(tmp));
+				ret.push(MyTransform.userEntityToGot(tmp));
 			}
 			return ret;
 		} catch (error) {
@@ -157,7 +157,7 @@ export class ChatGateway {
 				channel: MyTransform.channelEntityToGot(channel)
 			};
 			for (const rel of allRels) {
-				const tmp = this.generalGateway.getGOTUserFromUser(rel.user);
+				const tmp = MyTransform.userEntityToGot(rel.user);
 				ret.users.push({
 					...tmp,
 					status: rel.status
@@ -199,7 +199,7 @@ export class ChatGateway {
 				message: msg
 			});
 			return {
-				userFrom: this.generalGateway.getGOTUserFromUser(user),
+				userFrom: MyTransform.userEntityToGot(user),
 				channel: MyTransform.channelEntityToGot(channel),
 				msg: newMessage.message
 			}

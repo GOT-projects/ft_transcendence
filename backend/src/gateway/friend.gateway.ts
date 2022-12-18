@@ -9,6 +9,7 @@ import { CreateRelFriendDto, RelFriendService } from "src/database/services/frie
 import { GameService } from "src/database/services/game.service";
 import { UserService } from "src/database/services/user.service";
 import { GeneralGateway } from "./general.gateway";
+import { MyTransform } from "src/utils/transform";
 
 export interface UserAndStatus {
 	user: User;
@@ -21,7 +22,6 @@ export class FriendGateway {
 		private readonly userService: UserService,
 		private readonly relFriendService: RelFriendService,
 		private readonly demandService: RelDemandService,
-		private readonly generalGateway: GeneralGateway,
 		private readonly gameService: GameService,
 		private readonly blockService: BlockService,
 	) {}
@@ -87,7 +87,7 @@ export class FriendGateway {
 			for (const tmp of users) {
 				const inGame = await this.gameService.isInParty(tmp);
 				ret.push({
-					...this.generalGateway.getGOTUserFromUser(tmp),
+					...MyTransform.userEntityToGot(tmp),
 					status: inGame === undefined ? GOT.ProfileStatus.offline : GOT.ProfileStatus.inGame
 				});
 			}

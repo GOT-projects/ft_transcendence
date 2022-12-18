@@ -86,6 +86,7 @@ export namespace GOT {
         notifChannel: Channel[];
         friends: Friend[];
         blocks: User[];
+        gameDemands: User[]
     }
 
     export interface HistoryParties {
@@ -156,6 +157,6 @@ export namespace GOT {
     }
 
     export interface InitGame extends Party {
-        codeParty: string;
+        codeParty: number;
     }
 }

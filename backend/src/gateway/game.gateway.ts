@@ -1,17 +1,12 @@
-import { Logger, Paramtype } from "@nestjs/common";
+import { Logger } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 import { UserService } from "src/database/services/user.service";
-import { ChatGateway } from "./chat.gateway";
-import { FriendGateway } from "./friend.gateway";
-import { GeneralGateway } from "./general.gateway";
 import { User } from "src/database/entities/user.entity";
-import { RelDemand } from "src/database/entities/rel_demand.entity";
 import { GOT } from "shared/types";
 import { Game, gameStatus } from "src/database/entities/game.entity";
-import { JwtContent, jwtContentComplete } from "src/auth/types";
-import { RelDemandService } from "src/database/services/demand.service";
+import { jwtContentComplete } from "src/auth/types";
 import { GameService } from "src/database/services/game.service";
 import {v4 as uuidv4} from 'uuid';
 import { MyTransform } from "src/utils/transform";
@@ -93,7 +88,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	// Lists
 	private waiting: Map<string, User> = new Map<string, User>();
 	private waitingInvite: Map<string, Game> = new Map<string, Game>();
-	private games: Map<string, Games> = new  Map<string, Games>();
+	private games: Map<number, Games> = new  Map<number, Games>();
 
 	private waitUpdate = 50;
 
@@ -123,10 +118,11 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			const invite = this.waitingInvite.get(client.id);
 			if (invite !== undefined) {
 				this.gameService.delete(invite.id);
+				this.appGateway.sendProfilOfUser(invite.user2);
 				this.waitingInvite.delete(client.id);
 			}
-			let codeGame: string | undefined = undefined;
-			let codeSpectator: string[] = [];
+			let codeGame: number | undefined = undefined;
+			let codeSpectator: number[] = [];
 			for (const [code, games] of this.games) {
 				if (games.spectators.lastIndexOf(client.id) !== -1)
 					codeSpectator.push(code);
@@ -313,7 +309,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		return 0;
 	}
 
-	private async algoGame(client: Socket, codeParty: string) {
+	private async algoGame(client: Socket, codeParty: number) {
 		// TODO
 		let party = this.games.get(codeParty);
 		if (party) {
@@ -370,9 +366,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 				}
 				const tmp = await this.gameService.create(dto);
 				completeGame = await this.gameService.findCompleteGame(dto);
-				const code = uuidv4();
 				if (completeGame.length === 1) {
-					this.games.set(code, {
+					this.games.set(completeGame[0].id, {
 						game: completeGame[0],
 						spectators: [],
 						socketUser1: (completeGame[0].user1.id === user1.id ? assoc[0] : client.id),
@@ -389,11 +384,11 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 						user2: MyTransform.userEntityToGot(completeGame[0].user2),
 						points1: 0,
 						points2: 0,
-						codeParty: code
+						codeParty: completeGame[0].id
 					};
 					this.server.to([client.id, assoc[0]]).emit('client_init_game', start);
 					console.log('waiting', this.waiting, 'games', this.games);
-					this.algoGame(client, code);
+					this.algoGame(client, completeGame[0].id);
 				} else {
 					client.emit('error_client', 'Game not created');
 				}
@@ -442,7 +437,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 					status: gameStatus.DEMAND
 				});
 				this.waitingInvite.set(client.id, game);
-				client.emit("info_client", `User waiting ${user.login} response`);
+				client.emit("info_client", `Waiting ${user.login} response`);
+				await this.appGateway.sendProfilOfUser(user);
 				//client.emit('client_join_demand', true);
 			} else {
 				client.emit('error_client', 'User already in demand');
@@ -483,8 +479,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 				demands[0].status = gameStatus.IN_PROGRESS;
 				const game = await this.gameService.update(demands[0].id, demands[0]);
 				this.waitingInvite.delete(socketClient);
-				const code = uuidv4();
-				this.games.set(code, {
+				this.games.set(demands[0].id, {
 					game: demands[0],
 					spectators: [],
 					socketUser1: (demands[0].user1.id === auth.user.id ? client.id : socketClient),
@@ -501,10 +496,10 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 					user2: MyTransform.userEntityToGot(demands[0].user2),
 					points1: 0,
 					points2: 0,
-					codeParty: code
+					codeParty: demands[0].id
 				};
 				this.server.to([client.id, socketClient]).emit('client_init_game', start);
-				this.algoGame(client, code);
+				this.algoGame(client, demands[0].id);
 			} else
 				client.emit('error_client', 'User already in demand')
 		} catch (error) {
@@ -513,7 +508,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}
 
 	@SubscribeMessage("server_join_spectator")
-	async joinSpectator(@ConnectedSocket()client: Socket, @MessageBody("Authorization") jwt: string, @MessageBody("codeParty") codeParty: string){
+	async joinSpectator(@ConnectedSocket()client: Socket, @MessageBody("Authorization") jwt: string, @MessageBody("codeParty") codeParty: number){
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
@@ -522,14 +517,20 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			return ;
 		}
 		const party = this.games.get(codeParty);
-		if (party && party.spectators.lastIndexOf(client.id) === -1) {
+		if (party === undefined) {
+			client.emit('warning_client', `Party not found`);
+			return ;
+		}
+		if (party.spectators.lastIndexOf(client.id) === -1) {
 			party.spectators.push(client.id);
 			// TODO send infos start
+		} else {
+			client.emit('error_client', `User already spectator`);
 		}
 	}
 
 	@SubscribeMessage("server_change_pad")
-	async changePad(@ConnectedSocket()client: Socket, @MessageBody("Authorization") jwt: string, @MessageBody("codeParty") codeParty: string,  @MessageBody("padInfo") padInfo: any){
+	async changePad(@ConnectedSocket()client: Socket, @MessageBody("Authorization") jwt: string, @MessageBody("codeParty") codeParty: number,  @MessageBody("padInfo") padInfo: any){
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
