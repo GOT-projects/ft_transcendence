@@ -159,4 +159,25 @@ export namespace GOT {
     export interface InitGame extends Party {
         codeParty: number;
     }
+
+    export interface Ball {
+        x: number;
+        y: number;
+    }
+
+    export interface ActuGamePlayer {
+        ball: Ball;
+        enemyY: number;
+    }
+
+    export interface ActuGameSpectator {
+        ball: Ball,
+        player1Y: number;
+        player2Y: number;
+    }
+
+    export interface ActuGamePoints {
+        points1: number;
+        points2: number;
+    }
 }

@@ -17,7 +17,7 @@ import { AppGateway } from "./app.gateway";
 
 interface ball{
 	x: number,
-	y: number, 
+	y: number,
 	radius : number,
 	velocityX : number,
 	velocityY : number,
@@ -89,7 +89,9 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	private waitingInvite: Map<string, Game> = new Map<string, Game>();
 	private games: Map<number, Games> = new  Map<number, Games>();
 
-	private waitUpdate = 50;
+	private waitUpdate: number = 50;
+	private dimX: number = 2000;
+	private dimY: number = 1000;
 
 	/**
 	 * Utils
@@ -208,7 +210,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}
 
 	private resetBall(ball: ball){
-		ball.x = 1000;
+		ball.x = this.dimY;
 		ball.y = 500;
 		ball.velocityX = - ball.velocityX;
 		ball.speed = 7;
@@ -229,18 +231,47 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}
 
 	private algoGameSendData(game: Games) {
-		// TODO send datas
-		// x [0, 2000]
-		// y [0, 1000]
+		const player1: number = (game.player1.y > this.dimY ? this.dimY : (game.player1.y < 0 ? 0 : game.player1.y)) / this.dimY;
+		const player2: number = (game.player2.y > this.dimY ? this.dimY : (game.player2.y < 0 ? 0 : game.player2.y)) / this.dimY;
+		const ball: GOT.Ball = {
+			x: (game.ball.x > this.dimX ? this.dimX : (game.ball.x < 0 ? 0 : game.ball.x)) / this.dimX,
+			y: (game.ball.y > this.dimY ? this.dimY : (game.ball.y < 0 ? 0 : game.ball.y)) / this.dimY,
+		}
+		// player gauche
+		let actu: GOT.ActuGamePlayer = {
+			ball,
+			enemyY: player2
+		};
+		this.server.to(game.socketUser1).emit('client_game_player', actu);
+		// player droit
+		actu = {
+			ball,
+			enemyY: player1
+		};
+		this.server.to(game.socketUser2).emit('client_game_player', actu);
+		// spectator
+		if (game.spectators.length !== 0) {
+			const ret: GOT.ActuGameSpectator = {
+				ball,
+				player1Y: player1,
+				player2Y: player2
+			};
+			this.server.to(game.spectators).emit('client_game_spectator', ret);
+		}
+	}
 
-		//TODO trad to ratio
-		/*const party = this.games.get(codeParty);
-		if (party) {
-			if (party.spectators.length !== 0)
-				this.server.to(party.spectators).emit('client_spectator', party); // FIXME value send
-			this.server.to([party.socketUser1, party.socketUser2]).emit('client_pads', 'send pads if necessary') // FIXME value send
-			this.server.to([party.socketUser1, party.socketUser2]).emit('client_ball', 'send pads if necessary') // FIXME value send
-		}*/
+	private algoGameSendPoints(game: Games) {
+		const player1: number = (game.player1.y > this.dimY ? this.dimY : (game.player1.y < 0 ? 0 : game.player1.y)) / this.dimY;
+		const player2: number = (game.player2.y > this.dimY ? this.dimY : (game.player2.y < 0 ? 0 : game.player2.y)) / this.dimY;
+		const ball: GOT.Ball = {
+			x: (game.ball.x > this.dimX ? this.dimX : (game.ball.x < 0 ? 0 : game.ball.x)) / this.dimX,
+			y: (game.ball.y > this.dimY ? this.dimY : (game.ball.y < 0 ? 0 : game.ball.y)) / this.dimY,
+		}
+		const points: GOT.ActuGamePoints = {
+			points1: game.game.points1,
+			points2: game.game.points2
+		}
+		this.server.to([game.socketUser1, game.socketUser2, ...game.spectators]).emit('client_game_points', points);
 	}
 
 	private delay(ms: number) {
@@ -251,14 +282,16 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		if( party.ball.x - party.ball.radius < 0 ){
 			party.game.points2++;
 			try {
+				this.algoGameSendPoints(party);
 				await this.gameService.update(party.game.id, {points2: party.game.points2});
 			} catch (error) {
 				this.logger.error(`Update party point2 ${error.message}`);
 			}
 			this.resetBall(party.ball);
-		}else if( party.ball.x + party.ball.radius > 2000){
+		} else if( party.ball.x + party.ball.radius > this.dimX){
 			party.game.points1++;
 			try {
+				this.algoGameSendPoints(party);
 				await this.gameService.update(party.game.id, {points1: party.game.points1});
 			} catch (error) {
 				this.logger.error(`Update party point1 ${error.message}`);
@@ -279,11 +312,11 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		party.ball.y += party.ball.velocityY;
 			
 		// when the ball collides with bottom and top walls we inverse the y velocity.
-		if(party.ball.y - party.ball.radius < 0 || party.ball.y + party.ball.radius > 1000){
+		if(party.ball.y - party.ball.radius < 0 || party.ball.y + party.ball.radius > this.dimY){
 			party.ball.velocityY = -party.ball.velocityY;
 		}
 		// we check if the paddle hit the user or the com paddle
-		let player = (party.ball.x + party.ball.radius < 2000 / 2) ? party.player1 : party.player2;
+		let player = (party.ball.x + party.ball.radius < this.dimX / 2) ? party.player1 : party.player2;
 		
 		// if the ball hits a paddle
 		if(this.collision(party.ball, player)){
@@ -300,7 +333,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			let angleRad = (Math.PI/4) * collidePoint;
 			
 			// change the X and Y velocity direction
-			let direction = (party.ball.x + party.ball.radius < 2000/2) ? 1 : -1;
+			let direction = (party.ball.x + party.ball.radius < this.dimX/2) ? 1 : -1;
 			party.ball.velocityX = direction * party.ball.speed * Math.cos(angleRad);
 			party.ball.velocityY = party.ball.speed * Math.sin(angleRad);
 			
@@ -316,6 +349,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		if (party) {
 			// TODO send infos start
 			await this.delay(3000);
+			this.algoGameSendPoints(party);
 			while ((await this.update(party)) === 0) {
 				this.algoGameSendData(party);
 				await this.delay(this.waitUpdate);
@@ -327,10 +361,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			else
 				this.server.to(users).emit('info_client', `User ${party.game.user2.login} win the game`);
 			await this.delay(3000);
-			this.server.to(users).emit('client_redir', {
-				codeParty,
-				to: '/leaderboard',
-			})
+			this.server.to(users).emit('client_game_finish', {codeParty})
 		} else {
 			client.emit('error_client', `Party with code ${codeParty} not found`);
 		}
@@ -375,7 +406,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 						socketUser2: (completeGame[0].user1.id === user1.id ? client.id: assoc[0]),
 						player1: {x: 0, y : 500, width : 40, height : 200, score : 0,
 							top: undefined, bottom: undefined, left : undefined, right : undefined},
-						player2: {x : 2000 - 40, y : 500, width : 40, height : 200, score : 0,
+						player2: {x : this.dimX - 40, y : 500, width : 40, height : 200, score : 0,
 							top: undefined, bottom: undefined, left : undefined, right : undefined},
 						ball: {x: 1000, y: 500,  radius : 31.25, velocityX : 5, velocityY : 5, speed : 7,
 							top: undefined, bottom: undefined, left : undefined, right : undefined},
@@ -451,7 +482,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}
 
 	@SubscribeMessage("server_join_response")
-	async joinResponse(@ConnectedSocket()client: Socket, @MessageBody("Authorization") jwt: string, @MessageBody("login") login: string){
+	async joinResponse(@ConnectedSocket()client: Socket, @MessageBody("Authorization") jwt: string, @MessageBody("login") login: string, @MessageBody("status") status: boolean){
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
@@ -466,43 +497,58 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 				return ;
 			}
 			const demands = await this.gameService.getGameUserWhoDemand(user);
-			if (demands.length === 1) {
-				let socketClient: string | undefined = undefined;
-				for (const [key, value] of this.waitingInvite.entries()) {
-					if (value.id === demands[0].id)
-						socketClient = key;
-						break;
+			if (status) {
+				if (demands.length === 1) {
+					let socketClient: string | undefined = undefined;
+					for (const [key, value] of this.waitingInvite.entries()) {
+						if (value.id === demands[0].id)
+							socketClient = key;
+							break;
+					}
+					if (socketClient === undefined) {
+						client.emit('error_client', `Demand found, but not the client`);
+						return ;
+					}
+					demands[0].status = gameStatus.IN_PROGRESS;
+					const game = await this.gameService.update(demands[0].id, demands[0]);
+					this.waitingInvite.delete(socketClient);
+					this.games.set(demands[0].id, {
+						game: demands[0],
+						spectators: [],
+						socketUser1: (demands[0].user1.id === auth.user.id ? client.id : socketClient),
+						socketUser2: (demands[0].user1.id === auth.user.id ? socketClient : client.id),
+						player1: {x: 0, y : 500, width : 40, height : 200, score : 0,
+							top: undefined, bottom: undefined, left : undefined, right : undefined},
+						player2: {x : this.dimX - 40, y : 500, width : 40, height : 200, score : 0,
+							top: undefined, bottom: undefined, left : undefined, right : undefined},
+						ball: {x: 1000, y: 500,  radius : 31.25, velocityX : 5, velocityY : 5, speed : 7,
+							top: undefined, bottom: undefined, left : undefined, right : undefined},
+					});
+					const start: GOT.InitGame = {
+						user1: MyTransform.userEntityToGot(demands[0].user1),
+						user2: MyTransform.userEntityToGot(demands[0].user2),
+						points1: 0,
+						points2: 0,
+						codeParty: demands[0].id
+					};
+					this.server.to([client.id, socketClient]).emit('client_init_game', start);
+					this.algoGame(client, demands[0].id);
+				} else
+					client.emit('error_client', 'User already in demand')
+			} else {
+				if (demands.length === 1)
+					this.gameService.delete(demands[0].id);
+				let keyToDelete: string | undefined = undefined;
+				for (const [key, val] of this.waitingInvite) {
+					if (val.user1Id === user.id && val.user2Id === auth.user.id)
+						keyToDelete = key;
 				}
-				if (socketClient === undefined) {
-					client.emit('error_client', `Demand found, but not the client`);
-					return ;
+				if (keyToDelete) {
+					this.server.to(keyToDelete).emit('warning_client', `Your demand is refused`);
+					this.server.to(keyToDelete).emit('client_invite', false);
+					this.waitingInvite.delete(keyToDelete);
 				}
-				demands[0].status = gameStatus.IN_PROGRESS;
-				const game = await this.gameService.update(demands[0].id, demands[0]);
-				this.waitingInvite.delete(socketClient);
-				this.games.set(demands[0].id, {
-					game: demands[0],
-					spectators: [],
-					socketUser1: (demands[0].user1.id === auth.user.id ? client.id : socketClient),
-					socketUser2: (demands[0].user1.id === auth.user.id ? socketClient : client.id),
-					player1: {x: 0, y : 500, width : 40, height : 200, score : 0,
-						top: undefined, bottom: undefined, left : undefined, right : undefined},
-					player2: {x : 2000 - 40, y : 500, width : 40, height : 200, score : 0,
-						top: undefined, bottom: undefined, left : undefined, right : undefined},
-					ball: {x: 1000, y: 500,  radius : 31.25, velocityX : 5, velocityY : 5, speed : 7,
-						top: undefined, bottom: undefined, left : undefined, right : undefined},
-				});
-				const start: GOT.InitGame = {
-					user1: MyTransform.userEntityToGot(demands[0].user1),
-					user2: MyTransform.userEntityToGot(demands[0].user2),
-					points1: 0,
-					points2: 0,
-					codeParty: demands[0].id
-				};
-				this.server.to([client.id, socketClient]).emit('client_init_game', start);
-				this.algoGame(client, demands[0].id);
-			} else
-				client.emit('error_client', 'User already in demand')
+			}
 		} catch (error) {
 			client.emit('error_client', error.message);
 		}
@@ -531,7 +577,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}
 
 	@SubscribeMessage("server_change_pad")
-	async changePad(@ConnectedSocket()client: Socket, @MessageBody("Authorization") jwt: string, @MessageBody("codeParty") codeParty: number,  @MessageBody("padInfo") padInfo: any){
+	async changePad(@ConnectedSocket()client: Socket, @MessageBody("Authorization") jwt: string, @MessageBody("codeParty") codeParty: number,  @MessageBody("padInfo") padInfo: number){
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
@@ -542,9 +588,9 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		const party = this.games.get(codeParty);
 		if (party) {
 			if (party.socketUser1 === client.id)
-				return ; // TODO change pad left
+				party.player1.y = padInfo * this.dimY;
 			else if (party.socketUser2 === client.id)
-				return ; // TODO change pad right
+				party.player2.y = padInfo * this.dimY;
 		}
 	}
 
