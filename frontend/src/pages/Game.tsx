@@ -137,6 +137,9 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
             const parse = parseInt(id);
             if (!isNaN(parse)){
                 emitGame.emitjoinSpec(socketGame, parse);
+            }else{
+                socketGame.disconnect();
+                navigate('/game');
             }
         }else if (code === "waiting" && id != null && invite == null){
             console.log("emit join demande")
@@ -161,8 +164,10 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
                     const route = oldurl?.split("\"");
                     if (route){
                         let ret = route.join(""); 
+                        socketGame.disconnect();
                         navigate(`${ret}`);
                     }else{
+                        socketGame.disconnect();
                         navigate(`${oldurl}`);
                     }
                 }else{
@@ -183,6 +188,7 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
 
     const handlereturn = () => {
         emitGame.emitLeftWaiting(socketGame);
+        socketGame.disconnect();
         navigate("/game");
     }
     const handleStartGame = () => {
