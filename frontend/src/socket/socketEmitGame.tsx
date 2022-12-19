@@ -1,7 +1,6 @@
 import { Socket } from "socket.io-client";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { accountService } from "../services/account.service";
-import { GOT } from "../shared/types";
 
 
 let emitGameJoinWaing = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>) =>{

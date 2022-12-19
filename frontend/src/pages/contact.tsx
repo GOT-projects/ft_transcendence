@@ -1,5 +1,5 @@
-import { StyledChat, StyledChatPrive, StyledChatSep, StyledChatSettingButton, 
-    StyledChatSwith, StyledChatSwithButton, StyledChatText, StyledContact, StyledContaite, 
+import { StyledChatPrive, StyledChatSep, 
+    StyledChatSwith, StyledContact, StyledContaite, 
     StyledChatSwithTile, StyledSettingChan, StyledSettingChanP } from '../components/Styles/StyleChat';
 import React, {Dispatch, FunctionComponent, useContext, useEffect, useState } from 'react';
 import BackgroundAnimate from '../components/BackGroundAnimate';
@@ -8,7 +8,7 @@ import Header from '../components/Header';
 import {Colors} from "../components/Colors"
 import {NotifyInter} from "../components/interfaces"
 import {Notification} from "../components/Notify"
-import { SocketContext, useSocketGame } from '../socket/socketPovider';
+import { SocketContext } from '../socket/socketPovider';
 import { emitSocket } from '../socket/socketEmit';
 import ProfilView from '../components/popup/ProfilView';
 import { GOT } from '../shared/types';
@@ -68,9 +68,6 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     const [selectNameChan, setSelectNameChan] = useState<string>();
     
     const codeParam: Map<string, string> = accountService.getParamsPriv();
-
-    const socketGame = useSocketGame();
-    socketGame.disconnect();
 
     useEffect(() => {
         onSocket.profil_login(socket, setHisto);

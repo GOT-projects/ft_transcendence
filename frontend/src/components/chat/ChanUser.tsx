@@ -9,10 +9,9 @@ import { emitSocket } from "../../socket/socketEmit";
 import { Colors } from "../Colors";
 import { CgProfile } from "react-icons/cg";
 import { AiOutlineUserAdd } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
 import { onSocket } from "../../socket/socketOn";
 import { offSocket } from "../../socket/socketOff";
-import { StyledEmptyDiv, StyledEmptyDivChat } from "../Styles/StyleViewProfil";
+import { StyledEmptyDivChat } from "../Styles/StyleViewProfil";
 
 
 interface IProps {

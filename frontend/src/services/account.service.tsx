@@ -1,6 +1,4 @@
-import Axios from "axios"
 import { apiGet } from "../api/get";
-import { UsersId } from "../components/interfaces";
 
 
 let saveToken = (token: string) => {

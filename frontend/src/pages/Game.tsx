@@ -4,12 +4,11 @@ import Footer from '../components/Footer';
 import Header from '../components/Header';
 import {Colors} from "../components/Colors"
 import MousePadLeft from '../components/LeftPad';
-import {InfoServer, NotifyInter} from "../components/interfaces"
+import { NotifyInter} from "../components/interfaces"
 import {Notification} from "../components/Notify"
 import { StyledContenteGame, StyledLoginButton, StyledWaitingContente, StyledWaitingTitle } from '../components/Styles/StylesLogin';
 import { GOT } from '../shared/types';
 import { useNavigate } from 'react-router-dom';
-import { io } from 'socket.io-client';
 import { onSocketGame } from '../socket/socketOnGame';
 import {  emitGame } from '../socket/socketEmitGame';
 import { offSocketGame } from '../socket/socketOffGame';
@@ -44,7 +43,7 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
     const socketGame = useContext(SocketContextGame);
     
     if (socketGame.disconnected){
-        socketGame.connect()
+        console.log('reconnect', socketGame.io.reconnection());
     }
     useEffect(() => {
         onSocketGame.client_jwt(socketGame)
@@ -165,10 +164,10 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
                     const route = oldurl?.split("\"");
                     if (route){
                         let ret = route.join(""); 
-                        socketGame.disconnect();
+                        socketGame.io.reconnection();
                         navigate(`${ret}`);
                     }else{
-                        socketGame.disconnect();
+                        socketGame.io.reconnection();
                         navigate(`${oldurl}`);
                     }
                 }else{
@@ -184,13 +183,13 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
             setWating(false);
             setStartGame(true);
             setGame(false);
-            socketGame.disconnect();
+            socketGame.io.reconnection();
         }
     }, [code, invite, id])
 
     const handlereturn = () => {
         emitGame.emitLeftWaiting(socketGame);
-        socketGame.disconnect();
+        socketGame.io.reconnection();
         navigate("/game");
     }
     const handleStartGame = () => {

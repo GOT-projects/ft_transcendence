@@ -3,17 +3,13 @@ import Footer from "../components/Footer";
 import Header from "../components/Header"
 import {Colors} from "../components/Colors"
 import React, { Dispatch, FunctionComponent } from 'react'
-import { useContext, useState, useEffect, useRef} from 'react';
-import { StyledLead, StyledLeadTile, StyledSep, StyledTile, StyledLeadP, StyledLeadTileRank, StyledLeadB, Button, StyledSepController, StyledLeadPHead } from "../components/Styles/StyledleaderBoard";
-import {InfoServer, NotifyInter} from "../components/interfaces"
-import {Notification} from "../components/Notify"
+import { useContext, useState, useEffect } from 'react';
+import { StyledLead, StyledSep, StyledTile, StyledLeadP, StyledLeadTileRank, StyledLeadB, Button, StyledSepController, StyledLeadPHead } from "../components/Styles/StyledleaderBoard";
+import { NotifyInter} from "../components/interfaces"
 import { v4 as uuid } from 'uuid';
-import { apiGet } from "../api/get";
 import { GOT } from "../shared/types";
-import { SocketContext, useSocketGame } from "../socket/socketPovider";
-import { tmpdir } from "os";
+import { SocketContext } from "../socket/socketPovider";
 import { emitSocket } from "../socket/socketEmit";
-import Axios from "../services/Axios";
 import ProfilView from '../components/popup/ProfilView';
 import { GiRetroController } from 'react-icons/gi';
 
@@ -24,8 +20,6 @@ interface IProps {
 }
 
 const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
-	const socketGame = useSocketGame();
-    socketGame.disconnect();
 	const socket = useContext(SocketContext);
 
 	const [popuProfil, setPopupProfil] = useState(false);

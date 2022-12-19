@@ -1,22 +1,14 @@
 import Axios from "../services/Axios";
-import React from 'react';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import BackgroundAnimate from "../components/BackGroundAnimate";
-import { Colors } from "../components/Colors";
-import Footer from "../components/Footer";
-import Header from "../components/Header";
-import { InfoServer, UsersId } from "../components/interfaces";
+import { UsersId } from "../components/interfaces";
 import { StyledChatInput } from "../components/Styles/StyleChat";
 import { accountService } from "../services/account.service";
-import { useSocketGame } from "../socket/socketPovider";
 
 
 
 
 const Invite = () => {
-    const socketGame = useSocketGame();
-    socketGame.disconnect();
     const [infoUser, setInfoUser] = useState<UsersId>();
     const [inputChat, setInputChat] = useState("");
     let navigate = useNavigate();

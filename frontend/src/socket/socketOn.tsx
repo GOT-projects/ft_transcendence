@@ -4,7 +4,6 @@ import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { InfoServer } from "../components/interfaces";
 import { accountService } from "../services/account.service";
 import { GOT } from "../shared/types";
-import { emitSocket } from "./socketEmit";
 
 function transformUrlUsers(url: string) {
     if (url.split('')[0] === '/')

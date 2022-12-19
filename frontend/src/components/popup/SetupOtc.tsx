@@ -1,6 +1,5 @@
 import React, { Dispatch, FunctionComponent, useEffect, useState } from "react";
 import { StyledContaite, StyledContaiteDescription, StyledContaiteDescriptionA, StyledContaiteDescriptionH1, StyledContaiteDescriptionH3, StyledContaiteDescriptionP, StyledContaiteQrcode } from "../Styles/StyleOtc";
-import QRCode from "react-qr-code";
 import {apiPost} from "../../api/post"
 
 interface IProps {

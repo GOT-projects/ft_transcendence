@@ -1,16 +1,14 @@
-import { Dispatch, FunctionComponent, useContext, useEffect, useState } from "react";
+import { Dispatch, FunctionComponent, useContext, useEffect } from "react";
 import { GOT } from "../../shared/types";
 import { SocketContext } from "../../socket/socketPovider";
-import { StyledAddInput, StyledAddInputdiv, StyledAddInputdivButton, StyledChatDivEmpty, StyledChatDivhandle, StyledChatDivoption, StyledChatPrivAvatar, StyledChatPrivName, StyledChatSettingButton, StyledUser } from "../Styles/StyleChat";
+import { StyledChatDivEmpty, StyledChatDivhandle, StyledChatDivoption, StyledChatPrivAvatar, StyledChatPrivName, StyledChatSettingButton, StyledUser } from "../Styles/StyleChat";
 import { v4 as uuid } from 'uuid';
-import { GrAddCircle } from "react-icons/gr";
 import { emitSocket } from "../../socket/socketEmit";
 import { Colors } from "../Colors";
 import { CgProfile } from "react-icons/cg";
 import { MdOutlineBlock } from "react-icons/md";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import ProfilView from "../popup/ProfilView";
 import { StyledEmptyDivChat } from "../Styles/StyleViewProfil";
 
 

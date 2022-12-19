@@ -1,10 +1,8 @@
 import React from "react";
 import { Socket } from "socket.io-client";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { InfoServer } from "../components/interfaces";
 import { accountService } from "../services/account.service";
 import { GOT } from "../shared/types";
-import { emitSocket } from "./socketEmit";
 
 let error_client = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setNotify:any) => {
     socket.on('error_client', (rep:any) => {

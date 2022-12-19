@@ -8,10 +8,8 @@ import { SocketContext } from "../../socket/socketPovider";
 import { emitSocket } from "../../socket/socketEmit";
 import { onSocket } from "../../socket/socketOn";
 import { GiRetroController } from "react-icons/gi";
-import { GrFormView } from "react-icons/gr";
 import { MdOutlineViewInAr } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import { emitGame } from "../../socket/socketEmitGame";
 
 
 interface IProps {
