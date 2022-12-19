@@ -596,6 +596,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 						ball: {x: 1000, y: 500,  radius : 31.25, velocityX : 5, velocityY : 5, speed : 7,
 							top: undefined, bottom: undefined, left : undefined, right : undefined},
 					});
+					this.appGateway.sendProfilOfUser(auth.user);
 					const start: GOT.InitGame = {
 						user1: MyTransform.userEntityToGot(demands[0].user1),
 						user2: MyTransform.userEntityToGot(demands[0].user2),

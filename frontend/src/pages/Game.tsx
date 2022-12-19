@@ -201,7 +201,14 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
             {startGame ?  <StyledContenteGame>
                             <StyledLoginButton onClick={handleStartGame}>Start</StyledLoginButton>
                         </StyledContenteGame> : <></>}
-            {game ? <MousePadLeft socketGame={socketGame} profil={props.profil}/> : <></>}
+            {game ? <MousePadLeft
+                socketGame={socketGame}
+                profil={props.profil}
+                initGame={initGame}
+                player={player}
+                spec={spec}
+                point={point}
+            /> : <></>}
             <Notification notify={notify} setNotify={setNotify}/>
 			<Footer/>
 		</React.Fragment>

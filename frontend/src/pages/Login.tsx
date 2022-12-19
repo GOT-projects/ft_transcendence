@@ -25,7 +25,7 @@ const Login = () => {
     const navigate = useNavigate();
     (async () => await getAcces())()
     if (access === true){
-        navigate('/game');
+        navigate('/leaderboard');
     }else{
         const responce = apiGet.getIntraUrl();
         responce.then((rep) => {

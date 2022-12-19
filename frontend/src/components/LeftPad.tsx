@@ -48,6 +48,10 @@ async function useInterval(callback: any, delay: number) {
 interface IProps {
     socketGame : Socket<DefaultEventsMap, DefaultEventsMap>
     profil: GOT.Profile | undefined;
+	initGame: undefined | GOT.InitGame;
+	player: undefined | GOT.ActuGamePlayer;
+    spec: undefined | GOT.ActuGameSpectator;
+    point: undefined | GOT.ActuGamePoints;
 }
 
 const MousePadLeft:FunctionComponent<IProps> = (prosp:IProps) => {
