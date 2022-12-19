@@ -672,7 +672,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			client.emit("error_client", "Cannot send send pad information");
 			return ;
 		}
-		if (auth.targetList.game) {
+		if (auth.targetList.game !== undefined) {
 			if (auth.targetList.game.socketUser1 === client.id)
 				auth.targetList.game.player1.y = padInfo * this.dimY;
 			else if (auth.targetList.game.socketUser2 === client.id)
