@@ -20,7 +20,7 @@ import { SocketContext, useSocket } from '../socket/socketPovider';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { Socket } from "socket.io-client";
 import { GOT } from '../shared/types';
-
+import {  emitGame } from '../socket/socketEmitGame';
 
 async function useInterval(callback: any, delay: number) {
 	const savedCallback: any = useRef();
@@ -54,19 +54,7 @@ interface IProps {
     point: undefined | GOT.ActuGamePoints;
 }
 
-const MousePadLeft:FunctionComponent<IProps> = (prosp:IProps) => {
-
-	const socket = useContext(SocketContext);
-	
-	//var socket = io(InfoServer.SocketServer);
-	// type test = {
-	// 	table : HTMLElement | null,
-	// 	p1 : HTMLElement | null,
-	// 	baballe: HTMLElement | null
-	// };
-
-
-
+const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 	const [count, setCount] = useState(0);
 	const [tmp3, setTmp] = useState(0);
 	const [y, setY] = useState(0);   // pos mouse
@@ -75,34 +63,27 @@ const MousePadLeft:FunctionComponent<IProps> = (prosp:IProps) => {
 
 	let sizeofball: number = 0;
 	var pos_prct: number = 0;
-	var mouseY: string;
 	var ballY: string;
+	var ballX: string;
+	var mouseY: string;
 	var rectable;		// pour listen uniquement sur le jeu
 	var rectpad;
 	var rectball;
 	var tmp = 100;		// ntm js
 	var tmp2 = 0;
-
+	var rightPadpos: string;
+	ballX ="";
+	ballY = "";
+	rightPadpos = "";
 
 	var table = document.getElementById("Table");
 	var p1 = document.getElementById("leftpad");
 	var baballe = document.getElementById("ball");
 
-	socket.on('onUpdate', (e) => {
-		console.log(e);
-		setTmp(e);
-	})
-	
-	useInterval(() => {
-		// socket.on("connect", () => {
-		// 	console.log(socket.connected); // true
-		// });
-		socket.emit('updatePlayer', { msg: "lol ca marche pas", from: 'rcuminal' });
-		socket.off('onUpdate');
-		// socket.off('disconnect');
-		//console.log(tmp3);
-		setCount(count + 1);
-	}, 1000);
+	// useInterval(() => {
+
+	// 	setCount(count + 1);
+	// }, 1000);
 
 
 	if (table){
@@ -119,8 +100,6 @@ const MousePadLeft:FunctionComponent<IProps> = (prosp:IProps) => {
 		
 		tmp = y;
 		tmp -= rectable.top;
-		// pos en %
-		pos_prct = tmp / rectable.height * 100;
 		
 		sizeofball = rectpad.height/3;
 		
@@ -130,21 +109,59 @@ const MousePadLeft:FunctionComponent<IProps> = (prosp:IProps) => {
 		if (tmp > rectable.height - rectpad.height)
 			tmp = rectable.height - rectpad.height;
 		
-		
+		pos_prct = tmp / rectable.height * 100;
 		
 	}
+	console.log(props.player?.ball.x);
 	mouseY = tmp.toString();
-	ballY  = tmp2.toString(); 
-
-	return (
+	if (props.player?.ball.x && props.player?.ball.y && rectable?.width && rectable?.width){
+		ballX  = (props.player?.ball.x * rectable?.width).toString();
+		ballY  = (props.player?.ball.y * rectable?.height).toString();
+	}
+	if (props.profil?.userInfos.login === props.initGame?.user1.login){
+		emitGame.emit_change_pad(props.socketGame, pos_prct);
+		if (rectable?.height && props.player?.enemyY){
+			rightPadpos = (rectable?.height * props.player?.enemyY).toString();
+		}
+		return (
 			<StyledLeftPad id="Table">
 				<StyledHexaArea className='grid'/>
 				<StyledHexaAreaLight className='light' x="0px" y="0px" />
 				<StyledLeftPad1alias id="leftpad" y={mouseY+"px"}></StyledLeftPad1alias>
-				<StyledRightPadalias className="rightpad" y="0px"></StyledRightPadalias>
-				<StyledBallalias id="ball"  x="0px" y={ballY+"px"} rot="0px" size={sizeofball.toString()+"px"}></StyledBallalias>
-			</StyledLeftPad>
-		)
+				<StyledRightPadalias className="rightpad" y={rightPadpos + "px"}></StyledRightPadalias>
+				<StyledBallalias id="ball"  x={ballX+"px"} y={ballY+"px"} rot="0px" size={sizeofball.toString()+"px"}></StyledBallalias>
+			</StyledLeftPad>)
+	}
+	else if (props.profil?.userInfos.login === props.initGame?.user2.login){
+		emitGame.emit_change_pad(props.socketGame, pos_prct);
+		if (rectable?.height && props.player?.enemyY){
+			rightPadpos = (rectable?.height * props.player?.enemyY).toString(); // left ici
+		}
+		return (
+			<StyledLeftPad id="Table">
+				<StyledHexaArea className='grid'/>
+				<StyledHexaAreaLight className='light' x="0px" y="0px" />
+				<StyledRightPadalias id="leftpad" y={mouseY+"px"}></StyledRightPadalias>
+				<StyledLeftPad1alias className="rightpad" y={rightPadpos + "px"}></StyledLeftPad1alias>
+				<StyledBallalias id="ball"  x={ballX+"px"} y={ballY+"px"} rot="0px" size={sizeofball.toString()+"px"}></StyledBallalias>
+			</StyledLeftPad>)
+	}
+	else {
+		var leftPadPos: string = "";
+		if (rectable?.height && props.spec?.player2Y && props.spec?.player1Y){
+			leftPadPos = (rectable?.height * props.spec?.player1Y).toString();
+			rightPadpos = (rectable?.height * props.spec?.player2Y).toString();
+		}
+		return (
+			<StyledLeftPad id="Table">
+				<StyledHexaArea className='grid'/>
+				<StyledHexaAreaLight className='light' x="0px" y="0px" />
+				<StyledLeftPad1alias id="leftpad" y={leftPadPos+"px"}></StyledLeftPad1alias>
+				<StyledRightPadalias className="rightpad" y={rightPadpos + "px"}></StyledRightPadalias>
+				<StyledBallalias id="ball"  x={ballX+"px"} y={ballY+"px"} rot="0px" size={sizeofball.toString()+"px"}></StyledBallalias>
+			</StyledLeftPad>)
+	}
+
 }
 export default MousePadLeft;
 
