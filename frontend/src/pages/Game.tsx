@@ -48,17 +48,21 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
         onSocketGame.client_jwt(socketGame)
     }, [socketGame])
 
-    // socket init game
     useEffect(() => {
-        onSocketGame.client_init(socketGame, setInitGame, setStartInit);
+        console.log("init ", startInit)
         if (startInit){
             setStartInit(false);
             navigate(`/game?code=game&id=${initGame?.codeParty}`)
         }
+    }, [startInit])
+
+    // socket init game
+    useEffect(() => {
+        onSocketGame.client_init(socketGame, setInitGame, setStartInit);
         return () => {
             offSocketGame.client_init(socketGame);
         }
-    }, [socketGame, setInitGame])
+    }, [socketGame])
 
     // socket when invite is accepte
     useEffect(() => {
