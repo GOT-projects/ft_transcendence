@@ -105,9 +105,9 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 									<StyledLeadB onClick={() => {buttonHandler(usr.userInfos.login)}} className="button">{usr.userInfos.login}</StyledLeadB>
 								</div>
 							</td>
-							<StyledLeadP>{usr.stat.rank}</StyledLeadP>
-							<StyledLeadP>{usr.stat.victory}</StyledLeadP>
-							<StyledLeadP>{usr.stat.defeat}</StyledLeadP>
+							<StyledLeadP style={{textAlign: "center"}}>{usr.stat.rank}</StyledLeadP>
+							<StyledLeadP style={{textAlign: "center"}}>{usr.stat.victory}</StyledLeadP>
+							<StyledLeadP style={{textAlign: "center"}}>{usr.stat.defeat}</StyledLeadP>
 						</tr>
 						))
 					}

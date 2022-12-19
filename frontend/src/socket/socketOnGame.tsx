@@ -53,7 +53,7 @@ let client_init = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>,
         console.log("client_init_game", rep)
         if (rep){
             setInitGame(rep);
-            setStartGame(true);
+            setStartGame(true)
         } 
     })
 }
