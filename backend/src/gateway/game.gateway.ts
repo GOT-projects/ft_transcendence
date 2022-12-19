@@ -623,7 +623,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 				}
 				if (keyToDelete) {
 					this.server.to(keyToDelete).emit('warning_client', `Your demand is refused`);
-					this.server.to(keyToDelete).emit('client_invite', false);
+					this.server.to([keyToDelete, client.id]).emit('client_invite', false);
 					this.waitingInvite.delete(keyToDelete);
 				}
 			}
