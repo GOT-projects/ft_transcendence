@@ -21,7 +21,7 @@ position: absolute;
 z-index: 10;
 top: 50%;
 left: 50%;
-width: 90%;
+width: 100%;
 height: 60%;
 transform: translate(-50%, -50%);
 background-image: url(https://ns328286.ip-37-187-113.eu/ew/wallpapers/800x480/10602_800x480.jpg);
@@ -64,8 +64,8 @@ z-index: 1;
 	
 	export const StyledBall = styled.div<ballPos>`
 	position: absolute;
-	height: 5vh;
-	width: 5vh;
+	height: 3vh;
+	width: 3vh;
 	background-image: url(https://png.pngtree.com/element_our/20190601/ourlarge/pngtree-blue-red-glowing-round-ball-free-button-image_1370443.jpg);
 	background-position: 55% 45%;
 	background-size: 140%;

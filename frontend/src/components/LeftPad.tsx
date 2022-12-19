@@ -108,7 +108,7 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 		}
 		if (tmp > rectable.height - rectpad.height)
 			tmp = rectable.height - rectpad.height;
-		
+
 		pos_prct = tmp / rectable.height;
 		
 	}

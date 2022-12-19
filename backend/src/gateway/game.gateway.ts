@@ -212,19 +212,25 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		ball.x = this.dimY;
 		ball.y = 500;
 		ball.velocityX = - ball.velocityX;
-		ball.speed = 7;
+		ball.speed = 20;
 	}
 
 	private collision(b: ball, p: player){
-		p.top = p.y;
-		p.bottom = p.y + p.height;
-		p.left = p.x;
-		p.right = p.x + p.width;
+		p.top = p.y - p.height / 2;
+		p.bottom = p.y + p.height / 2;
+		if (b.x > 2000)
+			p.left = this.dimX - 20;
+		else
+			p.left = p.x;
+		if (b.x > 2000)
+			p.right = this.dimX;
+		else
+			p.right = p.x + p.width;
 		
-		b.top = b.y - b.radius;
-		b.bottom = b.y + b.radius;
+		b.top = b.y ;
+		b.bottom = b.y + b.radius * 2;
 		b.left = b.x - b.radius;
-		b.right = b.x + b.radius;
+		b.right = b.x + b.radius * 4;
 		
 		return p.left < b.right && p.top < b.bottom && p.right > b.left && p.bottom > b.top;
 	}
@@ -312,7 +318,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		party.ball.y += party.ball.velocityY;
 			
 		// when the ball collides with bottom and top walls we inverse the y velocity.
-		if(party.ball.y - party.ball.radius < 0 || party.ball.y + party.ball.radius > this.dimY){
+		if(party.ball.y < 0 || party.ball.y + party.ball.radius * 2 > this.dimY){
 			party.ball.velocityY = -party.ball.velocityY;
 		}
 		// we check if the paddle hit the user or the com paddle
@@ -321,7 +327,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		// if the ball hits a paddle
 		if(this.collision(party.ball, player)){
 			// we check where the ball hits the paddle
-			let collidePoint = (party.ball.y - (player.y + player.height/2));
+			let collidePoint = (party.ball.y - (player.y));
 			// normalize the value of collidePoint, we need to get numbers between -1 and 1.
 			// -player.height/2 < collide Point < player.height/2
 			collidePoint = collidePoint / (player.height/2);
@@ -427,11 +433,11 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 						spectators: [],
 						socketUser1: (completeGame[0].user1.id === user1.id ? assoc[0] : client.id),
 						socketUser2: (completeGame[0].user1.id === user1.id ? client.id: assoc[0]),
-						player1: {x: 0, y : 500, width : 40, height : 200, score : 0,
+						player1: {x: 0, y : 500, width : 20, height : 120, score : 0,
 							top: undefined, bottom: undefined, left : undefined, right : undefined},
-						player2: {x : this.dimX - 40, y : 500, width : 40, height : 200, score : 0,
+						player2: {x : this.dimX - 20, y : 500, width : 20, height : 200, score : 0,
 							top: undefined, bottom: undefined, left : undefined, right : undefined},
-						ball: {x: 1000, y: 500,  radius : 31.25, velocityX : 5, velocityY : 5, speed : 7,
+						ball: {x: 1000, y: 500,  radius : 31.25 / 2, velocityX : 15, velocityY : 15, speed : 20,
 							top: undefined, bottom: undefined, left : undefined, right : undefined},
 					});
 					const start: GOT.InitGame = {
@@ -590,11 +596,11 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 						spectators: [],
 						socketUser1: (demands[0].user1.id === auth.user.id ? client.id : socketClient),
 						socketUser2: (demands[0].user1.id === auth.user.id ? socketClient : client.id),
-						player1: {x: 0, y : 500, width : 40, height : 200, score : 0,
+						player1: {x: 0, y : 500, width : 20, height : 200, score : 0,
 							top: undefined, bottom: undefined, left : undefined, right : undefined},
-						player2: {x : this.dimX - 40, y : 500, width : 40, height : 200, score : 0,
+						player2: {x : this.dimX - 20, y : 500, width : 20, height : 200, score : 0,
 							top: undefined, bottom: undefined, left : undefined, right : undefined},
-						ball: {x: 1000, y: 500,  radius : 31.25, velocityX : 5, velocityY : 5, speed : 7,
+						ball: {x: 1000, y: 500,  radius : 31.25 / 2, velocityX : 15, velocityY : 15, speed : 20,
 							top: undefined, bottom: undefined, left : undefined, right : undefined},
 					});
 					this.appGateway.sendProfilOfUser(auth.user);
