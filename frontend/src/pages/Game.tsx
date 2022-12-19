@@ -42,8 +42,10 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
     const [point, setPoints] = useState<GOT.ActuGamePoints>();
     const navigate = useNavigate();
     const socketGame = useContext(SocketContextGame);
-
-
+    
+    if (socketGame.disconnect()){
+        socketGame.connect()
+    }
     useEffect(() => {
         onSocketGame.client_jwt(socketGame)
     }, [socketGame])
