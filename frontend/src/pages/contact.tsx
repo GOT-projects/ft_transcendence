@@ -8,7 +8,7 @@ import Header from '../components/Header';
 import {Colors} from "../components/Colors"
 import {NotifyInter} from "../components/interfaces"
 import {Notification} from "../components/Notify"
-import { SocketContext } from '../socket/socketPovider';
+import { SocketContext, useSocketGame } from '../socket/socketPovider';
 import { emitSocket } from '../socket/socketEmit';
 import ProfilView from '../components/popup/ProfilView';
 import { GOT } from '../shared/types';
@@ -69,6 +69,8 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     
     const codeParam: Map<string, string> = accountService.getParamsPriv();
 
+    const socketGame = useSocketGame();
+    socketGame.disconnect();
 
     useEffect(() => {
         onSocket.profil_login(socket, setHisto);

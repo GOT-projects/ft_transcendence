@@ -10,7 +10,7 @@ import {Notification} from "../components/Notify"
 import { v4 as uuid } from 'uuid';
 import { apiGet } from "../api/get";
 import { GOT } from "../shared/types";
-import { SocketContext } from "../socket/socketPovider";
+import { SocketContext, useSocketGame } from "../socket/socketPovider";
 import { tmpdir } from "os";
 import { emitSocket } from "../socket/socketEmit";
 import Axios from "../services/Axios";
@@ -24,6 +24,8 @@ interface IProps {
 }
 
 const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
+	const socketGame = useSocketGame();
+    socketGame.disconnect();
 	const socket = useContext(SocketContext);
 
 	const [popuProfil, setPopupProfil] = useState(false);
@@ -31,6 +33,7 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 	const [tab, setTab] = useState<GOT.LeaderBoard>();
 	const [histo, setHisto] = useState<GOT.HistoryParties>();
 	const [login, setLogin] = useState<string>("");
+
 
 	useEffect(() => {
 		emitSocket.emitLeaderboard(socket);

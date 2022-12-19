@@ -8,6 +8,7 @@ import {NotifyInter} from "../components/interfaces"
 import { accountService } from "../services/account.service";
 import { apiGet } from "../api/get";
 import { useNavigate } from "react-router-dom";
+import { useSocketGame } from "../socket/socketPovider";
 
 let access:boolean;
 
@@ -20,6 +21,8 @@ const getAcces = async () => {
 }
 
 const Login = () => {
+    const socketGame = useSocketGame();
+    socketGame.disconnect();
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''})
     const [Url, setUrl] = useState('')
     const navigate = useNavigate();

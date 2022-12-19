@@ -8,8 +8,11 @@ import Popup2FA from '../components/popup/Popup2FA';
 import { StyledWaitingContente, StyledWaitingTitle } from '../components/Styles/StylesLogin';
 import { Notification } from '../components/Notify';
 import { NotifyInter } from '../components/interfaces';
+import { useSocketGame } from '../socket/socketPovider';
 
 const Waiting = () => {
+    const socketGame = useSocketGame();
+    socketGame.disconnect();
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
     const [twoFAPop, setTwoFAPop] = useState(false);
 	const url = window.location.href;

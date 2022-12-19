@@ -9,11 +9,14 @@ import Header from "../components/Header";
 import { InfoServer, UsersId } from "../components/interfaces";
 import { StyledChatInput } from "../components/Styles/StyleChat";
 import { accountService } from "../services/account.service";
+import { useSocketGame } from "../socket/socketPovider";
 
 
 
 
 const Invite = () => {
+    const socketGame = useSocketGame();
+    socketGame.disconnect();
     const [infoUser, setInfoUser] = useState<UsersId>();
     const [inputChat, setInputChat] = useState("");
     let navigate = useNavigate();
