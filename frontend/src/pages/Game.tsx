@@ -33,7 +33,7 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
     const [startGame, setStartGame] = useState(false);
     const [startInit, setStartInit] = useState(false);
     const [game, setGame] = useState(false);
-    const [inviteRequest, setInviteRequest] = useState(false);
+    const [inviteRequest, setInviteRequest] = useState(true);
     const [endGame, setEndGame] = useState(false);
     const [initGame, setInitGame] = useState<GOT.InitGame>()
     const [player, setPlayer] = useState<GOT.ActuGamePlayer>();
@@ -64,6 +64,10 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
     // socket when invite is accepte
     useEffect(() => {
         onSocketGame.client_invite(socketGame, setInviteRequest);
+        if (!inviteRequest){
+            setInviteRequest(true);
+            navigate("/game")
+        }
         return () => {
             offSocketGame.client_invite(socketGame);
         }
