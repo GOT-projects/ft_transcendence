@@ -36,7 +36,7 @@ const Invite = () => {
 	    response.then((response:any) => {
 	    	if(response.status === 201){
                 accountService.saveToken(response.data.access_token);
-                navigate('/game');
+                navigate('/leaderboard');
 	    	}
 	    }).catch((e) =>{
             console.log(e);
