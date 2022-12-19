@@ -91,18 +91,23 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 	var table = document.getElementById("Table");
 	var p1 = document.getElementById("leftpad");
 	var baballe = document.getElementById("ball");
+	var pos: number | undefined = undefined;
 
-	// useInterval(() => {
+	useInterval(() => {
+		if (props.endGame === false && props.initGame?.player && pos !== pos_prct) {
+			emitGame.emit_change_pad(socketGame, pos_prct);
+			pos = pos_prct;
+		}
+	}, 50);
 
-	// 	setCount(count + 1);
-	// }, 1000);
-
-
-	if (table){
-	table.addEventListener("mousemove", (e) => {
-		setY(e.pageY );
-		setCount(count + 1);
-	});}
+	if (table && props.initGame?.player) {
+		table.addEventListener("mousemove", (e) => {
+			if (y !== e.pageY) {
+				setY(e.pageY);
+				setCount(count + 1);
+			}
+		});
+	}
 
 	if(table && p1 && baballe) {
 		
@@ -132,12 +137,11 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 		ballX  = (props.spec?.ball.x * rectable?.width).toString();
 		ballY  = (props.spec?.ball.y * rectable?.height).toString();
 	}
-	if (props.initGame?.player && props.profil?.userInfos.login === props.initGame?.user1.login){
-		if (props.endGame === false)
-			emitGame.emit_change_pad(socketGame, pos_prct);
+	if (props.initGame?.player && props.profil?.userInfos.email === props.initGame?.user1.email){
+		/*if (props.endGame === false)
+			emitGame.emit_change_pad(socketGame, pos_prct);*/
 		if (rectable?.height && props.player?.enemyY){
 			rightPadpos = (rectable?.height * props.player?.enemyY).toString();
-//			console.log("=====> otstring %D", props.player.enemyY);
 		}
 		return (
 			<StyledLeftPad id="Table">
@@ -148,9 +152,9 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 				<StyledBallalias id="ball"  x={ballX+"px"} y={ballY+"px"} rot="0px" size={sizeofball.toString()+"px"}></StyledBallalias>
 			</StyledLeftPad>)
 	}
-	else if (props.initGame?.player && props.profil?.userInfos.login === props.initGame?.user2.login){
-		if (props.endGame === false)
-			emitGame.emit_change_pad(socketGame, pos_prct);
+	else if (props.initGame?.player && props.profil?.userInfos.email === props.initGame?.user2.email){
+		/*if (props.endGame === false)
+			emitGame.emit_change_pad(socketGame, pos_prct);*/
 		if (rectable?.height && props.player?.enemyY){
 			rightPadpos = (rectable?.height * props.player?.enemyY).toString(); // left ici
 		}

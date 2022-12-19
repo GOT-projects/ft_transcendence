@@ -43,7 +43,7 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
     const navigate = useNavigate();
     const socketGame = useContext(SocketContextGame);
     
-    if (socketGame.disconnect()){
+    if (socketGame.disconnected){
         socketGame.connect()
     }
     useEffect(() => {
@@ -140,7 +140,6 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
             if (!isNaN(parse)){
                 emitGame.emitjoinSpec(socketGame, parse);
             }else{
-                socketGame.disconnect();
                 navigate('/game');
             }
         }else if (code === "waiting" && id != null && invite == null){
@@ -185,6 +184,7 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
             setWating(false);
             setStartGame(true);
             setGame(false);
+            socketGame.disconnect();
         }
     }, [code, invite, id])
 

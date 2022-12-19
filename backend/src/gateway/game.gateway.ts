@@ -149,8 +149,11 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 						game.game.points2 = 0;
 					game.game.status = gameStatus.FINISH;
 					this.gameService.update(game.game.id, game.game);
+					const users = [...(game.spectators), (client.id === game.socketUser1 ? game.socketUser2 : game.socketUser1)];
+					this.server.to(users).emit('info_client', `User ${client.id === game.socketUser1 ? game.game.user2.login : game.game.user1.login} win the game`);
 				}
-			}
+				this.games.delete(codeGame);
+				}
 			this.appGateway.sendLeaderboard();
 		} catch (error) {
 			client.emit('error_client', error.message);
@@ -354,14 +357,21 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		let party = this.games.get(codeParty);
 		if (party) {
 			// TODO send infos start
+			let users = [...(party.spectators), party.socketUser1, party.socketUser2];
 			this.appGateway.sendLeaderboard();
 			await this.delay(3000);
 			this.algoGameSendPoints(party);
 			while ((await this.update(party)) === 0) {
 				this.algoGameSendData(party);
 				await this.delay(this.waitUpdate);
+				const partyTmp = this.games.get(codeParty);
+				if (partyTmp === undefined) {
+					this.server.to(users).emit('client_game_finish', true);
+					return ;
+				}
+				users = [...(party.spectators), party.socketUser1, party.socketUser2];
 			}
-			const users = [...(party.spectators), party.socketUser1, party.socketUser2];
+			users = [...(party.spectators), party.socketUser1, party.socketUser2];
 			this.server.to(users).emit('client_game_finish', true);
 			this.games.delete(codeParty);
 			if (party.game.points1 > party.game.points2)
@@ -469,12 +479,21 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		const auth = await this.connectionSecure(client, jwt, true);
 		if (!auth)
 			return ;
-		if (auth.targetList.game || auth.targetList.spectator || auth.targetList.waitingInvite){
+		if (auth.targetList.game || auth.targetList.spectator){
 			client.emit("error_client", "No in waiting list");
 			return ;
 		}
 		if (this.waiting.delete(client.id))
 			client.emit('info_client', `You left the waiting list`);
+		if (this.waitingInvite.delete(client.id)) {
+			if (auth.targetList.waitingInvite) {
+				this.gameService.delete(auth.targetList.waitingInvite.id);
+				const user = await this.userService.findOne(auth.targetList.waitingInvite.user2Id);
+				if (user)
+					this.appGateway.sendProfilOfUser(user);
+			}
+			client.emit('info_client', `You left the waiting list`);
+		}
 	}
 
 	@SubscribeMessage("server_join_demand")
@@ -578,6 +597,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 				return ;
 			}
 			const demands = await this.gameService.getGameUserWhoIsDemand(user, auth.user);
+			console.log("status", status);
 			if (status) {
 				if (demands.length === 1) {
 					let socketClient: string | undefined = undefined;
@@ -620,6 +640,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 				} else
 					client.emit('error_client', `Any demand found`)
 			} else {
+				console.log('reply demands', demands)
 				if (demands.length === 1) {
 					await this.gameService.delete(demands[0].id);
 					this.appGateway.sendProfilOfUser(auth.user);
