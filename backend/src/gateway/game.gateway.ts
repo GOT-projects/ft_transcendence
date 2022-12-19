@@ -230,8 +230,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}
 
 	private algoGameSendData(game: Games) {
-		const player1: number = (game.player1.y > this.dimY ? this.dimY : (game.player1.y < 0 ? 0 : game.player1.y)) / this.dimY;
-		const player2: number = (game.player2.y > this.dimY ? this.dimY : (game.player2.y < 0 ? 0 : game.player2.y)) / this.dimY;
+		const player1: number = game.player1.y / this.dimY;
+		const player2: number = game.player2.y / this.dimY;
 		const ball: GOT.Ball = {
 			x: (game.ball.x > this.dimX ? this.dimX : (game.ball.x < 0 ? 0 : game.ball.x)) / this.dimX,
 			y: (game.ball.y > this.dimY ? this.dimY : (game.ball.y < 0 ? 0 : game.ball.y)) / this.dimY,
@@ -241,6 +241,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			ball,
 			enemyY: player2
 		};
+	//console.log("%d\n", player2);
 		this.server.to(game.socketUser1).emit('client_game_player', actu);
 		// player droit
 		actu = {

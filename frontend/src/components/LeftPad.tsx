@@ -109,7 +109,7 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 		if (tmp > rectable.height - rectpad.height)
 			tmp = rectable.height - rectpad.height;
 		
-		pos_prct = tmp / rectable.height * 100;
+		pos_prct = tmp / rectable.height;
 		
 	}
 	mouseY = tmp.toString();
@@ -121,6 +121,7 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 		emitGame.emit_change_pad(socketGame, pos_prct);
 		if (rectable?.height && props.player?.enemyY){
 			rightPadpos = (rectable?.height * props.player?.enemyY).toString();
+//			console.log("=====> otstring %D", props.player.enemyY);
 		}
 		return (
 			<StyledLeftPad id="Table">
