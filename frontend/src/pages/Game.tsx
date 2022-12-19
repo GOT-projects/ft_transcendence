@@ -25,6 +25,7 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
 	let params = (new URL(url)).searchParams;
     const code = params.get("code");
     const id = params.get("id");
+    const oldurl = params.get("oldurl");
     const invite = params.get("invite");
     const lastUrl = params.get("lastUrl");
     //TODO need add param last url
@@ -115,13 +116,13 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
     }, [socketGame])
 
     useEffect(() => {
-        if (code == "waiting" && id == null){
+        if (code === "waiting" && id == null){
             console.log("emit join game waiting")
             setWating(true);
             setStartGame(false);
             setGame(false);
             emitGame.emitGameJoinWaing(socketGame);
-        }else if (code == "spectator" && id != null){
+        }else if (code === "spectator" && id != null){
             console.log("emit join spec")
             setWating(true);
             setStartGame(false);
@@ -130,28 +131,38 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
             if (!isNaN(parse)){
                 emitGame.emitjoinSpec(socketGame, parse);
             }
-        }else if (code == "waiting" && id != null && invite == null){
+        }else if (code === "waiting" && id != null && invite == null){
             console.log("emit join demande")
             setWating(true);
             setStartGame(false);
             setGame(false);
             emitGame.emitJoinDemand(socketGame, id);
-        }else if (code == "waiting" && id != null && invite != null){
-            if (invite == "approuve"){
+        }else if (code === "waiting" && id != null && invite != null){
+            if (invite === "approuve"){
                 console.log("emit accept")
                 setWating(true);
                 setStartGame(false);
                 setGame(false);
                 emitGame.emitJoinResp(socketGame, id, true);
-            }else if (invite == "refused"){
-                console.log("emit refused")
+            }else if (invite === "refused"){
+                console.log("emit refused", oldurl)
                 setWating(true);
                 setStartGame(false);
                 setGame(false);
                 emitGame.emitJoinResp(socketGame, id, false);
-                navigate("/game");
+                if (oldurl !== undefined){
+                    const route = oldurl?.split("\"");
+                    if (route){
+                        let ret = route.join(""); 
+                        navigate(`${ret}`);
+                    }else{
+                        navigate(`${oldurl}`);
+                    }
+                }else{
+                    navigate("/leaderboard");
+                }
             }
-        }else if (code == "game" && id != undefined){
+        }else if (code === "game" && id != undefined){
             console.log("game", initGame)
             setStartGame(false);
             setWating(false);
