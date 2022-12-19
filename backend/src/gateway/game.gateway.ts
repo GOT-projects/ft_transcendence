@@ -197,7 +197,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		}
 	}
 
-	private async connectionSecure(client: Socket, jwt: string, emit: boolean): Promise<false |ClientInfos> {
+	private async connectionSecure(client: Socket, jwt: string, emit: boolean): Promise<false | ClientInfos> {
 		if (jwt === undefined){
 			this.logger.debug("JWT not found");
 			return false;

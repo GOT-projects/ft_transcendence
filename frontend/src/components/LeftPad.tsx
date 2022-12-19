@@ -16,11 +16,12 @@ import { apiGet } from "../api/get";
 import { TiArrowMaximiseOutline } from 'react-icons/ti';
 import { accountService } from '../services/account.service';
 import { ResultType } from '@remix-run/router/dist/utils';
-import { SocketContext, useSocket } from '../socket/socketPovider';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { Socket } from "socket.io-client";
 import { GOT } from '../shared/types';
 import {  emitGame } from '../socket/socketEmitGame';
+import { offSocketGame } from '../socket/socketOffGame';
+import { SocketContextGame } from '../socket/socketPovider';
 
 async function useInterval(callback: any, delay: number) {
 	const savedCallback: any = useRef();
@@ -46,7 +47,6 @@ async function useInterval(callback: any, delay: number) {
 
 
 interface IProps {
-    socketGame : Socket<DefaultEventsMap, DefaultEventsMap>
     profil: GOT.Profile | undefined;
 	initGame: undefined | GOT.InitGame;
 	player: undefined | GOT.ActuGamePlayer;
@@ -59,7 +59,7 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 	const [tmp3, setTmp] = useState(0);
 	const [y, setY] = useState(0);   // pos mouse
 
-
+	const socketGame = useContext(SocketContextGame);
 
 	let sizeofball: number = 0;
 	var pos_prct: number = 0;
@@ -112,14 +112,13 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 		pos_prct = tmp / rectable.height * 100;
 		
 	}
-	console.log(props.player?.ball.x);
 	mouseY = tmp.toString();
 	if (props.player?.ball.x && props.player?.ball.y && rectable?.width && rectable?.width){
 		ballX  = (props.player?.ball.x * rectable?.width).toString();
 		ballY  = (props.player?.ball.y * rectable?.height).toString();
 	}
 	if (props.profil?.userInfos.login === props.initGame?.user1.login){
-		emitGame.emit_change_pad(props.socketGame, pos_prct);
+		emitGame.emit_change_pad(socketGame, pos_prct);
 		if (rectable?.height && props.player?.enemyY){
 			rightPadpos = (rectable?.height * props.player?.enemyY).toString();
 		}
@@ -133,7 +132,7 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 			</StyledLeftPad>)
 	}
 	else if (props.profil?.userInfos.login === props.initGame?.user2.login){
-		emitGame.emit_change_pad(props.socketGame, pos_prct);
+		emitGame.emit_change_pad(socketGame, pos_prct);
 		if (rectable?.height && props.player?.enemyY){
 			rightPadpos = (rectable?.height * props.player?.enemyY).toString(); // left ici
 		}

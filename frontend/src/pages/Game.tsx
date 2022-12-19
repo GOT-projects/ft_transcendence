@@ -1,4 +1,4 @@
-import React, { Dispatch, FunctionComponent, useEffect, useState } from 'react';
+import React, { Dispatch, FunctionComponent, useContext, useEffect, useState } from 'react';
 import BackgroundAnimate from '../components/BackGroundAnimate';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
@@ -13,6 +13,7 @@ import { io } from 'socket.io-client';
 import { onSocketGame } from '../socket/socketOnGame';
 import {  emitGame } from '../socket/socketEmitGame';
 import { offSocketGame } from '../socket/socketOffGame';
+import { SocketContextGame } from '../socket/socketPovider';
 
 interface IProps {
    profil: GOT.Profile | undefined;
@@ -40,10 +41,8 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
     const [spec, setSpec] = useState<GOT.ActuGameSpectator>();
     const [point, setPoints] = useState<GOT.ActuGamePoints>();
     const navigate = useNavigate();
-    const socketGame = io(`${InfoServer.SocketServer}/game` ,{
-                withCredentials:false, extraHeaders: {
-                "Authorization": "bearer " + localStorage.getItem("token_access"),
-    }});
+    const socketGame = useContext(SocketContextGame);
+
 
     useEffect(() => {
         onSocketGame.client_jwt(socketGame)
@@ -206,7 +205,6 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
                             <StyledLoginButton onClick={handleStartGame}>Start</StyledLoginButton>
                         </StyledContenteGame> : <></>}
             {game ? <MousePadLeft
-                socketGame={socketGame}
                 profil={props.profil}
                 initGame={initGame}
                 player={player}
