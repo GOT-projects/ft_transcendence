@@ -1,4 +1,4 @@
-import {Dispatch, SetStateAction, FunctionComponent, useState, useContext} from 'react';
+import {Dispatch, FunctionComponent, useContext} from 'react';
 import {NotifyInter} from "../../components/interfaces"
 import { StyledMenuNotif, StyledMenuNotifButton, StyledMenuNotifButtonHover, StyledMenuNotifContentUser, StyledMenuNotifholder, StyledMenuNotifUser } from '../Styles/StyleNotifUser';
 import {RiUserAddFill} from 'react-icons/ri';
@@ -9,7 +9,6 @@ import { GOT } from '../../shared/types';
 import { SocketContext } from '../../socket/socketPovider';
 import { emitSocket } from '../../socket/socketEmit';
 import { useNavigate } from 'react-router-dom';
-import { accountService } from '../../services/account.service';
 
 interface IProps {
    notify: NotifyInter;
@@ -21,6 +20,7 @@ interface IProps {
 const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
     const socket = useContext(SocketContext);
     const navigate = useNavigate();
+    let url = (new URL(window.location.href));
 
     const handleAdd = (user: GOT.User) =>{
         let tmp: GOT.NotifChoice = {user:user, accept: true, channel: undefined};
@@ -74,7 +74,7 @@ const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
             props.setNotify(false);
             props.setNotifyMenu(false);
         }
-        navigate(`/game?code=waiting&invite=refused&id=${login}`)
+        navigate(`/game?code=waiting&invite=refused&id=${login}&oldurl=${url.pathname}"${url.search}"`)
     }
 
     return(
