@@ -465,8 +465,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			client.emit("error_client", "No in waiting list");
 			return ;
 		}
-		this.waiting.delete(client.id);
-		client.emit('info_client', `You left the waiting list`);
+		if (this.waiting.delete(client.id))
+			client.emit('info_client', `You left the waiting list`);
 	}
 
 	@SubscribeMessage("server_join_demand")
@@ -611,8 +611,11 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 				} else
 					client.emit('error_client', `Any demand found`)
 			} else {
-				if (demands.length === 1)
-					this.gameService.delete(demands[0].id);
+				if (demands.length === 1) {
+					await this.gameService.delete(demands[0].id);
+					this.appGateway.sendProfilOfUser(auth.user);
+				}
+				
 				let keyToDelete: string | undefined = undefined;
 				for (const [key, val] of this.waitingInvite) {
 					if (val.user1Id === user.id && val.user2Id === auth.user.id)
