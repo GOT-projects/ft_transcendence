@@ -22,6 +22,7 @@ import { GOT } from '../shared/types';
 import {  emitGame } from '../socket/socketEmitGame';
 import { offSocketGame } from '../socket/socketOffGame';
 import { SocketContextGame } from '../socket/socketPovider';
+import { useNavigate } from 'react-router-dom';
 
 async function useInterval(callback: any, delay: number) {
 	const savedCallback: any = useRef();
@@ -44,6 +45,9 @@ async function useInterval(callback: any, delay: number) {
 	}, [delay]);
 }
 
+async function delay(ms: number) {
+	return new Promise( resolve => setTimeout(resolve, ms) );
+}
 
 
 interface IProps {
@@ -52,6 +56,7 @@ interface IProps {
 	player: undefined | GOT.ActuGamePlayer;
     spec: undefined | GOT.ActuGameSpectator;
     point: undefined | GOT.ActuGamePoints;
+	endGame: boolean;
 }
 
 const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
@@ -60,7 +65,14 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 	const [y, setY] = useState(0);   // pos mouse
 
 	const socketGame = useContext(SocketContextGame);
-
+    const navigate = useNavigate();
+	
+	if (props.endGame) {
+		delay(2500).then(() => {
+			navigate('/leaderboard');
+		});
+	}
+	
 	let sizeofball: number = 0;
 	var pos_prct: number = 0;
 	var ballY: string;
@@ -113,12 +125,16 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 		
 	}
 	mouseY = tmp.toString();
-	if (props.player?.ball.x && props.player?.ball.y && rectable?.width && rectable?.width){
+	if (props.initGame?.player && props.player?.ball.x && props.player?.ball.y && rectable?.width && rectable?.width){
 		ballX  = (props.player?.ball.x * rectable?.width).toString();
 		ballY  = (props.player?.ball.y * rectable?.height).toString();
+	} else if (!(props.initGame?.player) && props.spec?.ball.x && props.spec?.ball.y && rectable?.width && rectable?.width) {
+		ballX  = (props.spec?.ball.x * rectable?.width).toString();
+		ballY  = (props.spec?.ball.y * rectable?.height).toString();
 	}
-	if (props.profil?.userInfos.login === props.initGame?.user1.login){
-		emitGame.emit_change_pad(socketGame, pos_prct);
+	if (props.initGame?.player && props.profil?.userInfos.login === props.initGame?.user1.login){
+		if (props.endGame === false)
+			emitGame.emit_change_pad(socketGame, pos_prct);
 		if (rectable?.height && props.player?.enemyY){
 			rightPadpos = (rectable?.height * props.player?.enemyY).toString();
 //			console.log("=====> otstring %D", props.player.enemyY);
@@ -132,8 +148,9 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 				<StyledBallalias id="ball"  x={ballX+"px"} y={ballY+"px"} rot="0px" size={sizeofball.toString()+"px"}></StyledBallalias>
 			</StyledLeftPad>)
 	}
-	else if (props.profil?.userInfos.login === props.initGame?.user2.login){
-		emitGame.emit_change_pad(socketGame, pos_prct);
+	else if (props.initGame?.player && props.profil?.userInfos.login === props.initGame?.user2.login){
+		if (props.endGame === false)
+			emitGame.emit_change_pad(socketGame, pos_prct);
 		if (rectable?.height && props.player?.enemyY){
 			rightPadpos = (rectable?.height * props.player?.enemyY).toString(); // left ici
 		}

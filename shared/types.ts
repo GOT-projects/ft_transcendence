@@ -161,6 +161,7 @@ export namespace GOT {
         user1: User;
         user2: User;
         codeParty: number;
+        player: boolean;
     }
 
     export interface Ball {

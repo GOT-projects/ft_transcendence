@@ -247,7 +247,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			ball,
 			enemyY: player2
 		};
-	//console.log("%d\n", player2);
+		//console.log("%d\n", player2);
 		this.server.to(game.socketUser1).emit('client_game_player', actu);
 		// player droit
 		actu = {
@@ -362,13 +362,13 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 				await this.delay(this.waitUpdate);
 			}
 			const users = [...(party.spectators), party.socketUser1, party.socketUser2];
+			this.server.to(users).emit('client_game_finish', true);
 			this.games.delete(codeParty);
 			if (party.game.points1 > party.game.points2)
 				this.server.to(users).emit('info_client', `User ${party.game.user1.login} win the game`);
 			else
 				this.server.to(users).emit('info_client', `User ${party.game.user2.login} win the game`);
 			await this.delay(3000);
-			this.server.to(users).emit('client_game_finish', true);
 			this.appGateway.sendLeaderboard();
 		} else {
 			client.emit('error_client', `Party with code ${codeParty} not found`);
@@ -443,7 +443,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 					const start: GOT.InitGame = {
 						user1: MyTransform.userEntityToGot(completeGame[0].user1),
 						user2: MyTransform.userEntityToGot(completeGame[0].user2),
-						codeParty: completeGame[0].id
+						codeParty: completeGame[0].id,
+						player: true
 					};
 					this.server.to([client.id, assoc[0]]).emit('client_init_game', start);
 					this.server.to([client.id, assoc[0]]).emit('client_game_points', {
@@ -607,7 +608,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 					const start: GOT.InitGame = {
 						user1: MyTransform.userEntityToGot(demands[0].user1),
 						user2: MyTransform.userEntityToGot(demands[0].user2),
-						codeParty: demands[0].id
+						codeParty: demands[0].id,
+						player: true
 					};
 					this.server.to([client.id, socketClient]).emit('client_init_game', start);
 					this.server.to([client.id, socketClient]).emit('client_game_points', {
@@ -657,7 +659,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			const start: GOT.InitGame = {
 				user1: MyTransform.userEntityToGot(party.game.user1),
 				user2: MyTransform.userEntityToGot(party.game.user2),
-				codeParty: party.game.id
+				codeParty: party.game.id,
+				player: false
 			};
 			client.emit('client_init_game', start);
 			client.emit('client_game_points', {

@@ -214,6 +214,7 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
                 player={player}
                 spec={spec}
                 point={point}
+                endGame={endGame}
             /> : <></>}
             <Notification notify={notify} setNotify={setNotify}/>
 			<Footer/>
