@@ -35,11 +35,7 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
     const [startInit, setStartInit] = useState(false);
     const [game, setGame] = useState(false);
     const [inviteRequest, setInviteRequest] = useState(true);
-    const [endGame, setEndGame] = useState(false);
-    const [initGame, setInitGame] = useState<GOT.InitGame>()
-    const [player, setPlayer] = useState<GOT.ActuGamePlayer>();
-    const [spec, setSpec] = useState<GOT.ActuGameSpectator>();
-    const [point, setPoints] = useState<GOT.ActuGamePoints>();
+    const [initGame, setInitGame] = useState<GOT.InitGame>();
     const navigate = useNavigate();
     
     useEffect(() => {
@@ -74,37 +70,6 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
         }
     }, [socketGame])
 
-    // socket when invite is accepte
-    useEffect(() => {
-        onSocketGame.client_game_finish(socketGame, setEndGame);
-        return () => {
-            offSocketGame.client_game_finish(socketGame);
-        }
-    }, [socketGame])
-
-    // socket in game actualise data enemy 
-    useEffect(() => {
-        onSocketGame.client_game_player(socketGame, setPlayer);
-        return () => {
-            offSocketGame.client_game_player(socketGame);
-        }
-    }, [socketGame])
-
-    // socket in game actualise data for spec 
-    useEffect(() => {
-        onSocketGame.client_game_spec(socketGame, setSpec);
-        return () => {
-            offSocketGame.client_game_spec(socketGame);
-        }
-    }, [socketGame])
-
-    // socket in game actualise point 
-    useEffect(() => {
-        onSocketGame.client_game_points(socketGame, setPoints);
-        return () => {
-            offSocketGame.client_game_points(socketGame);
-        }
-    }, [socketGame])
     //Socket get erreur from server 
     useEffect(() => {
         onSocketGame.error_client(socketGame, setNotify);
@@ -219,10 +184,6 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
             {game ? <MousePadLeft
                 profil={props.profil}
                 initGame={initGame}
-                player={player}
-                spec={spec}
-                point={point}
-                endGame={endGame}
             /> : <></>}
             <Notification notify={notify} setNotify={setNotify}/>
 			<Footer/>
