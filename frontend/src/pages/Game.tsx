@@ -21,6 +21,7 @@ interface IProps {
 
 const Game:FunctionComponent<IProps> = (props:IProps)=> {
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
+	const socketGame = useContext(SocketContextGame);
     let url = (new URL(window.location.href));
 	let params = (new URL(url)).searchParams;
     const code = params.get("code");
@@ -40,11 +41,7 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
     const [spec, setSpec] = useState<GOT.ActuGameSpectator>();
     const [point, setPoints] = useState<GOT.ActuGamePoints>();
     const navigate = useNavigate();
-    const socketGame = useContext(SocketContextGame);
     
-    if (socketGame.disconnected){
-        console.log('reconnect', socketGame.io.reconnection());
-    }
     useEffect(() => {
         onSocketGame.client_jwt(socketGame)
     }, [socketGame])
@@ -130,6 +127,7 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
             setStartGame(false);
             setGame(false);
             emitGame.emitGameJoinWaing(socketGame);
+            emitGame.emit_where_am_I(socketGame, "waiting")
         }else if (code === "spectator" && id != null){
             console.log("emit join spec")
             setWating(true);
@@ -138,6 +136,8 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
             const parse = parseInt(id);
             if (!isNaN(parse)){
                 emitGame.emitjoinSpec(socketGame, parse);
+                emitGame.emit_where_am_I(socketGame, "spectator")
+        }else if (code === "spectator" && id != null){
             }else{
                 navigate('/game');
             }
@@ -146,6 +146,7 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
             setWating(true);
             setStartGame(false);
             setGame(false);
+            emitGame.emit_where_am_I(socketGame, "waiting_invite")
             emitGame.emitJoinDemand(socketGame, id);
         }else if (code === "waiting" && id != null && invite != null){
             if (invite === "approuve"){
@@ -153,21 +154,21 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
                 setWating(true);
                 setStartGame(false);
                 setGame(false);
+                emitGame.emit_where_am_I(socketGame, "waiting_invite")
                 emitGame.emitJoinResp(socketGame, id, true);
             }else if (invite === "refused"){
                 console.log("emit refused", oldurl)
                 setWating(true);
                 setStartGame(false);
                 setGame(false);
+                emitGame.emit_where_am_I(socketGame, "waiting_invite")
                 emitGame.emitJoinResp(socketGame, id, false);
                 if (oldurl !== undefined){
                     const route = oldurl?.split("\"");
                     if (route){
                         let ret = route.join(""); 
-                        socketGame.io.reconnection();
                         navigate(`${ret}`);
                     }else{
-                        socketGame.io.reconnection();
                         navigate(`${oldurl}`);
                     }
                 }else{
@@ -176,20 +177,20 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
             }
         }else if (code === "game" && id !== undefined){
             console.log("game", initGame)
+            emitGame.emit_where_am_I(socketGame, "in_game")
             setStartGame(false);
             setWating(false);
             setGame(true);
         }else{
+            emitGame.emit_where_am_I(socketGame, "no_where")
             setWating(false);
             setStartGame(true);
             setGame(false);
-            socketGame.io.reconnection();
         }
     }, [code, invite, id])
 
     const handlereturn = () => {
         emitGame.emitLeftWaiting(socketGame);
-        socketGame.io.reconnection();
         navigate("/game");
     }
     const handleStartGame = () => {

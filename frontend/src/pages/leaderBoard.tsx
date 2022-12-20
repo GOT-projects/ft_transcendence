@@ -8,10 +8,11 @@ import { StyledLead, StyledSep, StyledTile, StyledLeadP, StyledLeadTileRank, Sty
 import { NotifyInter} from "../components/interfaces"
 import { v4 as uuid } from 'uuid';
 import { GOT } from "../shared/types";
-import { SocketContext } from "../socket/socketPovider";
+import { SocketContext, SocketContextGame } from "../socket/socketPovider";
 import { emitSocket } from "../socket/socketEmit";
 import ProfilView from '../components/popup/ProfilView';
 import { GiRetroController } from 'react-icons/gi';
+import { emitGame } from "../socket/socketEmitGame";
 
 
 interface IProps {
@@ -21,6 +22,7 @@ interface IProps {
 
 const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 	const socket = useContext(SocketContext);
+	const socketGame = useContext(SocketContextGame);
 
 	const [popuProfil, setPopupProfil] = useState(false);
 	const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
@@ -28,6 +30,9 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 	//const [histo, setHisto] = useState<GOT.HistoryParties>();
 	const [login, setLogin] = useState<string>("");
 
+	useEffect(() => {
+        emitGame.emit_where_am_I(socketGame,"no_where");
+	}, [])
 
 	useEffect(() => {
 		emitSocket.emitLeaderboard(socket);
