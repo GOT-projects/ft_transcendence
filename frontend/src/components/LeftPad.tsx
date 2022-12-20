@@ -187,7 +187,7 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 	if (props.initGame && point)
 		return (
 			<div>
-				<div style={{position: "absolute", zIndex: "10", top: "13%", opacity: "92%", color: 'white', display: 'flex', flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", width: "95%"}}>
+				<div style={{position: "absolute", zIndex: "10", top: "13%", opacity: "92%", color: 'white', display: 'flex', flexDirection: "row", flexWrap: "wrap", justifyContent:'space-between', width: "95%", marginLeft: "2.5%"}}>
 					<h2>{point?.points1 + ' - ' + props.initGame.user1.login}</h2>
 					<h2>{props.initGame.user2.login + ' - ' + point?.points2}</h2>
 				</div>
@@ -197,23 +197,21 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 					{
 						(props.initGame?.player && props.profil?.userInfos.email === props.initGame?.user1.email)
 						?
-							<StyledLeftPad1alias id="leftpad" y={mouseY+"px"}></StyledLeftPad1alias>
+							<>
+								<StyledLeftPad1alias id="leftpad" y={mouseY+"px"}></StyledLeftPad1alias>
+								<StyledRightPadalias className="rightpad" y={externPadPos + "px"}></StyledRightPadalias>
+							</>
 						: ((props.initGame?.player && props.profil?.userInfos.email === props.initGame?.user2.email)
 						?
-							<StyledRightPadalias id="leftpad" y={mouseY+"px"}></StyledRightPadalias>
+							<>
+								<StyledRightPadalias id="leftpad" y={mouseY+"px"}></StyledRightPadalias>
+								<StyledLeftPad1alias className="rightpad" y={externPadPos + "px"}></StyledLeftPad1alias>
+							</>
 						:
-							<StyledLeftPad1alias id="leftpad" y={externPadPos+"px"}></StyledLeftPad1alias>
-						)
-					}
-					{
-						(props.initGame?.player && props.profil?.userInfos.email === props.initGame?.user1.email)
-						?
-							<StyledRightPadalias className="rightpad" y={externPadPos + "px"}></StyledRightPadalias>
-						: ((props.initGame?.player && props.profil?.userInfos.email === props.initGame?.user2.email)
-						?
-							<StyledLeftPad1alias className="rightpad" y={externPadPos + "px"}></StyledLeftPad1alias>
-						:
-							<StyledRightPadalias className="rightpad" y={externPadPosSpec + "px"}></StyledRightPadalias>
+							<>
+								<StyledLeftPad1alias id="leftpad" y={externPadPos+"px"}></StyledLeftPad1alias>
+								<StyledRightPadalias className="rightpad" y={externPadPosSpec + "px"}></StyledRightPadalias>
+							</>
 						)
 					}
 					<StyledBallalias id="ball"  x={ballX+"px"} y={ballY+"px"} rot="0px" size={sizeOfBall.toString()+"px"}></StyledBallalias>

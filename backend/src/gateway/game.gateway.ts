@@ -144,9 +144,9 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 				const game = this.games.get(codeGame);
 				if (game) {
 					if (client.id === game.socketUser1)
-						game.game.points1 = 0;
+						game.game.points1 = -1;
 					else
-						game.game.points2 = 0;
+						game.game.points2 = -1;
 					game.game.status = gameStatus.FINISH;
 					this.gameService.update(game.game.id, game.game);
 					const users = [...(game.spectators), (client.id === game.socketUser1 ? game.socketUser2 : game.socketUser1)];
