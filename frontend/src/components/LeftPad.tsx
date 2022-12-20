@@ -126,13 +126,19 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 			rightPadpos = (rectable?.height * props.player?.enemyY).toString();
 		}
 		return (
-			<StyledLeftPad id="Table">
-				<StyledHexaArea className='grid'/>
-				<StyledHexaAreaLight className='light' x="0px" y="0px" />
-				<StyledLeftPad1alias id="leftpad" y={mouseY+"px"}></StyledLeftPad1alias>
-				<StyledRightPadalias className="rightpad" y={rightPadpos + "px"}></StyledRightPadalias>
-				<StyledBallalias id="ball"  x={ballX+"px"} y={ballY+"px"} rot="0px" size={sizeofball.toString()+"px"}></StyledBallalias>
-			</StyledLeftPad>)
+			<div>
+				<div style={{position: "absolute", zIndex: "10", top: "13%", opacity: "92%", color: 'white', display: 'flex', flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", width: "95%"}}>
+					<h2>{props.point?.points1 + ' - ' + props.initGame.user1.login}</h2>
+					<h2>{props.initGame.user2.login + ' - ' + props.point?.points2}</h2>
+				</div>
+				<StyledLeftPad id="Table">
+					<StyledHexaArea className='grid'/>
+					<StyledHexaAreaLight className='light' x="0px" y="0px" />
+					<StyledLeftPad1alias id="leftpad" y={mouseY+"px"}></StyledLeftPad1alias>
+					<StyledRightPadalias className="rightpad" y={rightPadpos + "px"}></StyledRightPadalias>
+					<StyledBallalias id="ball"  x={ballX+"px"} y={ballY+"px"} rot="0px" size={sizeofball.toString()+"px"}></StyledBallalias>
+				</StyledLeftPad>
+			</div>)
 	}
 	else if (props.initGame?.player && props.profil?.userInfos.email === props.initGame?.user2.email){
 		/*if (props.endGame === false)
@@ -141,29 +147,44 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 			rightPadpos = (rectable?.height * props.player?.enemyY).toString(); // left ici
 		}
 		return (
-			<StyledLeftPad id="Table">
-				<StyledHexaArea className='grid'/>
-				<StyledHexaAreaLight className='light' x="0px" y="0px" />
-				<StyledRightPadalias id="leftpad" y={mouseY+"px"}></StyledRightPadalias>
-				<StyledLeftPad1alias className="rightpad" y={rightPadpos + "px"}></StyledLeftPad1alias>
-				<StyledBallalias id="ball"  x={ballX+"px"} y={ballY+"px"} rot="0px" size={sizeofball.toString()+"px"}></StyledBallalias>
-			</StyledLeftPad>)
+			<div>
+				<div style={{position: "absolute", zIndex: "10", top: "13%", opacity: "92%", color: 'white', display: 'flex', flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", width: "95%"}}>
+					<h2>{props.point?.points1 + ' - ' + props.initGame.user1.login}</h2>
+					<h2>{props.initGame.user2.login + ' - ' + props.point?.points2}</h2>
+				</div>
+				<StyledLeftPad id="Table">
+					<StyledHexaArea className='grid'/>
+					<StyledHexaAreaLight className='light' x="0px" y="0px" />
+					<StyledRightPadalias id="leftpad" y={mouseY+"px"}></StyledRightPadalias>
+					<StyledLeftPad1alias className="rightpad" y={rightPadpos + "px"}></StyledLeftPad1alias>
+					<StyledBallalias id="ball"  x={ballX+"px"} y={ballY+"px"} rot="0px" size={sizeofball.toString()+"px"}></StyledBallalias>
+				</StyledLeftPad>
+			</div>)
 	}
-	else {
+	else if (props.initGame) {
 		var leftPadPos: string = "";
 		if (rectable?.height && props.spec?.player2Y && props.spec?.player1Y){
 			leftPadPos = (rectable?.height * props.spec?.player1Y).toString();
 			rightPadpos = (rectable?.height * props.spec?.player2Y).toString();
 		}
 		return (
-			<StyledLeftPad id="Table">
-				<StyledHexaArea className='grid'/>
-				<StyledHexaAreaLight className='light' x="0px" y="0px" />
-				<StyledLeftPad1alias id="leftpad" y={leftPadPos+"px"}></StyledLeftPad1alias>
-				<StyledRightPadalias className="rightpad" y={rightPadpos + "px"}></StyledRightPadalias>
-				<StyledBallalias id="ball"  x={ballX+"px"} y={ballY+"px"} rot="0px" size={sizeofball.toString()+"px"}></StyledBallalias>
-			</StyledLeftPad>)
+			<div>
+				<div style={{position: "absolute", zIndex: "10", top: "13%", opacity: "92%", color: 'white', display: 'flex', flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", width: "95%"}}>
+					<h2>{props.point?.points1 + ' - ' + props.initGame.user1.login}</h2>
+					<h2>{props.initGame.user2.login + ' - ' + props.point?.points2}</h2>
+				</div>
+				<StyledLeftPad id="Table">
+					<StyledHexaArea className='grid'/>
+					<StyledHexaAreaLight className='light' x="0px" y="0px" />
+					<StyledLeftPad1alias id="leftpad" y={leftPadPos+"px"}></StyledLeftPad1alias>
+					<StyledRightPadalias className="rightpad" y={rightPadpos + "px"}></StyledRightPadalias>
+					<StyledBallalias id="ball"  x={ballX+"px"} y={ballY+"px"} rot="0px" size={sizeofball.toString()+"px"}></StyledBallalias>
+				</StyledLeftPad>
+			</div>)
 	}
+	return (
+		<h1>No game infos</h1>
+	)
 
 }
 export default MousePadLeft;
