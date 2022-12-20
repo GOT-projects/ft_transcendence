@@ -3,12 +3,14 @@ import {NotifyInter} from "../../components/interfaces"
 import { StyledMenuNotif, StyledMenuNotifButton, StyledMenuNotifButtonHover, StyledMenuNotifContentUser, StyledMenuNotifholder, StyledMenuNotifUser } from '../Styles/StyleNotifUser';
 import {RiUserAddFill} from 'react-icons/ri';
 import {TiUserDelete} from 'react-icons/ti';
+import {GiRetroController} from 'react-icons/gi';
 import {MdGroupOff, MdGroup} from 'react-icons/md';
 import { v4 as uuid } from 'uuid';
 import { GOT } from '../../shared/types';
 import { SocketContext } from '../../socket/socketPovider';
 import { emitSocket } from '../../socket/socketEmit';
 import { useNavigate } from 'react-router-dom';
+import { Colors } from '../Colors';
 
 interface IProps {
    notify: NotifyInter;
@@ -126,10 +128,10 @@ const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
                         </div>
                         <StyledMenuNotifButton>
                             <StyledMenuNotifButtonHover>
-                                <MdGroup size={"30px"} onClick={() => handleAddInvitegame(game.login)}/>
+                                <GiRetroController color={Colors.radioActive} size={"25px"} onClick={() => handleAddInvitegame(game.login)}/>
                             </StyledMenuNotifButtonHover>
                             <StyledMenuNotifButtonHover>
-                                <MdGroupOff size={"25px"} onClick={() => handleRemoveInviteGame(game.login)}/>
+                                <GiRetroController color="red" size={"25px"} onClick={() => handleRemoveInviteGame(game.login)}/>
                             </StyledMenuNotifButtonHover>
                         </StyledMenuNotifButton>
                 </StyledMenuNotifholder>

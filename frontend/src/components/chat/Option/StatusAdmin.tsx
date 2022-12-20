@@ -107,7 +107,7 @@ const PopupOptionStatusAdmin:FunctionComponent<IProps> = (props: IProps) =>{
                 </StyledContaiteDivUser>
             </StyledContaiteAddUser>
             <StyledContaiteReturn className="addUser">
-                <StyledContaiteReturnDiv onClick={handleSend}>
+                <StyledContaiteReturnDiv onClick={handleClose}>
                     <p>return</p>
                 </StyledContaiteReturnDiv>
             </StyledContaiteReturn>

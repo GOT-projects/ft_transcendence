@@ -128,14 +128,17 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
             setNotify({isOpen: true, message: "Please choose password to your channel", type: "error"})
         }else{
             console.log("error need pwd djfkwqsjak" )
-            if (chanName)
+            if (chanName){
                 emitSocket.emitChanChangeName(socket, chanName, inputChan);
+                navigate(`/chat?code=Channel`);
+                return ;
+            }
         }
         if (inputChan !== ""){
-            navigate(`chat?code=Channel&name=${inputChan}`);
+            navigate(`/chat?code=Channel&name=${inputChan}`);
         }
         else{
-            navigate(`chat?code=Channel&name=${chanName}`);
+            navigate(`/chat?code=Channel&name=${chanName}`);
         }
     }
 

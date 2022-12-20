@@ -30,4 +30,5 @@ export const Colors = {
     hoverTextChat: "#42454D",
     bgChannel: "#96989D",
     green: "#3B953B",
+    radioActive: "#00FF02",
 }

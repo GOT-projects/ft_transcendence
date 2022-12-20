@@ -276,7 +276,7 @@ export const StyledChatPlace = styled.div`
     display:flex;
     flex-direction: column;
     margin: 10px;
-    max-width: 45%;
+    max-width: 100%;
     height: auto;
     border-radius: 4px;
     overflow-wrap: anywhere;
@@ -284,23 +284,13 @@ export const StyledChatPlace = styled.div`
     transition: 0.6s;
     background-color: transparent;
     &.receive{
+        background-color: ${Colors.hoverTextChat};
         justify-content: flex-start;
         text-align: left;
     }
     &.send{
         justify-content: flex-end;
-        transform: translateX(110%);
         align-items: flex-end;
-    }
-    &:hover{
-        &.send{
-            transition: 0.6s;
-            background-color: ${Colors.hoverTextChat};
-        }
-        &.receive{
-            transition: 0.6s;
-            background-color: ${Colors.hoverTextChat};
-        }
     }
     @media screen and (max-width: 768px){
     }

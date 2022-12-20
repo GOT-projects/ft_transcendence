@@ -5,7 +5,7 @@ import { InfoServer } from "../components/interfaces";
 import { accountService } from "../services/account.service";
 import { GOT } from "../shared/types";
 
-function transformUrlUsers(url: string) {
+export function transformUrlUsers(url: string) {
     if (url.split('')[0] === '/')
         return `${InfoServer.HttpServer}${url}`;
     return url;
