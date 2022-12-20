@@ -2,12 +2,14 @@ import {StyledLogin, StyledLoginLogo, StyledLoginButton} from "../components/Sty
 import BackgroundAnimate from "../components/BackGroundAnimate";
 import Logo from "../assets/Logo.png"
 import Footer from "../components/Footer";
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {Notification} from "../components/Notify"
 import {NotifyInter} from "../components/interfaces"
 import { accountService } from "../services/account.service";
 import { apiGet } from "../api/get";
 import { useNavigate } from "react-router-dom";
+import { SocketContextGame } from "../socket/socketPovider";
+import { emitGame } from "../socket/socketEmitGame";
 
 let access:boolean;
 
@@ -22,6 +24,10 @@ const getAcces = async () => {
 const Login = () => {
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''})
     const [Url, setUrl] = useState('')
+    const socketGame = useContext(SocketContextGame);
+    useEffect(() => {
+        emitGame.emit_where_am_I(socketGame,"no_where");
+    }, [])
     const navigate = useNavigate();
     (async () => await getAcces())()
     if (access === true){

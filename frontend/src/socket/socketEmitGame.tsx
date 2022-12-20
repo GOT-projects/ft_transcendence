@@ -26,7 +26,7 @@ let emit_change_pad = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>,p
 }
 
 let emit_where_am_I = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, where: string) =>{
-    socket.emit('server_change_pad', {Authorization: accountService.getToken(), where: where});
+    socket.emit('server_where_am_I', {Authorization: accountService.getToken(), where: where});
 }
 export const emitGame = {
     emitGameJoinWaing, emitLeftWaiting, emitJoinDemand, emitJoinResp, emitjoinSpec, emit_change_pad, emit_where_am_I

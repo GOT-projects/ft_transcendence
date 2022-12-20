@@ -1,14 +1,20 @@
 import Axios from "../services/Axios";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { StyledChatInput } from "../components/Styles/StyleChat";
 import { accountService } from "../services/account.service";
+import { emitGame } from "../socket/socketEmitGame";
+import { SocketContextGame } from "../socket/socketPovider";
 
 
 
 
 const Invite = () => {
     //const [infoUser, setInfoUser] = useState<UsersId>();
+    const socketGame = useContext(SocketContextGame);
+    useEffect(() => {
+        emitGame.emit_where_am_I(socketGame,"no_where");
+	}, [])
     const [inputChat, setInputChat] = useState("");
     let navigate = useNavigate();
     function handChange(event: any, setInput: any, input: string){

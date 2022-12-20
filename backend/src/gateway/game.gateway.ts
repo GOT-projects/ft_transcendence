@@ -713,11 +713,12 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		}
 	}
 
-	@SubscribeMessage('where_am_I')
+	@SubscribeMessage('server_where_am_I')
 	async whereAmI(@ConnectedSocket()client: Socket, @MessageBody("Authorization") jwt: string, @MessageBody('where') where: string){
 		const auth = await this.connectionSecure(client, jwt, true);
 		if (!auth)
 			return ;
+		this.logger.warn(where)
 		if (where === 'waiting_invite') {
 			if (auth.targetList.waitingUser || auth.targetList.spectator || auth.targetList.game)
 				this.deleteSocketData(client);
