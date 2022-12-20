@@ -731,7 +731,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			if (auth.targetList.waitingUser || auth.targetList.spectator || auth.targetList.waitingInvite)
 				this.deleteSocketData(client);
 		} else {
-			this.deleteSocketData(client);
+			if (auth.targetList.waitingUser || auth.targetList.spectator || auth.targetList.waitingInvite || auth.targetList.game)
+				this.deleteSocketData(client);
 		}
 	}
 
