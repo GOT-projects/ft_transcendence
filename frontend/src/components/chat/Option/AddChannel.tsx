@@ -1,6 +1,6 @@
-import { Dispatch, FunctionComponent, useContext, useEffect, useState } from "react";
+import { FunctionComponent, useContext, useEffect, useState } from "react";
 import { GOT } from "../../../shared/types";
-import { StyledContaiteAddChanDiv, StyledContaiteAddChanOption, StyledContaiteAddChanOptionP, StyledContaiteAddUser, StyledContaiteClose, StyledContaiteReturn, StyledContaiteReturnAddButton, StyledContaiteReturnAddButtonP, StyledContaiteReturnAddChannel, StyledContaiteReturnDiv, StyledContaiteViewAddChan } from "../../Styles/StyleViewProfil";
+import { StyledContaiteAddChanDiv, StyledContaiteAddChanOption, StyledContaiteAddChanOptionP, StyledContaiteReturnAddButton, StyledContaiteReturnAddButtonP, StyledContaiteReturnAddChannel, StyledContaiteReturnDiv, StyledContaiteViewAddChan } from "../../Styles/StyleViewProfil";
 import { motion } from "framer-motion";
 import { Colors } from "../../Colors";
 import { emitSocket } from "../../../socket/socketEmit";
@@ -56,11 +56,11 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
             return;
 		setInputPwd(event.target.value);
 	}	
-
+/*
     const handleReturn = () => {
         navigate("/chat?code=add");
     }
-
+*/
     const handleReturnChan = () => {
         navigate(`/chat?code=Channel&name=${codeParam.get("name")}&Setting=Menu`)
     }

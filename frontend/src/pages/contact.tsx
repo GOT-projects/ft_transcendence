@@ -65,7 +65,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     const [lstFriends, setLstFriends] = useState<GOT.Friend[]>()
 
     const [channelIn, setChannelIn] = useState<GOT.Channel[]>();
-    const [selectNameChan, setSelectNameChan] = useState<string>();
+    //const [selectNameChan, setSelectNameChan] = useState<string>();
     
     const codeParam: Map<string, string> = accountService.getParamsPriv();
 

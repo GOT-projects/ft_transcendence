@@ -1,13 +1,12 @@
-import { Dispatch, FunctionComponent, useContext, useEffect, useState } from "react";
+import { Dispatch, FunctionComponent, useContext, useState } from "react";
 import { FaWindowClose } from "react-icons/fa";
 import { GOT } from "../../../shared/types";
-import { StyledContaiteAddUser, StyledContaiteClose, StyledContaiteDivPUser, StyledContaiteDivUser, StyledContaitePUser, StyledContaiteReturn, StyledContaiteReturnDiv, StyledContaiteUser, StyledContaiteViewAddChan, StyledContaiteViewAddP, StyledEmptyDiv } from "../../Styles/StyleViewProfil";
+import { StyledContaiteAddUser, StyledContaiteClose, StyledContaiteDivPUser, StyledContaiteDivUser, StyledContaitePUser, StyledContaiteReturn, StyledContaiteReturnDiv, StyledContaiteViewAddChan, StyledContaiteViewAddP, StyledEmptyDiv } from "../../Styles/StyleViewProfil";
 import { motion } from "framer-motion";
 import { Colors } from "../../Colors";
 import { emitSocket } from "../../../socket/socketEmit";
 import { SocketContext } from "../../../socket/socketPovider";
 import { useNavigate } from "react-router-dom";
-import { onSocket } from "../../../socket/socketOn";
 import { v4 as uuid } from "uuid";
 
 interface IProps {
@@ -20,7 +19,7 @@ interface IProps {
 const PopupOptionAddUser:FunctionComponent<IProps> = (props: IProps) =>{
     const navigate = useNavigate();
     const socket = useContext(SocketContext)
-    const [input, setInput] = useState("");
+    //const [input, setInput] = useState("");
     const [selectUser, setSelectUser] = useState<GOT.User[]>([]);
 
     const handleClose = () => {

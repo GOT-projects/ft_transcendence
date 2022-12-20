@@ -713,6 +713,28 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		}
 	}
 
+	@SubscribeMessage('where_am_I')
+	async whereAmI(@ConnectedSocket()client: Socket, @MessageBody("Authorization") jwt: string, @MessageBody('where') where: string){
+		const auth = await this.connectionSecure(client, jwt, true);
+		if (!auth)
+			return ;
+		if (where === 'waiting_invite') {
+			if (auth.targetList.waitingUser || auth.targetList.spectator || auth.targetList.game)
+				this.deleteSocketData(client);
+		} else if (where === 'waiting') {
+			if (auth.targetList.game || auth.targetList.spectator || auth.targetList.waitingInvite)
+				this.deleteSocketData(client);
+		} else if (where === 'spectator') {
+			if (auth.targetList.game || auth.targetList.waitingUser || auth.targetList.waitingInvite)
+				this.deleteSocketData(client);
+		} else if (where === 'in_game') {
+			if (auth.targetList.waitingUser || auth.targetList.spectator || auth.targetList.waitingInvite)
+				this.deleteSocketData(client);
+		} else {
+			this.deleteSocketData(client);
+		}
+	}
+
 	/**
 	 * Socket init
 	 */

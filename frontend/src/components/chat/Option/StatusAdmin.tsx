@@ -11,7 +11,6 @@ import { SocketContext } from "../../../socket/socketPovider";
 import { useNavigate } from "react-router-dom";
 import { onSocket } from "../../../socket/socketOn";
 import { v4 as uuid } from "uuid";
-import { offSocket } from "../../../socket/socketOff";
 import { MdToggleOn, MdToggleOff } from 'react-icons/md';
 
 enum UserChannelStatus {

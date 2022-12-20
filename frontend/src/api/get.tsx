@@ -1,5 +1,4 @@
 import Axios from "../services/Axios"
-import {InfoServer} from "../components/interfaces"
 
 const getIntraUrl = async () => {
 	return (Axios.get('/auth/get_intra_url'))

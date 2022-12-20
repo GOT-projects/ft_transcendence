@@ -1,4 +1,4 @@
-import { Dispatch, FunctionComponent, useContext, useEffect, useState } from "react";
+import { FunctionComponent, useContext, useEffect, useState } from "react";
 import { FaWindowClose } from "react-icons/fa";
 import { GOT } from "../../../shared/types";
 import { StyledContaiteAddUser, StyledContaiteClose, StyledContaiteDivPUser, StyledContaiteDivUser, StyledContaitePUser, StyledContaiteReturn, StyledContaiteReturnDiv, StyledContaiteUser, StyledContaiteViewAddChan, StyledContaiteViewAddP, StyledInputPwdProtected, StylePwdProtected } from "../../Styles/StyleViewProfil";
@@ -11,8 +11,6 @@ import { onSocket } from "../../../socket/socketOn";
 import { v4 as uuid } from "uuid";
 import { offSocket } from "../../../socket/socketOff";
 import { MdOutlinePrivateConnectivity } from 'react-icons/md';
-import { stat } from "fs";
-import { StyledChatInput } from "../../Styles/StyleChat";
 
 export enum ChannelStatus {
     PUBLIC = 'PUBLIC',
@@ -63,7 +61,7 @@ const PopupOptionExloreChat:FunctionComponent<IProps> = (props: IProps) =>{
 
     const handleSend = async () => {
         //TODO need check if channel are protected or not
-        if (selectUser != undefined && selectUser !== ""){
+        if (selectUser !== undefined && selectUser !== ""){
             const tmp = channel?.filter((lst) => lst.name === selectUser);
             if (tmp && tmp[0].status === ChannelStatus.PROTECTED){
                 setPopopsPwd(true);
@@ -88,7 +86,7 @@ const PopupOptionExloreChat:FunctionComponent<IProps> = (props: IProps) =>{
 
     const Send = async () => {
         //TODO need check if channel are protected or not
-        if (selectUser !== "" && selectUser != undefined){
+        if (selectUser !== "" && selectUser !== undefined){
             const tmp = channel?.filter((lst) => lst.name === selectUser);
             if (tmp && tmp[0].status === ChannelStatus.PROTECTED){
                 emitSocket.emitChannelJoin(socket, selectUser, inputPwd);

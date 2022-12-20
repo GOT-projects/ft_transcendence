@@ -8,7 +8,6 @@ import { motion } from "framer-motion";
 import { Colors } from "../../Colors";
 import { emitSocket } from "../../../socket/socketEmit";
 import { SocketContext } from "../../../socket/socketPovider";
-import { useNavigate } from "react-router-dom";
 import { onSocket } from "../../../socket/socketOn";
 import { v4 as uuid } from "uuid";
 import { offSocket } from "../../../socket/socketOff";

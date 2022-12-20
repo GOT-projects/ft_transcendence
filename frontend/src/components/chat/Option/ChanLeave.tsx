@@ -33,7 +33,7 @@ enum UserChannelStatus {
 const PopupOptionLeave:FunctionComponent<IProps> = (props: IProps) =>{
     const navigate = useNavigate();
     const socket = useContext(SocketContext)
-    const [input, setInput] = useState("");
+    //const [input, setInput] = useState("");
     const [selectUser, setSelectUser] = useState<GOT.User[]>([]);
     const [userList, setUserlist] = useState<GOT.ChannelUsers>();
 

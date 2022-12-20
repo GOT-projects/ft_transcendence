@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent } from "react";
 import { FaWindowClose } from "react-icons/fa";
 import { StyledContaiteClose, StyledContaiteReturnDiv, StyledContaiteViewAddChan, StyledContaiteViewAddOption, StyledContaiteViewAddP, StyledContaiteViewoptionChan } from "../../Styles/StyleViewProfil";
 import { motion } from "framer-motion";
@@ -9,8 +9,8 @@ interface IProps {
 }
 
 const PopupOptionPrivateChan:FunctionComponent<IProps> = (props: IProps) =>{
-    const [inputName, setInputName] = useState("");
-    const [inputPwd, setInputPwd] = useState("");
+    //const [inputName, setInputName] = useState("");
+    //const [inputPwd, setInputPwd] = useState("");
     const navigate = useNavigate();
 
     const handleClose = () => {

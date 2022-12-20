@@ -1,26 +1,8 @@
-import React, { useContext, useState, useEffect, useRef, FunctionComponent } from 'react';
-import { StyledLeftPad, StyledLeftPad1alias, StyledLeftPad2, StyledBall, StyledBallalias, StyledRightPadalias } from './game/StyleLeftPad';
-import {User} from "./game/User"
-import {StyledCursor} from "./Styles/StyleMouse"
-import Async from "react-async"
-import { useAsync } from "react-async"
-import styled from 'styled-components';
-import {StyledHexaArea, StyledContainer, StyledGrid, StyledHexaAreaLight} from "./Styles/StyleBackGround"
-import BackgroundAnimate from "../components/BackGroundAnimate";
-import socketio, { Server } from 'socket.io';
-import { io } from "socket.io-client";
-import { Request, Response } from 'express';
-import { InfoServer } from './interfaces';
-import { on } from 'stream';
-import { apiGet } from "../api/get";
-import { TiArrowMaximiseOutline } from 'react-icons/ti';
-import { accountService } from '../services/account.service';
-import { ResultType } from '@remix-run/router/dist/utils';
-import { DefaultEventsMap } from 'socket.io/dist/typed-events';
-import { Socket } from "socket.io-client";
+import { useContext, useState, useEffect, useRef, FunctionComponent } from 'react';
+import { StyledLeftPad, StyledLeftPad1alias, StyledBallalias, StyledRightPadalias } from './game/StyleLeftPad';
+import {StyledHexaArea, StyledHexaAreaLight} from "./Styles/StyleBackGround"
 import { GOT } from '../shared/types';
 import {  emitGame } from '../socket/socketEmitGame';
-import { offSocketGame } from '../socket/socketOffGame';
 import { SocketContextGame } from '../socket/socketPovider';
 import { useNavigate } from 'react-router-dom';
 
@@ -60,8 +42,8 @@ interface IProps {
 }
 
 const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
-	const [count, setCount] = useState(0);
-	const [tmp3, setTmp] = useState(0);
+	//const [count, setCount] = useState(0);
+	//const [tmp3, setTmp] = useState(0);
 	const [y, setY] = useState(0);   // pos mouse
 
 	const socketGame = useContext(SocketContextGame);
@@ -80,9 +62,9 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 	var mouseY: string;
 	var rectable;		// pour listen uniquement sur le jeu
 	var rectpad;
-	var rectball;
+	//var rectball;
 	var tmp = 100;		// ntm js
-	var tmp2 = 0;
+	//var tmp2 = 0;
 	var rightPadpos: string;
 	ballX ="";
 	ballY = "";
@@ -104,7 +86,7 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 		table.addEventListener("mousemove", (e) => {
 			if (y !== e.pageY) {
 				setY(e.pageY);
-				setCount(count + 1);
+				//setCount(count + 1);
 			}
 		});
 	}
@@ -113,7 +95,7 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 		
 		rectable = table.getBoundingClientRect();
 		rectpad = p1.getBoundingClientRect();
-		rectball = baballe.getBoundingClientRect();
+		//rectball = baballe.getBoundingClientRect();
 		
 		tmp = y;
 		tmp -= rectable.top;

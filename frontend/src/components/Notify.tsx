@@ -13,7 +13,7 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
     const socket = useContext(SocketContext);
 
    const handleClose = () =>{
-        const params = (new URL(window.location.href));
+        //const params = (new URL(window.location.href));
         let regex:RegExp = /^User with login (.*[a-z]) send you a private message/
         if (regex.test(notify.message)){
             const tab = notify.message.split(" ");

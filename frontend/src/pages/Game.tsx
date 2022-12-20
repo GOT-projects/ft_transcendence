@@ -27,7 +27,7 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
     const id = params.get("id");
     const oldurl = params.get("oldurl");
     const invite = params.get("invite");
-    const lastUrl = params.get("lastUrl");
+    //const lastUrl = params.get("lastUrl");
     //TODO need add param last url
     const [waiting, setWating] = useState(false);
     const [startGame, setStartGame] = useState(false);
@@ -174,7 +174,7 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
                     navigate("/leaderboard");
                 }
             }
-        }else if (code === "game" && id != undefined){
+        }else if (code === "game" && id !== undefined){
             console.log("game", initGame)
             setStartGame(false);
             setWating(false);

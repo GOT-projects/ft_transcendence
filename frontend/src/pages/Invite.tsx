@@ -1,7 +1,6 @@
 import Axios from "../services/Axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { UsersId } from "../components/interfaces";
 import { StyledChatInput } from "../components/Styles/StyleChat";
 import { accountService } from "../services/account.service";
 
@@ -9,7 +8,7 @@ import { accountService } from "../services/account.service";
 
 
 const Invite = () => {
-    const [infoUser, setInfoUser] = useState<UsersId>();
+    //const [infoUser, setInfoUser] = useState<UsersId>();
     const [inputChat, setInputChat] = useState("");
     let navigate = useNavigate();
     function handChange(event: any, setInput: any, input: string){

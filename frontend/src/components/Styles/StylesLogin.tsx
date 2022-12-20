@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import {Colors} from "../Colors"
-import {Link} from 'react-router-dom'
 
 
 interface PropsLogo {

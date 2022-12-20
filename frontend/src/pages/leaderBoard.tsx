@@ -4,7 +4,7 @@ import Header from "../components/Header"
 import {Colors} from "../components/Colors"
 import React, { Dispatch, FunctionComponent } from 'react'
 import { useContext, useState, useEffect } from 'react';
-import { StyledLead, StyledSep, StyledTile, StyledLeadP, StyledLeadTileRank, StyledLeadB, Button, StyledSepController, StyledLeadPHead } from "../components/Styles/StyledleaderBoard";
+import { StyledLead, StyledSep, StyledTile, StyledLeadP, StyledLeadTileRank, StyledLeadB, StyledSepController, StyledLeadPHead } from "../components/Styles/StyledleaderBoard";
 import { NotifyInter} from "../components/interfaces"
 import { v4 as uuid } from 'uuid';
 import { GOT } from "../shared/types";
@@ -25,7 +25,7 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 	const [popuProfil, setPopupProfil] = useState(false);
 	const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
 	const [tab, setTab] = useState<GOT.LeaderBoard>();
-	const [histo, setHisto] = useState<GOT.HistoryParties>();
+	//const [histo, setHisto] = useState<GOT.HistoryParties>();
 	const [login, setLogin] = useState<string>("");
 
 
