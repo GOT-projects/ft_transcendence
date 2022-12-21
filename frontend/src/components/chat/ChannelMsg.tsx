@@ -19,7 +19,7 @@ interface IProps {
 }
 
 const ChannelMsg:FunctionComponent<IProps> = (props:IProps)=> {
-    const [handleSocket, setHandleSocket] = useState<string>('');
+    //const [handleSocket, setHandleSocket] = useState<string>('');
     const bottomChat = useRef<null | HTMLDivElement>(null);
     const [inputChat, setInputChat] = useState("");
     const socket = useContext(SocketContext)

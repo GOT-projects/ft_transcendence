@@ -1,19 +1,16 @@
-import { Dispatch, FunctionComponent, useContext, useState } from "react";
+import { FunctionComponent } from "react";
 import { FaWindowClose } from "react-icons/fa";
-import { GOT } from "../../../shared/types";
-import { StyledContaiteAddUser, StyledContaiteClose, StyledContaiteReturn, StyledContaiteReturnDiv, StyledContaiteViewAddChan, StyledContaiteViewAddOption, StyledContaiteViewAddP, StyledContaiteViewoptionChan } from "../../Styles/StyleViewProfil";
+import { StyledContaiteClose, StyledContaiteReturnDiv, StyledContaiteViewAddChan, StyledContaiteViewAddOption, StyledContaiteViewAddP, StyledContaiteViewoptionChan } from "../../Styles/StyleViewProfil";
 import { motion } from "framer-motion";
 import { Colors } from "../../Colors";
-import { emitSocket } from "../../../socket/socketEmit";
-import { SocketContext } from "../../../socket/socketPovider";
 import { useNavigate } from "react-router-dom";
 
 interface IProps {
 }
 
 const PopupOptionPrivateChan:FunctionComponent<IProps> = (props: IProps) =>{
-    const [inputName, setInputName] = useState("");
-    const [inputPwd, setInputPwd] = useState("");
+    //const [inputName, setInputName] = useState("");
+    //const [inputPwd, setInputPwd] = useState("");
     const navigate = useNavigate();
 
     const handleClose = () => {

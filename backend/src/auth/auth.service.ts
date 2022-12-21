@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { HttpException, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { Request, Response } from "express";
 import { stringify } from "querystring";
@@ -60,7 +60,6 @@ export class AuthService {
 			wallet: request.data.wallet,
 			email: request.data.email,
 		}
-		// TODO 2FA
 		this.connect(res, createUserDto);
 	}
 

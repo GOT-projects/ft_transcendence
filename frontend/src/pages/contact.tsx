@@ -1,5 +1,5 @@
-import { StyledChat, StyledChatPrive, StyledChatSep, StyledChatSettingButton, 
-    StyledChatSwith, StyledChatSwithButton, StyledChatText, StyledContact, StyledContaite, 
+import { StyledChatPrive, StyledChatSep, 
+    StyledChatSwith, StyledContact, StyledContaite, 
     StyledChatSwithTile, StyledSettingChan, StyledSettingChanP } from '../components/Styles/StyleChat';
 import React, {Dispatch, FunctionComponent, useContext, useEffect, useState } from 'react';
 import BackgroundAnimate from '../components/BackGroundAnimate';
@@ -8,7 +8,7 @@ import Header from '../components/Header';
 import {Colors} from "../components/Colors"
 import {NotifyInter} from "../components/interfaces"
 import {Notification} from "../components/Notify"
-import { SocketContext } from '../socket/socketPovider';
+import { SocketContext, SocketContextGame } from '../socket/socketPovider';
 import { emitSocket } from '../socket/socketEmit';
 import ProfilView from '../components/popup/ProfilView';
 import { GOT } from '../shared/types';
@@ -36,6 +36,7 @@ import { useNavigate } from 'react-router-dom';
 import PopupOptionLeave from '../components/chat/Option/ChanLeave';
 import PopupOptionBlock from '../components/chat/Option/ChanBlock';
 import PopupOptionStatusAdmin from '../components/chat/Option/StatusAdmin';
+import { emitGame } from '../socket/socketEmitGame';
 
 interface IProps {
    profil: GOT.Profile | undefined;
@@ -44,6 +45,7 @@ interface IProps {
 
 const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     const socket = useContext(SocketContext);
+	const socketGame = useContext(SocketContextGame);
     const navigate = useNavigate();
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
     const [active, setActive] = useState("UnActiveMenu");
@@ -65,10 +67,13 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     const [lstFriends, setLstFriends] = useState<GOT.Friend[]>()
 
     const [channelIn, setChannelIn] = useState<GOT.Channel[]>();
-    const [selectNameChan, setSelectNameChan] = useState<string>();
+    //const [selectNameChan, setSelectNameChan] = useState<string>();
     
     const codeParam: Map<string, string> = accountService.getParamsPriv();
 
+	useEffect(() => {
+        emitGame.emit_where_am_I(socketGame,"no_where");
+	}, [])
 
     useEffect(() => {
         onSocket.profil_login(socket, setHisto);

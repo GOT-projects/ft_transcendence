@@ -2,7 +2,7 @@ import {StyledHeader, StyleMenusHeader ,StyleMenuHeader, StyleNavToggler, StyleN
 import {Dispatch, FunctionComponent, useState, useEffect, useCallback, useContext } from "react";
 import { IoIosNotifications, IoMdNotificationsOff } from 'react-icons/io';
 import ProfileMenu from "./MenuProfilHeader";
-import {InfoServer, NotifyInter} from "../components/interfaces"
+import {NotifyInter} from "../components/interfaces"
 import { Colors } from "./Colors";
 import PopupNotifUser from "./popup/NotifyUser";
 import PopupListFriends from "./popup/FriendLst";
@@ -13,7 +13,6 @@ import SetupOtc from "./popup/SetupOtc";
 import { onSocket } from "../socket/socketOn";
 import { offSocket } from "../socket/socketOff";
 import { useNavigate } from "react-router-dom";
-import { query } from "express";
 import { accountService } from "../services/account.service";
 
 interface IProps {
@@ -36,9 +35,8 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
     const [profileMenu, setProfileMenu] = useState(false);
     const [otc, setOtc] = useState(false);
     let notif = false;
-    const codeParam: Map<string, string> = accountService.getParamsNotif();
 
-    if (props.profil?.notif.length !== 0 || props.profil.notifChannel.length !== 0){
+    if (props.profil?.notif.length !== 0 || props.profil.notifChannel.length !== 0 || props.profil.gameDemands.length !== 0){
         notif = true;
     }
     //Socket refresh token
@@ -146,9 +144,8 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
 	return (
         <StyledHeader>
             <StyleMenusHeader className={active}>
-                <StyleMenuHeader colortext={props.colorHome} text={"Home"} to='/'>Home</StyleMenuHeader>
-                <StyleMenuHeader colortext={props.colorGame}text={"Game"}to="/game">Game</StyleMenuHeader>
                 <StyleMenuHeader colortext={props.colorLeadBoard}text={"LeaderBoard"} to='/leaderboard'>LeaderBoard</StyleMenuHeader>
+                <StyleMenuHeader colortext={props.colorGame}text={"Game"}to="/game">Game</StyleMenuHeader>
                 <StyleMenuHeader colortext={props.colorChat} text={"Chat"}to='/chat?code=Priv'>Chat</StyleMenuHeader>
                 <StyleMenuHeaderNotity colorIcon={notif ? Colors.NotifActive : Colors.NotifUnactive}>
                     {notif ? <IoIosNotifications size={"22px"} onClick={handleMenuNotif}/> : <IoMdNotificationsOff size={"22px"}/>}

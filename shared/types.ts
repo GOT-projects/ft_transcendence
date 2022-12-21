@@ -86,12 +86,14 @@ export namespace GOT {
         notifChannel: Channel[];
         friends: Friend[];
         blocks: User[];
+        gameDemands: User[]
     }
 
     export interface HistoryParties {
         userInfos: User;
         stat: StatUser;
         parties: Party[];
+        inGame: number | undefined; // id de la game ou pas visualiser
     }
 
 
@@ -153,5 +155,33 @@ export namespace GOT {
     export interface ChannelUsers {
         channel: Channel;
         users: UserChannel[];
+    }
+
+    export interface InitGame {
+        user1: User;
+        user2: User;
+        codeParty: number;
+        player: boolean;
+    }
+
+    export interface Ball {
+        x: number;
+        y: number;
+    }
+
+    export interface ActuGamePlayer {
+        ball: Ball;
+        enemyY: number;
+    }
+
+    export interface ActuGameSpectator {
+        ball: Ball,
+        player1Y: number;
+        player2Y: number;
+    }
+
+    export interface ActuGamePoints {
+        points1: number;
+        points2: number;
     }
 }

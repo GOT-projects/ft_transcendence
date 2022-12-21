@@ -1,6 +1,5 @@
 
 import styled from 'styled-components';
-import { Colors } from '../Colors';
 import Background from "../../assets/grid.png"
 
 interface mousePos{

@@ -11,7 +11,6 @@ import { SocketContext } from "../../../socket/socketPovider";
 import { useNavigate } from "react-router-dom";
 import { onSocket } from "../../../socket/socketOn";
 import { v4 as uuid } from "uuid";
-import { offSocket } from "../../../socket/socketOff";
 import { MdToggleOn, MdToggleOff } from 'react-icons/md';
 
 enum UserChannelStatus {
@@ -108,7 +107,7 @@ const PopupOptionStatusAdmin:FunctionComponent<IProps> = (props: IProps) =>{
                 </StyledContaiteDivUser>
             </StyledContaiteAddUser>
             <StyledContaiteReturn className="addUser">
-                <StyledContaiteReturnDiv onClick={handleSend}>
+                <StyledContaiteReturnDiv onClick={handleClose}>
                     <p>return</p>
                 </StyledContaiteReturnDiv>
             </StyledContaiteReturn>

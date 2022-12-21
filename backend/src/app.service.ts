@@ -5,6 +5,7 @@ import { GOT } from "shared/types";
 import { jwtContent } from "./auth/types";
 import { UserService } from "./database/services/user.service";
 
+
 @Injectable()
 export class AppService {
     constructor(

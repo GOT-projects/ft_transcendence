@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import {Colors} from "../Colors"
-import {Link} from 'react-router-dom'
 
 
 interface PropsLogo {
@@ -158,6 +157,12 @@ export const StyledWaitingContente = styled.div`
         --slice-3: inset(10% -6px 85% 0);
         --slice-4: inset(40% -6px 43% 0);
         --slice-5: inset(80% -6px 5% 0);
+        &.Waiting{
+            content: 'Waiting...';
+        }
+        &.Return{
+            content: 'Return';
+        }
         content: 'Login Intra';
         display: block;
         position: absolute;

@@ -1,11 +1,23 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { GOT } from "shared/types";
-import internal from "stream";
-import { Repository } from "typeorm";
+import { DeleteResult, Repository, UpdateResult } from "typeorm";
 import { Game, gameStatus } from "../entities/game.entity";
 import { User } from "../entities/user.entity";
 import { UserService } from "./user.service";
+import { PartialType } from "@nestjs/swagger";
+
+export class CreateGameDto {
+	user1Id!: number;
+	user2Id!: number;
+	status!: gameStatus;
+}
+
+export class UpdateGameDto extends PartialType(CreateGameDto)  {
+	id?: number | undefined;
+	points1?: number | undefined;
+	points2?: number| undefined;
+}
 
 @Injectable()
 export class GameService {
@@ -13,6 +25,11 @@ export class GameService {
 		@InjectRepository(Game) private gameRepository: Repository<Game>,
 		private readonly userService: UserService,
 	) {}
+
+	async create(createGameDto: CreateGameDto): Promise<Game> {
+		const newGame = this.gameRepository.create(createGameDto);
+		return await this.gameRepository.save(newGame);
+	}
 
 	async isInParty(user: User): Promise<Game | undefined> {
 		const inProgress = await this.gameRepository.find({
@@ -32,7 +49,12 @@ export class GameService {
 		const allUsers = await this.userService.findAll();
 		for (const user of allUsers)
 			map.set(user.id, {victory: 0, defeat: 0, rank: -1});
-		const allGames = await this.gameRepository.find();
+		const allGames = await this.gameRepository.find({
+			where: [
+				{status: gameStatus.FINISH},
+				{status: gameStatus.IN_PROGRESS},
+			],
+		});
 		// Récupération des défaites et des victoires
 		for (const game of allGames) {
 			const idVictory = game.points1 > game.points2 ? game.user1Id : game.user2Id;
@@ -53,7 +75,7 @@ export class GameService {
 			}
 		}
 		let newMap: Map<number, GOT.StatUser> = new Map<number, GOT.StatUser>([...map].sort((a: any , b: any) => {
-			return (a[1].victory - a[1].defeat) - (b[1].victory - b[1].defeat);
+			return (b[1].victory - b[1].defeat) - (a[1].victory - a[1].defeat);
 		}));
 		let i: number = 1;
 		for (const elem of newMap) {
@@ -79,5 +101,81 @@ export class GameService {
 		if (statUser === undefined)
 			return 'User statistic problem';
 		return statUser;
+	}
+
+	async getGameDemands(): Promise<Game[]> {
+		return this.gameRepository.find({
+			where: [
+				{status: gameStatus.DEMAND}
+			]
+		});
+	}
+
+	async getGameUserWhoDemand(user: User): Promise<Game[]> {
+		return this.gameRepository.find({
+			select: ["id", "points1", "points2", "status", "user1", "user2", "user1Id", "user2Id"],
+			where: [
+				{user1Id: user.id, status: gameStatus.DEMAND}
+			],
+			relations: ["user1", "user2"]
+		});
+	}
+
+	async getGameUserWhoIsDemand(userWho: User, userIs: User): Promise<Game[]> {
+		return this.gameRepository.find({
+			select: ["id", "points1", "points2", "status", "user1", "user2", "user1Id", "user2Id"],
+			where: [
+				{user1Id: userWho.id, user2Id: userIs.id, status: gameStatus.DEMAND}
+			],
+			relations: ["user1", "user2"]
+		});
+	}
+
+
+	async getGameUserIsDemand(user: User): Promise<Game[]> {
+		return this.gameRepository.find({
+			select: ["id", "points1", "points2", "status", "user1", "user2", "user1Id", "user2Id"],
+			where: [
+				{user2Id: user.id, status: gameStatus.DEMAND}
+			],
+			relations: ["user1", "user2"]
+		});
+	}
+
+	async getGamesInProgress(): Promise<Game[]> {
+		return this.gameRepository.find({
+			where: [
+				{status: gameStatus.IN_PROGRESS}
+			]
+		});
+	}
+
+	async findCompleteGame(createGameDto: CreateGameDto): Promise<Game[]> {
+		return await this.gameRepository.find({
+			select: ["id", "points1", "points2", "status", "user1", "user2", "user1Id", "user2Id"],
+			where: createGameDto,
+			relations: ["user1", "user2"]
+		});
+	}
+
+	async findUserInGame(user: User) {
+		return await this.gameRepository.find({
+			select: ["id", "points1", "points2", "status", "user1", "user2", "user1Id", "user2Id"],
+			where: [
+				{user1Id: user.id, status: gameStatus.IN_PROGRESS},
+				{user2Id: user.id, status: gameStatus.IN_PROGRESS},
+			],
+			relations: ["user1", "user2"]
+		});
+	}
+
+	async update(id: number, updateGameDto: UpdateGameDto): Promise<UpdateResult> {
+		return await this.gameRepository.update(id, updateGameDto);
+	}
+
+	async delete(id: number): Promise<DeleteResult> {
+		return await this.gameRepository.delete({
+			id
+		});
 	}
 }

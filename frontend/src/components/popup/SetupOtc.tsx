@@ -1,6 +1,5 @@
 import React, { Dispatch, FunctionComponent, useEffect, useState } from "react";
 import { StyledContaite, StyledContaiteDescription, StyledContaiteDescriptionA, StyledContaiteDescriptionH1, StyledContaiteDescriptionH3, StyledContaiteDescriptionP, StyledContaiteQrcode } from "../Styles/StyleOtc";
-import QRCode from "react-qr-code";
 import {apiPost} from "../../api/post"
 
 interface IProps {
@@ -66,7 +65,7 @@ const SetupOtc:FunctionComponent<IProps> = (props: IProps) => {
             <StyledContaiteDescriptionP>{ code }</StyledContaiteDescriptionP>
         </StyledContaiteDescription>
         <StyledContaiteQrcode>
-            <img src={gcode}/>
+            <img alt="qrcode to add 2fa" src={gcode}/>
         </StyledContaiteQrcode>
             <StyledContaiteDescriptionP>Verify the code from the app</StyledContaiteDescriptionP>
             <input type="text" value={inputOtc} placeholder="OTC CODE" onChange={(e) => {handleChange(e)}}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import BackgroundAnimate from "../components/BackGroundAnimate";
 import Footer from "../components/Footer";
 import { accountService } from '../services/account.service';
@@ -8,14 +8,20 @@ import Popup2FA from '../components/popup/Popup2FA';
 import { StyledWaitingContente, StyledWaitingTitle } from '../components/Styles/StylesLogin';
 import { Notification } from '../components/Notify';
 import { NotifyInter } from '../components/interfaces';
+import { SocketContextGame } from '../socket/socketPovider';
+import { emitGame } from '../socket/socketEmitGame';
 
 const Waiting = () => {
     const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
     const [twoFAPop, setTwoFAPop] = useState(false);
+    const socketGame = useContext(SocketContextGame);
 	const url = window.location.href;
     let navigate = useNavigate();
 	let params = (new URL(url)).searchParams;
     const code = params.get("code");
+    useEffect(() => {
+        emitGame.emit_where_am_I(socketGame,"no_where");
+	}, [])
     useEffect(() => {
         if (!!code && !twoFAPop){
         try{
@@ -27,7 +33,7 @@ const Waiting = () => {
                     if (response.data.user.isTwoFactorAuthenticationEnabled){
                             setTwoFAPop(true);
                     }else{
-                        navigate('/game');
+                        navigate('/leaderboard');
                     }
 	        	}
 	        }).catch((e) =>{

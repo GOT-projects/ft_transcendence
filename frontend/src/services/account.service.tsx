@@ -1,20 +1,18 @@
-import Axios from "axios"
 import { apiGet } from "../api/get";
-import { UsersId } from "../components/interfaces";
 
 
 let saveToken = (token: string) => {
     document.cookie = `token_access= ${token}; expires= ; path=/`;
     localStorage.setItem('token_access', token)
 }
-
+/*
 let saveAccess = (token: string) => {
     localStorage.setItem('access', token)
 }
 
 let removeAccess= () => {
     localStorage.removeItem('access')
-}
+}*/
 
 let removeUser= () => {
     localStorage.removeItem('access')

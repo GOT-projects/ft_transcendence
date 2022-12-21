@@ -1,12 +1,11 @@
 import styled from 'styled-components';
 import {Colors} from "../Colors"
 import { motion } from "framer-motion";
-// import {Link} from 'react-router-dom'
-
+/*
 interface BgColor{
     color:string;
 }
-
+*/
 export const StyledContaite = styled(motion.div)`
     position: absolute;
     flex-direction: column;

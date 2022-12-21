@@ -107,6 +107,8 @@ export const StyledContaitePUser = styled.p`
     margin: 4px;
     margin-left: 10px;
     font-size: 20px;
+    width: 8.2em;
+    overflow: hidden; 
     color: ${Colors.primary};
 `
 
@@ -215,8 +217,8 @@ export const StyledContaiteView = styled.div`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 400px;
-    height: 600px;
+    width: 50%;
+    height: calc(100% - 9rem);
     overflow: hidden;
     border: 2px solid ${Colors.border};
     border-radius: 20px;
@@ -382,20 +384,33 @@ export const StyledContaiteHistory = styled.div`
 `
 export const StyledContaiteHistorylst = styled.div`
     display: flex;
+    justify-content: space-evenly;
     margin: 10px;
     width: 100%;
     align-items: center;
 `
 export const StyledContaiteHistoryUser = styled.div`
     display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin: 10px;
-    width: 100px;
+    width: 12em;
     overflow: hidden;
+`
+export const StyledContaiteHistoryUserButton = styled.div`
+    position: absolute;
+    display: flex;
+    align-items: center;
+    right: 10px;
+    justify-content: flex-end;
+    gap: 10px;
+    
 `
 
 export const StyledContaiteHistoryScore = styled.div`
     display: flex;
     margin: 10px;
+    width: 8em;
     overflow: hidden;
 `
 export const StyledContaiteHistoryVs = styled.div`
@@ -411,6 +426,10 @@ export const StyledContaiteText = styled.p<Isize>`
     font-family: "Public Pixel";
     color: ${Colors.dark1};
     font-size: ${p => p.size};
+    &.title{
+        width: 10em;
+        overflow: hidden;
+    }
 
 `
 

@@ -1,11 +1,9 @@
-import { parse } from 'path';
 import { useState } from 'react';
-import { PageName } from './interfaces';
 import {StyledHexaArea, StyledContainer, StyledGrid, StyledHexaAreaLight} from "./Styles/StyleBackGround"
 
 function BackgroundAnimate(props:{name:string}){
-    const w = window.innerWidth;
-    const h = window.innerHeight;
+    //const w = window.innerWidth;
+    //const h = window.innerHeight;
     const [x, setX] = useState(0);
     const [y, setY] = useState(0);
 	if (props.name !== "game"){
@@ -16,8 +14,8 @@ function BackgroundAnimate(props:{name:string}){
 	}
     const sendX = x.toString() + "px";
     const sendY = y.toString() + "px";
-    const sendW = w.toString() + "px";
-    const sendH = h.toString() + "px";
+    //const sendW = w.toString() + "px";
+    //const sendH = h.toString() + "px";
 	return (
         <StyledContainer>
             <StyledGrid id="hex-grid">

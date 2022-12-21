@@ -3,19 +3,16 @@ import Footer from "../components/Footer";
 import Header from "../components/Header"
 import {Colors} from "../components/Colors"
 import React, { Dispatch, FunctionComponent } from 'react'
-import { useContext, useState, useEffect, useRef} from 'react';
-import { StyledLead, StyledLeadTile, StyledSep, StyledTile, StyledLeadP, StyledLeadTileRank, StyledLeadB, Button, StyledSepController, StyledLeadPHead } from "../components/Styles/StyledleaderBoard";
-import {InfoServer, NotifyInter} from "../components/interfaces"
-import {Notification} from "../components/Notify"
+import { useContext, useState, useEffect } from 'react';
+import { StyledLead, StyledSep, StyledTile, StyledLeadP, StyledLeadTileRank, StyledLeadB, StyledSepController, StyledLeadPHead } from "../components/Styles/StyledleaderBoard";
+import { NotifyInter} from "../components/interfaces"
 import { v4 as uuid } from 'uuid';
-import { apiGet } from "../api/get";
 import { GOT } from "../shared/types";
-import { SocketContext } from "../socket/socketPovider";
-import { tmpdir } from "os";
+import { SocketContext, SocketContextGame } from "../socket/socketPovider";
 import { emitSocket } from "../socket/socketEmit";
-import Axios from "../services/Axios";
 import ProfilView from '../components/popup/ProfilView';
 import { GiRetroController } from 'react-icons/gi';
+import { emitGame } from "../socket/socketEmitGame";
 
 
 interface IProps {
@@ -25,12 +22,17 @@ interface IProps {
 
 const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 	const socket = useContext(SocketContext);
+	const socketGame = useContext(SocketContextGame);
 
 	const [popuProfil, setPopupProfil] = useState(false);
 	const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
 	const [tab, setTab] = useState<GOT.LeaderBoard>();
-	const [histo, setHisto] = useState<GOT.HistoryParties>();
+	//const [histo, setHisto] = useState<GOT.HistoryParties>();
 	const [login, setLogin] = useState<string>("");
+
+	useEffect(() => {
+        emitGame.emit_where_am_I(socketGame,"no_where");
+	}, [])
 
 	useEffect(() => {
 		emitSocket.emitLeaderboard(socket);
@@ -105,9 +107,9 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 									<StyledLeadB onClick={() => {buttonHandler(usr.userInfos.login)}} className="button">{usr.userInfos.login}</StyledLeadB>
 								</div>
 							</td>
-							<StyledLeadP>{usr.stat.rank}</StyledLeadP>
-							<StyledLeadP>{usr.stat.victory}</StyledLeadP>
-							<StyledLeadP>{usr.stat.defeat}</StyledLeadP>
+							<StyledLeadP style={{textAlign: "center"}}>{usr.stat.rank}</StyledLeadP>
+							<StyledLeadP style={{textAlign: "center"}}>{usr.stat.victory}</StyledLeadP>
+							<StyledLeadP style={{textAlign: "center"}}>{usr.stat.defeat}</StyledLeadP>
 						</tr>
 						))
 					}

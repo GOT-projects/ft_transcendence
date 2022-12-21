@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { accountService } from "../services/account.service";
 import { emitSocket } from "../socket/socketEmit";
 import { SocketContext } from "../socket/socketPovider";
+import { v4 as uuid } from "uuid";
 
 export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
    const {notify, setNotify} = props;
@@ -13,7 +14,7 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
     const socket = useContext(SocketContext);
 
    const handleClose = () =>{
-        const params = (new URL(window.location.href));
+        //const params = (new URL(window.location.href));
         let regex:RegExp = /^User with login (.*[a-z]) send you a private message/
         if (regex.test(notify.message)){
             const tab = notify.message.split(" ");
@@ -72,6 +73,7 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
                  opacity: '0.9',
 				 transition: '0.6s'
                  }}
+        key={uuid()}
          >
          {handleViewPopup() ?
          <Alert severity={notify.type} onClose={handleClose} onClick={handleClose} 

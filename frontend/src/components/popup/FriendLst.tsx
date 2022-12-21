@@ -1,4 +1,4 @@
-import {Dispatch, FunctionComponent, useContext, useEffect, useState} from 'react';
+import {Dispatch, FunctionComponent, useContext, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 import { GOT } from '../../shared/types';
@@ -29,7 +29,7 @@ const StatusProfile:FunctionComponent<IProp> = (props:IProp)=> {
 
 const PopupListFriends:FunctionComponent<IProps> = (props:IProps) => {
     const socket = useContext(SocketContext);
-    const [friends, setFriends] = useState<GOT.Friend[]>()
+    //const [friends, setFriends] = useState<GOT.Friend[]>()
     const navigate = useNavigate()
 
     useEffect(() => {

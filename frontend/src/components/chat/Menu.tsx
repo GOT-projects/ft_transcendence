@@ -1,13 +1,12 @@
-import { Dispatch, FunctionComponent, useContext, useEffect } from "react";
+import { Dispatch, FunctionComponent, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { GOT } from "../../shared/types";
 import { emitSocket } from "../../socket/socketEmit";
 import { SocketContext } from "../../socket/socketPovider";
 import { StyleNavToggler, StyleNavTogglerIcon } from "../Styles/StyledHeader";
-import { StyledChanDiv, StyledChanPadd, StyledChanSep, StyledContaiteChannel, StyledContaiteMenu, StyledMenuTitle } from "../Styles/StyleViewProfil";
+import { StyledChanDiv, StyledChanPadd, StyledChanSep, StyledContaiteChannel, StyledContaiteMenu } from "../Styles/StyleViewProfil";
 import { TiMessages} from 'react-icons/ti';
-import { colors } from "@material-ui/core";
 import { Colors } from "../Colors";
 
 
