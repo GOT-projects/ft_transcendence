@@ -119,7 +119,7 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 
 	useEffect(() => {
 		if (rectpad?.height) {
-			setSizeOfBall(rectpad.height / 3);
+			setSizeOfBall(rectpad.height / 4);
 		}
 	}, [rectpad?.height]);
 

@@ -220,20 +220,16 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	private collision(b: ball, p: player){
 		p.top = p.y - p.height / 2;
-		p.bottom = p.y + p.height / 2;
-		if (b.x > 2000)
-			p.left = this.dimX - 20;
-		else
-			p.left = p.x;
-		if (b.x > 2000)
-			p.right = this.dimX;
-		else
-			p.right = p.x + p.width;
+		p.bottom = p.y + p.height / 4;
+
+		p.left = p.x;
 		
-		b.top = b.y ;
-		b.bottom = b.y + b.radius * 2;
+		p.right = p.x + p.width;
+		
+		b.top = b.y - b.radius;
+		b.bottom = b.y + b.radius;
 		b.left = b.x - b.radius;
-		b.right = b.x + b.radius * 4;
+		b.right = b.x + b.radius * 3.5;
 		
 		return p.left < b.right && p.top < b.bottom && p.right > b.left && p.bottom > b.top;
 	}
@@ -288,7 +284,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}
 
 	private async update(party: Games): Promise<number>{
-		if( party.ball.x - party.ball.radius < 0 ){
+		if( party.ball.x + party.ball.radius < 20){
 			party.game.points2++;
 			try {
 				this.algoGameSendPoints(party);
@@ -297,7 +293,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 				this.logger.error(`Update party point2 ${error.message}`);
 			}
 			this.resetBall(party.ball);
-		} else if( party.ball.x + party.ball.radius > this.dimX){
+		} else if(party.ball.x + party.ball.radius > this.dimX - 20){
 			party.game.points1++;
 			try {
 				this.algoGameSendPoints(party);
@@ -325,7 +321,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			party.ball.velocityY = -party.ball.velocityY;
 		}
 		// we check if the paddle hit the user or the com paddle
-		let player = (party.ball.x + party.ball.radius < this.dimX / 2) ? party.player1 : party.player2;
+		let player = (party.ball.x < this.dimX / 2) ? party.player1 : party.player2;
 		
 		// if the ball hits a paddle
 		if(this.collision(party.ball, player)){
@@ -333,7 +329,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			let collidePoint = (party.ball.y - (player.y));
 			// normalize the value of collidePoint, we need to get numbers between -1 and 1.
 			// -player.height/2 < collide Point < player.height/2
-			collidePoint = collidePoint / (player.height/2);
+			collidePoint = collidePoint / (player.height);
 			
 			// when the ball hits the top of a paddle we want the ball, to take a -45degees angle
 			// when the ball hits the center of the paddle we want the ball to take a 0degrees angle
@@ -443,11 +439,11 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 						spectators: [],
 						socketUser1: (completeGame[0].user1.id === user1.id ? assoc[0] : client.id),
 						socketUser2: (completeGame[0].user1.id === user1.id ? client.id: assoc[0]),
-						player1: {x: 0, y : 500, width : 20, height : 120, score : 0,
+						player1: {x: 0, y : 500, width : 20, height : 200, score : 0,
 							top: undefined, bottom: undefined, left : undefined, right : undefined},
 						player2: {x : this.dimX - 20, y : 500, width : 20, height : 200, score : 0,
 							top: undefined, bottom: undefined, left : undefined, right : undefined},
-						ball: {x: 1000, y: 500,  radius : 31.25 / 2, velocityX : 15, velocityY : 15, speed : 20,
+							ball: {x: 1000, y: 500,  radius : 25, velocityX : 10, velocityY : 10, speed : 20,
 							top: undefined, bottom: undefined, left : undefined, right : undefined},
 					});
 					const start: GOT.InitGame = {
@@ -597,7 +593,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 				return ;
 			}
 			const demands = await this.gameService.getGameUserWhoIsDemand(user, auth.user);
-			console.log("status", status);
 			if (status) {
 				if (demands.length === 1) {
 					let socketClient: string | undefined = undefined;
@@ -621,7 +616,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 							top: undefined, bottom: undefined, left : undefined, right : undefined},
 						player2: {x : this.dimX - 20, y : 500, width : 20, height : 200, score : 0,
 							top: undefined, bottom: undefined, left : undefined, right : undefined},
-						ball: {x: 1000, y: 500,  radius : 31.25 / 2, velocityX : 15, velocityY : 15, speed : 20,
+							ball: {x: 1000, y: 500,  radius : 25, velocityX : 10, velocityY : 10, speed : 20,
 							top: undefined, bottom: undefined, left : undefined, right : undefined},
 					});
 					this.appGateway.sendProfilOfUser(auth.user);
@@ -640,7 +635,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 				} else
 					client.emit('error_client', `Any demand found`)
 			} else {
-				console.log('reply demands', demands)
 				if (demands.length === 1) {
 					await this.gameService.delete(demands[0].id);
 					this.appGateway.sendProfilOfUser(auth.user);
