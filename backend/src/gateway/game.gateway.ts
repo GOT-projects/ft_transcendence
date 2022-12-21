@@ -206,10 +206,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			return false;
 		}
 		const auth = await this.connectUserBody(client, jwt, emit);
-		if (!auth) {
-			client.emit('rm_token', true);
+		if (!auth)
 			return false;
-		}
 		return auth;
 	}
 

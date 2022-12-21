@@ -192,7 +192,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		}
 		const auth = await this.connectUserBody(client, jwt);
 		if (!auth) {
-			client.emit('rm_token', true);
+			client.emit('client_rm_token', true);
 			return false;
 		}
 		if (auth.newUser) {
