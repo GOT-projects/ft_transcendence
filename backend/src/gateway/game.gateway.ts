@@ -733,6 +733,45 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		})
 	}
 
+	@SubscribeMessage('server_custom')
+	async custom(@ConnectedSocket()client: Socket, @MessageBody("Authorization") jwt: string, @MessageBody('custom') custom: GOT.CustomGame){
+		const auth = await this.connectionSecure(client, jwt, true);
+		if (!auth)
+			return ;
+		try {
+			if (custom.ball && custom.color) {
+				const values = Object.values(GOT.EnumBall);
+				if (!(values.includes(custom.ball as unknown as GOT.EnumBall))) {
+					client.emit('error_client', 'Custom information ball is incorrect');
+					return;
+				}
+				if (custom.color.length < 2 || custom.color.length > 7 || custom.color[0] !== '#') {
+					client.emit('error_client', 'Custom information color is not hex color');
+					return ;
+				}
+				const hex = '0123456789ABCDEFabcdef'
+				for (let index = 1; index < custom.color.length; index++) {
+					if (!hex.includes(custom.color[index])) {
+						client.emit('error_client', 'Custom information color is not hex color');
+						return ;
+					}
+				}
+				this.userService.update(auth.user.id, {
+					ball: custom.ball,
+					color: custom.color
+				});
+				this.appGateway.sendProfilOfUser(auth.user);
+			} else
+				client.emit('error_client', 'Custom informations ball or color is not send');
+		} catch (error) {
+			client.emit('error_client', error.message);
+		}
+		if (custom === undefined) {
+			client.emit('error_client', 'Custom informations are empty');
+			return ;
+		}
+	}
+
 	/**
 	 * Socket init
 	 */

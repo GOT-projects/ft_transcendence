@@ -4,6 +4,7 @@ import { Message } from "./message.entity";
 import { RelBlock } from "./rel_block.entity";
 import { RelFriend } from "./rel_friend.entity";
 import { RelUserChannel } from "./rel_user_channel.entity";
+import { GOT } from "shared/types";
 
 @Entity()
 export class User {
@@ -32,9 +33,15 @@ export class User {
 	@Column( {unique: true, nullable: false} )
 	email!: string;
 
+	@Column({
+        type: "enum",
+        enum: GOT.EnumBall,
+        default: GOT.EnumBall.DEFAULT
+    })
+    ball!: GOT.EnumBall;
 
-
-
+	@Column( {nullable: false, default: '#121212'} )
+	color!: string;
 
 	// Messages
 

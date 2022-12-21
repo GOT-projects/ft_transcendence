@@ -18,7 +18,8 @@ export namespace GOT {
         wallet: number;
         email: string;
         isTwoFactorAuthenticationEnabled: boolean;
-        // TODO add 2FA
+        ball: EnumBall;
+        color: string;
     }
 
     /**
@@ -183,5 +184,17 @@ export namespace GOT {
     export interface ActuGamePoints {
         points1: number;
         points2: number;
+    }
+
+    export enum EnumBall {
+        DEFAULT = 'DEFAULT',
+        FOOT = 'FOOT',
+        TENIS = 'TENIS',
+        PONG = 'PONG',
+    }
+
+    export interface CustomGame {
+        ball: EnumBall,
+        color: string
     }
 }
