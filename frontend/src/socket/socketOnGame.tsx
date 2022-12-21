@@ -72,7 +72,7 @@ let client_game_finish = async (socket:Socket<DefaultEventsMap, DefaultEventsMap
 
 let client_game_player = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setPlayer: React.Dispatch<React.SetStateAction<GOT.ActuGamePlayer| undefined>>) => {
     socket.on('client_game_player', (rep:GOT.ActuGamePlayer) => {
-        console.log('client_game_player', rep);
+        //console.log('client_game_player', rep);
         if (rep)
             setPlayer(rep);
     })
@@ -80,7 +80,7 @@ let client_game_player = async (socket:Socket<DefaultEventsMap, DefaultEventsMap
 
 let client_game_spec = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setSpec: React.Dispatch<React.SetStateAction<GOT.ActuGameSpectator| undefined>>) => {
     socket.on('client_game_spectator', (rep:GOT.ActuGameSpectator) => {
-        console.log('client_game_spectator', rep);
+        //console.log('client_game_spectator', rep);
         if (rep)
             setSpec(rep);
     })

@@ -713,7 +713,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			const auth = await this.connectionSecure(client, jwt, true);
 			if (!auth)
 				return ;
-			this.logger.warn(where)
+			this.logger.debug(where)
 			if (where === 'waiting_invite') {
 				if (auth.targetList.waitingUser || auth.targetList.spectator || auth.targetList.game)
 					this.deleteSocketData(client);
