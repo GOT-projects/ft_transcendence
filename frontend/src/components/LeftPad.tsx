@@ -113,7 +113,6 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 				setTmp(rectable.height - rectpad.height);
 			else
 				setTmp(val);
-			setSizeOfBall(rectpad.height / 3);
 		}
 	}, [rectable, rectpad, y]);
 
