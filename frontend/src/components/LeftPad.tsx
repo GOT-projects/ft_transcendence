@@ -161,19 +161,21 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 	}, [spec, rectable]);
 
 	// Récupération des coordonnées du pad joueur
-	if (table && props.initGame?.player) {
-		//console.log('add event listener');
-		table.addEventListener("mousemove", (e) => {
-			if (y !== e.pageY) {
-				setY(e.pageY);
-			}
-		});
-		/*table.addEventListener("touchmove", (e) => {
-			if (y !== e.pageY) {
-				setY(e.pageY);
-			}
-		});*/
-	}
+	useEffect(() => {
+		if (table && props.initGame?.player) {
+			//console.log('add event listener');
+			table.addEventListener("mousemove", (e) => {
+				if (y !== e.pageY) {
+					setY(e.pageY);
+				}
+			});
+			/*table.addEventListener("touchmove", (e) => {
+				if (y !== e.pageY) {
+					setY(e.pageY);
+				}
+			});*/
+		}
+	}, [table, props.initGame])
 
 	// Envoi des informations du pad joueur
 	useInterval(() => {
@@ -181,7 +183,7 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 			emitGame.emit_change_pad(socketGame, posPad);
 			posActu = posPad;
 		}
-	}, 50);
+	}, 150);
 	
 
 	if (props.initGame && point)
