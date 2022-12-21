@@ -215,6 +215,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		ball.x = this.dimY;
 		ball.y = 500;
 		ball.velocityX = - ball.velocityX;
+		ball.velocityY = 0;
 		ball.speed = 20;
 	}
 
@@ -229,7 +230,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		b.top = b.y - b.radius;
 		b.bottom = b.y + b.radius;
 		b.left = b.x - b.radius;
-		b.right = b.x + b.radius * 3.5;
+		b.right = b.x + b.radius * 2;
 		
 		return p.left < b.right && p.top < b.bottom && p.right > b.left && p.bottom > b.top;
 	}
@@ -329,7 +330,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			let collidePoint = (party.ball.y - (player.y));
 			// normalize the value of collidePoint, we need to get numbers between -1 and 1.
 			// -player.height/2 < collide Point < player.height/2
-			collidePoint = collidePoint / (player.height);
+			collidePoint = collidePoint / (player.height / 2);
 			
 			// when the ball hits the top of a paddle we want the ball, to take a -45degees angle
 			// when the ball hits the center of the paddle we want the ball to take a 0degrees angle
@@ -343,7 +344,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			party.ball.velocityY = party.ball.speed * Math.sin(angleRad);
 			
 			// speed up the ball everytime a paddle hits it.
-			party.ball.speed += 0.1;
+			party.ball.speed += 1;
 		}
 		return 0;
 	}

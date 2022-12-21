@@ -63,14 +63,14 @@ z-index: 1;
 `;
 	
 	export const StyledBall = styled.div<ballPos>`
-	position: relative;
+	position: absolute;
 	background-image: url(https://png.pngtree.com/element_our/20190601/ourlarge/pngtree-blue-red-glowing-round-ball-free-button-image_1370443.jpg);
 	background-position: 55% 45%;
 	background-size: 140%;
 	top: ;
 	left: ;
 	border-radius: 50%;
-	z-index: 1;
+	z-index: 2;
 	opacity: 100%;
 	filter: brightness(75%);
 `;
