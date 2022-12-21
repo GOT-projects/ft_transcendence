@@ -10,10 +10,14 @@ import { onSocket } from "../../socket/socketOn";
 import { GiRetroController } from "react-icons/gi";
 import { MdOutlineViewInAr } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { StatusProfile } from "./FriendLst";
+import { StyledChatSettingButton } from "../Styles/StyleChat";
+import { AiOutlineUserAdd } from "react-icons/ai";
 
 
 interface IProps {
    setPopupProfil:Dispatch<React.SetStateAction<boolean>>;
+   profil: GOT.Profile | undefined;
    login: string;
 }
 
@@ -40,6 +44,31 @@ const ProfilView:FunctionComponent<IProps> = (props:IProps) =>{
     const handleSpect = () => {
         navigate(`/game?code=spectator&id=${profil?.inGame}`)
     }
+    const handleStatus = (login: string | undefined)=>{
+        if (login === undefined)
+            return ""
+        const tmp = props.profil?.friends.filter((f) => f.login === login)
+        if (tmp?.length !== 0 && tmp !== undefined){
+            return tmp[0].status;
+        }
+        return ""
+    }
+    const handleAddFriend = (login:string | undefined) => {
+        if (login !== undefined){
+            emitSocket.emitDemandFriend(socket, login);
+        }
+    }
+
+    const handleCheckFriend = () => {
+        if (props.profil?.userInfos.login === profil?.userInfos.login){
+            return false;
+        }
+        const tmp = props.profil?.friends.filter((l) => l.login === profil?.userInfos.login)
+        if (tmp !== undefined && tmp.length !== 0) {
+            return false;
+        }
+        return true;
+    }
 
     return(
         <StyledContaiteView>
@@ -47,12 +76,17 @@ const ProfilView:FunctionComponent<IProps> = (props:IProps) =>{
                     <FaWindowClose size={30} color={Colors.dark1} onClick={handleClose}/>
             </StyledContaiteClose>
             <StyledContaiteProfil>
-                <StyledViewAvatar profilImg={profil?.userInfos.urlImg}/>
+                <StatusProfile size={"50px"} img={profil?.userInfos.urlImg} username={profil?.userInfos.login} status={handleStatus(profil?.userInfos.login)} page="viewProfil"/>
                 <StyledContaiteText className="title" size={"18px"}>{profil?.userInfos.login}</StyledContaiteText>
                 <StyledContaiteHistoryUserButton>
                     <GiRetroController size={30} color={Colors.primary} title={"invite game"} onClick={handleInviteGame}/>
                     {profil?.inGame !== undefined ?
                     <MdOutlineViewInAr size={30} color={Colors.primary} title={"View game"} onClick={handleSpect}/>:<></>}
+                    {handleCheckFriend() ?   
+                    <StyledChatSettingButton onClick={() => {handleAddFriend(profil?.userInfos.login)}}>
+                        <AiOutlineUserAdd className='setting' size={30} color={Colors.ChatMenuButtonText}/>
+                    </StyledChatSettingButton> : <></>}
+
                 </StyledContaiteHistoryUserButton>
             </StyledContaiteProfil>
             <StyledContaiteRank>

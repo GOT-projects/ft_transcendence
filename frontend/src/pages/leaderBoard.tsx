@@ -117,7 +117,7 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 				</tbody>
 				</StyledLeadTileRank>
 			</StyledLead>
-			{popuProfil ? <ProfilView login={login} setPopupProfil={setPopupProfil}/> : <> </>}
+			{popuProfil ? <ProfilView login={login} setPopupProfil={setPopupProfil} profil={props.profil}/> : <> </>}
 			<Footer/>
 		</React.Fragment>
 	)

@@ -1,8 +1,6 @@
-import { Dispatch, FunctionComponent, useContext, useEffect, useState } from "react";
-import { GOT } from "../../../shared/types";
-import { StyledBallPong, StyledBallTennis, StyledContaiteClose, StyledContaiteHistory, StyledContaiteHistorylst, StyledContaiteHistoryScore, StyledContaiteHistorytile, StyledContaiteHistoryUser, StyledContaiteHistoryUserButton, StyledContaiteHistoryVs, StyledContaiteProfil, StyledContaiteRank, StyledContaiteSettingGame, StyledContaiteText, StyledContaiteView, StyledSelectBall, StyledViewAvatar } from "../../Styles/StyleViewProfil";
+import { Dispatch, FunctionComponent, useContext, useState } from "react";
+import { StyledBallPong, StyledBallTennis, StyledContaiteSettingGame, StyledSelectBall } from "../../Styles/StyleViewProfil";
 import { SocketContext } from "../../../socket/socketPovider";
-import { useNavigate } from "react-router-dom";
 import { ColorPicker, useColor } from "react-color-palette";
 import "react-color-palette/lib/css/styles.css";
 import { v4 as uuid } from "uuid";
@@ -12,11 +10,9 @@ interface IProps {
 }
 
 const SettingGame:FunctionComponent<IProps> = (props:IProps) =>{
-    const socket = useContext(SocketContext);
     const [color, setColor] = useColor("hex", "#121212");
     const [tennis, setTennis] = useState(false);
     const [pong, setPong] = useState(false);
-    const [value, setValue] = useState(0);
     const handleClose = ( ) => {
         props.setPopupProfil(false);
     }

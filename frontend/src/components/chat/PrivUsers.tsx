@@ -10,6 +10,7 @@ import { MdOutlineBlock } from "react-icons/md";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { StyledEmptyDivChat } from "../Styles/StyleViewProfil";
+import { StatusProfile } from "../popup/FriendLst";
 
 
 interface IProps {
@@ -85,6 +86,14 @@ const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
         return (false);
     }
 
+    const handleStatus = (login: string)=>{
+        const tmp = props.profil?.friends.filter((f) => f.login === login)
+        if (tmp?.length !== 0 && tmp !== undefined){
+            return tmp[0].status;
+        }
+        return ""
+    }
+
     return (
         <>
             {props.friends ? 
@@ -92,7 +101,7 @@ const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
                 <StyledUser key={uuid()} color={user.login === props.selectUser?.login ? 
                         Colors.ChatMenuButton : Colors.ChatMenu} >
                     <StyledChatDivhandle onClick={() => {handleSelectFriend(user.login)}}>
-                        <StyledChatPrivAvatar profil={user.urlImg}/>
+                        <StatusProfile size={"40px"} img={user.urlImg} username={user.login} status={handleStatus(user.login)} page={"priv"}/>
                         <StyledChatPrivName key={uuid()}>{user.login}</StyledChatPrivName>
                     </StyledChatDivhandle>
                 <StyledChatDivoption>

@@ -56,14 +56,20 @@ export const StyleMenuFriendUser = styled.div`
 `
 
 
-export const StyledMenuFriendImgContente = styled.div`
+interface Shadow{
+    color:string | undefined;
+}
+export const StyledMenuFriendImgContente = styled.div<Shadow>`
     margin: 15px;
     width: 50px;
     height: 50px;
+    border-radius: 50%;
+    box-shadow: 0px 0px 3px 3px ${p => p.color};
 `
 
 interface Img{
-    img:string;
+    img:string | undefined;
+    size:string | undefined;
 }
 interface Status{
     statusColor:string;
@@ -72,8 +78,8 @@ interface Status{
 export const StyledMenuFriendImg = styled.div<Img>`
     position: relative;
     z-index: 59;
-    width: 40px;
-    height:40px;
+    width: ${p => p.size};
+    height:${p => p.size};
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);

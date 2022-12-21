@@ -67,7 +67,6 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
     const [lstFriends, setLstFriends] = useState<GOT.Friend[]>()
 
     const [channelIn, setChannelIn] = useState<GOT.Channel[]>();
-    //const [selectNameChan, setSelectNameChan] = useState<string>();
     
     const codeParam: Map<string, string> = accountService.getParamsPriv();
 
@@ -87,21 +86,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
             await onSocket.client_privmsg_users(socket, setFriends);
         })();
     },[socket, friends, setFriends])
-/*
-    useEffect(() => {
-        onSocket.client_friends(socket, setLstFriends);
-        return () => {
-            offSocket.client_friends(socket);
-        } 
-    },[socket, lstFriends, setLstFriends])
 
-    useEffect(() => {
-        onSocket.client_privmsg_send(socket, selectUser)
-        return () => {
-            offSocket.client_privmsg_send(socket);
-        } 
-    },[socket])
-*/
     useEffect(() => {
         onSocket.client_channels_in(socket, setChannelIn)
         return () => {
@@ -286,7 +271,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
             {add === "privateChan" ? <PopupOptionPrivateChan /> : <></>}
 
 
-            {popuProfil ? <ProfilView login={login} setPopupProfil={setPopupProfil}/> : <> </>}
+            {popuProfil ? <ProfilView login={login} setPopupProfil={setPopupProfil} profil={props.profil}/> : <> </>}
             <Notification notify={notify} setNotify={setNotify}/>
            <Footer/>
 		</React.Fragment>
