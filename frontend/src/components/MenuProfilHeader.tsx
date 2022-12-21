@@ -9,18 +9,21 @@ import { GOT } from '../shared/types';
 import { BiUpload } from 'react-icons/bi';
 import { Colors } from './Colors';
 import { apiPost } from '../api/post';
+import { GoSettings } from 'react-icons/go';
 
 interface IProps {
    notify: NotifyInter;
    setNotify: Dispatch<any>;
    setProfileMenu: Dispatch<React.SetStateAction<boolean>>;
    setOtc: Dispatch<React.SetStateAction<boolean>>;
+   setPopupSetting: Dispatch<React.SetStateAction<boolean>>;
    profil: GOT.Profile | undefined;
 }
 
 const ProfileMenu :FunctionComponent<IProps> = (props:IProps) => {
     const [changeUsername, setChangeUsername] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
+
     
     const handleChangeUsername = () => {
         if (changeUsername === true)
@@ -48,6 +51,11 @@ const ProfileMenu :FunctionComponent<IProps> = (props:IProps) => {
     props.setProfileMenu(false);
     props.setOtc(true);
   }
+  const handleSettingGame= () =>{
+    props.setProfileMenu(false);
+    props.setOtc(false);
+    props.setPopupSetting(true);
+  }
     
     return (
         <StyledMenuProfile 
@@ -67,6 +75,7 @@ const ProfileMenu :FunctionComponent<IProps> = (props:IProps) => {
                 <StyleMenuHeaderProfilOption >Avatar</StyleMenuHeaderProfilOption>
                 <BiUpload size={25} color={Colors.darkText}/>
             </StyleMenuHeaderAvatarContainte>
+            <StyleMenuHeaderProfilOption onClick={handleSettingGame}><GoSettings color={Colors.Bg2fa} size={20}/> Game</StyleMenuHeaderProfilOption>
             <StyleMenuHeaderProfilOption onClick={handleOtc}>Setup 2FA</StyleMenuHeaderProfilOption>
             <StyleMenuHeaderProfilData>
                 victory {props.profil?.stat.victory} rank {props.profil?.stat.rank}

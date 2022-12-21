@@ -14,6 +14,7 @@ import { onSocket } from "../socket/socketOn";
 import { offSocket } from "../socket/socketOff";
 import { useNavigate } from "react-router-dom";
 import { accountService } from "../services/account.service";
+import SettingGame from "./game/setting/settingGame";
 
 interface IProps {
    notify: NotifyInter;
@@ -33,9 +34,14 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
     const [friendList, setFriendList] = useState(false);
     const [notifMenu, setNotifMenu] = useState(false);
     const [profileMenu, setProfileMenu] = useState(false);
+    const [popUpSetting, setPopUpSetting] = useState(false);
     const [otc, setOtc] = useState(false);
     let notif = false;
+    let friend = false;
 
+    if (props.profil?.friends.length !== 0){
+        friend = true;
+    }
     if (props.profil?.notif.length !== 0 || props.profil.notifChannel.length !== 0 || props.profil.gameDemands.length !== 0){
         notif = true;
     }
@@ -153,6 +159,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                 <StyleHeaderUserList onClick={handleFriendList}/>
                 <StyleMenuHeaderProfil onClick={handleMenuProfil} profil={props.profil?.userInfos.urlImg}/>        
                 {profileMenu ? <ProfileMenu notify={props.notify} 
+                                            setPopupSetting={setPopUpSetting}
                                             setNotify={props.setNotify} 
                                             setProfileMenu={setProfileMenu}
                                             setOtc={setOtc}
@@ -177,6 +184,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                 </StyleNavToggler>
                 {profileMenu ? <ProfileMenu notify={props.notify} 
                                             setOtc={setOtc}
+                                            setPopupSetting={setPopUpSetting}
                                             setNotify={props.setNotify}
                                             setProfileMenu={setProfileMenu}
                                             profil={props.profil}
@@ -189,6 +197,8 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
                 {friendList ? <PopupListFriends setFriendsLst={setFriendList} profil={props.profil}/> : <></>}
             </StyleNav>
                 {otc ? <SetupOtc setOtc={setOtc}/> : <></>}
+                {popUpSetting ? <SettingGame setPopupProfil={setPopUpSetting}/> : <> </>}
+
         </StyledHeader>
 	)
 }

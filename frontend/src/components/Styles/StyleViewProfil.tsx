@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import {Colors} from "../Colors"
 import { motion } from "framer-motion";
 // import {Link} from 'react-router-dom'
+import tennis from "../../assets/tennis.png"
+import pong from "../../assets/pinpong.png"
 
 interface BgColor{
     color:string;
@@ -208,6 +210,55 @@ export const StyledContaiteViewAddOption = styled.div`
         background-color: ${Colors.Bg2faIn};
     }
 `
+export const StyledSelectBall = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 10px;
+`
+export const StyledBallTennis = styled.div<BgColor>`
+    background-size: 50px;
+    width: 100%;
+    margin: 10px;
+    width: 25px;
+    height: 25px;
+    box-shadow: 0px 0px 3px 3px ${p => p.color};
+    background: url(${tennis});
+    background-size: 100% 100%;
+    border-radius: 50%;
+`
+export const StyledBallPong = styled.div<BgColor>`
+    background-size: 50px;
+    width: 100%;
+    margin: 10px;
+    width: 25px;
+    height: 25px;
+    background: url(${pong});
+    background-size: 100% 100%;
+    box-shadow: 0px 0px 3px 3px ${p => p.color};
+    border-radius: 50%;
+
+`
+export const StyledContaiteSettingGame = styled.div`
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 10;
+    top: 4rem;
+    left: 50%;
+    width: 300px;
+    height: 300px;
+    transform: translate(-50%, 50%);
+    overflow: hidden;
+    opacity: 1;
+    border: 2px solid ${Colors.border};
+    border-radius: 20px;
+    background-color: ${Colors.dark2};
+    opacity: 0.9;
+    @media screen and (max-width: 768px){
+        height: 500px;
+    }
+`;
 
 export const StyledContaiteView = styled.div`
     position: absolute;
