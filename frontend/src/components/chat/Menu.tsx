@@ -1,13 +1,14 @@
-import { Dispatch, FunctionComponent, useContext } from "react";
+import { Dispatch, FunctionComponent, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { GOT } from "../../shared/types";
 import { emitSocket } from "../../socket/socketEmit";
 import { SocketContext } from "../../socket/socketPovider";
 import { StyleNavToggler, StyleNavTogglerIcon } from "../Styles/StyledHeader";
-import { StyledChanDiv, StyledChanPadd, StyledChanSep, StyledContaiteChannel, StyledContaiteMenu } from "../Styles/StyleViewProfil";
+import { StyledChanDiv, StyledChanPadd, StyledChanSep, StyledContaiteChannel, StyledContaiteMenu, StyledContaiteMenuSelector, StyledSelector } from "../Styles/StyleViewProfil";
 import { TiMessages} from 'react-icons/ti';
 import { Colors } from "../Colors";
+import { accountService } from "../../services/account.service";
 
 
 interface IProps {
@@ -29,6 +30,20 @@ interface IProps {
 const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
     const navigate = useNavigate();
     const socket = useContext(SocketContext);
+    const codeParam: Map<string, string> = accountService.getParamsPriv();
+    const [code, setCode] = useState<string>();
+    const [nameChan, setNameChan] = useState<string>();
+
+    useEffect(() => {
+        const name = codeParam.get("name")        
+        const codeTmp = codeParam.get("code")        
+        if( code != undefined  && name != undefined && code === "Channel"){
+            setNameChan(name)
+        }else if (codeTmp != undefined){
+            setCode(codeTmp);
+            setNameChan("")
+        }
+    }, [codeParam])
 
     const handlePriveMsg = (name:string) => {
         if (props.setChatSwitch){
@@ -61,6 +76,12 @@ const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
         navigate("/chat?code=add")
     }
 
+    const handleChanName = (login:string) => {
+        if (login === nameChan){
+            return true;
+        }
+        return false;
+    }
     return (
         <StyledContaiteMenu> 
             <StyleNavToggler onClick={navMenu} className={props.active}>
@@ -69,18 +90,24 @@ const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
                 <StyleNavTogglerIcon className={props.active}></StyleNavTogglerIcon>
             </StyleNavToggler>
         <StyledContaiteMenu className={props.active}>
-            <StyledChanDiv onClick={() => {handlePriveMsg("private")}}>
-                <TiMessages size={30} color={Colors.primary}/>
-            </StyledChanDiv>
+            <StyledContaiteMenuSelector className={code === "Private" ? "select" : "notSelect"}>
+                <StyledSelector></StyledSelector>
+                <StyledChanDiv className={code === "Private" ? "select" : "notSelect"} onClick={() => {handlePriveMsg("private")}}>
+                    <TiMessages size={30} color={Colors.primary}/>
+                </StyledChanDiv>
+            </StyledContaiteMenuSelector>
             <StyledChanSep/>
             <StyledContaiteChannel>
-                <StyledChanDiv className="add"onClick={() => {handleAddChannel()}}>
+                <StyledChanDiv className={code === "add" ? "select" : "notSelect"} onClick={() => {handleAddChannel()}}>
                     <StyledChanPadd >+</StyledChanPadd>
                 </StyledChanDiv>
                 {props.channelIn?.map((chan) => (
-                    <StyledChanDiv key={uuid()} onClick={() => {handleChan(chan.name)}}>
+                    <StyledContaiteMenuSelector key={uuid()} className={handleChanName(chan.name) ? "select" : "notSelect"}>
+                    <StyledSelector></StyledSelector>
+                    <StyledChanDiv key={uuid()} className={handleChanName(chan.name) ? "select" : "notSelect"} onClick={() => {handleChan(chan.name)}}>
                         <p>{chan.name.substring(0, 4)}</p>
                     </StyledChanDiv>
+                    </StyledContaiteMenuSelector>
                 ))}
             </StyledContaiteChannel>
         </StyledContaiteMenu> 

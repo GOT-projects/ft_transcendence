@@ -96,7 +96,7 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 						<StyledLeadPHead>Loses</StyledLeadPHead>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody style={{overflow: "scroll"}}>
 					<>
 					{
 						tab?.map((usr: GOT.ProfileLeaderBoard) => (

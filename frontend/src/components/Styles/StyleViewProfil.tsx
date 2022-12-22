@@ -288,6 +288,7 @@ export const StyledContaiteMenu = styled.div`
     height: 100%;
     background: ${Colors.Bg2faIn};
     transition: 0.6s;
+    overflow: hidden;
     @media screen and (max-width: 768px){
         &.UnActiveMenu{
             z-index: 20;
@@ -296,6 +297,26 @@ export const StyledContaiteMenu = styled.div`
         }
     }
 `
+export const StyledContaiteMenuSelector = styled.div`
+    display: flex;
+    position: relative;
+    align-items: center;
+    transform: translateX(-2px);
+    transition: 0.6s;
+    &.select{
+        transition: 0.6s;
+        transform: translateX(10px);
+    }
+`
+
+export const StyledSelector = styled.div`
+    margin-left: 0;
+    height: 100%;
+    width: 10px;
+    border-radius: 0 10px 0 10px;
+    background-color: ${Colors.border};
+    transition: 0.6s;
+`
 export const StyledContaiteChannel = styled.div`
     display: flex;
     flex-direction: column;
@@ -303,6 +324,7 @@ export const StyledContaiteChannel = styled.div`
     width: 100px;
     height: 100%;
     overflow: scroll;
+    transition: 0.6s;
     background-color: ${Colors.Bg2faIn};
 `
 export const StyledChanSep = styled.div`
@@ -340,8 +362,11 @@ export const StyledChanDiv = styled.div`
         transition: 0.6s;
         border-radius: 20%;
     }
+    &.select{
+        transition: 0.6s;
+        border-radius: 20%;
+    }
 `
-
 
 export const StyledContaiteAddChanDiv = styled.div`
     display: flex;

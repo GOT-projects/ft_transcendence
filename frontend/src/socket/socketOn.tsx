@@ -25,6 +25,12 @@ let profil_login = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, set
     })
 }
 
+let client_rm = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>) => {
+    socket.on('client_rm_token', (rm: boolean) => {
+        accountService.removeToken();
+    })
+}
+
 let client_privmsg_users = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setFriends:React.Dispatch<React.SetStateAction<GOT.User[] | undefined>>) => {
     socket.on('client_privmsg_users', (rep:GOT.User[]) => {
         if (rep){
@@ -73,15 +79,7 @@ let client_jwt = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>) => {
             accountService.saveToken(rep);
         } 
     })
-}/*
-let client_channel_send = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setChannelMsg:React.Dispatch<React.SetStateAction<GOT.MsgChannel | undefined>>) => {
-    socket.on('client_channels', (rep:GOT.MsgChannel) => {
-        console.log('client_channels', rep);
-        if (rep){
-            setChannelMsg(rep);
-        } 
-    })// TODO BIG PB client_channels return GOT.Channel[] list des channels visible (incoherent nom)
-}*/
+}
 
 let client_channels_in = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setChannel:React.Dispatch<React.SetStateAction<GOT.Channel[] | undefined>>) => {
     socket.on('client_channels_in', (rep:GOT.Channel[]) => {
@@ -90,26 +88,7 @@ let client_channels_in = async (socket:Socket<DefaultEventsMap, DefaultEventsMap
         }
     })
 }
-/*
-let client_friends = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setLstFriends:React.Dispatch<React.SetStateAction<GOT.Friend[] | undefined>>) => {
-    socket.on('client_friends', (rep:GOT.Friend[]) => {
-        if (rep){
-            for (const user of rep) {
-                user.urlImg = transformUrlUsers(user.urlImg);
-            }
-            setLstFriends(rep);
-        } 
-    })
-}
 
-let client_privmsg_send = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, selectUser:GOT.User | undefined) => {
-        socket.on('client_privmsg_send', (rep:GOT.msg) => {
-            if (selectUser?.login === rep.userFrom.login){
-                emitSocket.emitPrivmsg(socket, rep.userFrom.login);
-            }
-        })
-}
-*/
 let client_profil = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setProfil:React.Dispatch<React.SetStateAction<GOT.Profile | undefined>> | undefined) => {
     socket.on('client_profil', (rep:GOT.Profile) =>{
         console.warn('client_profil', rep);
@@ -183,8 +162,9 @@ let info_client = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setN
 }
 
 export const onSocket = {
-    profil_login, client_privmsg_users, /*client_friends, client_privmsg_send,*/ error_client, /*client_channel_send, */
-    info_client, warning_client, client_profil ,client_users, client_privmsg, client_channels, client_channels_in,
-    client_channelMsg, client_chanmsg_users_not_ban, client_jwt
+    profil_login, client_privmsg_users, error_client, client_rm, 
+    info_client, warning_client, client_profil ,client_users, 
+    client_privmsg, client_channels, client_channels_in,
+    client_channelMsg, client_chanmsg_users_not_ban, client_jwt, 
 
 }

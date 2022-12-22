@@ -182,7 +182,7 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 			emitGame.emit_change_pad(socketGame, posPad);
 			posActu = posPad;
 		}
-	}, 150);
+	}, 50);
 	
 
 	if (props.initGame && point)

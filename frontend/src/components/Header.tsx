@@ -37,14 +37,15 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
     const [popUpSetting, setPopUpSetting] = useState(false);
     const [otc, setOtc] = useState(false);
     let notif = false;
-    let friend = false;
 
-    if (props.profil?.friends.length !== 0){
-        friend = true;
-    }
     if (props.profil?.notif.length !== 0 || props.profil.notifChannel.length !== 0 || props.profil.gameDemands.length !== 0){
         notif = true;
     }
+
+    useEffect(() => {
+        onSocket.client_rm(socket);
+    }, [socket])
+
     //Socket refresh token
     useEffect(() => {
         onSocket.client_jwt(socket);
