@@ -229,8 +229,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		
 		b.top = b.y - b.radius;
 		b.bottom = b.y + b.radius;
-		b.left = b.x - b.radius;
-		b.right = b.x + b.radius;
+		b.left = b.x - b.radius * 1.5;
+		b.right = b.x + b.radius * 1.5;
 		
 		return p.left < b.right && p.top < b.bottom && p.right > b.left && p.bottom > b.top;
 	}
@@ -312,7 +312,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		party.ball.y += party.ball.velocityY;
 			
 		// when the ball collides with bottom and top walls we inverse the y velocity.
-		if(party.ball.y < 0 || party.ball.y + party.ball.radius > this.dimY){
+		if(party.ball.y - party.ball.radius < 0 || party.ball.y + party.ball.radius > this.dimY){
 			party.ball.velocityY = -party.ball.velocityY;
 		}
 		// we check if the paddle hit the user or the com paddle
