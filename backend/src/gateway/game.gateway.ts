@@ -223,9 +223,9 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		p.top = p.y;
 		p.bottom = p.y + p.height;
 
-		p.left = p.x- p.width;
+		p.left = p.x - p.width;
 		
-		p.right = p.x ;
+		p.right = p.x + p.width;
 		
 		b.top = b.y - b.radius;
 		b.bottom = b.y + b.radius;
@@ -239,8 +239,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		const player1: number = (game.player1.y)/ this.dimY;
 		const player2: number = (game.player2.y) / this.dimY;
 		const ball: GOT.Ball = {
-			x: (game.ball.x > this.dimX ? this.dimX : (game.ball.x < 0 ? 0 : game.ball.x)) / this.dimX,
-			y: (game.ball.y > this.dimY ? this.dimY : (game.ball.y < 0 ? 0 : game.ball.y)) / this.dimY,
+			x: (game.ball.x - game.ball.radius) / this.dimX,
+			y: (game.ball.y - game.ball.radius) / this.dimY,
 		}
 		// player gauche
 		let actu: GOT.ActuGamePlayer = {
@@ -267,12 +267,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}
 
 	private algoGameSendPoints(game: Games) {
-		const player1: number = (game.player1.y > this.dimY ? this.dimY : (game.player1.y < 0 ? 0 : game.player1.y)) / this.dimY;
-		const player2: number = (game.player2.y > this.dimY ? this.dimY : (game.player2.y < 0 ? 0 : game.player2.y)) / this.dimY;
-		const ball: GOT.Ball = {
-			x: (game.ball.x > this.dimX ? this.dimX : (game.ball.x < 0 ? 0 : game.ball.x)) / this.dimX,
-			y: (game.ball.y > this.dimY ? this.dimY : (game.ball.y < 0 ? 0 : game.ball.y)) / this.dimY,
-		}
 		const points: GOT.ActuGamePoints = {
 			points1: game.game.points1,
 			points2: game.game.points2
@@ -285,7 +279,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}
 
 	private async update(party: Games): Promise<number>{
-		if( party.ball.x + party.ball.radius < 20){
+		if( party.ball.x - party.ball.radius < 0){
 			party.game.points2++;
 			try {
 				this.algoGameSendPoints(party);
@@ -294,7 +288,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 				this.logger.error(`Update party point2 ${error.message}`);
 			}
 			this.resetBall(party.ball);
-		} else if(party.ball.x > this.dimX - 40){
+		} else if(party.ball.x + party.ball.radius > this.dimX){
 			party.game.points1++;
 			try {
 				this.algoGameSendPoints(party);
@@ -325,7 +319,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		let player = (party.ball.x < this.dimX / 2) ? party.player1 : party.player2;
 		
 		// if the ball hits a paddle
-		if(this.collision(party.ball, player)){
+		if(this.collision(party.ball, player) && party.ball.x < this.dimX - 20 && party.ball.x > 20){
 			// we check where the ball hits the paddle
 			let collidePoint = (party.ball.y - (player.y + player.height / 2));
 			// normalize the value of collidePoint, we need to get numbers between -1 and 1.

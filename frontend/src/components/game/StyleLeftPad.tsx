@@ -38,12 +38,11 @@ width:2%;
 height:20%;
 background-color: red;
 top: ;
-transform: translate(0, -50%);
 border-radius: 10px;
 background-image: url(https://i.pinimg.com/474x/70/86/62/70866228da01302bce6afc9106e676b0.jpg);
 background-position: center;
 background-size: 1500%;
-
+transform: translate(0, -50%);
 z-index: 2;
 
 `;
@@ -64,11 +63,11 @@ z-index: 2;
 `;
 	
 	export const StyledBall = styled.div<ballPos>`
-	position: relative;
+	position: absolute;
 	background-image: url(https://png.pngtree.com/element_our/20190601/ourlarge/pngtree-blue-red-glowing-round-ball-free-button-image_1370443.jpg);
 	background-position: 55% 45%;
 	background-size: 140%;
-  transform: translate(0, -50%);
+
 	top: ;
 	left: ;
 	border-radius: 50%;

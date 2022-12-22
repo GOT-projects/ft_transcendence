@@ -113,6 +113,7 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 				setTmp(rectable.height - rectpad.height);
 			else
 				setTmp(val);
+			setSizeOfBall(rectpad.height / 4);
 		}
 	}, [rectable, rectpad, y]);
 
@@ -140,7 +141,7 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 		//console.log('actu ball + pads player')
 		if (rectable && player) {
 			// Récupération de la coordonnée du pad externe au joueur
-			setExternPadPos((rectable.height * player.enemyY).toString());
+			setExternPadPos((rectable.height * player.enemyY + sizeOfBall * 2).toString());
 			// Récupération des coordonnées de la balle
 			setBallX((player.ball.x * rectable.width).toString());
 			setBallY((player.ball.y * rectable.height).toString());
@@ -153,9 +154,9 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 			setBallX((spec.ball.x * rectable.width).toString());
 			setBallY((spec.ball.y * rectable.height).toString());
 			// Récupération de la coordonnée du 1er pad externe au spectateur
-			setExternPadPos((rectable.height * spec.player1Y).toString());
+			setExternPadPos((rectable.height * spec.player1Y + sizeOfBall * 2).toString());
 			// Récupération de la coordonnée du 2eme pad extern du spectateur
-			setExternPadPosSpec((rectable.height * spec.player2Y).toString());
+			setExternPadPosSpec((rectable.height * spec.player2Y + sizeOfBall * 2).toString());
 		}
 	}, [spec, rectable]);
 
@@ -182,7 +183,7 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 			emitGame.emit_change_pad(socketGame, posPad);
 			posActu = posPad;
 		}
-	}, 32);
+	}, 150);
 	
 
 	if (props.initGame && point)
@@ -194,6 +195,7 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 				</div>
 				<StyledLeftPad id="Table">
 					<StyledHexaArea className='grid'/>
+					<StyledHexaAreaLight className='light' x="0px" y="0px" />
 					{
 						(props.initGame?.player && props.profil?.userInfos.email === props.initGame?.user1.email)
 						?
