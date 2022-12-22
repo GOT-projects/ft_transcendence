@@ -319,7 +319,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		let player = (party.ball.x < this.dimX / 2) ? party.player1 : party.player2;
 		
 		// if the ball hits a paddle
-		if(this.collision(party.ball, player) && party.ball.x < this.dimX - 20 && party.ball.x > 20){
+		if(this.collision(party.ball, player) && party.ball.x + party.ball.radius < this.dimX - 20){
 			// we check where the ball hits the paddle
 			let collidePoint = (party.ball.y - (player.y + player.height / 2));
 			// normalize the value of collidePoint, we need to get numbers between -1 and 1.
