@@ -43,7 +43,6 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
     }, [socketGame])
 
     useEffect(() => {
-        console.log("init ", startInit)
         if (startInit){
             setStartInit(false);
             navigate(`/game?code=game&id=${initGame?.codeParty}`)
@@ -87,14 +86,12 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
 
     useEffect(() => {
         if (code === "waiting" && id == null){
-            console.log("emit join game waiting")
             setWating(true);
             setStartGame(false);
             setGame(false);
             emitGame.emitGameJoinWaing(socketGame);
             emitGame.emit_where_am_I(socketGame, "waiting");
         }else if (code === "spectator" && id != null){
-            console.log("emit join spec")
             setWating(true);
             setStartGame(false);
             setGame(false);
@@ -107,7 +104,6 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
                 navigate('/game');
             }
         }else if (code === "waiting" && id != null && invite == null){
-            console.log("emit join demande")
             setWating(true);
             setStartGame(false);
             setGame(false);
@@ -115,7 +111,6 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
             emitGame.emitJoinDemand(socketGame, id);
         }else if (code === "waiting" && id != null && invite != null){
             if (invite === "approuve"){
-                console.log("emit accept")
                 setWating(true);
                 setStartGame(false);
                 setGame(false);
@@ -141,7 +136,6 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
                 }
             }
         }else if (code === "game" && id !== undefined){
-            console.log("game", initGame)
             emitGame.emit_where_am_I(socketGame, "in_game")
             setStartGame(false);
             setWating(false);

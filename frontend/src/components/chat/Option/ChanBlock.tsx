@@ -39,7 +39,7 @@ const PopupOptionBlock:FunctionComponent<IProps> = (props: IProps) =>{
 
     const handleClose = () => {
         props.setInvite(false);
-        navigate(`/chat?code=Channel&name=${props.chanName}&Setting=false`)
+        navigate(`/chat?code=Channel&name=${props.chanName}`)
     }
 
     useEffect(() => {

@@ -28,14 +28,12 @@ export const StatusProfile:FunctionComponent<IProp> = (props:IProp)=> {
         return false
     }
     const handleStatus = () => {
-        console.log("color", props.status)
         if (props.status === "online" || props.status === "inGame"){
             return "green"
         }else{
             return "red"
         }
     }
-        console.log("color", props.status)
     return(
         <StyledMenuFriendImgContente color={props.status === "inGame" ? Colors.border : "none"}>
             <StyledMenuFriendImg img={props.img} size={props.size}/>

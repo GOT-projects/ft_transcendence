@@ -117,7 +117,6 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 	// actualisation de la postion du pad joueur
 	useEffect(() => {
 		if (rectable && rectpad) {
-			//console.log('actu pads joueur')
 			let val = y - rectable.top;
 			if (val < rectpad.height)
 				setTmp(rectpad.height);

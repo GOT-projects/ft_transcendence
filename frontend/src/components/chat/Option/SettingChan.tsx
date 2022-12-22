@@ -24,7 +24,7 @@ const PopupChannelSetting:FunctionComponent<IProps> = (props: IProps) =>{
     const navigate = useNavigate();
     const handleClose = () => {
         props.setSetting(false);
-        navigate(`/chat?code=Channel&name=${props.chanName}&Setting=false`);
+        navigate(`/chat?code=Channel&name=${props.chanName}`);
     }
 
 /*    const handleAdd = (name: string) => {

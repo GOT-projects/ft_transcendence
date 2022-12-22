@@ -15,12 +15,12 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
 
    const handleClose = () =>{
         //const params = (new URL(window.location.href));
-        let regex:RegExp = /^User with login (.*[a-z]) send you a private message/
+        let regex:RegExp = /^User with login (.*[^ ])send you a private message/
         if (regex.test(notify.message)){
             const tab = notify.message.split(" ");
             navigate(`/chat?code=Private&name=${tab[3]}`);
         }
-        let regexChan:RegExp = /^Error: Channel (.*[a-z])/
+        let regexChan:RegExp = /^Error: Channel (.*[^ ])/
         if (regexChan.test(notify.message)){
             const tab = notify.message.split(" ");
             navigate(`/chat?code=Chan=${tab[3]}`)
@@ -30,11 +30,12 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
    }
    const handleViewPopup = () =>{
         const params = (new URL(window.location.href));
-        let regexPrivMsg:RegExp = /^User with login (.*[a-z]) send you a private message/
+        const code = params.searchParams.get("code");
+        const name = params.searchParams.get("name");
+        let regexPrivMsg:RegExp = /^User with login (.*[^ ]) send you a private message/
         if (regexPrivMsg.test(notify.message)){
             const tab = notify.message.split(" ");
-            const code = params.searchParams.get("code");
-            if (code === "Priv"){
+            if (code === "Private"){
                 const name = params.searchParams.get("name");
                 if (name === tab[3]){
                     return false;
@@ -42,10 +43,9 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
                 
             }
         }
-        let regexChannel:RegExp = /^Info: Channel (.*[a-z]) have a new member (.*[a-z])/
+        let regexChannel:RegExp = /^^Info: Channel (.*[^ ]) have a new member/
         if (regexChannel.test(notify.message)){
             const tab = notify.message.split(" ");
-            const code = params.searchParams.get("code");
             if (code === "Channel"){
                 const name = params.searchParams.get("name");
                 if (tab && tab[2] === name){
@@ -57,6 +57,14 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
         if (regexJwt.test(notify.message)){
             accountService.removeToken();
             navigate("/");
+        }
+        let regexChannelMsg:RegExp = /^Info: Channel (.*[^ ]) received a message/
+        if (regexChannelMsg.test(notify.message)){
+            const tab = notify.message.split(" ");
+            console.log(tab);
+            if (tab && tab[2] == name){
+                return false;
+            }
         }
         return true;
    }

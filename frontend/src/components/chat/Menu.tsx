@@ -43,11 +43,9 @@ const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
             setCode(codeTmp);
             setNameChan("")
         }else{
-            console.log("end")
             setNameChan("")
             setCode("");
         }
-        console.log(code, nameChan)
     }, [codeParam])
 
     const handlePriveMsg = (name:string) => {

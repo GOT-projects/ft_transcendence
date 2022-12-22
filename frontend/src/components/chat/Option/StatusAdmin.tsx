@@ -38,7 +38,7 @@ const PopupOptionStatusAdmin:FunctionComponent<IProps> = (props: IProps) =>{
 
     const handleClose = () => {
         props.setInvite(false);
-        navigate(`/chat?code=Channel&name=${props.chanName}&Setting=false`)
+        navigate(`/chat?code=Channel&name=${props.chanName}`)
     }
 
     useEffect(() => {
@@ -72,6 +72,10 @@ const PopupOptionStatusAdmin:FunctionComponent<IProps> = (props: IProps) =>{
             return false
         }
         return true
+    }
+    const handleReturn = () => {
+        props.setInvite(false);
+        navigate(`/chat?code=Channel&name=${props.chanName}&Setting=Menu`)
     }
 
     console.log("userlist", userList)
@@ -107,7 +111,7 @@ const PopupOptionStatusAdmin:FunctionComponent<IProps> = (props: IProps) =>{
                 </StyledContaiteDivUser>
             </StyledContaiteAddUser>
             <StyledContaiteReturn className="addUser">
-                <StyledContaiteReturnDiv onClick={handleClose}>
+                <StyledContaiteReturnDiv onClick={handleReturn}>
                     <p>return</p>
                 </StyledContaiteReturnDiv>
             </StyledContaiteReturn>
