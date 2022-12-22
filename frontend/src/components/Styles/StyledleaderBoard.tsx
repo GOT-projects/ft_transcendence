@@ -29,6 +29,10 @@ export const StyledLead = styled.div`
     background-image: url(https://ns328286.ip-37-187-113.eu/ew/wallpapers/800x480/10602_800x480.jpg);
     background-size: cover;
     opacity: 0.7;
+    @media screen and (max-width: 768px){
+        width: 90%;
+        height: calc(100% - 7rem);
+    }
 `;
 
 export const StyledTile = styled.h1`

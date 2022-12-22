@@ -17,6 +17,9 @@ export const StyledContainer = styled.div`
     position: relative;
     cursor: none;
     overflow: scroll;
+    @media screen and (max-width: 768px){
+        overflow: hidden;
+    }
 `;
 
 export const StyledGrid = styled.header`

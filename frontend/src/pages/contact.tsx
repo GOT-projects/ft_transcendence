@@ -170,7 +170,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
         }
         else
             setAdd("");
-    }, [codeParam, add, settingInvite, settingBlock, setting, settingAdmin])
+    }, [codeParam, add, settingInvite, settingBlock, setting, settingAdmin, chatSwitch, friends, handleSelectFriend])
 
 	return (
 		<React.Fragment>

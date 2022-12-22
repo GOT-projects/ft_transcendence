@@ -93,7 +93,7 @@ const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
         }
         return ""
     }
-
+    console.log(props.friends, props.userFriend)
     return (
         <>
             {props.friends ? 

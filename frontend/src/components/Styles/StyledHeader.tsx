@@ -23,6 +23,7 @@ export const StyledHeader = styled.div`
     transition: 0.8s;
     @media screen and (max-width: 768px){
         display: block;
+        position: fixed;
         background: rgba(47,156,226,1);
     }
 `;

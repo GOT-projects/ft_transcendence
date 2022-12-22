@@ -62,9 +62,6 @@ const PopupOptionAddUser:FunctionComponent<IProps> = (props: IProps) =>{
     const handleListUser = (login : string) => {
         if (login === props.profil?.userInfos.login)
             return (false);
-        const tmp =props.profil?.friends.filter((user) => user.login === login);
-        if (tmp !== undefined && tmp.length !== 0)
-            return (false);
         const tmp1 =props.friends?.filter((user) => user.login === login);
         if (tmp1 !== undefined && tmp1.length !== 0)
             return (false);
