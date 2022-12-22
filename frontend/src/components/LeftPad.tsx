@@ -194,7 +194,6 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 				</div>
 				<StyledLeftPad id="Table">
 					<StyledHexaArea className='grid'/>
-					<StyledHexaAreaLight className='light' x="0px" y="0px" />
 					{
 						(props.initGame?.player && props.profil?.userInfos.email === props.initGame?.user1.email)
 						?

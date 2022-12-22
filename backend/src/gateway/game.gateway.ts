@@ -220,24 +220,24 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}
 
 	private collision(b: ball, p: player){
-		p.top = p.y - p.height / 2;
-		p.bottom = p.y + p.height / 4;
+		p.top = p.y;
+		p.bottom = p.y + p.height;
 
-		p.left = p.x;
+		p.left = p.x- p.width;
 		
-		p.right = p.x + p.width;
+		p.right = p.x ;
 		
 		b.top = b.y - b.radius;
 		b.bottom = b.y + b.radius;
 		b.left = b.x - b.radius;
-		b.right = b.x + b.radius * 2;
+		b.right = b.x + b.radius;
 		
 		return p.left < b.right && p.top < b.bottom && p.right > b.left && p.bottom > b.top;
 	}
 
 	private algoGameSendData(game: Games) {
-		const player1: number = game.player1.y / this.dimY;
-		const player2: number = game.player2.y / this.dimY;
+		const player1: number = (game.player1.y)/ this.dimY;
+		const player2: number = (game.player2.y) / this.dimY;
 		const ball: GOT.Ball = {
 			x: (game.ball.x > this.dimX ? this.dimX : (game.ball.x < 0 ? 0 : game.ball.x)) / this.dimX,
 			y: (game.ball.y > this.dimY ? this.dimY : (game.ball.y < 0 ? 0 : game.ball.y)) / this.dimY,
@@ -294,7 +294,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 				this.logger.error(`Update party point2 ${error.message}`);
 			}
 			this.resetBall(party.ball);
-		} else if(party.ball.x + party.ball.radius > this.dimX - 20){
+		} else if(party.ball.x > this.dimX - 40){
 			party.game.points1++;
 			try {
 				this.algoGameSendPoints(party);
@@ -318,7 +318,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		party.ball.y += party.ball.velocityY;
 			
 		// when the ball collides with bottom and top walls we inverse the y velocity.
-		if(party.ball.y < 0 || party.ball.y + party.ball.radius * 2 > this.dimY){
+		if(party.ball.y < 0 || party.ball.y + party.ball.radius > this.dimY){
 			party.ball.velocityY = -party.ball.velocityY;
 		}
 		// we check if the paddle hit the user or the com paddle
@@ -327,7 +327,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		// if the ball hits a paddle
 		if(this.collision(party.ball, player)){
 			// we check where the ball hits the paddle
-			let collidePoint = (party.ball.y - (player.y));
+			let collidePoint = (party.ball.y - (player.y + player.height / 2));
 			// normalize the value of collidePoint, we need to get numbers between -1 and 1.
 			// -player.height/2 < collide Point < player.height/2
 			collidePoint = collidePoint / (player.height / 2);
@@ -700,9 +700,9 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		}
 		if (auth.targetList.game !== undefined) {
 			if (auth.targetList.game.socketUser1 === client.id)
-				auth.targetList.game.player1.y = padInfo * this.dimY;
+				auth.targetList.game.player1.y = padInfo * this.dimY - 100;
 			else if (auth.targetList.game.socketUser2 === client.id)
-				auth.targetList.game.player2.y = padInfo * this.dimY;
+				auth.targetList.game.player2.y = padInfo * this.dimY - 100;
 		} else {
 			client.emit("warning_client", "Pad info not send");
 		}
