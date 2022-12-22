@@ -145,11 +145,11 @@ export const StyledChatSwithTile = styled.div`
 
 export const StyledChatPrive = styled.div`
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     flex-direction: column;
     border-radius: 10px 0 0 10px;
     height: calc(100% - 80px - 6rem);
-    width: 100%;
+    width: 450px;
     overflow: scroll;
 `;
 
@@ -355,9 +355,10 @@ export const StyledSender = styled.button`
 export const StyledUser = styled.button<BgColor>`
     display: flex;
     margin: 10px;
+    margin-left: 0;
     height: 60px;
-    width: 400px;
-    border-radius: 20px;
+    width: 360px;
+    border-radius: 0 20px 20px 0;
     border: 0;
     align-items: center;
     justify-content: row;

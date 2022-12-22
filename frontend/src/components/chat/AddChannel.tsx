@@ -64,7 +64,7 @@ const PopupAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
                 <StyledContaiteViewAddP>Create channel</StyledContaiteViewAddP>
                 <StyledContaiteViewAddP>{">"}</StyledContaiteViewAddP>
             </StyledContaiteViewAddOption>
-            <StyledContaiteViewAddOption onClick={() => {handleAdd("joinChannel")}}>
+            <StyledContaiteViewAddOption onClick={() => {handleAdd("explore")}}>
                 <StyledContaiteViewAddP>Join channel</StyledContaiteViewAddP>
                 <StyledContaiteViewAddP>{">"}</StyledContaiteViewAddP>
             </StyledContaiteViewAddOption>

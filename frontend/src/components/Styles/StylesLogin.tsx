@@ -55,7 +55,7 @@ export const StyledWaitingContente2FA = styled.div`
     transform: translate(-50%, -50%);
     width: 450px;
     height: 100px;
-    overflow: hidden;
+    overflow: scroll;
     letter-spacing: 3px;
     outline: transparent;
     background: ${Colors.Bg2fa};

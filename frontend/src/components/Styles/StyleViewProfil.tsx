@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 // import {Link} from 'react-router-dom'
 import tennis from "../../assets/tennis.png"
 import pong from "../../assets/pinpong.png"
+import comet from "../../assets/comet.png"
 
 interface BgColor{
     color:string;
@@ -236,8 +237,20 @@ export const StyledBallPong = styled.div<BgColor>`
     background-size: 100% 100%;
     box-shadow: 0px 0px 3px 3px ${p => p.color};
     border-radius: 50%;
-
 `
+
+export const StyledBallComet = styled.div<BgColor>`
+    background-size: 50px;
+    width: 100%;
+    margin: 10px;
+    width: 30px;
+    height: 30px;
+    background: url(${comet});
+    background-size: 100% 100%;
+    box-shadow: 0px 0px 3px 3px ${p => p.color};
+    border-radius: 50%;
+`
+
 export const StyledContaiteSettingGame = styled.div`
     position: absolute;
     display: flex;
@@ -259,6 +272,27 @@ export const StyledContaiteSettingGame = styled.div`
         height: 500px;
     }
 `;
+export const StyledButtonSetting = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    justify-content: space-between;
+`
+
+export const StyledButtonP = styled.p`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    border: solid 1px ${Colors.border};
+    width: 80px;
+    height: 40px;
+    background: ${Colors.greyButton};
+    &:hover{
+        transition: 0.6s;
+        background: ${Colors.hoverTextChat}
+    }
+`
 
 export const StyledContaiteView = styled.div`
     position: absolute;

@@ -56,7 +56,7 @@ const PopupOptionExloreChat:FunctionComponent<IProps> = (props: IProps) =>{
 
     const handleReturn = () => {
         setPopopsPwd(false);
-        navigate("/chat?code=joinChannel")
+        navigate("/chat?code=add")
     }
 
     const handleSend = async () => {

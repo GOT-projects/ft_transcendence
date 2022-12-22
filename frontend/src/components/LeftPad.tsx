@@ -9,10 +9,11 @@ import { onSocketGame } from '../socket/socketOnGame';
 import { offSocketGame } from '../socket/socketOffGame';
 import tennis from "../assets/tennis.png"
 import pong from "../assets/pinpong.png"
+import comet from "../assets/comet.png"
 
 enum EnumBall {
     DEFAULT = 'DEFAULT',
-    FOOT = 'FOOT',
+    COMET = 'COMET',
     TENIS = 'TENIS',
     PONG = 'PONG',
 }
@@ -197,9 +198,10 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
     const handleUrl = () => {
         if (props.profil?.userInfos.ball === EnumBall.DEFAULT){
             return defaultBall;
-
         }else if (props.profil?.userInfos.ball === EnumBall.TENIS){
             return tennis
+        }else if (props.profil?.userInfos.ball === EnumBall.COMET){
+            return comet
         }else if (props.profil?.userInfos.ball === EnumBall.PONG){
             return pong
         }
@@ -209,7 +211,8 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 	if (props.initGame && point)
 		return (
 			<div>
-				<div style={{position: "absolute", zIndex: "10", top: "13%", opacity: "92%", color: 'white', display: 'flex', flexDirection: "row", flexWrap: "wrap", justifyContent:'space-between', width: "95%", marginLeft: "2.5%"}}>
+				<div style={{position: "absolute", zIndex: "10", top: "13%", opacity: "92%", color: 'white', display: 'flex', 
+                            flexDirection: "row", flexWrap: "wrap", justifyContent:'space-between', width: "95%", marginLeft: "2.5%"}}>
 					<h2>{point?.points1 + ' - ' + props.initGame.user1.login}</h2>
 					<h2>{props.initGame.user2.login + ' - ' + point?.points2}</h2>
 				</div>

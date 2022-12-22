@@ -53,22 +53,16 @@ const SetupOtc:FunctionComponent<IProps> = (props: IProps) => {
             exit={{x: -100, opacity: 0}}>
         <StyledContaiteDescriptionH1>Setup Authenticator app</StyledContaiteDescriptionH1>
         <StyledContaiteDescription>
-            <StyledContaiteDescriptionP>Use a phone app like: </StyledContaiteDescriptionP>
-            <StyledContaiteDescriptionA href="https://support.1password.com/one-time-passwords/" target="_blank">1Password,</StyledContaiteDescriptionA>
-            <StyledContaiteDescriptionA href="https://support.1password.com/one-time-passwords/" target="_blank">Authy,</StyledContaiteDescriptionA>
-            <StyledContaiteDescriptionA href="https://support.1password.com/one-time-passwords/" target="_blank">LasPass Authenticator,</StyledContaiteDescriptionA>
-            <StyledContaiteDescriptionA href="https://support.1password.com/one-time-passwords/" target="_blank">Microsoft Authenticator,</StyledContaiteDescriptionA>
-            <StyledContaiteDescriptionP>etc. to get 2FA codes when prompted during sign-in</StyledContaiteDescriptionP>
+            <StyledContaiteDescriptionP>Use a phone app like: 1Password Authy LasPass Authenticator etc. to get 2FA codes when prompted during sign-in</StyledContaiteDescriptionP>
             <StyledContaiteDescriptionH3>Scan the QR code</StyledContaiteDescriptionH3>
-            <StyledContaiteDescriptionP>Use an authenticator app from your phone to scan. If you are unable to scan,</StyledContaiteDescriptionP>
-            <StyledContaiteDescriptionH3>Entry this text code</StyledContaiteDescriptionH3>
+            <StyledContaiteDescriptionH3>Entry this text code or scan the Qrcode</StyledContaiteDescriptionH3>
             <StyledContaiteDescriptionP>{ code }</StyledContaiteDescriptionP>
         </StyledContaiteDescription>
         <StyledContaiteQrcode>
-            <img alt="qrcode to add 2fa" src={gcode}/>
+            <img alt="qrcode to add 2fa" src={gcode} style={{width: "250px"}}/>
         </StyledContaiteQrcode>
             <StyledContaiteDescriptionP>Verify the code from the app</StyledContaiteDescriptionP>
-            <input type="text" value={inputOtc} placeholder="OTC CODE" onChange={(e) => {handleChange(e)}}
+            <input style={{margin: "10px"}} type="text" value={inputOtc} placeholder="OTC CODE" onChange={(e) => {handleChange(e)}}
                                                                                 onKeyDown={(e) => {
                                                                                     if (e.key === 'Enter' && !e.shiftKey){
                                                                                         sendOtc();

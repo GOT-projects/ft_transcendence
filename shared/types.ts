@@ -188,7 +188,7 @@ export namespace GOT {
 
     export enum EnumBall {
         DEFAULT = 'DEFAULT',
-        FOOT = 'FOOT',
+        COMET = 'COMET',
         TENIS = 'TENIS',
         PONG = 'PONG',
     }

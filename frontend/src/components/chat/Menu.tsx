@@ -42,7 +42,12 @@ const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
         }else if (codeTmp != undefined){
             setCode(codeTmp);
             setNameChan("")
+        }else{
+            console.log("end")
+            setNameChan("")
+            setCode("");
         }
+        console.log(code, nameChan)
     }, [codeParam])
 
     const handlePriveMsg = (name:string) => {

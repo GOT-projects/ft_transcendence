@@ -196,7 +196,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                         <StyledChatSwithTile>{chatSwitch}</StyledChatSwithTile>
                     </StyledChatSwith>
                     <StyledChatSep/>
-                    <StyledChatPrive >
+                    <StyledChatPrive className={add}>
                     {add === "Private" ? <PriveUserMenu friends={friends} 
                                             setFriends={setFriends} selectUser={selectUser} 
                                             setActive={setActive} profil={props.profil}

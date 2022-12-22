@@ -153,7 +153,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
             <StyleMenusHeader className={active}>
                 <StyleMenuHeader colortext={props.colorLeadBoard}text={"LeaderBoard"} to='/leaderboard'>LeaderBoard</StyleMenuHeader>
                 <StyleMenuHeader colortext={props.colorGame}text={"Game"}to="/game">Game</StyleMenuHeader>
-                <StyleMenuHeader colortext={props.colorChat} text={"Chat"}to='/chat?code=Priv'>Chat</StyleMenuHeader>
+                <StyleMenuHeader colortext={props.colorChat} text={"Chat"}to='/chat?code=Private'>Chat</StyleMenuHeader>
                 <StyleMenuHeaderNotity colorIcon={notif ? Colors.NotifActive : Colors.NotifUnactive}>
                     {notif ? <IoIosNotifications size={"22px"} onClick={handleMenuNotif}/> : <IoMdNotificationsOff size={"22px"}/>}
                 </StyleMenuHeaderNotity>

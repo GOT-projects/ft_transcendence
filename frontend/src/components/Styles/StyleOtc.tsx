@@ -10,10 +10,10 @@ export const StyledContaite = styled(motion.div)`
     position: absolute;
     flex-direction: column;
     width: 500px;
-    height: 600px;
+    height: calc(100hv);
     top: 4rem;
     right: 0;
-    overflow: hidden;
+    overflow: scroll;
     border-radius: 0 0 0 20px;
     cursor: auto;
     background-color: ${Colors.ChatMenu};
@@ -40,6 +40,7 @@ export const StyledContaiteDescriptionH1 = styled.h1`
 `
 
 export const StyledContaiteDescriptionP = styled.p`
+    margin: 10px;
     font-size: 14px;
     color: ${Colors.darkText}
 `
