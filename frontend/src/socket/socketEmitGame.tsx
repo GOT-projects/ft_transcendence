@@ -1,6 +1,7 @@
 import { Socket } from "socket.io-client";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { accountService } from "../services/account.service";
+import { GOT } from "../shared/types";
 
 
 let emitGameJoinWaing = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>) =>{
@@ -28,6 +29,10 @@ let emit_change_pad = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>,p
 let emit_where_am_I = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, where: string) =>{
     socket.emit('server_where_am_I', {Authorization: accountService.getToken(), where: where});
 }
+
+let emit_custom = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, custom: GOT.CustomGame) =>{
+    socket.emit('server_custom', {Authorization: accountService.getToken(), custom: custom});
+}
 export const emitGame = {
-    emitGameJoinWaing, emitLeftWaiting, emitJoinDemand, emitJoinResp, emitjoinSpec, emit_change_pad, emit_where_am_I
+    emitGameJoinWaing, emitLeftWaiting, emitJoinDemand, emitJoinResp, emitjoinSpec, emit_change_pad, emit_where_am_I, emit_custom
 }

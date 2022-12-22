@@ -7,6 +7,16 @@ import { SocketContextGame } from '../socket/socketPovider';
 import { useNavigate } from 'react-router-dom';
 import { onSocketGame } from '../socket/socketOnGame';
 import { offSocketGame } from '../socket/socketOffGame';
+import tennis from "../assets/tennis.png"
+import pong from "../assets/pinpong.png"
+
+enum EnumBall {
+    DEFAULT = 'DEFAULT',
+    FOOT = 'FOOT',
+    TENIS = 'TENIS',
+    PONG = 'PONG',
+}
+
 
 async function useInterval(callback: any, delay: number) {
 	const savedCallback: any = useRef();
@@ -40,6 +50,7 @@ interface IProps {
 }
 
 const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
+    const defaultBall = "https://png.pngtree.com/element_our/20190601/ourlarge/pngtree-blue-red-glowing-round-ball-free-button-image_1370443.jpg";
 	const [endGame, setEndGame] = useState(false);
     const [player, setPlayer] = useState<GOT.ActuGamePlayer>();
     const [spec, setSpec] = useState<GOT.ActuGameSpectator>();
@@ -183,6 +194,16 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 			posActu = posPad;
 		}
 	}, 50);
+    const handleUrl = () => {
+        if (props.profil?.userInfos.ball === EnumBall.DEFAULT){
+            return defaultBall;
+
+        }else if (props.profil?.userInfos.ball === EnumBall.TENIS){
+            return tennis
+        }else if (props.profil?.userInfos.ball === EnumBall.PONG){
+            return pong
+        }
+    }
 	
 
 	if (props.initGame && point)
@@ -215,7 +236,9 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 							</>
 						)
 					}
-					<StyledBallalias id="ball"  x={ballX+"px"} y={ballY+"px"} rot="0px" size={sizeOfBall.toString()+"px"}></StyledBallalias>
+					<StyledBallalias id="ball"  x={ballX+"px"} y={ballY+"px"} 
+                                     rot="0px" size={sizeOfBall.toString()+"px"} 
+                                     color={props.profil?.userInfos.color} urlBg={handleUrl()} ></StyledBallalias>
 				</StyledLeftPad>
 			</div>
 		);

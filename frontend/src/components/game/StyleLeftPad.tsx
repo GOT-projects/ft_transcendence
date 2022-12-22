@@ -14,6 +14,14 @@ interface ballPos {
     rot: string;
 	size: string;
 }
+interface ballPos2 {
+	x: string;
+	y: string;
+    rot: string;
+	size: string;
+    color: string | undefined,
+    urlBg: string | undefined,
+}
 
 export const StyledLeftPad = styled.div`
 
@@ -62,9 +70,10 @@ background-size: 1500%;
 z-index: 1;
 `;
 	
-	export const StyledBall = styled.div<ballPos>`
+	export const StyledBall = styled.div<ballPos2>`
 	position: relative;
-	background-image: url(https://png.pngtree.com/element_our/20190601/ourlarge/pngtree-blue-red-glowing-round-ball-free-button-image_1370443.jpg);
+	background-image: url(${p => p.urlBg});
+    box-shadow: 0px 0px 4px 4px ${p => p.color};
 	background-position: 55% 45%;
 	background-size: 140%;
 	top: ;
