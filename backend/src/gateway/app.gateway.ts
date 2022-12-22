@@ -68,6 +68,8 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 												urlImg: friend.urlImg,
 												wallet: friend.wallet,
 												email: friend.email,
+												ball: friend.ball,
+												color: friend.color,
 												isTwoFactorAuthenticationEnabled: friend.isTwoFactorAuthenticationEnabled,
 												userIdIsBlock: [],
 												users1Friend: [],
@@ -159,6 +161,8 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 											urlImg: friend.urlImg,
 											wallet: friend.wallet,
 											email: friend.email,
+											ball: friend.ball,
+											color: friend.color,
 											isTwoFactorAuthenticationEnabled: friend.isTwoFactorAuthenticationEnabled,
 											userIdIsBlock: [],
 											users1Friend: [],
@@ -191,8 +195,10 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return false;
 		}
 		const auth = await this.connectUserBody(client, jwt);
-		if (!auth)
+		if (!auth) {
+			client.emit('client_rm_token', true);
 			return false;
+		}
 		if (auth.newUser) {
 			const friends = await this.friendGateway.getFriends(auth.user);
 			if (typeof friends !== 'string') {
@@ -205,6 +211,8 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 							urlImg: friend.urlImg,
 							wallet: friend.wallet,
 							email: friend.email,
+							ball: friend.ball,
+							color: friend.color,
 							isTwoFactorAuthenticationEnabled: friend.isTwoFactorAuthenticationEnabled,
 							userIdIsBlock: [],
 							users1Friend: [],
@@ -1000,6 +1008,8 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 											urlImg: friend.urlImg,
 											wallet: friend.wallet,
 											email: friend.email,
+											ball: friend.ball,
+											color: friend.color,
 											isTwoFactorAuthenticationEnabled: friend.isTwoFactorAuthenticationEnabled,
 											userIdIsBlock: [],
 											users1Friend: [],

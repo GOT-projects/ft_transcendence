@@ -13,7 +13,9 @@ export namespace MyTransform {
 			urlImg: user.urlImg,
 			wallet: user.wallet,
 			email: user.email,
-			isTwoFactorAuthenticationEnabled: user.isTwoFactorAuthenticationEnabled
+			isTwoFactorAuthenticationEnabled: user.isTwoFactorAuthenticationEnabled,
+			ball: user.ball,
+			color: user.color
 		}
 	}
 	

@@ -16,7 +16,9 @@ export class CreateUserDto {
 }
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
-		id!: number;
+		id?: number | undefined;
+		ball: GOT.EnumBall;
+		color: string;
 }
 
 
