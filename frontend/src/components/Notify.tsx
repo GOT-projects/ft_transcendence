@@ -14,25 +14,24 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
     const socket = useContext(SocketContext);
 
    const handleClose = () =>{
-        //const params = (new URL(window.location.href));
-        let regex:RegExp = /^User with login (.*[^ ])send you a private message/
+        let regex:RegExp = /^Info: User with login (.*[^ ]) send you a private message/
         if (regex.test(notify.message)){
             const tab = notify.message.split(" ");
             navigate(`/chat?code=Private&name=${tab[3]}`);
         }
-        let regexChan:RegExp = /^Error: Channel (.*[^ ])/
+        let regexChan:RegExp = /^Info: Channel (.*[^ ]) received a message/
+        console.log( "testttttttttt", regexChan.test(notify.message));
         if (regexChan.test(notify.message)){
             const tab = notify.message.split(" ");
-            navigate(`/chat?code=Chan=${tab[3]}`)
+            navigate(`/chat?code=Channel&name=${tab[2]}`);
         }
-        emitSocket.emitProfil(socket);
         setNotify({...notify, isOpen: false})
    }
    const handleViewPopup = () =>{
         const params = (new URL(window.location.href));
         const code = params.searchParams.get("code");
         const name = params.searchParams.get("name");
-        let regexPrivMsg:RegExp = /^User with login (.*[^ ]) send you a private message/
+        let regexPrivMsg:RegExp = /^Info: User with login (.*[^ ]) send you a private message/
         if (regexPrivMsg.test(notify.message)){
             const tab = notify.message.split(" ");
             if (code === "Private"){
@@ -43,7 +42,7 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
                 
             }
         }
-        let regexChannel:RegExp = /^^Info: Channel (.*[^ ]) have a new member/
+        let regexChannel:RegExp = /^Info: Channel (.*[^ ]) have a new member/
         if (regexChannel.test(notify.message)){
             const tab = notify.message.split(" ");
             if (code === "Channel"){
@@ -61,7 +60,6 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
         let regexChannelMsg:RegExp = /^Info: Channel (.*[^ ]) received a message/
         if (regexChannelMsg.test(notify.message)){
             const tab = notify.message.split(" ");
-            console.log(tab);
             if (tab && tab[2] == name){
                 return false;
             }

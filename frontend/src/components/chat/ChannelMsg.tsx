@@ -39,16 +39,18 @@ const ChannelMsg:FunctionComponent<IProps> = (props:IProps)=> {
     
     useEffect(() => {
         //receive list message
-        onSocket.client_channelMsg(socket, setSelectChanMsg);
-        return () => {
-            offSocket.client_channelMsg(socket);
-        } 
-    },[socket, setSelectChanMsg, selectChanMsg])
+        if (props.chanName !== ""){
+            onSocket.client_channelMsg(socket, setSelectChanMsg, props.chanName);
+            return () => {
+                offSocket.client_channelMsg(socket);
+            } 
+        }
+    },[socket, setSelectChanMsg, selectChanMsg, props.chanName])
 
 
     useEffect(() =>{
         emitSocket.emitChannelMsg(socket, props.chanName)
-    }, [socket])
+    }, [socket, props.chanName])
 
     function handChange(event: any, setInput: any, input: string){
         if (input === "" && event.target.value ==="\n")

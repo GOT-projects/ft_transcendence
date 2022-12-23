@@ -50,9 +50,9 @@ let client_channels = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, 
     })
 }
 
-let client_channelMsg = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setMsgChannel:React.Dispatch<React.SetStateAction<GOT.MsgChannel[] | undefined>>) => {
+let client_channelMsg = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setMsgChannel:React.Dispatch<React.SetStateAction<GOT.MsgChannel[] | undefined>>, chanName:string) => {
     socket.on('client_chanmsg', (rep:GOT.MsgChannel[]) => {
-        if (rep){
+        if (rep &&  rep.length !== 0 && rep[0].channel.name === chanName){
             for (const msg of rep) {
                 msg.userFrom.urlImg = transformUrlUsers(msg.userFrom.urlImg);
             }

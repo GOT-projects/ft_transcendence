@@ -296,7 +296,7 @@ export const StyledChatPlace = styled.div`
     }
 `;
 
-export const StyledChatText = styled.pre`
+export const StyledChatText = styled.p`
     margin: 10px;
     font-size:14px; 
     font-family: "Public Pixel";
