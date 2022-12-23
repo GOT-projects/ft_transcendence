@@ -20,7 +20,7 @@ help:
 	@printf "\tdown if run and run compose\n"
 	@printf "make $(COLOR_PURPLE)down$(COLOR_NORM)\n"
 	@printf "\tdown the dockers\n"
-	@printf "make $(COLOR_PURPLE)exec$(COLOR_NORM)\n"
+	@printf "make $(COLOR_PURPLE)exec $(COLOR_RED)name$(COLOR_NORM)\n"
 	@printf "\ttake one argument (name of the docker) and go in\n"
 	@printf "make $(COLOR_PURPLE)purge$(COLOR_NORM)\n"
 	@printf "\tdelete all images, volumes\n"
