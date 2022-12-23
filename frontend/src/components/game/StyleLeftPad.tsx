@@ -17,10 +17,10 @@ interface ballPos {
 interface ballPos2 {
 	x: string;
 	y: string;
-    rot: string;
+  rot: string;
 	size: string;
-    color: string | undefined,
-    urlBg: string | undefined,
+  color: string | undefined,
+  urlBg: string | undefined,
 }
 
 export const StyledLeftPad = styled.div`
@@ -70,18 +70,18 @@ background-size: 1500%;
 z-index: 2;
 `;
 	
-	export const StyledBall = styled.div<ballPos2>`
-	position: absolute;
-	background-image: url(${p => p.urlBg});
-    box-shadow: 0px 0px 4px 4px ${p => p.color};
-	background-position: 55% 45%;
-	background-size: 140%;
-	top: ;
-	left: ;
-	border-radius: 50%;
-	z-index: 1;
-	opacity: 100%;
-	filter: brightness(75%);
+export const StyledBall = styled.div<ballPos2>`
+position: absolute;
+background-image: url(${p => p.urlBg});
+  box-shadow: 0px 0px 4px 4px ${p => p.color};
+background-position: 55% 45%;
+background-size: 140%;
+top: ;
+left: ;
+border-radius: 50%;
+z-index: 1;
+opacity: 100%;
+filter: brightness(75%);
 `;
 
 export const StyledLeftPad1alias = styled(StyledLeftPad1).attrs<mousePos>(p => ({
