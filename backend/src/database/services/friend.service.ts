@@ -6,8 +6,8 @@ import { RelFriend } from "../entities/rel_friend.entity";
 import { User } from "../entities/user.entity";
 
 export class CreateRelFriendDto {
-    user1Id!: number;
-    user2Id!: number;
+	user1Id!: number;
+	user2Id!: number;
 }
 
 @Injectable()

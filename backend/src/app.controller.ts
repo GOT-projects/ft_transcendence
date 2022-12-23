@@ -7,27 +7,27 @@ import { JWTGuard } from "./auth/guards/jwt.guard";
 @Controller()
 //@UseGuards(JWTGuard)
 export class AppController {
-    constructor(
-        private readonly appService: AppService,
-    ) {}
+	constructor(
+		private readonly appService: AppService,
+	) {}
 
-    @Put('upload')
-    @UseInterceptors(FileInterceptor('file'))
-    async changeProfileImage(@Req() req: Request, @UploadedFile(
-        new ParseFilePipe({
-          validators: [
-            new MaxFileSizeValidator({ maxSize: 10000000 }),
-          ],
-        }),
-    ) file: Express.Multer.File) {
-        if (!req?.headers?.authorization || !file)
-            throw new HttpException('No authorization header or no file', HttpStatus.BAD_REQUEST);
-        const jwt = req.headers.authorization.split(' ')[1];
-        return await this.appService.changeProfilImage(jwt, file);
-    }
+	@Put('upload')
+	@UseInterceptors(FileInterceptor('file'))
+	async changeProfileImage(@Req() req: Request, @UploadedFile(
+		new ParseFilePipe({
+		  validators: [
+			new MaxFileSizeValidator({ maxSize: 10000000 }),
+		  ],
+		}),
+	) file: Express.Multer.File) {
+		if (!req?.headers?.authorization || !file)
+			throw new HttpException('No authorization header or no file', HttpStatus.BAD_REQUEST);
+		const jwt = req.headers.authorization.split(' ')[1];
+		return await this.appService.changeProfilImage(jwt, file);
+	}
 
-    @Get('images/:file')
-    async getProfilImage(@Req() req: Request, @Param('file') file: string, @Res() res: Response) {
-        return await this.appService.getProfilImage(file, res);
-    }
+	@Get('images/:file')
+	async getProfilImage(@Req() req: Request, @Param('file') file: string, @Res() res: Response) {
+		return await this.appService.getProfilImage(file, res);
+	}
 }

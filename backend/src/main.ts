@@ -4,18 +4,6 @@ import { AppModule } from './app.module';
 import { exit } from 'process';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 
-/*
-import { GOT } from 'shared/types';
-class A implements GOT.User {
-	id: number;
-	idIntra?: number;
-	login: string;
-	username: string;
-	urlImg: string;
-	wallet: number;
-}
-*/
-
 async function bootstrap() {
 	const logger = new Logger('main.ts - server');
 	if (

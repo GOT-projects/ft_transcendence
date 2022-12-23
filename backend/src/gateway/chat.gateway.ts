@@ -305,15 +305,11 @@ export class ChatGateway {
 			}
 			if (chan.status === GOT.ChannelStatus.PROTECTED)
 				chan.password = await hashChannelPass(chan.password);
-			console.log('tototototototo');
-			
 			channel = await this.channelService.create({
 				name: chan.name,
 				status: chan.status,
 				password: ((chan.status === GOT.ChannelStatus.PROTECTED) ? chan.password : undefined)
 			});
-			console.log(channel);
-			
 			await this.relUserChannelService.create({
 				userId: user.id,
 				channelId: channel.id,

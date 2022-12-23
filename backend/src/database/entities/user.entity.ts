@@ -34,11 +34,11 @@ export class User {
 	email!: string;
 
 	@Column({
-        type: "enum",
-        enum: GOT.EnumBall,
-        default: GOT.EnumBall.DEFAULT
-    })
-    ball!: GOT.EnumBall;
+		type: "enum",
+		enum: GOT.EnumBall,
+		default: GOT.EnumBall.DEFAULT
+	})
+	ball!: GOT.EnumBall;
 
 	@Column( {nullable: false, default: '#121212'} )
 	color!: string;

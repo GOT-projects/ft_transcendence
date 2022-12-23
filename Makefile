@@ -3,23 +3,28 @@ COLOR_RED		:=	\033[31m
 COLOR_PURPLE	:=	\033[35m
 cmd				:=	$(shell which docker-compose >/dev/null; RETVAL=$$?; if [ $$RETVAL -eq 0 ]; then echo 'docker-compose'; else echo 'docker compose'; fi)
 
-all:
-	${cmd} kill && ${cmd} down -v && ${cmd} up --build -d && ${cmd} logs -f nestjs web
+all: down up
+	${cmd} logs -f nestjs web
+
+up:
+	${cmd} up --build -d
 
 down:
-	${cmd} down -v
+	${cmd} kill && ${cmd} down -v
 
 exec:
 	docker exec -it $(wordlist 1,2,$(MAKECMDGOALS)) bash
 
-purge:
+purge: down
 	docker system prune -a -f --volumes
 
 help:
 	@printf "make $(COLOR_PURPLE)all$(COLOR_NORM)\n"
-	@printf "\tdown if run and run compose\n"
+	@printf "\tdown, up dockers and show logs of nest and react\n"
+	@printf "make $(COLOR_PURPLE)up$(COLOR_NORM)\n"
+	@printf "\tup dockers\n"
 	@printf "make $(COLOR_PURPLE)down$(COLOR_NORM)\n"
-	@printf "\tdown the dockers\n"
+	@printf "\tdown dockers\n"
 	@printf "make $(COLOR_PURPLE)exec $(COLOR_RED)name$(COLOR_NORM)\n"
 	@printf "\ttake one argument (name of the docker) and go in\n"
 	@printf "make $(COLOR_PURPLE)purge$(COLOR_NORM)\n"

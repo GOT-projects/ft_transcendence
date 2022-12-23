@@ -3,12 +3,12 @@ import { JwtModule } from "@nestjs/jwt";
 import { DatabaseModule } from "src/database/database.module";
 
 export const jwtModule = JwtModule.registerAsync({
-    imports: [ConfigModule],
-    useFactory: async () => ({
-        secret: `${process.env.JWT_SECRET}`,
-        signOptions: {
-            expiresIn: parseInt(`${process.env.JWT_TTL}`),
-        },
-    }),
-    inject: [ConfigService],
+	imports: [ConfigModule],
+	useFactory: async () => ({
+		secret: `${process.env.JWT_SECRET}`,
+		signOptions: {
+			expiresIn: parseInt(`${process.env.JWT_TTL}`),
+		},
+	}),
+	inject: [ConfigService],
 });

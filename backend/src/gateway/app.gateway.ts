@@ -687,7 +687,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			if (typeof profil !== 'string'){
 				this.server.to(sock).emit('client_profil', profil);
 				this.server.to(sock).emit('info_client', `Invitation to join channel ${chanName}`);
-            }
+			}
 		}
 		client.emit('info_client', `Channel ${chanName} you invite user with login ${loginInvite}`);
 	}
@@ -1042,18 +1042,18 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 	async handleConnection(@ConnectedSocket() client: Socket) {
 		let jwt: string | undefined = undefined;
 		const authorizationHeader = client.handshake.headers.authorization;
-        // Not connected
-        if (!authorizationHeader) {
+		// Not connected
+		if (!authorizationHeader) {
 			this.logger.verbose(`Client connected anonymous: ${client.id}`);
 			return ;
-        }
-        const bearer : string[] = authorizationHeader.split(' ');
-        if (bearer.length !== 2) {
+		}
+		const bearer : string[] = authorizationHeader.split(' ');
+		if (bearer.length !== 2) {
 			this.logger.verbose(`Client connected anonymous: ${client.id}`);
 			return ;
-        }
-        // Verify token
-        jwt = bearer[1];
+		}
+		// Verify token
+		jwt = bearer[1];
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth) {
 			this.logger.verbose(`Client connected anonymous: ${client.id}`);

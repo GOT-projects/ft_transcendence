@@ -5,8 +5,8 @@ import { jwtModule } from 'src/auth/jwt.module';
 import { DatabaseModule } from 'src/database/database.module';
 
 @Module({
-  imports: [DatabaseModule, jwtModule],
-  providers: [AuthService],
-  controllers: [AuthController],
+	imports: [DatabaseModule, jwtModule],
+	providers: [AuthService],
+	controllers: [AuthController],
 })
 export class AuthModule {}

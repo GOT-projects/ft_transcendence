@@ -96,7 +96,6 @@ export class AuthService {
 				access_token: jwt,
 				user:  user
 			};
-			console.log(jwt);
 			res.header('Authorization', `Bearer ${ jwt }`);
 			res.send(ret);
 		} catch (error) {
@@ -108,9 +107,9 @@ export class AuthService {
 		const secret = authenticator.generateSecret();
 	
 		const otpAuthUrl = authenticator.keyuri(
-		  user.email,
-		  `${process.env.APP_NAME}`,
-		  secret,
+			user.email,
+			`${process.env.APP_NAME}`,
+			secret,
 		);
 	
 		await this.usersService.setTwoFactorAuthenticationSecret(

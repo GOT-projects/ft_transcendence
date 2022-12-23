@@ -8,8 +8,8 @@ import { User } from "../entities/user.entity";
 
 export class CreateChannelDto {
 	name!: string;
-    status!: GOT.ChannelStatus;
-    password?: string;
+	status!: GOT.ChannelStatus;
+	password?: string;
 }
 
 export class UpdateChannelDto extends PartialType(CreateChannelDto) {

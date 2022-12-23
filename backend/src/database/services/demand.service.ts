@@ -6,9 +6,9 @@ import { RelDemand } from "../entities/rel_demand.entity";
 import { User } from "../entities/user.entity";
 
 export class CreateRelDemandDto {
-    userIdDemand!: number;
-    userIdWhoDemand: number | null;
-    channelIdWhoDemand: number | null;
+	userIdDemand!: number;
+	userIdWhoDemand: number | null;
+	channelIdWhoDemand: number | null;
 }
 
 @Injectable()

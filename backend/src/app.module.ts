@@ -12,20 +12,20 @@ import { ChatGateway } from './gateway/chat.gateway';
 import { GameGateway } from './gateway/game.gateway';
 
 @Module({
-  imports: [
-    DatabaseModule,
-    AuthModule,
-    jwtModule,
-    multerModule
-  ],
-  controllers: [AppController],
-  providers: [
-    AppService,
-    AppGateway,
-    GeneralGateway,
-    FriendGateway,
-    ChatGateway,
-    GameGateway
-  ],
+	imports: [
+		DatabaseModule,
+		AuthModule,
+		jwtModule,
+		multerModule
+	],
+	controllers: [AppController],
+	providers: [
+		AppService,
+		AppGateway,
+		GeneralGateway,
+		FriendGateway,
+		ChatGateway,
+		GameGateway
+	],
 })
 export class AppModule {}

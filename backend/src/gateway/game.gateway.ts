@@ -250,7 +250,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			ball,
 			enemyY: player2
 		};
-		//console.log("%d\n", player2);
 		this.server.to(game.socketUser1).emit('client_game_player', actu);
 		// player droit
 		actu = {
@@ -795,8 +794,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		}
 		// Verify token
 		jwt = bearer[1];
-		console.log('jwt', jwt);
-		
+
 		const auth = await this.connectionSecure(client, jwt, false);
 		if (!auth)
 			return await this.handleDisconnect(client);

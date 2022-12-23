@@ -1,0 +1,37 @@
+#FROM postgres:latest
+#COPY docker/init.sql /docker-entrypoint-initdb.d/
+#RUN sed s/'$POSTGRES_USER'/"$POSTGRES_USER"/g /docker-entrypoint-initdb.d/init.sql > /docker-entrypoint-initdb.d/tmp.sql \
+#    && mv /docker-entrypoint-initdb.d/tmp.sql /docker-entrypoint-initdb.d/init.sql \
+#    && sed s/'$POSTGRES_PASSWORD'/"$POSTGRES_PASSWORD"/g /docker-entrypoint-initdb.d/init.sql > /docker-entrypoint-initdb.d/tmp.sql \
+#    && mv /docker-entrypoint-initdb.d/tmp.sql /docker-entrypoint-initdb.d/init.sql \
+#    && sed s/'$POSTGRES_DB'/"$POSTGRES_DB"/g /docker-entrypoint-initdb.d/init.sql > /docker-entrypoint-initdb.d/tmp.sql \
+#    && mv /docker-entrypoint-initdb.d/tmp.sql /docker-entrypoint-initdb.d/init.sql
+#
+#CMD cat /docker-entrypoint-initdb.d/init.sql
+
+# dump build stage
+FROM postgres:latest as dumperPostgres
+
+ARG POSTGRES_USER
+ARG POSTGRES_PASSWORD
+ARG POSTGRES_DB
+
+COPY docker/init.sql /docker-entrypoint-initdb.d/
+RUN sed s/'$POSTGRES_USER'/"$POSTGRES_USER"/g /docker-entrypoint-initdb.d/init.sql > /docker-entrypoint-initdb.d/tmp.sql \
+    && mv /docker-entrypoint-initdb.d/tmp.sql /docker-entrypoint-initdb.d/init.sql \
+    && sed s/'$POSTGRES_PASSWORD'/"$POSTGRES_PASSWORD"/g /docker-entrypoint-initdb.d/init.sql > /docker-entrypoint-initdb.d/tmp.sql \
+    && mv /docker-entrypoint-initdb.d/tmp.sql /docker-entrypoint-initdb.d/init.sql \
+    && sed s/'$POSTGRES_DB'/"$POSTGRES_DB"/g /docker-entrypoint-initdb.d/init.sql > /docker-entrypoint-initdb.d/tmp.sql \
+    && mv /docker-entrypoint-initdb.d/tmp.sql /docker-entrypoint-initdb.d/test_dump.sql && rm -f /docker-entrypoint-initdb.d/init.sql
+
+RUN ["sed", "-i", "s/exec \"$@\"/echo \"skipping...\"/", "/usr/local/bin/docker-entrypoint.sh"]
+
+ENV POSTGRES_USER=${POSTGRES_USER}
+ENV POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+ENV PGDATA=/data
+
+RUN ["/usr/local/bin/docker-entrypoint.sh", "postgres"]
+
+FROM postgres:latest
+
+COPY --from=dumperPostgres /data $PGDATA
