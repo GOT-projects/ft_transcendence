@@ -24,7 +24,6 @@ interface ballPos2 {
 }
 
 export const StyledLeftPad = styled.div`
-
 position: absolute;
 z-index: 10;
 top: 25%;
@@ -73,7 +72,7 @@ z-index: 2;
 export const StyledBall = styled.div<ballPos2>`
 position: absolute;
 background-image: url(${p => p.urlBg});
-  box-shadow: 0px 0px 4px 4px ${p => p.color};
+box-shadow: 0px 0px 4px 4px ${p => p.color};
 background-position: 55% 45%;
 background-size: 140%;
 top: ;

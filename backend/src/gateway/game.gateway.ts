@@ -329,7 +329,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			party.ball.velocityX = direction * party.ball.speed * Math.cos(angleRad);
 			party.ball.velocityY = party.ball.speed * Math.sin(angleRad);
 
-			party.ball.speed += 1;
+			party.ball.speed += 2;
 		}
 		return 0;
 	}
@@ -429,7 +429,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 							top: undefined, bottom: undefined, left : undefined, right : undefined},
 						player2: {x : this.dimX - 40, y : 500, width : 40, height : 200, score : 0,
 							top: undefined, bottom: undefined, left : undefined, right : undefined},
-							ball: {x: 1000, y: 500,  radius : 25, velocityX : 15, velocityY : 0, speed : 10,
+							ball: {x: 1000, y: 500,  radius : 25, velocityX : 25, velocityY : 0, speed : 15,
 							top: undefined, bottom: undefined, left : undefined, right : undefined},
 					});
 					const start: GOT.InitGame = {
@@ -602,7 +602,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 							top: undefined, bottom: undefined, left : undefined, right : undefined},
 						player2: {x : this.dimX - 40, y : 500, width : 40, height : 200, score : 0,
 							top: undefined, bottom: undefined, left : undefined, right : undefined},
-							ball: {x: 1000, y: 500,  radius : 25, velocityX : 15, velocityY : 0, speed : 10,
+							ball: {x: 1000, y: 500,  radius : 25, velocityX : 25, velocityY : 0, speed : 15,
 							top: undefined, bottom: undefined, left : undefined, right : undefined},
 					});
 					this.appGateway.sendProfilOfUser(auth.user);
