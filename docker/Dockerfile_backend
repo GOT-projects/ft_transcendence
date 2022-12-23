@@ -12,11 +12,13 @@ COPY --chown=node:node  ./backend/tsconfig.json ./
 COPY --chown=node:node  ./backend/.eslintrc.js  ./
 COPY --chown=node:node  ./backend/.prettierrc   ./
 
-RUN npm i
+RUN yarn install
 
 RUN mkdir dist
+RUN chown node:node dist
 
 VOLUME [ "/usr/src/app/shared" ]
 VOLUME [ "/usr/src/app/src" ]
 
-CMD npm run start:dev
+COPY --chown=node:node docker/entrypoint/entrypoint_backend.sh ./
+ENTRYPOINT ["bash", "./entrypoint_backend.sh"]

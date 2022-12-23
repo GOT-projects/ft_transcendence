@@ -2,6 +2,7 @@ import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { exit } from 'process';
+import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 
 /*
 import { GOT } from 'shared/types';
@@ -31,16 +32,17 @@ async function bootstrap() {
 		logger.error(`Incomplete environment`);
 		exit(1);
 	}
-	const app = await NestFactory.create(AppModule);
+	const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
 	app.enableCors({
 		credentials: false,
 		origin: '*'
 	});
-	app.useLogger(['log', 'error', 'warn', 'debug', 'verbose']); // TODO rm for prod
+	if (process.env.ENV === 'DEV')
+		app.useLogger(['log', 'error', 'warn', 'debug', 'verbose']);
 	const port: number = (process.env.PORT_SERVER ? parseInt(process.env.PORT_SERVER) : 3000);
 	process.env.TTL_REGENERATE = `${ Math.floor(parseInt(process.env.JWT_TTL) * 0.8) }`;
 	const ttlRegenerate = process.env.JWT_TTL 
-	await app.listen(port);
+	await app.listen(port, '0.0.0.0');
 	logger.log(`Server start on port ${port}`);
 }
 

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { HttpException, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { Request, Response } from "express";
 import { stringify } from "querystring";
@@ -18,22 +18,26 @@ export class AuthService {
 	) {}
 
 	getIntraUrl(req: Request) {
+		if (!process.env.PORT_SERVER)
+			throw new HttpException('server port error', HttpStatus.BAD_REQUEST);
 		const params = stringify({
 			client_id: process.env.API_UID,
-			redirect_uri: `${ req.protocol }://${ req.hostname }:${process.env.PORT}/waiting`,
+			redirect_uri: `${ req.protocol }://${ req.hostname.slice(0, -(process.env.PORT_SERVER.length + 1)) }:${process.env.PORT}/waiting`,
 			response_type: 'code',
 		})
 		return `https://api.intra.42.fr/oauth/authorize?${params}`;
 	}
 
 	async connect_intra(req: Request, res: Response, code: string) {
+		if (!process.env.PORT_SERVER)
+			throw new HttpException('server port error', HttpStatus.BAD_REQUEST);
 		// Get token
 		const data = {
 			code: code,
 			client_id: '' + process.env.API_UID,
 			client_secret: '' + process.env.API_SECRET,
 			grant_type: 'authorization_code',
-			redirect_uri: `${ req.protocol }://${ req.hostname }:${process.env.PORT}/waiting`,
+			redirect_uri: `${ req.protocol }://${ req.hostname.slice(0, -(process.env.PORT_SERVER.length + 1)) }:${process.env.PORT}/waiting`,
 		}
 		let request;
 		try {
@@ -55,12 +59,12 @@ export class AuthService {
 			isTwoFactorAuthenticationEnabled: false,
 			twoFactorAuthenticationSecret: undefined,
 			login: request.data.login,
-			username: request.data.login,
+			// username: request.data.login,
 			urlImg: request.data.image.link,
 			wallet: request.data.wallet,
 			email: request.data.email,
 		}
-		this.connect(res, createUserDto);
+		await this.connect(res, createUserDto);
 	}
 
 	async invite(res: Response,login: string) {
@@ -68,12 +72,12 @@ export class AuthService {
 			isTwoFactorAuthenticationEnabled: false,
 			twoFactorAuthenticationSecret: undefined,
 			login: login,
-			username: login,
+			//username: login,
 			urlImg: 'https://docs.nestjs.com/assets/logo-small.svg',
 			wallet: -1,
 			email: login
 		}
-		this.connect(res, createUserDto);
+		await this.connect(res, createUserDto);
 	}
 
 	private async connect(res: Response, createUserDto: CreateUserDto) {
@@ -127,7 +131,6 @@ export class AuthService {
 	isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode: string, user: User) {
 		if (user.twoFactorAuthenticationSecret === undefined || user.twoFactorAuthenticationSecret === null)
 			return false;
-		console.log(user.twoFactorAuthenticationSecret)
 		return authenticator.verify({
 			token: twoFactorAuthenticationCode,
 			secret: user.twoFactorAuthenticationSecret,

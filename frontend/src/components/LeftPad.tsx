@@ -243,8 +243,11 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 				</StyledLeftPad>
 			</div>
 		);
+	delay(3000).then(() => {
+		navigate("/game");
+	})
 	return (
-		<h1>No game infos</h1>
+		<h1 style={{position: "absolute", zIndex: "10", top: "13%", color: "red", textAlign: "center", width: "100%"}}>No game infos</h1>
 	);
 }
 export default MousePadLeft;

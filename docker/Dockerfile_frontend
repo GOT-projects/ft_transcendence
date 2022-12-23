@@ -7,7 +7,6 @@ COPY --chown=node:node ./frontend/package.json	./
 COPY --chown=node:node ./frontend/tsconfig.json	./
 COPY --chown=node:node ./frontend/craco.config.js ./
 COPY --chown=node:node ./frontend/public/ ./
-COPY --chown=node:node ./entrypoint/entrypoint.sh ./
 
 
 VOLUME [ "/usr/src/app/frontend/src" ]
@@ -17,6 +16,5 @@ VOLUME [ "/usr/src/app/shared" ]
 RUN yarn install
 EXPOSE 80
 
-CMD yarn run dev
-
-#ENTRYPOINT ["bash", "./entrypoint.sh"]
+COPY --chown=node:node docker/entrypoint/entrypoint_frontend.sh ./
+ENTRYPOINT ["bash", "./entrypoint_frontend.sh"]

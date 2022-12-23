@@ -3,6 +3,8 @@
 
 ## Notes
 
+`docker-compose kill &&  docker-compose down -v && docker-compose up --build -d && docker-compose logs -f nestjs web`
+
 [draw](https://excalidraw.com/#room=abaf3fe998bb25b4e653,leo5BnA3X1O4sU7JC70sTA)
 
 ___

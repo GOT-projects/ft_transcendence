@@ -9,7 +9,7 @@ export class CreateUserDto {
 		twoFactorAuthenticationSecret?: string;
 		isTwoFactorAuthenticationEnabled!: boolean;
 		login!: string;
-		username!: string;
+		//username!: string;
 		urlImg!: string;
 		wallet!: number;
 		email!: string;

@@ -1,10 +1,10 @@
 import { Body, Controller, Get, HttpCode, HttpException, HttpStatus, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { Request, Response } from 'express';
-import { JWTGuard } from './guards/jwt.guard';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from 'src/database/services/user.service';
+import { Request, Response } from 'express';
 import { User } from 'src/database/entities/user.entity';
+import { UserService } from 'src/database/services/user.service';
+import { AuthService } from './auth.service';
+import { JWTGuard } from './guards/jwt.guard';
 import { jwtContent } from './types';
 
 @Controller('auth')
@@ -20,14 +20,22 @@ export class AuthController {
     async connect_intra(@Req() req: Request, @Res() res: Response, @Body('code') code: string) {
 		if (!code)
 			throw new HttpException('empty code', HttpStatus.BAD_REQUEST);
-        return await this.authService.connect_intra(req, res, code);
+        try {
+            return await this.authService.connect_intra(req, res, code);
+        } catch (error) {
+            throw new HttpException(error.message, error.status);
+        }
     }
 
     @Post('invite')
     async invite(@Res() res: Response, @Body('login') login: string) {
 		if (!login)
 			throw new HttpException('empty login', HttpStatus.BAD_REQUEST);
-        return await this.authService.invite(res, login);
+        try {
+            return await this.authService.invite(res, login);
+        } catch (error) {
+            throw new HttpException(error.message, error.status);
+        }
     }
 
     @Post('2fa/generate')
@@ -63,7 +71,6 @@ export class AuthController {
             const jwt = req.headers.authorization.split(' ')[1];
             const data: jwtContent = await this.jwtService.verifyAsync(jwt);
             const tmpUser: User | null = await this.userService.findUnique(data.userId, data.userLogin);
-            console.log("body", body);
             if (!tmpUser)
                 throw new HttpException('No authorization header', HttpStatus.BAD_REQUEST);
             const isCodeValid =
