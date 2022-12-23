@@ -11,7 +11,7 @@ interface mousePos {
 interface ballPos {
 	x: string;
 	y: string;
-    rot: string;
+  rot: string;
 	size: string;
 }
 
@@ -62,40 +62,40 @@ background-size: 1500%;
 z-index: 2;
 `;
 	
-	export const StyledBall = styled.div<ballPos>`
-	position: absolute;
-	background-image: url(https://png.pngtree.com/element_our/20190601/ourlarge/pngtree-blue-red-glowing-round-ball-free-button-image_1370443.jpg);
-	background-position: 55% 45%;
-	background-size: 140%;
-	top: ;
-	left: ;
-	border-radius: 50%;
-	z-index: 1;
-	opacity: 100%;
-	filter: brightness(75%);
+export const StyledBall = styled.div<ballPos>`
+position: absolute;
+background-image: url(https://png.pngtree.com/element_our/20190601/ourlarge/pngtree-blue-red-glowing-round-ball-free-button-image_1370443.jpg);
+background-position: 55% 45%;
+background-size: 140%;
+top: ;
+left: ;
+border-radius: 50%;
+z-index: 1;
+opacity: 100%;
+filter: brightness(75%);
 `;
 
 export const StyledLeftPad1alias = styled(StyledLeftPad1).attrs<mousePos>(p => ({
     style: {
         top: p.y,
     },
-  }))<mousePos>`
-  `;
+}))<mousePos>`
+`;
 
-  export const StyledRightPadalias = styled(StyledLeftPad2).attrs<mousePos>(p => ({
+export const StyledRightPadalias = styled(StyledLeftPad2).attrs<mousePos>(p => ({
     style: {
         top: p.y,
     },
-  }))<mousePos>`
-  `;
+}))<mousePos>`
+`;
 
-  export const StyledBallalias = styled(StyledBall).attrs<ballPos>(p => ({
-    style: {
-        top: p.y,
-        left: p.x,
-        transform: p.rot,
-		height: p.size,
-		width: p.size,
-    },
-  }))<ballPos>`
-  `;
+export const StyledBallalias = styled(StyledBall).attrs<ballPos>(p => ({
+  style: {
+      top: p.y,
+      left: p.x,
+      transform: p.rot,
+	    height: p.size,
+	    width: p.size,
+  },
+}))<ballPos>`
+`;

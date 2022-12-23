@@ -309,38 +309,26 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			}
 			return 1;
 		}
-		
-		// the ball has a velocity
+
 		party.ball.x += party.ball.velocityX;
 		party.ball.y += party.ball.velocityY;
 			
-		// when the ball collides with bottom and top walls we inverse the y velocity.
 		if(party.ball.y - party.ball.radius < 0 || party.ball.y + party.ball.radius > this.dimY){
 			party.ball.velocityY = -party.ball.velocityY;
 		}
-		// we check if the paddle hit the user or the com paddle
 		let player = (party.ball.x < this.dimX / 2) ? party.player1 : party.player2;
 		
 		// if the ball hits a paddle
 		if(this.collision(party.ball, player)){
-			// we check where the ball hits the paddle
 			let collidePoint = (party.ball.y - (player.y + player.height / 2));
-			// normalize the value of collidePoint, we need to get numbers between -1 and 1.
-			// -player.height/2 < collide Point < player.height/2
 			collidePoint = collidePoint / (player.height / 2);
-			
-			// when the ball hits the top of a paddle we want the ball, to take a -45degees angle
-			// when the ball hits the center of the paddle we want the ball to take a 0degrees angle
-			// when the ball hits the bottom of the paddle we want the ball to take a 45degrees
-			// Math.PI/4 = 45degrees
 			let angleRad = (Math.PI/4) * collidePoint;
 			
-			// change the X and Y velocity direction
+			// change the X, Y velocity
 			let direction = (party.ball.x + party.ball.radius < this.dimX/2) ? 1 : -1;
 			party.ball.velocityX = direction * party.ball.speed * Math.cos(angleRad);
 			party.ball.velocityY = party.ball.speed * Math.sin(angleRad);
-			
-			// speed up the ball everytime a paddle hits it.
+
 			party.ball.speed += 1;
 		}
 		return 0;
