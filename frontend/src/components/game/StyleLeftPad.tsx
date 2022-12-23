@@ -27,8 +27,9 @@ background-image: url(https://ns328286.ip-37-187-113.eu/ew/wallpapers/800x480/10
 background-size: cover;
 overflow: hidden;
 opacity: 100%;
-box-shadow: inset 0px 0px 20px 20px #0ff;
-border: 5px solid red;
+box-shadow: inset 0px 0px 20px 20px #0ff,
+            0 0 2em #730ae6;
+border: 5px solid #400373;
 border-radius: 20px;
 `;
 
@@ -44,7 +45,6 @@ background-position: center;
 background-size: 1500%;
 transform: translate(0, -50%);
 z-index: 2;
-
 `;
 
 export const StyledLeftPad2 = styled.div<mousePos>`
@@ -67,7 +67,6 @@ z-index: 2;
 	background-image: url(https://png.pngtree.com/element_our/20190601/ourlarge/pngtree-blue-red-glowing-round-ball-free-button-image_1370443.jpg);
 	background-position: 55% 45%;
 	background-size: 140%;
-
 	top: ;
 	left: ;
 	border-radius: 50%;

@@ -39,7 +39,7 @@ const SettingGame:FunctionComponent<IProps> = (props:IProps) =>{
             <ColorPicker width={300} height={100} 
                          color={color} 
                          onChange={setColor} 
-                         hideHSV hideHEX hideRGB dark />
+                         hideHSV hideRGB dark />
             <StyledSelectBall>
                 <StyledBallTennis onClick={handleTennis} color={tennis ? color.hex : "transparente"} key={uuid()} className="pongSelect"></StyledBallTennis>
                 <StyledBallPong onClick={handlePong}color={pong ? color.hex : "none"} key={uuid()} className="SelectTennis"></StyledBallPong>
