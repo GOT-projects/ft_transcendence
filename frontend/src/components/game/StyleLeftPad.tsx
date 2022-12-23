@@ -11,7 +11,7 @@ interface mousePos {
 interface ballPos {
 	x: string;
 	y: string;
-    rot: string;
+  rot: string;
 	size: string;
 }
 interface ballPos2 {
@@ -27,16 +27,17 @@ export const StyledLeftPad = styled.div`
 
 position: absolute;
 z-index: 10;
-top: 50%;
-left: 50%;
-width: 100%;
-height: 60%;
-transform: translate(-50%, -50%);
+top: 25%;
+left: 0%;
+width: calc(100% - 10px);
+height: 50%;
 background-image: url(https://ns328286.ip-37-187-113.eu/ew/wallpapers/800x480/10602_800x480.jpg);
 background-size: cover;
 overflow: hidden;
-opacity: 92%;
-border: 3px solid ${Colors.border};
+opacity: 100%;
+box-shadow: inset 0px 0px 20px 20px #0ff,
+            0 0 2em #730ae6;
+border: 5px solid #400373;
 border-radius: 20px;
 `;
 
@@ -46,13 +47,12 @@ width:2%;
 height:20%;
 background-color: red;
 top: ;
-transform: translate(0, -50%);
 border-radius: 10px;
 background-image: url(https://i.pinimg.com/474x/70/86/62/70866228da01302bce6afc9106e676b0.jpg);
 background-position: center;
 background-size: 1500%;
-z-index: 1;
-
+transform: translate(0, -50%);
+z-index: 2;
 `;
 
 export const StyledLeftPad2 = styled.div<mousePos>`
@@ -67,11 +67,11 @@ border-radius: 10px;
 background-image: url(https://i.pinimg.com/474x/70/86/62/70866228da01302bce6afc9106e676b0.jpg);
 background-position: center;
 background-size: 1500%;
-z-index: 1;
+z-index: 2;
 `;
 	
 	export const StyledBall = styled.div<ballPos2>`
-	position: relative;
+	position: absolute;
 	background-image: url(${p => p.urlBg});
     box-shadow: 0px 0px 4px 4px ${p => p.color};
 	background-position: 55% 45%;
@@ -88,23 +88,23 @@ export const StyledLeftPad1alias = styled(StyledLeftPad1).attrs<mousePos>(p => (
     style: {
         top: p.y,
     },
-  }))<mousePos>`
-  `;
+}))<mousePos>`
+`;
 
-  export const StyledRightPadalias = styled(StyledLeftPad2).attrs<mousePos>(p => ({
+export const StyledRightPadalias = styled(StyledLeftPad2).attrs<mousePos>(p => ({
     style: {
         top: p.y,
     },
-  }))<mousePos>`
-  `;
+}))<mousePos>`
+`;
 
-  export const StyledBallalias = styled(StyledBall).attrs<ballPos>(p => ({
-    style: {
-        top: p.y,
-        left: p.x,
-        transform: p.rot,
-		height: p.size,
-		width: p.size,
-    },
-  }))<ballPos>`
-  `;
+export const StyledBallalias = styled(StyledBall).attrs<ballPos>(p => ({
+  style: {
+      top: p.y,
+      left: p.x,
+      transform: p.rot,
+	    height: p.size,
+	    width: p.size,
+  },
+}))<ballPos>`
+`;
