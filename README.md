@@ -15,16 +15,13 @@ FIXME
 
 ---
 TODO
- - Front
-    - invite partie pop up view profil
-    - custom game
-    - waiting page game
-    - jeu
- - Back
-    - jeu
-    - list waiting game
-    - custom game
-    - hash password
+- Front
+	- input channel
+	- redirection game quand erreur
+	- game: affischage des score (responsive)
+	- responsive
+- Back
+	- secure
 
 ___
 
@@ -69,52 +66,52 @@ npm i -g @nestjs/cli
 
 `PUT /upload`
 - Params:
-    - `file` une image
+	- `file` une image
 - Return:
-    - file
+	- file
 
 `GET /images/:file`
 - Params:
-    - `:file` nom du fichier
+	- `:file` nom du fichier
 - Return:
-    - file
+	- file
 
 
 ##### Image
 
 `POST /auth/connect_intra`
 - Params:
-    - `code` code de l'intra
+	- `code` code de l'intra
 - Return:
-    - status '201'
+	- status '201'
 
 `POST /auth/invite`
 - Params:
-    - `login` login de l'utilisateur à créer
+	- `login` login de l'utilisateur à créer
 - Return:
-    - status '201'
+	- status '201'
 
 `POST /auth/2fa/generate`
 - Header token
 - Return:
-    - status '201'
-    - une string qrcode
+	- status '201'
+	- une string qrcode
 
 `POST /auth/2fa/activate`
 - Header: token
 - Return:
-    - status '201'
+	- status '201'
 
 `POST /auth/2fa/authenticate`
 - Header: token
 - Return:
-    - status '201'
-    - une string étant un jwt
+	- status '201'
+	- une string étant un jwt
 
 `GET /auth/get_intra_url`
 - Return:
-    - status '200'
-    - une string étant un l'url de l'intra
+	- status '200'
+	- une string étant un l'url de l'intra
 
 #### Socket
 
@@ -122,93 +119,93 @@ npm i -g @nestjs/cli
 
 `server_profil`
 - Params:
-    - `Authorization`: `GOT.Token` (string)
+	- `Authorization`: `GOT.Token` (string)
 - Return:
-    - `GOT.Profile` on `client_profil` (information du profil de la personne connecté)
+	- `GOT.Profile` on `client_profil` (information du profil de la personne connecté)
 
 `server_profil_login`
 - Params:
-    - `Authorization`: `GOT.Token` (string)
-    - `login`: `string` login de la personne dont on veut le profil
+	- `Authorization`: `GOT.Token` (string)
+	- `login`: `string` login de la personne dont on veut le profil
 - Return:
-    - `GOT.HistoryParties` on `client_profil_login` (information du profil de la personne voulu)
+	- `GOT.HistoryParties` on `client_profil_login` (information du profil de la personne voulu)
 
 `server_change_login`
 - Params:
-    - `Authorization`: `GOT.Token` (string)
-    - `username`: `string` nouveau username de la personne connecté
+	- `Authorization`: `GOT.Token` (string)
+	- `username`: `string` nouveau username de la personne connecté
 - Return:
-    - `GOT.Profile` on `client_profil` (information du profil de la personne conneté)
+	- `GOT.Profile` on `client_profil` (information du profil de la personne conneté)
 
 
 ##### Leaderboard
 
 `server_leaderboard`
 - Params:
-    - `Authorization`: `GOT.Token` (string)
+	- `Authorization`: `GOT.Token` (string)
 - Return:
-    - `GOT.LeaderBoard` on `client_leaderboard` (tout le leaderboard)
+	- `GOT.LeaderBoard` on `client_leaderboard` (tout le leaderboard)
 
 ##### Amis
 
 `server_demand_friend`
 - Params:
-    - `Authorization`: `GOT.Token` (string)
-    - `login`: `string` login de la personne que l'on veut ajouter en amis
+	- `Authorization`: `GOT.Token` (string)
+	- `login`: `string` login de la personne que l'on veut ajouter en amis
 - Return:
-    - `GOT.Profile` on `client_profil` (toutes les informations de la personne connecté)
+	- `GOT.Profile` on `client_profil` (toutes les informations de la personne connecté)
 
 `server_reply_notification`
 - Params:
-    - `Authorization`: `GOT.Token` (string)
-    - `reply`: `GOT.NotifChoice` la réponse à une demande en notification
+	- `Authorization`: `GOT.Token` (string)
+	- `reply`: `GOT.NotifChoice` la réponse à une demande en notification
 - Return:
-    - `GOT.Profile` on `client_profil` (toutes les informations de la personne connecté)
-    - `GOT.ChannelUsers` on `client_chan_users` (utilisateurs + ban du channel)
-    - `GOT.Channel[]` on `client_channels_in` (channels sur lesquels la personnes connecté est)
+	- `GOT.Profile` on `client_profil` (toutes les informations de la personne connecté)
+	- `GOT.ChannelUsers` on `client_chan_users` (utilisateurs + ban du channel)
+	- `GOT.Channel[]` on `client_channels_in` (channels sur lesquels la personnes connecté est)
 
 `server_block_somebody`
 - Params:
-    - `Authorization`: `GOT.Token` (string)
-    - `login`: `string` login de la personne que l'on veut bloquer
+	- `Authorization`: `GOT.Token` (string)
+	- `login`: `string` login de la personne que l'on veut bloquer
 - Return:
-    - `GOT.Profile` on `client_profil` (toutes les informations de la personne connecté)
+	- `GOT.Profile` on `client_profil` (toutes les informations de la personne connecté)
 
 `server_unblock_somebody`
 - Params:
-    - `Authorization`: `GOT.Token` (string)
-    - `login`: `string` login de la personne que l'on veut dé bloquer
+	- `Authorization`: `GOT.Token` (string)
+	- `login`: `string` login de la personne que l'on veut dé bloquer
 - Return:
-    - `GOT.Profile` on `client_profil` (toutes les informations de la personne connecté)
+	- `GOT.Profile` on `client_profil` (toutes les informations de la personne connecté)
 
 ##### Chat
 
 `server_privmsg`
 - Params:
-    - `Authorization`: `GOT.Token` (string)
-    - `login`: `string` login de la personne avec qui sera la discution retournée
+	- `Authorization`: `GOT.Token` (string)
+	- `login`: `string` login de la personne avec qui sera la discution retournée
 - Return:
-    - `GOT.msg[]` on `client_privmsg` (messages entre les 2 utilisateurs)
+	- `GOT.msg[]` on `client_privmsg` (messages entre les 2 utilisateurs)
 
 `server_privmsg_users`
 - Params:
-    - `Authorization`: `GOT.Token` (string)
+	- `Authorization`: `GOT.Token` (string)
 - Return:
-    - `GOT.User[]` on `client_privmsg_users` (utilisateurs avec qui la personnes connecté à reçu ou envoyé au moins un message)
+	- `GOT.User[]` on `client_privmsg_users` (utilisateurs avec qui la personnes connecté à reçu ou envoyé au moins un message)
 
 `server_privmsg_send`
 - Params:
-    - `Authorization`: `GOT.Token` (string)
-    - `login`: `string` login de la personne à qui l'on veut envoyer le message
-    - `msg`: `string` message à envoyer
+	- `Authorization`: `GOT.Token` (string)
+	- `login`: `string` login de la personne à qui l'on veut envoyer le message
+	- `msg`: `string` message à envoyer
 - Return:
-    - `GOT.msg[]` on `client_privmsg` (messages entre les 2 utilisateurs)
+	- `GOT.msg[]` on `client_privmsg` (messages entre les 2 utilisateurs)
 
 `server_users`
 - Params:
-    - `Authorization`: `GOT.Token` (string)
+	- `Authorization`: `GOT.Token` (string)
 - Return:
-    - `GOT.User[]` on `client_users` (liste des utilisateurs du server)
+	- `GOT.User[]` on `client_users` (liste des utilisateurs du server)
 
 
 ###### Channel
@@ -216,114 +213,114 @@ npm i -g @nestjs/cli
 
 `server_chanmsg`
 - Params:
-    - `Authorization`: `GOT.Token` (string)
-    - `chanName`: `string` nom du channel dont la discution sera retournée
+	- `Authorization`: `GOT.Token` (string)
+	- `chanName`: `string` nom du channel dont la discution sera retournée
 - Return:
-    - `GOT.MsgChannel[]` on `client_chanmsg` (messages du channel)
+	- `GOT.MsgChannel[]` on `client_chanmsg` (messages du channel)
 
 `server_chan_users`
 - Params:
-    - `Authorization`: `GOT.Token` (string)
-    - `chanName`: `string` nom du channel dont la discution sera retournée
+	- `Authorization`: `GOT.Token` (string)
+	- `chanName`: `string` nom du channel dont la discution sera retournée
 - Return:
-    - `GOT.ChannelUsers` on `client_chan_users` (utilisateurs + ban du channel)
+	- `GOT.ChannelUsers` on `client_chan_users` (utilisateurs + ban du channel)
 
 `server_channels_in`
 - Params:
-    - `Authorization`: `GOT.Token` (string)
+	- `Authorization`: `GOT.Token` (string)
 - Return:
-    - `GOT.Channel[]` on `client_channels_in` (channels sur lesquels la personnes connecté est)
+	- `GOT.Channel[]` on `client_channels_in` (channels sur lesquels la personnes connecté est)
 
 `server_chanmsg_send`
 - Params:
-    - `Authorization`: `GOT.Token` (string)
-    - `chanName`: `string` nom du channel ou l'on veut envoyer le message
-    - `msg`: `string` message à envoyer
+	- `Authorization`: `GOT.Token` (string)
+	- `chanName`: `string` nom du channel ou l'on veut envoyer le message
+	- `msg`: `string` message à envoyer
 - Return:
-    - `GOT.MsgChannel[]` on `client_chanmsg` (messages du channel)
+	- `GOT.MsgChannel[]` on `client_chanmsg` (messages du channel)
 
 `server_channels`
 - Params:
-    - `Authorization`: `GOT.Token` (string)
+	- `Authorization`: `GOT.Token` (string)
 - Return:
-    - `GOT.Channel[]` on `client_channels` (liste des channels du server visible pour l'utilisateur)
+	- `GOT.Channel[]` on `client_channels` (liste des channels du server visible pour l'utilisateur)
 
 `server_chanmsg_join`
 - Params:
-    - `Authorization`: `GOT.Token` (string)
-    - `chanName`: `string` nom du channel ou l'on veut rejoindre
-    - `password`: `string` mdp
+	- `Authorization`: `GOT.Token` (string)
+	- `chanName`: `string` nom du channel ou l'on veut rejoindre
+	- `password`: `string` mdp
 - Return:
-    - `GOT.ChannelUsers` on `client_chan_users` (utilisateurs + ban du channel)
-    - `GOT.Channel[]` on `client_channels_in` (channels sur lesquels la personnes connecté est)
+	- `GOT.ChannelUsers` on `client_chan_users` (utilisateurs + ban du channel)
+	- `GOT.Channel[]` on `client_channels_in` (channels sur lesquels la personnes connecté est)
 
 `server_chanmsg_invite`
 - Params:
-    - `Authorization`: `GOT.Token` (string)
-    - `chanName`: `string` nom du channel que la personne va rejoindre
-    - `login`: `string` login de la personne qui va rejoindre le channel
+	- `Authorization`: `GOT.Token` (string)
+	- `chanName`: `string` nom du channel que la personne va rejoindre
+	- `login`: `string` login de la personne qui va rejoindre le channel
 - Return:
-    - `GOT.Profile` on `client_profil` (toutes les informations de la personne connecté)
+	- `GOT.Profile` on `client_profil` (toutes les informations de la personne connecté)
 
 `server_chan_create`
 - Params:
-    - `Authorization`: `GOT.Token` (string)
-    - `chan`: `GOT.Channel` channel à créer
+	- `Authorization`: `GOT.Token` (string)
+	- `chan`: `GOT.Channel` channel à créer
 - Return:
-    - `GOT.Channel[]` on `client_channels_in` (channels sur lesquels la personnes connecté est)
-    - `GOT.Channel[]` on `client_channels` (liste des channels du server visible pour l'utilisateur)
+	- `GOT.Channel[]` on `client_channels_in` (channels sur lesquels la personnes connecté est)
+	- `GOT.Channel[]` on `client_channels` (liste des channels du server visible pour l'utilisateur)
 
 `server_chan_ban_somebody`
 - Params:
-    - `Authorization`: `GOT.Token` (string)
-    - `chanName`: `string` nom du channel
-    - `loginToBan`: `string` login de la personne à ban
+	- `Authorization`: `GOT.Token` (string)
+	- `chanName`: `string` nom du channel
+	- `loginToBan`: `string` login de la personne à ban
 - Return:
-    - `GOT.ChannelUsers` on `client_chan_users` (utilisateurs + ban du channel)
-    - `GOT.Channel[]` on `client_channels_in` (channels sur lesquels la personnes connecté est)
-    - `GOT.Channel[]` on `client_channels` (liste des channels du server visible pour l'utilisateur)
+	- `GOT.ChannelUsers` on `client_chan_users` (utilisateurs + ban du channel)
+	- `GOT.Channel[]` on `client_channels_in` (channels sur lesquels la personnes connecté est)
+	- `GOT.Channel[]` on `client_channels` (liste des channels du server visible pour l'utilisateur)
 
 `server_chan_unban_somebody`
 - Params:
-    - `Authorization`: `GOT.Token` (string)
-    - `chanName`: `string` nom du channel
-    - `loginToUnban`: `string` login de la personne à dé banir
+	- `Authorization`: `GOT.Token` (string)
+	- `chanName`: `string` nom du channel
+	- `loginToUnban`: `string` login de la personne à dé banir
 - Return:
-    - `GOT.ChannelUsers` on `client_chan_users` (utilisateurs + ban du channel)
-    - `GOT.Channel[]` on `client_channels_in` (channels sur lesquels la personnes connecté est)
-    - `GOT.Channel[]` on `client_channels` (liste des channels du server visible pour l'utilisateur)
+	- `GOT.ChannelUsers` on `client_chan_users` (utilisateurs + ban du channel)
+	- `GOT.Channel[]` on `client_channels_in` (channels sur lesquels la personnes connecté est)
+	- `GOT.Channel[]` on `client_channels` (liste des channels du server visible pour l'utilisateur)
 
 `server_chan_leave`
 - Params:
-    - `Authorization`: `GOT.Token` (string)
-    - `chanName`: `string` nom du channel
+	- `Authorization`: `GOT.Token` (string)
+	- `chanName`: `string` nom du channel
 - Return:
-    - `GOT.ChannelUsers` on `client_chan_users` (utilisateurs + ban du channel)
-    - `GOT.Channel[]` on `client_channels_in` (channels sur lesquels la personnes connecté est)
-    - `GOT.Channel[]` on `client_channels` (liste des channels du server visible pour l'utilisateur)
+	- `GOT.ChannelUsers` on `client_chan_users` (utilisateurs + ban du channel)
+	- `GOT.Channel[]` on `client_channels_in` (channels sur lesquels la personnes connecté est)
+	- `GOT.Channel[]` on `client_channels` (liste des channels du server visible pour l'utilisateur)
 
 `server_chan_edit_status`
 - Params:
-    - `Authorization`: `GOT.Token` (string)
-    - `chan`: `GOT.Channel` channel modifier
+	- `Authorization`: `GOT.Token` (string)
+	- `chan`: `GOT.Channel` channel modifier
 - Return:
-    - `GOT.Channel[]` on `client_channels_in` (channels sur lesquels la personnes connecté est)
-    - `GOT.Channel[]` on `client_channels` (liste des channels du server visible pour l'utilisateur)
+	- `GOT.Channel[]` on `client_channels_in` (channels sur lesquels la personnes connecté est)
+	- `GOT.Channel[]` on `client_channels` (liste des channels du server visible pour l'utilisateur)
 
 `server_chan_edit_password`
 - Params:
-    - `Authorization`: `GOT.Token` (string)
-    - `chanName`: `string` nom du channel
-    - `password`: `string` nouveau mot de passe
+	- `Authorization`: `GOT.Token` (string)
+	- `chanName`: `string` nom du channel
+	- `password`: `string` nouveau mot de passe
 - Return:
-    - `GOT.Channel[]` on `client_channels_in` (channels sur lesquels la personnes connecté est)
-    - `GOT.Channel[]` on `client_channels` (liste des channels du server visible pour l'utilisateur)
+	- `GOT.Channel[]` on `client_channels_in` (channels sur lesquels la personnes connecté est)
+	- `GOT.Channel[]` on `client_channels` (liste des channels du server visible pour l'utilisateur)
 
 `server_chan_edit_name`
 - Params:
-    - `Authorization`: `GOT.Token` (string)
-    - `chanName`: `string` nom du channel
-    - `newChanName`: `string` nouveau nom du channel
+	- `Authorization`: `GOT.Token` (string)
+	- `chanName`: `string` nom du channel
+	- `newChanName`: `string` nouveau nom du channel
 - Return:
-    - `GOT.Channel[]` on `client_channels_in` (channels sur lesquels la personnes connecté est)
-    - `GOT.Channel[]` on `client_channels` (liste des channels du server visible pour l'utilisateur)
+	- `GOT.Channel[]` on `client_channels_in` (channels sur lesquels la personnes connecté est)
+	- `GOT.Channel[]` on `client_channels` (liste des channels du server visible pour l'utilisateur)
