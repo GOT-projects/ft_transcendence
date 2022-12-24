@@ -1,8 +1,8 @@
 #!/bin/sh
 
 if [ ${ENV} = "DEV" ]; then 
-	exec npm run start:dev
+	exec yarn run start:dev
 else
-	npm run build
+	yarn run build
 	exec node dist/src/main
 fi

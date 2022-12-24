@@ -4,7 +4,7 @@
 if [ ${ENV} = "DEV" ]; then 
 	exec yarn run dev
 else
-	npm run build
-	npm install -g serve
+	yarn run build
+	yarn global add -g serve
 	exec serve -s build
 fi
