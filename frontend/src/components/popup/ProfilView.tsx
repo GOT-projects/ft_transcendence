@@ -1,6 +1,6 @@
 import { Dispatch, FunctionComponent, useContext, useEffect, useState } from "react";
 import { GOT } from "../../shared/types";
-import { StyledContaiteClose, StyledContaiteHistory, StyledContaiteHistorylst, StyledContaiteHistoryScore, StyledContaiteHistorytile, StyledContaiteHistoryUser, StyledContaiteHistoryUserButton, StyledContaiteHistoryVs, StyledContaiteProfil, StyledContaiteRank, StyledContaiteText, StyledContaiteView, StyledViewAvatar } from "../Styles/StyleViewProfil";
+import { StyledContaiteClose, StyledContaiteHistory, StyledContaiteHistorylst, StyledContaiteHistoryScore, StyledContaiteHistorytile, StyledContaiteHistoryUser, StyledContaiteHistoryUserButton, StyledContaiteHistoryVs, StyledContaiteProfil, StyledContaiteRank, StyledContaiteText, StyledContaiteView } from "../Styles/StyleViewProfil";
 import { FaWindowClose } from 'react-icons/fa';
 import { Colors } from "../Colors";
 import { v4 as uuid } from 'uuid';
@@ -35,7 +35,7 @@ const ProfilView:FunctionComponent<IProps> = (props:IProps) =>{
 
     useEffect(() => {
         emitSocket.emitProfilHisto(socket, props.login);
-    }, [socket]);
+    }, [socket, props.login]);
 
     const handleInviteGame = ()=>{
         navigate(`/game?code=waiting&id=${profil?.userInfos.login}`)

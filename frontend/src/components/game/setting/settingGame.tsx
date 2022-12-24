@@ -1,6 +1,6 @@
 import { Dispatch, FunctionComponent, useContext, useState } from "react";
 import { StyledBallComet, StyledBallPong, StyledBallTennis, StyledButtonP, StyledButtonSetting, StyledContaiteSettingGame, StyledSelectBall } from "../../Styles/StyleViewProfil";
-import { SocketContext, SocketContextGame } from "../../../socket/socketPovider";
+import { SocketContextGame } from "../../../socket/socketPovider";
 import { ColorPicker, useColor } from "react-color-palette";
 import "react-color-palette/lib/css/styles.css";
 import { v4 as uuid } from "uuid";

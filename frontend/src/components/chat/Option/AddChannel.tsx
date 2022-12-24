@@ -41,7 +41,7 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
         }else{
             navigate("/chat")
         }
-    },[]);
+    },[navigate, codeParam]);
 
     const handleChangeChan = (event: any,) => {
         if (inputChan === "" && event.target.value ==="\n")

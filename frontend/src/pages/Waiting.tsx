@@ -21,32 +21,32 @@ const Waiting = () => {
     const code = params.get("code");
     useEffect(() => {
         emitGame.emit_where_am_I(socketGame,"no_where");
-	}, [])
+	}, [socketGame])
     useEffect(() => {
         if (!!code && !twoFAPop){
-        try{
-            const response = apiPost.PostConnectIntra(code);
-	        response.then((response:any) => {
-	        	if(response.status === 201){
-                    console.log(response.data.user.isTwoFactorAuthenticationEnabled);
-                    accountService.saveToken(response.data.access_token);
-                    if (response.data.user.isTwoFactorAuthenticationEnabled){
+            try{
+                const response = apiPost.PostConnectIntra(code);
+                response.then((response:any) => {
+                    if(response.status === 201){
+                        console.log(response.data.user.isTwoFactorAuthenticationEnabled);
+                        accountService.saveToken(response.data.access_token);
+                        if (response.data.user.isTwoFactorAuthenticationEnabled){
                             setTwoFAPop(true);
-                    }else{
-                        navigate('/leaderboard');
+                        }else{
+                            navigate('/leaderboard');
+                        }
                     }
-	        	}
-	        }).catch((e) =>{
+                }).catch((e) =>{
+                    console.log(e);
+                    navigate('/');
+                });
+            }catch(e){
                 console.log(e);
-                navigate('/');
-            });
-        }catch(e){
-            console.log(e);
+            }
+        }else{
+            navigate('/');
         }
-    }else{
-        navigate('/');
-    }
-    }, [])
+    }, [code, navigate, twoFAPop])
 
 	return (
         <React.Fragment>

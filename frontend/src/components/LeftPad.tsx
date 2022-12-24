@@ -147,27 +147,29 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 	}, [tmp, player]);
 
 	useEffect(() => {
-		//console.log('actu ball + pads player')
-		if (rectable && player) {
-			// Récupération de la coordonnée du pad externe au joueur
-			setExternPadPos((rectable.height * player.enemyY + sizeOfBall * 2).toString());
-			// Récupération des coordonnées de la balle
-			setBallX((player.ball.x * rectable.width - sizeOfBall / 2).toString());
-			setBallY((player.ball.y * rectable.height - sizeOfBall / 2).toString());
+		if (rectable) {
+			if (player) {
+				//console.log('actu ball + pads player')
+				// Récupération de la coordonnée du pad externe au joueur
+				setExternPadPos((rectable.height * player.enemyY + sizeOfBall * 2).toString());
+				// Récupération des coordonnées de la balle
+				setBallX((player.ball.x * rectable.width - sizeOfBall / 2).toString());
+				setBallY((player.ball.y * rectable.height - sizeOfBall / 2).toString());
+			}
+			else if (spec) {
+				//console.log('actu ball + pads spectateur')
+				setBallX((spec.ball.x * rectable.width - sizeOfBall / 2).toString());
+				setBallY((spec.ball.y * rectable.height - sizeOfBall / 2).toString());
+				// Récupération de la coordonnée du 1er pad externe au spectateur
+				setExternPadPos((rectable.height * spec.player1Y + sizeOfBall * 2).toString());
+				// Récupération de la coordonnée du 2eme pad extern du spectateur
+				setExternPadPosSpec((rectable.height * spec.player2Y + sizeOfBall * 2).toString());
+			}
 		}
-	}, [player, rectable]);
+	}, [spec, player, rectable, sizeOfBall]);
 
 	useEffect(() => {
-		//console.log('actu ball + pads spectateur')
-		if (rectable && spec) {
-			setBallX((spec.ball.x * rectable.width - sizeOfBall / 2).toString());
-			setBallY((spec.ball.y * rectable.height - sizeOfBall / 2).toString());
-			// Récupération de la coordonnée du 1er pad externe au spectateur
-			setExternPadPos((rectable.height * spec.player1Y + sizeOfBall * 2).toString());
-			// Récupération de la coordonnée du 2eme pad extern du spectateur
-			setExternPadPosSpec((rectable.height * spec.player2Y + sizeOfBall * 2).toString());
-		}
-	}, [spec, rectable]);
+	}, [spec, rectable, sizeOfBall]);
 
 	// Récupération des coordonnées du pad joueur
 	useEffect(() => {

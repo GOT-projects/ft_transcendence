@@ -31,7 +31,7 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 
 	useEffect(() => {
         emitGame.emit_where_am_I(socketGame,"no_where");
-	}, [])
+	}, [socketGame])
 
 	useEffect(() => {
 		emitSocket.emitLeaderboard(socket);
@@ -45,7 +45,7 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 		return () => {
 			socket.off('client_leaderboard');
 		}
-	}, [tab]);
+	}, [socket, tab]);
 	
 	const buttonHandler = (handleLogin: string) => {
 		if (popuProfil === false){

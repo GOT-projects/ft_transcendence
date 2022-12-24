@@ -14,7 +14,7 @@ const Invite = () => {
     const socketGame = useContext(SocketContextGame);
     useEffect(() => {
         emitGame.emit_where_am_I(socketGame,"no_where");
-	}, [])
+	}, [socketGame])
     const [inputChat, setInputChat] = useState("");
     let navigate = useNavigate();
     function handChange(event: any, setInput: any, input: string){

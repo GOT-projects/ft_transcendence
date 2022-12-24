@@ -27,7 +27,7 @@ const Login = () => {
     const socketGame = useContext(SocketContextGame);
     useEffect(() => {
         emitGame.emit_where_am_I(socketGame,"no_where");
-    }, [])
+    }, [socketGame])
     const navigate = useNavigate();
     (async () => await getAcces())()
     if (access === true){

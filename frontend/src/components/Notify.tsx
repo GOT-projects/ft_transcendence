@@ -60,7 +60,7 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
         let regexChannelMsg:RegExp = /^Info: Channel (.*[^ ]) received a message/
         if (regexChannelMsg.test(notify.message)){
             const tab = notify.message.split(" ");
-            if (tab && tab[2] == name){
+            if (tab && tab[2] === name){
                 return false;
             }
         }

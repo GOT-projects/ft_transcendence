@@ -59,7 +59,7 @@ const ChanUserMenu:FunctionComponent<IProps> = (props: IProps) => {
         return () => {
             offSocket.client_chanmsg_users_not_ban(socket);
         }
-    }, [socket, setUserlist, userList])
+    }, [socket, setUserlist, userList, props.profil?.userInfos.login])
 
     useEffect(() => {
         emitSocket.emitFriends(socket);
@@ -67,7 +67,7 @@ const ChanUserMenu:FunctionComponent<IProps> = (props: IProps) => {
     
     useEffect(() => {
         emitSocket.emitChanUserNotBan(socket, props.chanName);
-    }, [socket])
+    }, [socket, props.chanName])
 
     const handleBlock = (login:string) => {
         emitSocket.emitChanBlock(socket, props.chanName, login)

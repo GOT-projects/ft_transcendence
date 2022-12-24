@@ -37,16 +37,16 @@ const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
     useEffect(() => {
         const name = codeParam.get("name")        
         const codeTmp = codeParam.get("code")        
-        if( code != undefined  && name != undefined && code === "Channel"){
+        if( code !== undefined  && name !== undefined && code === "Channel"){
             setNameChan(name)
-        }else if (codeTmp != undefined){
+        }else if (codeTmp !== undefined){
             setCode(codeTmp);
             setNameChan("")
         }else{
             setNameChan("")
             setCode("");
         }
-    }, [codeParam])
+    }, [codeParam, code])
 
     const handlePriveMsg = (name:string) => {
         if (props.setChatSwitch){

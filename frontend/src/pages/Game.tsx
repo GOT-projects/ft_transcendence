@@ -47,7 +47,7 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
             setStartInit(false);
             navigate(`/game?code=game&id=${initGame?.codeParty}`)
         }
-    }, [startInit])
+    }, [startInit, initGame, navigate])
 
     // socket init game
     useEffect(() => {
@@ -67,7 +67,7 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
         return () => {
             offSocketGame.client_invite(socketGame);
         }
-    }, [socketGame])
+    }, [socketGame, navigate, inviteRequest])
 
     //Socket get erreur from server 
     useEffect(() => {
@@ -146,7 +146,7 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
             setStartGame(true);
             setGame(false);
         }
-    }, [code, invite, id])
+    }, [code, invite, id, navigate, oldurl, socketGame])
 
     const handlereturn = () => {
         emitGame.emitLeftWaiting(socketGame);

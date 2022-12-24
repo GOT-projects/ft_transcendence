@@ -54,17 +54,17 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
     //Socket get erreur from server 
     useEffect(() => {
         onSocket.error_client(socket, props.setNotify);
-    }, [socket])
+    }, [socket, props.setNotify])
 
     //Socket get info from server 
     useEffect(() => {
         onSocket.info_client(socket, props.setNotify);
-    }, [socket])
+    }, [socket, props.setNotify])
 
     //Socket get info from server 
     useEffect(() => {
         onSocket.warning_client(socket, props.setNotify)
-    }, [socket])
+    }, [socket, props.setNotify])
 
     //Update info user all last data and Update if data are changed
     useEffect(() => {
@@ -72,7 +72,7 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
         return () => {
             offSocket.client_profil(socket);
         }
-    }, [socket])
+    }, [socket, props.setProfil])
 
     //get profile info
     useEffect(() => {

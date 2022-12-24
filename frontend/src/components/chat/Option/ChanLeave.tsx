@@ -51,7 +51,7 @@ const PopupOptionLeave:FunctionComponent<IProps> = (props: IProps) =>{
 
     useEffect(() => {
         emitSocket.emitChanUserNotBan(socket, props.chanName);
-    }, [socket])
+    }, [socket, props.chanName])
 
     const handleSelect = (user: GOT.User) => {
         const find = selectUser.find((select) => select.login === user.login)

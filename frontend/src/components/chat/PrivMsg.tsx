@@ -63,7 +63,7 @@ const PriveMsg:FunctionComponent<IProps> = (props:IProps)=> {
         return () => {
             offSocket.client_privmsg_send(socket);
         } 
-    },[socket, setSelectUserMsg, selectUserMsg])
+    },[socket, setSelectUserMsg, selectUserMsg, props.userSelect?.login])
 
     function handChange(event: any, setInput: any, input: string){
         if (input === "" && event.target.value ==="\n")

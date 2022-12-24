@@ -117,7 +117,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
         emitSocket.emitChannelsIn(socket);
     }, [socket])
 
-    const handleSelectFriend = (name:string) => {
+    /*const handleSelectFriend = (name:string) => {
         const user = friends?.filter((user) => user.login === name);
         if (user){
             const tmp:GOT.User = user[0];
@@ -127,14 +127,23 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                 emitSocket.emitPrivmsg(socket, name);
             }
         }
-    }
+    }*/
 
     useEffect(() =>{
         if (codeParam.get("code") === "Private" && codeParam.get("name")){
             const name = codeParam.get("name");
             const check = friends?.filter((friend) => friend.login === name)
             if (check && check?.length !== 0){
-                handleSelectFriend(check[0].login);
+                const user = friends?.filter((user) => user.login === name);
+                if (user){
+                    const tmp:GOT.User = user[0];
+                    if (selectUser !== tmp){
+                        setSelectUser(tmp);
+                        setAdd("");
+                        emitSocket.emitPrivmsg(socket, check[0].login);
+                    }
+                }
+                //handleSelectFriend(check[0].login);
                 setChatSwitch("Private");
                 setAdd("");
             }
@@ -170,7 +179,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
         }
         else
             setAdd("");
-    }, [codeParam, add, settingInvite, settingBlock, setting, settingAdmin, chatSwitch, friends, handleSelectFriend])
+    }, [codeParam, add, settingInvite, settingBlock, setting, settingAdmin, chatSwitch, friends/*, handleSelectFriend*/, socket, selectUser])
 
 	return (
 		<React.Fragment>

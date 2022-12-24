@@ -1,7 +1,7 @@
 import { Dispatch, FunctionComponent, useContext, useEffect } from "react";
 import { GOT } from "../../shared/types";
 import { SocketContext } from "../../socket/socketPovider";
-import { StyledChatDivEmpty, StyledChatDivhandle, StyledChatDivoption, StyledChatPrivAvatar, StyledChatPrivName, StyledChatSettingButton, StyledUser } from "../Styles/StyleChat";
+import { StyledChatDivEmpty, StyledChatDivhandle, StyledChatDivoption, StyledChatPrivName, StyledChatSettingButton, StyledUser } from "../Styles/StyleChat";
 import { v4 as uuid } from 'uuid';
 import { emitSocket } from "../../socket/socketEmit";
 import { Colors } from "../Colors";

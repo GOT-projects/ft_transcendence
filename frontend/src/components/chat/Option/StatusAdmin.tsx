@@ -47,7 +47,7 @@ const PopupOptionStatusAdmin:FunctionComponent<IProps> = (props: IProps) =>{
 
     useEffect(() => {
         emitSocket.emitChanUserNotBan(socket, props.chanName);
-    }, [socket])
+    }, [socket, props.chanName])
 
     const handleSelect = (user: GOT.User) => {
         const find = selectUser.find((select) => select.login === user.login)
@@ -59,14 +59,14 @@ const PopupOptionStatusAdmin:FunctionComponent<IProps> = (props: IProps) =>{
             setSelectUser((prev) => [...prev, user]);
         }
 	}	
-
+/*
     const handleSend = () => {
         selectUser.map((user) => {
             emitSocket.emitInviteSomebody(socket, props.chanName, user.login);
         })
         props.setInvite(false);
     }
-
+*/
     const handleListUser = (user: GOT.UserChannel) => {
         if (user.status === UserChannelStatus.OWNER){
             return false
