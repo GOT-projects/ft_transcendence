@@ -14,50 +14,50 @@ import { emitGame } from "../socket/socketEmitGame";
 let access:boolean;
 
 const getAcces = async () => {
-    let data = await accountService.isLogged();
-    if (data === true)
-        access = true;
-    else
-        access = false;
+	let data = await accountService.isLogged();
+	if (data === true)
+		access = true;
+	else
+		access = false;
 }
 
 const Login = () => {
-    const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''})
-    const [Url, setUrl] = useState('')
-    const socketGame = useContext(SocketContextGame);
-    useEffect(() => {
-        emitGame.emit_where_am_I(socketGame,"no_where");
-    }, [socketGame])
-    const navigate = useNavigate();
-    (async () => await getAcces())()
-    if (access === true){
-        navigate('/leaderboard');
-    }else{
-        const responce = apiGet.getIntraUrl();
-        responce.then((rep) => {
-            setUrl(rep.data);
-        }).catch((e) => {
-            console.log(e);
-        })
-    }
+	const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''})
+	const [Url, setUrl] = useState('')
+	const socketGame = useContext(SocketContextGame);
+	useEffect(() => {
+		emitGame.emit_where_am_I(socketGame,"no_where");
+	}, [socketGame])
+	const navigate = useNavigate();
+	(async () => await getAcces())()
+	if (access === true){
+		navigate('/leaderboard');
+	}else{
+		const responce = apiGet.getIntraUrl();
+		responce.then((rep) => {
+			setUrl(rep.data);
+		}).catch((e) => {
+			console.log(e);
+		})
+	}
 
-    const Contaite = () => {
-	    return (
-            <StyledLogin>
-			    <StyledLoginLogo height="200px" width="410px" img={Logo}/>			   
-                <StyledLoginButton href={Url} >Login Intra</StyledLoginButton>
-                <StyledLoginButton href='/invite' >Invite mode</StyledLoginButton>
-                <Footer/>
-            </StyledLogin>	   
-	    )
-    }
+	const Contaite = () => {
+		return (
+			<StyledLogin>
+				<StyledLoginLogo height="200px" width="410px" img={Logo}/>
+				<StyledLoginButton href={Url} >Login Intra</StyledLoginButton>
+				<StyledLoginButton href='/invite' >Invite mode</StyledLoginButton>
+				<Footer/>
+			</StyledLogin>
+		)
+	}
 	return (
-        <React.Fragment>
-            <BackgroundAnimate name="login"/>
-            <Contaite></Contaite>
-            <Footer/>
-            <Notification notify={notify} setNotify={setNotify}/>
-        </React.Fragment>
+		<React.Fragment>
+			<BackgroundAnimate name="login"/>
+			<Contaite></Contaite>
+			<Footer/>
+			<Notification notify={notify} setNotify={setNotify}/>
+		</React.Fragment>
 	)
 }
 

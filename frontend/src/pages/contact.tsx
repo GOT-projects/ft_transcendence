@@ -1,6 +1,6 @@
-import { StyledChatPrive, StyledChatSep, 
-    StyledChatSwith, StyledContact, StyledContaite, 
-    StyledChatSwithTile, StyledSettingChan, StyledSettingChanP } from '../components/Styles/StyleChat';
+import { StyledChatPrive, StyledChatSep,
+	StyledChatSwith, StyledContact, StyledContaite,
+	StyledChatSwithTile, StyledSettingChan, StyledSettingChanP } from '../components/Styles/StyleChat';
 import React, {Dispatch, FunctionComponent, useContext, useEffect, useState } from 'react';
 import BackgroundAnimate from '../components/BackGroundAnimate';
 import Footer from '../components/Footer';
@@ -44,245 +44,245 @@ interface IProps {
 }
 
 const Chat:FunctionComponent<IProps> = (props:IProps)=> {
-    const socket = useContext(SocketContext);
+	const socket = useContext(SocketContext);
 	const socketGame = useContext(SocketContextGame);
-    const navigate = useNavigate();
-    const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
-    const [active, setActive] = useState("UnActiveMenu");
-    const [login, setLogin] = useState<string>("");
+	const navigate = useNavigate();
+	const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
+	const [active, setActive] = useState("UnActiveMenu");
+	const [login, setLogin] = useState<string>("");
 
-    const [add, setAdd] =  useState("");
-    const [invite, setInvite] =  useState(false);
-    const [setting, setSetting] =  useState(false);
-    const [settingInvite, setSettingInvite] =  useState(false);
-    const [settingBlock, setSettingBlock] =  useState(false);
-    const [settingAdmin, setSettingAdmin] =  useState(false);
-    const [chatSwitch, setChatSwitch] = useState<string>('');
-    const [histo, setHisto] = useState<GOT.HistoryParties>();
-    const [popuProfil, setPopupProfil] = useState(false);
+	const [add, setAdd] =  useState("");
+	const [invite, setInvite] =  useState(false);
+	const [setting, setSetting] =  useState(false);
+	const [settingInvite, setSettingInvite] =  useState(false);
+	const [settingBlock, setSettingBlock] =  useState(false);
+	const [settingAdmin, setSettingAdmin] =  useState(false);
+	const [chatSwitch, setChatSwitch] = useState<string>('');
+	const [histo, setHisto] = useState<GOT.HistoryParties>();
+	const [popuProfil, setPopupProfil] = useState(false);
 
-    const [usersList, setUsersList] = useState<GOT.User[]>();
-    const [selectUser, setSelectUser] = useState<GOT.User>();
-    const [friends, setFriends] = useState<GOT.User[]>();
-    const [lstFriends] = useState<GOT.Friend[]>()
+	const [usersList, setUsersList] = useState<GOT.User[]>();
+	const [selectUser, setSelectUser] = useState<GOT.User>();
+	const [friends, setFriends] = useState<GOT.User[]>();
+	const [lstFriends] = useState<GOT.Friend[]>()
 
-    const [channelIn, setChannelIn] = useState<GOT.Channel[]>();
-    
-    const codeParam: Map<string, string> = accountService.getParamsPriv();
+	const [channelIn, setChannelIn] = useState<GOT.Channel[]>();
+
+	const codeParam: Map<string, string> = accountService.getParamsPriv();
 
 	useEffect(() => {
-        emitGame.emit_where_am_I(socketGame,"no_where");
+		emitGame.emit_where_am_I(socketGame,"no_where");
 	}, [socketGame])
 
-    useEffect(() => {
-        onSocket.profil_login(socket, setHisto);
-        return () => {
-            offSocket.profil_login(socket);
-        }
-    }, [histo, socket]);
+	useEffect(() => {
+		onSocket.profil_login(socket, setHisto);
+		return () => {
+			offSocket.profil_login(socket);
+		}
+	}, [histo, socket]);
 
-    useEffect(() => {
-        (async () => {
-            await onSocket.client_privmsg_users(socket, setFriends);
-        })();
-    },[socket, friends, setFriends])
+	useEffect(() => {
+		(async () => {
+			await onSocket.client_privmsg_users(socket, setFriends);
+		})();
+	},[socket, friends, setFriends])
 
-    useEffect(() => {
-        onSocket.client_channels_in(socket, setChannelIn)
-        return () => {
-            offSocket.client_channelIn(socket);
-        } 
-    },[socket])
+	useEffect(() => {
+		onSocket.client_channels_in(socket, setChannelIn)
+		return () => {
+			offSocket.client_channelIn(socket);
+		}
+	},[socket])
 
-    useEffect(() => {
-        onSocket.client_users(socket, setUsersList);
-        return () => {
-            offSocket.client_users(socket);
-        } 
-    },[socket])
+	useEffect(() => {
+		onSocket.client_users(socket, setUsersList);
+		return () => {
+			offSocket.client_users(socket);
+		}
+	},[socket])
 
-    useEffect(() => {
-        emitSocket.emitFriends(socket);
-    }, [socket])
+	useEffect(() => {
+		emitSocket.emitFriends(socket);
+	}, [socket])
 
-    useEffect(() => {
-        emitSocket.emitPrivmsgUsers(socket);
-    }, [socket])
+	useEffect(() => {
+		emitSocket.emitPrivmsgUsers(socket);
+	}, [socket])
 
-    useEffect(() => {
-        emitSocket.emitUsers(socket);
-    }, [socket])
+	useEffect(() => {
+		emitSocket.emitUsers(socket);
+	}, [socket])
 
-    useEffect(() => {
-        emitSocket.emitChannelsIn(socket);
-    }, [socket])
+	useEffect(() => {
+		emitSocket.emitChannelsIn(socket);
+	}, [socket])
 
-    /*const handleSelectFriend = (name:string) => {
-        const user = friends?.filter((user) => user.login === name);
-        if (user){
-            const tmp:GOT.User = user[0];
-            if (selectUser !== tmp){
-                setSelectUser(tmp);
-                setAdd("");
-                emitSocket.emitPrivmsg(socket, name);
-            }
-        }
-    }*/
+	/*const handleSelectFriend = (name:string) => {
+		const user = friends?.filter((user) => user.login === name);
+		if (user){
+			const tmp:GOT.User = user[0];
+			if (selectUser !== tmp){
+				setSelectUser(tmp);
+				setAdd("");
+				emitSocket.emitPrivmsg(socket, name);
+			}
+		}
+	}*/
 
-    useEffect(() =>{
-        if (codeParam.get("code") === "Private" && codeParam.get("name")){
-            const name = codeParam.get("name");
-            const check = friends?.filter((friend) => friend.login === name)
-            if (check && check?.length !== 0){
-                const user = friends?.filter((user) => user.login === name);
-                if (user){
-                    const tmp:GOT.User = user[0];
-                    if (selectUser !== tmp){
-                        setSelectUser(tmp);
-                        setAdd("");
-                        emitSocket.emitPrivmsg(socket, check[0].login);
-                    }
-                }
-                //handleSelectFriend(check[0].login);
-                setChatSwitch("Private");
-                setAdd("");
-            }
-        }else if(codeParam.get("code") === "Private"){
-                setAdd("");
-                setChatSwitch("Private");
-        }
+	useEffect(() =>{
+		if (codeParam.get("code") === "Private" && codeParam.get("name")){
+			const name = codeParam.get("name");
+			const check = friends?.filter((friend) => friend.login === name)
+			if (check && check?.length !== 0){
+				const user = friends?.filter((user) => user.login === name);
+				if (user){
+					const tmp:GOT.User = user[0];
+					if (selectUser !== tmp){
+						setSelectUser(tmp);
+						setAdd("");
+						emitSocket.emitPrivmsg(socket, check[0].login);
+					}
+				}
+				//handleSelectFriend(check[0].login);
+				setChatSwitch("Private");
+				setAdd("");
+			}
+		}else if(codeParam.get("code") === "Private"){
+				setAdd("");
+				setChatSwitch("Private");
+		}
 
-        const tmp = codeParam.get("code");
-        if (tmp){
-            setAdd(tmp);
-            if (codeParam.get("code") === "Channel" && codeParam.get("name") && codeParam.get("setting") === undefined){
-                const name = codeParam.get("name");
-                if (name)
-                    setChatSwitch(name);
-            }else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "Menu"){
-                setSetting(true);
-            }else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "Change"){
-                setAdd("addChannel");
-            }else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "Invite"){
-                setSettingInvite(true);
-            }else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "Block"){
-                setSettingBlock(true);
-            }else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "Admin"){
-                setSettingAdmin(true);
-            }else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "false"){
-                setSettingInvite(false);
-                setSettingBlock(false);
-                setSettingAdmin(false);
-                setSetting(false);
-                setAdd("");
-            }
-        }
-        else
-            setAdd("");
-    }, [codeParam, add, settingInvite, settingBlock, setting, settingAdmin, chatSwitch, friends/*, handleSelectFriend*/, socket, selectUser])
+		const tmp = codeParam.get("code");
+		if (tmp){
+			setAdd(tmp);
+			if (codeParam.get("code") === "Channel" && codeParam.get("name") && codeParam.get("setting") === undefined){
+				const name = codeParam.get("name");
+				if (name)
+					setChatSwitch(name);
+			}else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "Menu"){
+				setSetting(true);
+			}else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "Change"){
+				setAdd("addChannel");
+			}else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "Invite"){
+				setSettingInvite(true);
+			}else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "Block"){
+				setSettingBlock(true);
+			}else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "Admin"){
+				setSettingAdmin(true);
+			}else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "false"){
+				setSettingInvite(false);
+				setSettingBlock(false);
+				setSettingAdmin(false);
+				setSetting(false);
+				setAdd("");
+			}
+		}
+		else
+			setAdd("");
+	}, [codeParam, add, settingInvite, settingBlock, setting, settingAdmin, chatSwitch, friends/*, handleSelectFriend*/, socket, selectUser])
 
 	return (
 		<React.Fragment>
 			<BackgroundAnimate name="contact"/>
-            <Header colorHome={Colors.MenuDisable} 
-                    colorGame={Colors.MenuDisable} 
-                    colorLeadBoard={Colors.MenuDisable} 
-                    colorChat={Colors.MenuActive}
-                    notify={notify}
-                    setNotify={setNotify}
-                    profil={props.profil}
-                    setProfil={props.setProfil}
-             />
+			<Header colorHome={Colors.MenuDisable}
+					colorGame={Colors.MenuDisable}
+					colorLeadBoard={Colors.MenuDisable}
+					colorChat={Colors.MenuActive}
+					notify={notify}
+					setNotify={setNotify}
+					profil={props.profil}
+					setProfil={props.setProfil}
+			 />
 
-            <StyledContaite>
-                <MenuChat  friends={friends} profil={props.profil} setFriends={setFriends} 
-                           setProfil={props.setProfil} 
-                           chatSwitch={chatSwitch} setChatSwitch={setChatSwitch} 
-                           active={active} setActive={setActive} channelIn={channelIn}
-                           listUser={usersList} add={add} setAdd={setAdd}/>
-                <StyledContact className={active}>
-                    <StyledChatSwith> 
-                        <StyledChatSwithTile>{chatSwitch}</StyledChatSwithTile>
-                    </StyledChatSwith>
-                    <StyledChatSep/>
-                    <StyledChatPrive className={add}>
-                    {add === "Private" ? <PriveUserMenu friends={friends} 
-                                            setFriends={setFriends} selectUser={selectUser} 
-                                            setActive={setActive} profil={props.profil}
-                                            setSelectUser={setSelectUser} userFriend={lstFriends}
-                                            setLogin={setLogin}
-                                            setPopupProfil={setPopupProfil} 
-                                            popuProfil={popuProfil}/> : <></>}
-                    {add === "Channel" ? <ChanUserMenu profil={props.profil} 
-                                            setPopupProfil={setPopupProfil} chanName={chatSwitch} 
-                                            popuProfil={popuProfil} setActive={setActive} 
-                                            setLogin={setLogin}/> : <></>}
-                    </StyledChatPrive>
-                    {add === "Channel" ? <StyledSettingChan>
-                        <StyledSettingChanP>Channel setting</StyledSettingChanP>
-                        <AiFillSetting size={30} color={Colors.grey} title="Channel Setting"
-                                            onClick={() => {
-                                            navigate(`/chat?code=Channel&name=${chatSwitch}&Setting=Menu`)
-                                            }}/>
-                        <FcInvite size={30} title="Invite people tot channel"
-                                            onClick={() => {setInvite(true)}}/>
-                        <HiArrowCircleRight size={30} color={"red"} title="Leave Channel" 
-                                            onClick={() => {
-                                                emitSocket.emitLeaveChan(socket, chatSwitch, props.profil?.userInfos.login)
-                                                setChatSwitch("")
-                                                navigate("/chat")}}/>
-                    </StyledSettingChan> : <></>}
-                </StyledContact>
+			<StyledContaite>
+				<MenuChat  friends={friends} profil={props.profil} setFriends={setFriends}
+						   setProfil={props.setProfil}
+						   chatSwitch={chatSwitch} setChatSwitch={setChatSwitch}
+						   active={active} setActive={setActive} channelIn={channelIn}
+						   listUser={usersList} add={add} setAdd={setAdd}/>
+				<StyledContact className={active}>
+					<StyledChatSwith>
+						<StyledChatSwithTile>{chatSwitch}</StyledChatSwithTile>
+					</StyledChatSwith>
+					<StyledChatSep/>
+					<StyledChatPrive className={add}>
+					{add === "Private" ? <PriveUserMenu friends={friends}
+											setFriends={setFriends} selectUser={selectUser}
+											setActive={setActive} profil={props.profil}
+											setSelectUser={setSelectUser} userFriend={lstFriends}
+											setLogin={setLogin}
+											setPopupProfil={setPopupProfil}
+											popuProfil={popuProfil}/> : <></>}
+					{add === "Channel" ? <ChanUserMenu profil={props.profil}
+											setPopupProfil={setPopupProfil} chanName={chatSwitch}
+											popuProfil={popuProfil} setActive={setActive}
+											setLogin={setLogin}/> : <></>}
+					</StyledChatPrive>
+					{add === "Channel" ? <StyledSettingChan>
+						<StyledSettingChanP>Channel setting</StyledSettingChanP>
+						<AiFillSetting size={30} color={Colors.grey} title="Channel Setting"
+											onClick={() => {
+											navigate(`/chat?code=Channel&name=${chatSwitch}&Setting=Menu`)
+											}}/>
+						<FcInvite size={30} title="Invite people tot channel"
+											onClick={() => {setInvite(true)}}/>
+						<HiArrowCircleRight size={30} color={"red"} title="Leave Channel"
+											onClick={() => {
+												emitSocket.emitLeaveChan(socket, chatSwitch, props.profil?.userInfos.login)
+												setChatSwitch("")
+												navigate("/chat")}}/>
+					</StyledSettingChan> : <></>}
+				</StyledContact>
 
-                {add === "Private" ? <PriveMsg active={active} profil={props.profil} 
-                                            setProfil={props.setProfil} 
-                                            userSelect={selectUser}/> : <></>}
+				{add === "Private" ? <PriveMsg active={active} profil={props.profil}
+											setProfil={props.setProfil}
+											userSelect={selectUser}/> : <></>}
 
-                {add === "Channel" ? <ChannelMsg active={active} profil={props.profil} 
-                                            setProfil={props.setProfil} 
-                                            chanName={chatSwitch}/> : <></>}
-            </StyledContaite>
+				{add === "Channel" ? <ChannelMsg active={active} profil={props.profil}
+											setProfil={props.setProfil}
+											chanName={chatSwitch}/> : <></>}
+			</StyledContaite>
 
-            {add === "add" ? <PopupAddChannel friends={friends} setFriends={setFriends} 
-                                            profil={props.profil} setProfil={props.setProfil} 
-                                            setAction={setAdd} listUser={usersList}/> : <></>}
+			{add === "add" ? <PopupAddChannel friends={friends} setFriends={setFriends}
+											profil={props.profil} setProfil={props.setProfil}
+											setAction={setAdd} listUser={usersList}/> : <></>}
 
-            {add === "addUser" ? <PopupOptionAddUser profil={props.profil} friends={friends}
-                                        listUser={usersList} setAdd={setAdd} 
-                                        setFriends={setFriends} /> : <></>}
-            {invite ? <PopupOptionInvite profil={props.profil} friends={friends}
-                                        listUser={usersList} setAdd={setAdd} 
-                                        setInvite={setInvite}
-                                        setFriends={setFriends} chanName={chatSwitch}/> : <></>}
+			{add === "addUser" ? <PopupOptionAddUser profil={props.profil} friends={friends}
+										listUser={usersList} setAdd={setAdd}
+										setFriends={setFriends} /> : <></>}
+			{invite ? <PopupOptionInvite profil={props.profil} friends={friends}
+										listUser={usersList} setAdd={setAdd}
+										setInvite={setInvite}
+										setFriends={setFriends} chanName={chatSwitch}/> : <></>}
 
-            {setting ? <PopupChannelSetting profil={props.profil} listUser={usersList} 
-                                        setProfil={props.setProfil} setAction={setAdd}
-                                        setFriends={setFriends} friends={friends}
-                                        chanName={chatSwitch} setSetting={setSetting}/>: <></>}
-            {settingInvite ? <PopupOptionLeave profil={props.profil} friends={friends}
-                                        listUser={usersList} setAdd={setAdd} 
-                                        setInvite={setSettingInvite}
-                                        setFriends={setFriends} chanName={chatSwitch}/> : <></>}
-            {settingAdmin ? <PopupOptionStatusAdmin profil={props.profil} friends={friends}
-                                        listUser={usersList} setAdd={setAdd} 
-                                        setInvite={setSettingAdmin}
-                                        setFriends={setFriends} chanName={chatSwitch}/> : <></>}
-            {settingBlock ? <PopupOptionBlock profil={props.profil} friends={friends}
-                                        listUser={usersList} setAdd={setAdd} 
-                                        setInvite={setSettingBlock}
-                                        setFriends={setFriends} chanName={chatSwitch}/> : <></>}
-            {add === "addChannel" ? <PopupOptionAddChannel /> : <></>}
+			{setting ? <PopupChannelSetting profil={props.profil} listUser={usersList}
+										setProfil={props.setProfil} setAction={setAdd}
+										setFriends={setFriends} friends={friends}
+										chanName={chatSwitch} setSetting={setSetting}/>: <></>}
+			{settingInvite ? <PopupOptionLeave profil={props.profil} friends={friends}
+										listUser={usersList} setAdd={setAdd}
+										setInvite={setSettingInvite}
+										setFriends={setFriends} chanName={chatSwitch}/> : <></>}
+			{settingAdmin ? <PopupOptionStatusAdmin profil={props.profil} friends={friends}
+										listUser={usersList} setAdd={setAdd}
+										setInvite={setSettingAdmin}
+										setFriends={setFriends} chanName={chatSwitch}/> : <></>}
+			{settingBlock ? <PopupOptionBlock profil={props.profil} friends={friends}
+										listUser={usersList} setAdd={setAdd}
+										setInvite={setSettingBlock}
+										setFriends={setFriends} chanName={chatSwitch}/> : <></>}
+			{add === "addChannel" ? <PopupOptionAddChannel /> : <></>}
 
-            {add === "joinChannel" ? <PopupOptionJoinChannel /> : <></>}
+			{add === "joinChannel" ? <PopupOptionJoinChannel /> : <></>}
 
-            {add === "explore" ? <PopupOptionExloreChat channelIn={channelIn}/> : <></>}
+			{add === "explore" ? <PopupOptionExloreChat channelIn={channelIn}/> : <></>}
 
-            {add === "privateChan" ? <PopupOptionPrivateChan /> : <></>}
+			{add === "privateChan" ? <PopupOptionPrivateChan /> : <></>}
 
 
-            {popuProfil ? <ProfilView login={login} setPopupProfil={setPopupProfil} profil={props.profil}/> : <> </>}
-            <Notification notify={notify} setNotify={setNotify}/>
-           <Footer/>
+			{popuProfil ? <ProfilView login={login} setPopupProfil={setPopupProfil} profil={props.profil}/> : <> </>}
+			<Notification notify={notify} setNotify={setNotify}/>
+		   <Footer/>
 		</React.Fragment>
 	)
 }

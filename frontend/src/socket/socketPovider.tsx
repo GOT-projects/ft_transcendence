@@ -5,7 +5,7 @@ import { InfoServer } from "../components/interfaces";
 
 //init socket to server
 export const socket = io(InfoServer.SocketServer ,{withCredentials:false, extraHeaders: {
-    "Authorization": "bearer " + localStorage.getItem("token_access"),
+	"Authorization": "bearer " + localStorage.getItem("token_access"),
 }});
 
 export const SocketContext = createContext(socket);
@@ -16,8 +16,8 @@ export const useSocket = () => useContext(SocketContext);
 
 //init socket to server
 export const socketGame = io(`${InfoServer.SocketServer}/game` ,{
-    withCredentials:false, extraHeaders: {
-    "Authorization": "bearer " + localStorage.getItem("token_access"),
+	withCredentials:false, extraHeaders: {
+	"Authorization": "bearer " + localStorage.getItem("token_access"),
 }});
 
 export const SocketContextGame = createContext(socketGame);

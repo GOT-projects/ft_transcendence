@@ -10,16 +10,16 @@ interface mousePos {
 interface ballPos {
 	x: string;
 	y: string;
-  rot: string;
+	rot: string;
 	size: string;
 }
 interface ballPos2 {
 	x: string;
 	y: string;
-  rot: string;
+	rot: string;
 	size: string;
-  color: string | undefined,
-  urlBg: string | undefined,
+	color: string | undefined,
+	urlBg: string | undefined,
 }
 
 export const StyledLeftPad = styled.div`
@@ -34,7 +34,7 @@ background-size: cover;
 overflow: hidden;
 opacity: 100%;
 box-shadow: inset 0px 0px 20px 20px #0ff,
-            0 0 2em #730ae6;
+						0 0 2em #730ae6;
 border: 5px solid #400373;
 border-radius: 20px;
 `;
@@ -83,26 +83,26 @@ filter: brightness(75%);
 `;
 
 export const StyledLeftPad1alias = styled(StyledLeftPad1).attrs<mousePos>(p => ({
-    style: {
-        top: p.y,
-    },
+		style: {
+				top: p.y,
+		},
 }))<mousePos>`
 `;
 
 export const StyledRightPadalias = styled(StyledLeftPad2).attrs<mousePos>(p => ({
-    style: {
-        top: p.y,
-    },
+		style: {
+				top: p.y,
+		},
 }))<mousePos>`
 `;
 
 export const StyledBallalias = styled(StyledBall).attrs<ballPos>(p => ({
-  style: {
-      top: p.y,
-      left: p.x,
-      transform: p.rot,
-	    height: p.size,
-	    width: p.size,
-  },
+	style: {
+			top: p.y,
+			left: p.x,
+			transform: p.rot,
+			height: p.size,
+			width: p.size,
+	},
 }))<ballPos>`
 `;

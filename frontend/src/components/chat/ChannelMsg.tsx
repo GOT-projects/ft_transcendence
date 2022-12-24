@@ -12,83 +12,83 @@ import { StyledEmptyDiv } from "../Styles/StyleViewProfil";
 
 
 interface IProps {
-   profil: GOT.Profile | undefined;
-   setProfil:Dispatch<React.SetStateAction<GOT.Profile | undefined>> | undefined;
-   chanName: string;
-   active: string;
+	profil: GOT.Profile | undefined;
+	setProfil:Dispatch<React.SetStateAction<GOT.Profile | undefined>> | undefined;
+	chanName: string;
+	active: string;
 }
 
 const ChannelMsg:FunctionComponent<IProps> = (props:IProps)=> {
-    //const [handleSocket, setHandleSocket] = useState<string>('');
-    const bottomChat = useRef<null | HTMLDivElement>(null);
-    const [inputChat, setInputChat] = useState("");
-    const socket = useContext(SocketContext)
-    const codeParam: Map<string, string> = accountService.getParamsPriv();
+	//const [handleSocket, setHandleSocket] = useState<string>('');
+	const bottomChat = useRef<null | HTMLDivElement>(null);
+	const [inputChat, setInputChat] = useState("");
+	const socket = useContext(SocketContext)
+	const codeParam: Map<string, string> = accountService.getParamsPriv();
 
-    const [selectChanMsg, setSelectChanMsg] = useState<GOT.MsgChannel[]>();
-    useEffect(() => {
-        //  scroll to bottom every time messages change
-        bottomChat.current?.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'start' });
-    }, [socket, setSelectChanMsg, selectChanMsg]);
+	const [selectChanMsg, setSelectChanMsg] = useState<GOT.MsgChannel[]>();
+	useEffect(() => {
+		//  scroll to bottom every time messages change
+		bottomChat.current?.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'start' });
+	}, [socket, setSelectChanMsg, selectChanMsg]);
 
-    useEffect(() =>{
-        if (codeParam.get("code") === "Priv" && !codeParam.get("name")){
-            setSelectChanMsg(undefined);
-        }
-    }, [codeParam])
-    
-    useEffect(() => {
-        //receive list message
-        if (props.chanName !== ""){
-            onSocket.client_channelMsg(socket, setSelectChanMsg, props.chanName);
-            return () => {
-                offSocket.client_channelMsg(socket);
-            } 
-        }
-    },[socket, setSelectChanMsg, selectChanMsg, props.chanName])
+	useEffect(() =>{
+		if (codeParam.get("code") === "Priv" && !codeParam.get("name")){
+			setSelectChanMsg(undefined);
+		}
+	}, [codeParam])
+	
+	useEffect(() => {
+		//receive list message
+		if (props.chanName !== ""){
+			onSocket.client_channelMsg(socket, setSelectChanMsg, props.chanName);
+			return () => {
+				offSocket.client_channelMsg(socket);
+			} 
+		}
+	},[socket, setSelectChanMsg, selectChanMsg, props.chanName])
 
 
-    useEffect(() =>{
-        emitSocket.emitChannelMsg(socket, props.chanName)
-    }, [socket, props.chanName])
+	useEffect(() =>{
+		emitSocket.emitChannelMsg(socket, props.chanName)
+	}, [socket, props.chanName])
 
-    function handChange(event: any, setInput: any, input: string){
-        if (input === "" && event.target.value ==="\n")
-            return;
+	function handChange(event: any, setInput: any, input: string){
+		if (input === "" && event.target.value ==="\n")
+			return;
 		setInput(event.target.value);
 	}	
 
-    const sendMsg = () => {
-        if (inputChat === " " || inputChat === "\n" || inputChat === ""){
-            return;
-        }
-        emitSocket.emitChannelMsg_send(socket, props.chanName, inputChat);
-        setInputChat("");
-    }
+	const sendMsg = () => {
+		if (inputChat === " " || inputChat === "\n" || inputChat === ""){
+			return;
+		}
+		emitSocket.emitChannelMsg_send(socket, props.chanName, inputChat);
+		setInputChat("");
+	}
 
-    return (
-            <StyledChat className={props.active}>
-                <StyledChatWindow>
-                    <StyledChatTextArea>
-                        {selectChanMsg?.map((data:GOT.MsgChannel) => (
-                                <StyledChatPlace key={uuid()} className={data.userFrom.login === props.profil?.userInfos.login ? "send" : "receive"}>
-                                    <StyledChatText>{data.msg}</StyledChatText>
-                                    {data.userFrom.login !== props.profil?.userInfos.login ?
-                                    <StyledChatNameUser>Send by {data.userFrom.login}</StyledChatNameUser> : 
-                                    <StyledEmptyDiv key={uuid()}/>}                                </StyledChatPlace>
-                        ))}
-                        <div className='field' ref={bottomChat}/>
-                    </StyledChatTextArea>
-                    <StyledChatSendDiv className={selectChanMsg ? "active" : "deactive"}>
-                    <StyledChatInput  name='chat' placeholder="Send message"  onChange={(e) => handChange(e, setInputChat, inputChat)} 
-                                                                            onKeyDown={(e) => {
-                                                                                if (e.key === 'Enter' && !e.shiftKey){
-                                                                                    sendMsg();
-                                                                                }}}
-                                                                            value={inputChat} autoFocus/>
-                    </StyledChatSendDiv>
-                </StyledChatWindow>
-            </StyledChat>
-    )
+	return (
+			<StyledChat className={props.active}>
+				<StyledChatWindow>
+					<StyledChatTextArea>
+						{selectChanMsg?.map((data:GOT.MsgChannel) => (
+								<StyledChatPlace key={uuid()} className={data.userFrom.login === props.profil?.userInfos.login ? "send" : "receive"}>
+									<StyledChatText>{data.msg}</StyledChatText>
+									{data.userFrom.login !== props.profil?.userInfos.login ?
+									<StyledChatNameUser>Send by {data.userFrom.login}</StyledChatNameUser> : 
+									<StyledEmptyDiv key={uuid()}/>}                                </StyledChatPlace>
+						))}
+						<div className='field' ref={bottomChat}/>
+					</StyledChatTextArea>
+					<StyledChatSendDiv className={selectChanMsg ? "active" : "deactive"}>
+					<StyledChatInput  name='chat' placeholder="Send message"  onChange={(e) => handChange(e, setInputChat, inputChat)} 
+																			onKeyDown={(e) => {
+																				if (e.key === 'Enter' && !e.shiftKey){
+																					sendMsg();
+																				}}}
+																			value={inputChat} autoFocus/>
+					</StyledChatSendDiv>
+				</StyledChatWindow>
+			</StyledChat>
+	)
 }
 export default ChannelMsg;

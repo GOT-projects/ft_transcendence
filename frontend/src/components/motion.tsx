@@ -11,32 +11,32 @@ import LeaderBoard from '../pages/leaderBoard'
 import { GOT } from '../shared/types'
 
 const MotionRoutes = () => {
-    const location = useLocation();
-    const [profil, setProfil] = useState<GOT.Profile>();
-    return (
-       <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<Login/>}/>
-          <Route path="/waiting" element={<Waiting/>}/>
-           <Route path="/game" element={
-               <AuthGuard>
-                   <Game profil={profil}  setProfil={setProfil}/>
-               </AuthGuard>
-               }/>
-          <Route path="/chat" element={
-                <AuthGuard>
-                   <Chat profil={profil}  setProfil={setProfil}/>
-                </AuthGuard>
-               }/>
-          <Route path="/leaderboard" element={
-               <AuthGuard>
-                   <LeaderBoard profil={profil}  setProfil={setProfil}/>
-               </AuthGuard>
-               }/>
-           <Route path="/invite" element={
-                   <Invite/>
-               }/>
-       </Routes>
-    )
-}  
+	const location = useLocation();
+	const [profil, setProfil] = useState<GOT.Profile>();
+	return (
+	   <Routes location={location} key={location.pathname}>
+		  <Route path="/" element={<Login/>}/>
+		  <Route path="/waiting" element={<Waiting/>}/>
+		   <Route path="/game" element={
+			   <AuthGuard>
+				   <Game profil={profil}  setProfil={setProfil}/>
+			   </AuthGuard>
+			   }/>
+		  <Route path="/chat" element={
+				<AuthGuard>
+				   <Chat profil={profil}  setProfil={setProfil}/>
+				</AuthGuard>
+			   }/>
+		  <Route path="/leaderboard" element={
+			   <AuthGuard>
+				   <LeaderBoard profil={profil}  setProfil={setProfil}/>
+			   </AuthGuard>
+			   }/>
+		   <Route path="/invite" element={
+				   <Invite/>
+			   }/>
+	   </Routes>
+	)
+}
 
 export default MotionRoutes;

@@ -12,10 +12,10 @@ import pong from "../assets/pinpong.png"
 import comet from "../assets/comet.png"
 
 enum EnumBall {
-    DEFAULT = 'DEFAULT',
-    COMET = 'COMET',
-    TENIS = 'TENIS',
-    PONG = 'PONG',
+	DEFAULT = 'DEFAULT',
+	COMET = 'COMET',
+	TENIS = 'TENIS',
+	PONG = 'PONG',
 }
 
 
@@ -49,11 +49,11 @@ interface IProps {
 }
 
 const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
-    const defaultBall = "https://png.pngtree.com/element_our/20190601/ourlarge/pngtree-blue-red-glowing-round-ball-free-button-image_1370443.jpg";
+	const defaultBall = "https://png.pngtree.com/element_our/20190601/ourlarge/pngtree-blue-red-glowing-round-ball-free-button-image_1370443.jpg";
 	const [endGame, setEndGame] = useState(false);
-    const [player, setPlayer] = useState<GOT.ActuGamePlayer>();
-    const [spec, setSpec] = useState<GOT.ActuGameSpectator>();
-    const [point, setPoints] = useState<GOT.ActuGamePoints>({points1: 0, points2: 0});
+	const [player, setPlayer] = useState<GOT.ActuGamePlayer>();
+	const [spec, setSpec] = useState<GOT.ActuGameSpectator>();
+	const [point, setPoints] = useState<GOT.ActuGamePoints>({points1: 0, points2: 0});
 	const [sizeOfBall, setSizeOfBall] = useState<number>(0);
 	const [posPad, setPosPad] = useState<number>(0);
 	const [mouseY, setMouseY] = useState<string>('0');
@@ -72,9 +72,9 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 	var posActu: number | undefined = undefined;
 
 	const socketGame = useContext(SocketContextGame);
-    const navigate = useNavigate();
-	
-	// socket in game actualise point 
+	const navigate = useNavigate();
+
+	// socket in game actualise point
 	useEffect(() => {
 		onSocketGame.client_game_points(socketGame, setPoints);
 		return () => {
@@ -83,34 +83,34 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 	}, [socketGame])
 
 	// socket when game is finish
-    useEffect(() => {
-        onSocketGame.client_game_finish(socketGame, setEndGame).then(() => {
+	useEffect(() => {
+		onSocketGame.client_game_finish(socketGame, setEndGame).then(() => {
 			if (endGame) {
 				delay(2000).then(() => {
 					navigate('/leaderboard');
 				});
 			}
 		});
-        return () => {
-            offSocketGame.client_game_finish(socketGame);
-        }
-    }, [socketGame, endGame, navigate])
+		return () => {
+			offSocketGame.client_game_finish(socketGame);
+		}
+	}, [socketGame, endGame, navigate])
 
-    // socket in game actualise data enemy 
-    useEffect(() => {
-        onSocketGame.client_game_player(socketGame, setPlayer);
-        return () => {
-            offSocketGame.client_game_player(socketGame);
-        }
-    }, [socketGame])
+	// socket in game actualise data enemy
+	useEffect(() => {
+		onSocketGame.client_game_player(socketGame, setPlayer);
+		return () => {
+			offSocketGame.client_game_player(socketGame);
+		}
+	}, [socketGame])
 
-    // socket in game actualise data for spec 
-    useEffect(() => {
-        onSocketGame.client_game_spec(socketGame, setSpec);
-        return () => {
-            offSocketGame.client_game_spec(socketGame);
-        }
-    }, [socketGame])
+	// socket in game actualise data for spec
+	useEffect(() => {
+		onSocketGame.client_game_spec(socketGame, setSpec);
+		return () => {
+			offSocketGame.client_game_spec(socketGame);
+		}
+	}, [socketGame])
 
 	// actualisation de la postion du pad joueur
 	useEffect(() => {
@@ -195,24 +195,24 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 			posActu = posPad;
 		}
 	}, 33);
-    const handleUrl = () => {
-        if (props.profil?.userInfos.ball === EnumBall.DEFAULT){
-            return defaultBall;
-        }else if (props.profil?.userInfos.ball === EnumBall.TENIS){
-            return tennis
-        }else if (props.profil?.userInfos.ball === EnumBall.COMET){
-            return comet
-        }else if (props.profil?.userInfos.ball === EnumBall.PONG){
-            return pong
-        }
-    }
-	
+	const handleUrl = () => {
+		if (props.profil?.userInfos.ball === EnumBall.DEFAULT){
+			return defaultBall;
+		}else if (props.profil?.userInfos.ball === EnumBall.TENIS){
+			return tennis
+		}else if (props.profil?.userInfos.ball === EnumBall.COMET){
+			return comet
+		}else if (props.profil?.userInfos.ball === EnumBall.PONG){
+			return pong
+		}
+	}
+
 
 	if (props.initGame && point)
 		return (
 			<div>
-				<div style={{position: "absolute", zIndex: "10", top: "13%", opacity: "92%", color: 'white', display: 'flex', 
-                            flexDirection: "row", flexWrap: "wrap", justifyContent:'space-between', width: "95%", marginLeft: "2.5%"}}>
+				<div style={{position: "absolute", zIndex: "10", top: "13%", opacity: "92%", color: 'white', display: 'flex',
+							flexDirection: "row", flexWrap: "wrap", justifyContent:'space-between', width: "95%", marginLeft: "2.5%"}}>
 					<h2>{point?.points1 + ' - ' + props.initGame.user1.login}</h2>
 					<h2>{props.initGame.user2.login + ' - ' + point?.points2}</h2>
 				</div>
@@ -239,9 +239,9 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 							</>
 						)
 					}
-					<StyledBallalias id="ball"  x={ballX+"px"} y={ballY+"px"} 
-                                     rot="0px" size={sizeOfBall.toString()+"px"} 
-                                     color={props.profil?.userInfos.color} urlBg={handleUrl()} ></StyledBallalias>
+					<StyledBallalias id="ball"  x={ballX+"px"} y={ballY+"px"}
+									 rot="0px" size={sizeOfBall.toString()+"px"}
+									 color={props.profil?.userInfos.color} urlBg={handleUrl()} ></StyledBallalias>
 				</StyledLeftPad>
 			</div>
 		);

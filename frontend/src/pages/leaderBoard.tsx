@@ -30,7 +30,7 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 	const [login, setLogin] = useState<string>("");
 
 	useEffect(() => {
-        emitGame.emit_where_am_I(socketGame,"no_where");
+		emitGame.emit_where_am_I(socketGame,"no_where");
 	}, [socketGame])
 
 	useEffect(() => {
@@ -46,7 +46,7 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 			socket.off('client_leaderboard');
 		}
 	}, [socket, tab]);
-	
+
 	const buttonHandler = (handleLogin: string) => {
 		if (popuProfil === false){
 			setLogin(handleLogin);
@@ -60,9 +60,9 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 	return (
 		<React.Fragment>
 			<BackgroundAnimate name="LeaderBoard"/>
-			<Header colorHome={Colors.MenuDisable} 
-					colorGame={Colors.MenuDisable} 
-					colorLeadBoard={Colors.MenuActive} 
+			<Header colorHome={Colors.MenuDisable}
+					colorGame={Colors.MenuDisable}
+					colorLeadBoard={Colors.MenuActive}
 					colorChat={Colors.MenuDisable}
 					notify={notify}
 					setNotify={setNotify}

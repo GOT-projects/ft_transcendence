@@ -4,16 +4,15 @@ import MotionRoutes from "./components/motion"
 import { SocketContext, socket } from './socket/socketPovider';
 
 function App() {
-  return ( 
-  <SnackbarProvider maxSnack={2} preventDuplicate >
-   <SocketContext.Provider value={socket}>
-    <Router>
-       <MotionRoutes/>
-    </Router>
-   </SocketContext.Provider>
-   </SnackbarProvider>
-
-  )
+	return (
+		<SnackbarProvider maxSnack={2} preventDuplicate >
+			<SocketContext.Provider value={socket}>
+				<Router>
+					<MotionRoutes/>
+				</Router>
+			</SocketContext.Provider>
+		</SnackbarProvider>
+	)
 }
 
 export default App;

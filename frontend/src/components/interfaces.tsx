@@ -1,19 +1,19 @@
 export interface NotifyInter{
-    isOpen:boolean, 
-    message: string,
-    type: any,
+	isOpen:boolean,
+	message: string,
+	type: any,
 }
 
 export interface NotifyInterUse{
-    notify: NotifyInter,
-    setNotify: any,
+	notify: NotifyInter,
+	setNotify: any,
 }
 
 export const Severity = {
-    error: "error",
-    warning: "warning",
-    info: "info",
-    success: "success",
+	error: "error",
+	warning: "warning",
+	info: "info",
+	success: "success",
 }
 
 export const InfoServer = {
@@ -24,23 +24,23 @@ export const InfoServer = {
 }
 
 export interface DataMesssage{
-    id?:string;
-    message?: string,
-    from?: string,
+	id?:string;
+	message?: string,
+	from?: string,
 }
 
 export interface UserListPrivate{
-    id: string,
-    user:string,
-    mute: boolean,
-    block: boolean,
-    active: boolean,
-    data?:DataMesssage[],
+	id: string,
+	user:string,
+	mute: boolean,
+	block: boolean,
+	active: boolean,
+	data?:DataMesssage[],
 }
 
 export interface PageName{
 	name:string,
-} 
+}
 
 export interface ServerToClientEvents {
   noArg: () => void;
@@ -49,12 +49,12 @@ export interface ServerToClientEvents {
 }
 
 export interface UsersId{
-    id: number,
-    idIntra: number | null,
-    login: string,
-    urlImg: string,
-    username: string,
-    wallet: number,
+	id: number,
+	idIntra: number | null,
+	login: string,
+	urlImg: string,
+	username: string,
+	wallet: number,
 }
 
 export interface ClientToServerEvents {
