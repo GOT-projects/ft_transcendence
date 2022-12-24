@@ -27,6 +27,8 @@ async function bootstrap() {
 	});
 	if (process.env.ENV === 'DEV')
 		app.useLogger(['log', 'error', 'warn', 'debug', 'verbose']);
+	else
+		app.useLogger(['log', 'error', 'warn']);
 	const port: number = (process.env.PORT_SERVER ? parseInt(process.env.PORT_SERVER) : 3000);
 	process.env.TTL_REGENERATE = `${ Math.floor(parseInt(process.env.JWT_TTL) * 0.8) }`;
 	const ttlRegenerate = process.env.JWT_TTL 

@@ -32,6 +32,8 @@ ENV PGDATA=/data
 
 RUN ["/usr/local/bin/docker-entrypoint.sh", "postgres"]
 
-FROM postgres:latest
+FROM postgres:latest as PROD
 
 COPY --from=dumperPostgres /data $PGDATA
+
+FROM postgres:latest as DEV

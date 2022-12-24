@@ -334,10 +334,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	}
 
 	private async algoGame(client: Socket, codeParty: number) {
-		// TODO
 		let party = this.games.get(codeParty);
 		if (party) {
-			// TODO send infos start
 			let users = [...(party.spectators), party.socketUser1, party.socketUser2];
 			this.appGateway.sendLeaderboard();
 			await this.delay(3000);
