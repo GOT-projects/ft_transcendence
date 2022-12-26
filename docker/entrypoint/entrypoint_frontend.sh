@@ -1,10 +1,9 @@
 #!/bin/sh
 
-
 if [ ${ENV} = "DEV" ]; then 
-	exec yarn run dev
+	yarn run dev
 else
 	yarn run build
-	yarn global add -g serve
-	exec serve -s build
+	yarn global add serve
+	serve -s build
 fi
