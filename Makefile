@@ -6,7 +6,13 @@ cmd				:=	$(shell which docker-compose >/dev/null; RETVAL=$$?; if [ $$RETVAL -eq
 all: down up
 	${cmd} logs -f nestjs web
 
+dev: down
+	cat .env | sed 's/ENV=PROD/ENV=DEV/g' >> .env 
+	${cmd} up --build -d
+	${cmd} logs -f nestjs web
+
 up:
+	cat .env | sed 's/ENV=DEV/ENV=PROD/g' >> .env 
 	${cmd} up --build -d
 
 down:
