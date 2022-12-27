@@ -310,7 +310,12 @@ export const StyledContaiteView = styled.div`
 	background-color: ${Colors.dark2};
 	opacity: 0.9;
 	@media screen and (max-width: 768px){
-		height: 500px;
+        opacity: 1;
+	    top: 4rem;
+	    left: 0;
+	    width: 100%;
+	    height: calc(100% - 7.1rem);
+	    transform: translate(0, 0);
 	}
 `;
 
@@ -486,7 +491,7 @@ export const StyledContaiteHistory = styled.div`
 	margin: 10px;
 	height: 100%;
 	flex-direction: column;
-	overflow: scroll;
+	overflow-y: scroll;
 	background-color: ${Colors.ChatMenu};
 	align-items: center;
 	border: 2px solid ${Colors.border};

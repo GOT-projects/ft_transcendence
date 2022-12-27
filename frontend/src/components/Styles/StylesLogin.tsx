@@ -150,6 +150,11 @@ export const StyledWaitingContente = styled.div`
 	border: 0;
 	letter-spacing: 3px;
 	outline: transparent;
+    @media screen and (max-width: 768px){
+	    width: 300px;
+	    height: 100px;
+	}
+
 	&:after {
 		--slice-0: inset(50% 50% 50% 50%);
 		--slice-1: inset(80% -6px 0 0);
@@ -230,7 +235,7 @@ export const StyledWaitingTitle = styled.h1`
 	font-size: 50px;
 	color: ${Colors.primary};
 	@media screen and (max-width: 768px){
-		font-size: 60px;
+		font-size: 20px;
 	}
 `
 

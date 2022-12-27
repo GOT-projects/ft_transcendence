@@ -36,7 +36,7 @@ export const StyleMenusHeader = styled.ul`
 		top: 3rem;
 		right: 0;
 		width: 220px;
-		height: 13rem;
+		height: 10rem;
 		padding: 5px;
 		align-items: flex-start;
 		border-left: 2px solid ${Colors.border};

@@ -30,8 +30,11 @@ export const StyledLead = styled.div`
 	background-size: cover;
 	opacity: 0.7;
 	@media screen and (max-width: 768px){
-		width: 90%;
-		height: calc(100% - 7rem);
+		width: calc(100% - 5px);
+	    transform: translate(0, 0);
+        top: 4rem;
+        left: 0;
+		height: calc(100% - 7.1rem);
 	}
 `;
 
@@ -39,6 +42,9 @@ export const StyledTile = styled.h1`
 	margin: 20px;
 	font-family: 'Public Pixel';
 	color: ${Colors.primary};
+	@media screen and (max-width: 768px){
+        font-size: 24px;
+	}
 `;
 
 export const StyledSep = styled.div`
@@ -107,6 +113,16 @@ export const StyledLeadPHead = styled.th`
 	font-size: x-large;
 	border-bottom: 1px solid deeppink;
 	border-collapse: collapse;
+	@media screen and (max-width: 768px){
+	    margin: 10px;
+	    width: 10px;
+	    padding: 3px;
+	    font-family: "Curve";
+	    opacity: 1;
+	    color: red;
+	    text-align: center;
+	    font-size: x-large;
+	}
 `;
 
 export const StyledLeadB = styled.div`
