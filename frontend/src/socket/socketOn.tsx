@@ -56,8 +56,8 @@ let client_channelMsg = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>
 			for (const msg of rep) {
 				msg.userFrom.urlImg = transformUrlUsers(msg.userFrom.urlImg);
 			}
-			setMsgChannel(rep);
 		}
+		setMsgChannel(rep);
 	})
 }
 
