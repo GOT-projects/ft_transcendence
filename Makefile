@@ -7,12 +7,12 @@ all: down up
 	${cmd} logs -f nestjs web
 
 dev: down
-	cat .env | sed 's/ENV=PROD/ENV=DEV/g' >> .env 
+	sed -i -e 's/ENV=PROD/ENV=DEV/g' .env && rm -f .env-e
 	${cmd} up --build -d
 	${cmd} logs -f nestjs web
 
 up:
-	cat .env | sed 's/ENV=DEV/ENV=PROD/g' >> .env 
+	sed -i -e 's/ENV=DEV/ENV=PROD/g' .env && rm -f .env-e
 	${cmd} up --build -d
 
 down:
