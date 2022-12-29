@@ -59,6 +59,9 @@ const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
 	const handleChan = (name:string) => {
 		if (props.setChatSwitch){
 			emitSocket.emitProfil(socket);
+            if (props.setActive){
+			    props.setActive("UnActiveMenu");
+            }
 			props.setChatSwitch(name);
 			navigate(`/chat?code=Channel&name=${name}`)
 		}

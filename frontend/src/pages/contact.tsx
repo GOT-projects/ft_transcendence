@@ -207,8 +207,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
 											setLogin={setLogin}/> : <></>}
 					</StyledChatPrive>
 					{add === "Channel" ? <StyledSettingChan>
-						<StyledSettingChanP>Channel setting</StyledSettingChanP>
-						<AiFillSetting size={30} color={Colors.grey} title="Channel Setting"
+						<AiFillSetting style={{marginLeft:"10px"}} size={30} color={Colors.grey} title="Channel Setting"
 											onClick={() => {
 											navigate(`/chat?code=Channel&name=${chatSwitch}&Setting=Menu`)
 											}}/>

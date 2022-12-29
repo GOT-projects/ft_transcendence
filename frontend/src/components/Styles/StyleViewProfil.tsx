@@ -343,7 +343,6 @@ export const StyledContaiteMenuSelector = styled.div`
 	align-items: center;
 	transform: translateX(-2px);
 	transition: 0.6s;
-    background: red;
 	&.select{
 		transition: 0.6s;
 		transform: translateX(10px);
