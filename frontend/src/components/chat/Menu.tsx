@@ -69,7 +69,6 @@ const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
 		} else if (props.setActive){
 			props.setActive("ActiveMenu");
 		}
-		navigate("/chat")
 	}
 
 	const handleAddChannel = () => {

@@ -117,18 +117,6 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
 		emitSocket.emitChannelsIn(socket);
 	}, [socket])
 
-	/*const handleSelectFriend = (name:string) => {
-		const user = friends?.filter((user) => user.login === name);
-		if (user){
-			const tmp:GOT.User = user[0];
-			if (selectUser !== tmp){
-				setSelectUser(tmp);
-				setAdd("");
-				emitSocket.emitPrivmsg(socket, name);
-			}
-		}
-	}*/
-
 	useEffect(() =>{
 		if (codeParam.get("code") === "Private" && codeParam.get("name")){
 			const name = codeParam.get("name");

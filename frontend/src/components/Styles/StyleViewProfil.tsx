@@ -329,6 +329,7 @@ export const StyledContaiteMenu = styled.div`
 	transition: 0.6s;
 	overflow: hidden;
 	@media screen and (max-width: 768px){
+	    width: 80px;
 		&.UnActiveMenu{
 			z-index: 20;
 			transform: translate(-100px);
@@ -342,10 +343,20 @@ export const StyledContaiteMenuSelector = styled.div`
 	align-items: center;
 	transform: translateX(-2px);
 	transition: 0.6s;
+    background: red;
 	&.select{
 		transition: 0.6s;
 		transform: translateX(10px);
 	}
+	@media screen and (max-width: 768px){
+	    transform: translateX(-16px);
+        padding-left: 12px;
+	    &.select{
+	    	transition: 0.6s;
+	    	transform: translateX(2px);
+            padding-left:0 ;
+	    }
+    }
 `
 
 export const StyledSelector = styled.div`
@@ -355,6 +366,8 @@ export const StyledSelector = styled.div`
 	border-radius: 0 10px 0 10px;
 	background-color: ${Colors.border};
 	transition: 0.6s;
+	@media screen and (max-width: 768px){
+	}
 `
 export const StyledContaiteChannel = styled.div`
 	display: flex;
@@ -405,6 +418,11 @@ export const StyledChanDiv = styled.div`
 		transition: 0.6s;
 		border-radius: 20%;
 	}
+	@media screen and (max-width: 768px){
+	    &.select{
+            margin-left: 12px;
+        }
+    }
 `
 
 export const StyledContaiteAddChanDiv = styled.div`
