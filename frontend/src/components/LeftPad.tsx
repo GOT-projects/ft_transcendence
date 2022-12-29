@@ -211,7 +211,7 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 	if (props.initGame && point)
 		return (
 			<div>
-				<div style={{position: "absolute", zIndex: "10", top: "13%", opacity: "92%", color: 'white', display: 'flex',
+				<div style={{position: "absolute", zIndex: "10", top: "13%", opacity: "92%", color: 'white', display: 'flex', fontFamily:'Public Pixel',
 							flexDirection: "row", flexWrap: "wrap", justifyContent:'space-between', width: "95%", marginLeft: "2.5%"}}>
 					<h2>{point?.points1 + ' - ' + props.initGame.user1.login}</h2>
 					<h2>{props.initGame.user2.login + ' - ' + point?.points2}</h2>
