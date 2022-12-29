@@ -15,16 +15,17 @@ const SetupOtc:FunctionComponent<IProps> = (props: IProps) => {
 			const rep = apiPost.Post2FAGenerate();
 			if (rep){
 				rep.then((response:any) =>{
-					console.log(response)
+					console.log("jdfksajkasd",response)
 					setGcode(response.data.qrcode)
 					setCode(response.data.secret)
-				})
+				}).catch((e)=>{
+			        console.log("catch", e)
+                })
 			}
-
 		}catch(e){
 			console.log(e);
 		}
-	},[])
+	},[setGcode, setCode])
 
 	const handleChange = (event: any) => {
 		if (inputOtc === "" && event.target.value ==="\n")
@@ -45,6 +46,7 @@ const SetupOtc:FunctionComponent<IProps> = (props: IProps) => {
 		}
 	}
 
+    console.log(gcode);
 	return (
 		<StyledContaite
 			initial={{x: 300}}

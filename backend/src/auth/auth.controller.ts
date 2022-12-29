@@ -53,7 +53,7 @@ export class AuthController {
 			await this.authService.generateTwoFactorAuthenticationSecret(
 				tmpUser,
 			);
-			return res.json({
+			return res.send({
 				qrcode: await this.authService.generateQrCodeDataURL(otpAuthUrl),
 				secret
 			});
