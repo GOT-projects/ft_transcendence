@@ -14,7 +14,7 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
 	const socket = useContext(SocketContext);
 
    const handleClose = () =>{
-		let regex:RegExp = /^Info: User with login (.*[^ ]) send you a private message/
+		let regex:RegExp = /^User with login (.*[^ ]) send you a private message/
 		if (regex.test(notify.message)){
 			const tab = notify.message.split(" ");
 			navigate(`/chat?code=Private&name=${tab[3]}`);
@@ -31,7 +31,8 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
 		const params = (new URL(window.location.href));
 		const code = params.searchParams.get("code");
 		const name = params.searchParams.get("name");
-		let regexPrivMsg:RegExp = /^Info: User with login (.*[^ ]) send you a private message/
+		let regexPrivMsg:RegExp = /^User with login (.*[^ ]) send you a private message/
+        console.log(regexPrivMsg.test(notify.message));
 		if (regexPrivMsg.test(notify.message)){
 			const tab = notify.message.split(" ");
 			if (code === "Private"){

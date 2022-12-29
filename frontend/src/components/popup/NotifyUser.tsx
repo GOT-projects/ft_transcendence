@@ -32,6 +32,7 @@ const PopupNotifUser:FunctionComponent<IProps> = (props:IProps) => {
 			props.setNotifyMenu(false);
 		}
 		emitSocket.emitReplyNotif(socket, tmp)
+		emitSocket.emitSendPrivmsg(socket, user.login, "👋");
 	}
 
 	const handleRemove = (user: GOT.User) =>{

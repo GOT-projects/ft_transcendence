@@ -41,7 +41,9 @@ const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
 			if (props.setSelectUser)
 				props.setSelectUser(tmp);
 		}
-		emitSocket.emitPrivmsg(socket, name);
+        if (name && name !== ""){
+		    emitSocket.emitPrivmsg(socket, name);
+        }
 		if (props.setActive)
 			props.setActive("UnActiveMenu");
 		navigate(`/chat?code=Private&name=${name}`);
@@ -93,7 +95,6 @@ const PriveUserMenu:FunctionComponent<IProps> = (props: IProps) => {
 		}
 		return ""
 	}
-	console.log(props.friends, props.userFriend)
 	return (
 		<>
 			{props.friends ?
