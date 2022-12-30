@@ -49,7 +49,9 @@ const ChannelMsg:FunctionComponent<IProps> = (props:IProps)=> {
 
 
 	useEffect(() =>{
-		emitSocket.emitChannelMsg(socket, props.chanName)
+        if (codeParam.get("code") === "Private" && codeParam.get("name") !== undefined ){
+		    emitSocket.emitChannelMsg(socket, codeParam.get("name"))
+        }
 	}, [socket, props.chanName])
 
 	function handChange(event: any, setInput: any, input: string){
@@ -62,7 +64,7 @@ const ChannelMsg:FunctionComponent<IProps> = (props:IProps)=> {
 		if (inputChat === " " || inputChat === "\n" || inputChat === ""){
 			return;
 		}
-		emitSocket.emitChannelMsg_send(socket, props.chanName, inputChat);
+		emitSocket.emitChannelMsg_send(socket, codeParam.get("name"), inputChat);
 		setInputChat("");
 	}
 

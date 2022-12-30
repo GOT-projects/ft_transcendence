@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosHeaders } from "axios";
 import { InfoServer } from "../components/interfaces";
 import { accountService } from "./account.service";
 
@@ -10,12 +10,12 @@ const Axios = axios.create({
 
 
 Axios.interceptors.request.use(
-	request => {
+	config => {
 		let token = accountService.getToken();
-		if (request.headers){
-			request.headers.Authorization = `Bearer ${token}`
+		if (config.headers){
+            (config.headers as AxiosHeaders).set("Authorization", `Bearer ${token}`);
 		}
-		return (request);
+		return (config);
 	}, (e) => {
 		return Promise.reject(e);
 })

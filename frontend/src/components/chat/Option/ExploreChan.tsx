@@ -22,7 +22,7 @@ interface IProps {
 	channelIn: GOT.Channel[] | undefined ;
 }
 
-const PopupOptionExloreChat:FunctionComponent<IProps> = (props: IProps) =>{
+const PopupOptionExloreChat:FunctionComponent<IProps> = () =>{
 	const navigate = useNavigate();
 	const socket = useContext(SocketContext)
 	const [selectUser, setSelectUser] = useState<string>();
@@ -51,7 +51,6 @@ const PopupOptionExloreChat:FunctionComponent<IProps> = (props: IProps) =>{
 
 	const handleSelect = (user: string) => {
 			setSelectUser(user)
-		console.log("select", selectUser )
 	}	
 
 	const handleReturn = () => {

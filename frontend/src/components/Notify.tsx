@@ -20,7 +20,6 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
 			navigate(`/chat?code=Private&name=${tab[3]}`);
 		}
 		let regexChan:RegExp = /^Info: Channel (.*[^ ]) received a message/
-		console.log( "testttttttttt", regexChan.test(notify.message));
 		if (regexChan.test(notify.message)){
 			const tab = notify.message.split(" ");
 			navigate(`/chat?code=Channel&name=${tab[2]}`);
@@ -32,7 +31,6 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
 		const code = params.searchParams.get("code");
 		const name = params.searchParams.get("name");
 		let regexPrivMsg:RegExp = /^User with login (.*[^ ]) send you a private message/
-        console.log(regexPrivMsg.test(notify.message));
 		if (regexPrivMsg.test(notify.message)){
 			const tab = notify.message.split(" ");
 			if (code === "Private"){

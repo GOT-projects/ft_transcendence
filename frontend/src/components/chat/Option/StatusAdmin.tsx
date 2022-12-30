@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { onSocket } from "../../../socket/socketOn";
 import { v4 as uuid } from "uuid";
 import { MdToggleOn, MdToggleOff } from 'react-icons/md';
+import { accountService } from "../../../services/account.service";
 
 enum UserChannelStatus {
 	MEMBER = 'MEMBER',
@@ -35,6 +36,7 @@ const PopupOptionStatusAdmin:FunctionComponent<IProps> = (props: IProps) =>{
 	const socket = useContext(SocketContext)
 	const [selectUser, setSelectUser] = useState<GOT.User[]>([]);
 	const [userList, setUserlist] = useState<GOT.ChannelUsers>();
+	const codeParam: Map<string, string> = accountService.getParamsPriv();
 
 	const handleClose = () => {
 		props.setInvite(false);
@@ -46,7 +48,9 @@ const PopupOptionStatusAdmin:FunctionComponent<IProps> = (props: IProps) =>{
 	}, [socket, setUserlist, userList])
 
 	useEffect(() => {
-		emitSocket.emitChanUserNotBan(socket, props.chanName);
+        if (codeParam.get("code") === "Channel" && codeParam.get("name") !== undefined ){
+		    emitSocket.emitChanUserNotBan(socket, props.chanName);
+        }
 	}, [socket, props.chanName])
 
 	const handleSelect = (user: GOT.User) => {
@@ -78,7 +82,6 @@ const PopupOptionStatusAdmin:FunctionComponent<IProps> = (props: IProps) =>{
 		navigate(`/chat?code=Channel&name=${props.chanName}&Setting=Menu`)
 	}
 
-	console.log("userlist", userList)
 	return (
 		<StyledContaiteViewAddChan>
 			<motion.div

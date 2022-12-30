@@ -134,14 +134,12 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 
 	useEffect(() => {
 		if (rectable) {
-			//console.log('actu pospad');
 			setPosPad(tmp / rectable.height);
 		}
 	}, [tmp, rectable]);
 
 	useEffect(() => {
 		if (player) {
-			//console.log('update mouse');
 			setMouseY(tmp.toString());
 		}
 	}, [tmp, player]);
@@ -149,7 +147,6 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 	useEffect(() => {
 		if (rectable) {
 			if (player) {
-				//console.log('actu ball + pads player')
 				// Récupération de la coordonnée du pad externe au joueur
 				setExternPadPos((rectable.height * player.enemyY + sizeOfBall * 2).toString());
 				// Récupération des coordonnées de la balle
@@ -157,7 +154,6 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 				setBallY((player.ball.y * rectable.height - sizeOfBall / 2).toString());
 			}
 			else if (spec) {
-				//console.log('actu ball + pads spectateur')
 				setBallX((spec.ball.x * rectable.width - sizeOfBall / 2).toString());
 				setBallY((spec.ball.y * rectable.height - sizeOfBall / 2).toString());
 				// Récupération de la coordonnée du 1er pad externe au spectateur
@@ -174,17 +170,11 @@ const MousePadLeft:FunctionComponent<IProps> = (props:IProps) => {
 	// Récupération des coordonnées du pad joueur
 	useEffect(() => {
 		if (table && props.initGame?.player) {
-			//console.log('add event listener');
 			table.addEventListener("mousemove", (e) => {
 				if (y !== e.pageY) {
 					setY(e.pageY);
 				}
 			});
-			/*table.addEventListener("touchmove", (e) => {
-				if (y !== e.pageY) {
-					setY(e.pageY);
-				}
-			});*/
 		}
 	}, [table, props.initGame])
 

@@ -11,6 +11,7 @@ import { SocketContext } from "../../../socket/socketPovider";
 import { onSocket } from "../../../socket/socketOn";
 import { v4 as uuid } from "uuid";
 import { offSocket } from "../../../socket/socketOff";
+import { accountService } from "../../../services/account.service";
 
 interface IProps {
 	listUser:GOT.User[] | undefined;
@@ -26,6 +27,7 @@ const PopupOptionInvite:FunctionComponent<IProps> = (props: IProps) =>{
 	const socket = useContext(SocketContext)
 	const [selectUser, setSelectUser] = useState<GOT.User[]>([]);
 	const [userList, setUserlist] = useState<GOT.ChannelUsers>();
+	const codeParam: Map<string, string> = accountService.getParamsPriv();
 
 	const handleClose = () => {
 		props.setInvite(false);
@@ -39,7 +41,9 @@ const PopupOptionInvite:FunctionComponent<IProps> = (props: IProps) =>{
 	}, [socket, setUserlist, userList])
 
 	useEffect(() => {
-		emitSocket.emitChanUserNotBan(socket, props.chanName);
+        if (codeParam.get("code") === "Channel" && codeParam.get("name") !== undefined ){
+		    emitSocket.emitChanUserNotBan(socket, props.chanName);
+        }
 	}, [socket, props.chanName])
 
 	const handleSelect = (user: GOT.User) => {

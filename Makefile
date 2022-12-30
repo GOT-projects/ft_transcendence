@@ -26,7 +26,9 @@ purge: down
 
 help:
 	@printf "make $(COLOR_PURPLE)all$(COLOR_NORM)\n"
-	@printf "\tdown, up dockers and show logs of nest and react\n"
+	@printf "\tdown, up dockers and show logs of nest and react in Prod\n"
+	@printf "make $(COLOR_PURPLE)dev$(COLOR_NORM)\n"
+	@printf "\tdown, up dockers and show logs of nest and react in Dev\n"
 	@printf "make $(COLOR_PURPLE)up$(COLOR_NORM)\n"
 	@printf "\tup dockers\n"
 	@printf "make $(COLOR_PURPLE)down$(COLOR_NORM)\n"

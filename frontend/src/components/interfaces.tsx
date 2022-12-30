@@ -16,10 +16,14 @@ export const Severity = {
 	success: "success",
 }
 
+export const Port = {
+    Server: process.env.WDS_SOCKET_PORT !== undefined ? parseInt(process.env.WDS_SOCKET_PORT) : 3000,
+}
+
 export const InfoServer = {
-	HttpServer:"http://" +  window.location.hostname + ":3000",
-	SocketServer:"http://" +  window.location.hostname + ":3000",
-	server: window.location.hostname + ":3000",
+	HttpServer:"http://" +  window.location.hostname + `:${Port.Server}`,
+	SocketServer:"http://" +  window.location.hostname + `:${Port.Server}`,
+	server: window.location.hostname + `:${Port.Server}`,
 	client: window.location.hostname,
 }
 

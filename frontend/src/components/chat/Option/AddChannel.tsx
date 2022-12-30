@@ -1,4 +1,4 @@
-import { FunctionComponent, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { GOT } from "../../../shared/types";
 import { StyledContaiteAddChanDiv, StyledContaiteAddChanOption, StyledContaiteAddChanOptionP, StyledContaiteReturnAddButton, StyledContaiteReturnAddButtonP, StyledContaiteReturnAddChannel, StyledContaiteReturnDiv, StyledContaiteViewAddChan } from "../../Styles/StyleViewProfil";
 import { motion } from "framer-motion";
@@ -10,16 +10,13 @@ import { Notification } from "../../Notify";
 import { useNavigate } from "react-router-dom";
 import { accountService } from '../../../services/account.service';
 
-interface IProps {
-}
-
 enum ChannelStatus {
 	PUBLIC = 'PUBLIC',
 	PROTECTED = 'PROTECTED',
 	PRIVATE = 'PRIVATE'
 }
 
-const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
+const PopupOptionAddChannel = () =>{
 	const socket = useContext(SocketContext);
 	const navigate = useNavigate();
 	const [inputChan, setInputChan] = useState("");
@@ -100,10 +97,8 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
 	}
 	const handleSendChange = () =>{
 		const chanName = codeParam.get("name");
-		console.log(selecte)
 		if (chanName && inputChan !== "" && selecte !== ""){
 			if (chanName && selecte === "public"){
-				console.log(selecte, inputChan)
 				const tmp:GOT.Channel = {name: inputChan, status: ChannelStatus.PUBLIC, password:undefined}
 				emitSocket.emitChanChangeStatus(socket, tmp);
 			}else if (chanName && selecte === "private"){
@@ -124,10 +119,8 @@ const PopupOptionAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
 			const tmp:GOT.Channel = {name: chanName, status: ChannelStatus.PROTECTED, password:inputPwd}
 			emitSocket.emitChanChangeStatus(socket, tmp);
 		}else if (selecte === "protected" && inputPwd === ""){
-			console.log("error need pwd")
 			setNotify({isOpen: true, message: "Please choose password to your channel", type: "error"})
 		}else{
-			console.log("error need pwd djfkwqsjak" )
 			if (chanName){
 				emitSocket.emitChanChangeName(socket, chanName, inputChan);
 				navigate(`/chat?code=Channel`);
