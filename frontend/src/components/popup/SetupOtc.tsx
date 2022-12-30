@@ -15,7 +15,6 @@ const SetupOtc:FunctionComponent<IProps> = (props: IProps) => {
 			const rep = apiPost.Post2FAGenerate();
 			if (rep){
 				rep.then((response:any) =>{
-					console.log("jdfksajkasd",response)
 					setGcode(response.data.qrcode)
 					setCode(response.data.secret)
 				}).catch((e)=>{
@@ -46,7 +45,6 @@ const SetupOtc:FunctionComponent<IProps> = (props: IProps) => {
 		}
 	}
 
-    console.log(gcode);
 	return (
 		<StyledContaite
 			initial={{x: 300}}

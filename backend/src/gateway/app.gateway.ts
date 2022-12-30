@@ -588,7 +588,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			return ;
 		const ret = await this.chatGateway.getChanmsg(auth.user, chanName);
 		if (typeof ret === 'string') {
-			client.emit('error_client', 'chan_msg' + ret);
+			client.emit('error_client', 'chan_msg ' + ret);
 			return ;
 		}
 		client.emit('client_chanmsg', ret);

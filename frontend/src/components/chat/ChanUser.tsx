@@ -78,8 +78,6 @@ const ChanUserMenu:FunctionComponent<IProps> = (props: IProps) => {
 		    emitSocket.emitChanBlock(socket, codeParam.get("name"), login)
 	    }
     }
-    console.log("user: chanName", props.chanName, codeParam.get("name"))
-
 	return (
 		<> 
 			{userList ? 

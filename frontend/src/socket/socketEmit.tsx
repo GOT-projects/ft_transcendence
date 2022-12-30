@@ -59,15 +59,17 @@ let emitChannelsIn = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>) =
 	socket.emit('server_channels_in', {Authorization: accountService.getToken()})
 }
 
-let emitChannelMsg = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, channelName: string) => {
+let emitChannelMsg = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, channelName: string | undefined) => {
+    console.log("emit server chan msg: ", channelName)
 	socket.emit('server_chanmsg', {Authorization: accountService.getToken(), chanName: channelName})
 }
 
-let emitChannelMsg_send = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName: string, msg:string) => {
+let emitChannelMsg_send = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName: string | undefined, msg:string) => {
 	socket.emit('server_chanmsg_send', {Authorization: accountService.getToken(), chanName: chanName, msg:msg})
 }
 
 let emitChanUserNotBan = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName: string | undefined) => {
+    console.log("emit server emitChanUserNotBan: ", chanName)
 	socket.emit('server_chan_users', {Authorization: accountService.getToken(), chanName: chanName})
 }
 
