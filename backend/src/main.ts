@@ -4,6 +4,7 @@ import { AppModule } from './app.module';
 import { exit } from 'process';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 
+
 async function bootstrap() {
 	const logger = new Logger('main.ts - server');
 	if (
@@ -16,6 +17,7 @@ async function bootstrap() {
 		|| process.env.API_UID === undefined || process.env.API_UID === ''
 		|| process.env.API_SECRET === undefined || process.env.API_SECRET === ''
 		|| process.env.APP_NAME === undefined || process.env.APP_NAME === ''
+		|| (process.env.ENV !== 'DEV' && process.env.ENV !== 'PROD')
 	) {
 		logger.error(`Incomplete environment`);
 		exit(1);
@@ -25,6 +27,7 @@ async function bootstrap() {
 		credentials: false,
 		origin: '*'
 	});
+	app.register(require('@fastify/multipart'))
 	if (process.env.ENV === 'DEV')
 		app.useLogger(['log', 'error', 'warn', 'debug', 'verbose']);
 	else

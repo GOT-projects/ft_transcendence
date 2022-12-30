@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpException, HttpStatus, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpException, HttpStatus, NotFoundException, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request, Response } from 'express';
 import { User } from 'src/database/entities/user.entity';
@@ -29,6 +29,8 @@ export class AuthController {
 
 	@Post('invite')
 	async invite(@Res() res: Response, @Body('login') login: string) {
+		if (process.env.ENV === 'PROD')
+			throw new NotFoundException();
 		if (!login)
 			throw new HttpException('empty login', HttpStatus.BAD_REQUEST);
 		try {

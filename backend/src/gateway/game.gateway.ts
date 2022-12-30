@@ -739,7 +739,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 						return ;
 					}
 				}
-				this.userService.update(auth.user.id, {
+				await this.userService.update(auth.user.id, {
 					ball: custom.ball,
 					color: custom.color
 				});
