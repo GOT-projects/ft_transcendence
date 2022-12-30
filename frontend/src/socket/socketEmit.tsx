@@ -67,7 +67,7 @@ let emitChannelMsg_send = async (socket:Socket<DefaultEventsMap, DefaultEventsMa
 	socket.emit('server_chanmsg_send', {Authorization: accountService.getToken(), chanName: chanName, msg:msg})
 }
 
-let emitChanUserNotBan = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName: string) => {
+let emitChanUserNotBan = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName: string | undefined) => {
 	socket.emit('server_chan_users', {Authorization: accountService.getToken(), chanName: chanName})
 }
 
@@ -95,7 +95,7 @@ let emitChanUnBlock = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, 
 	socket.emit('server_chan_unban_somebody', {Authorization: accountService.getToken(), chanName: chanName, loginToUnban:loginUnblock})
 }
 
-let emitChanBlock = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName:string, loginBlock:string) => {
+let emitChanBlock = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName:string | undefined, loginBlock:string) => {
 	socket.emit('server_chan_ban_somebody', {Authorization: accountService.getToken(), chanName: chanName, loginToBan:loginBlock})
 }
 

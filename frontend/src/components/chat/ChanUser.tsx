@@ -12,6 +12,7 @@ import { AiOutlineUserAdd } from "react-icons/ai";
 import { onSocket } from "../../socket/socketOn";
 import { offSocket } from "../../socket/socketOff";
 import { StyledEmptyDivChat } from "../Styles/StyleViewProfil";
+import { accountService } from "../../services/account.service";
 
 
 interface IProps {
@@ -33,6 +34,7 @@ const ChanUserMenu:FunctionComponent<IProps> = (props: IProps) => {
 	const socket = useContext(SocketContext)
 	const [userList, setUserlist] = useState<GOT.ChannelUsers>();
 	const [myStatus, setMyStatus] = useState<UserChannelStatus>();
+	const codeParam: Map<string, string> = accountService.getParamsPriv();
 
 	useEffect(() => {
 		emitSocket.emitChannelsIn(socket);
@@ -66,12 +68,17 @@ const ChanUserMenu:FunctionComponent<IProps> = (props: IProps) => {
 	}, [socket])
 	
 	useEffect(() => {
-		emitSocket.emitChanUserNotBan(socket, props.chanName);
+        if (codeParam.get("code") === "Channel" && codeParam.get("name") !== undefined ){
+		        emitSocket.emitChanUserNotBan(socket, codeParam.get("name"));
+        }
 	}, [socket, props.chanName])
 
 	const handleBlock = (login:string) => {
-		emitSocket.emitChanBlock(socket, props.chanName, login)
-	}
+        if (codeParam.get("code") === "Channel" && codeParam.get("name") !== undefined ){
+		    emitSocket.emitChanBlock(socket, codeParam.get("name"), login)
+	    }
+    }
+    console.log("user: chanName", props.chanName, codeParam.get("name"))
 
 	return (
 		<> 
