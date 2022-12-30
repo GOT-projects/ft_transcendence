@@ -59,9 +59,9 @@ services:
     depends_on:
       - postgres
     expose:
-      - "3000"
+      - ${PORT_SERVER}
     ports:
-      - 3000:3000
+      - ${PORT_SERVER}:${PORT_SERVER}
     restart: always
     networks:
       - back
@@ -82,6 +82,7 @@ services:
     #runtime
     environment:
       - PORT=${PORT}
+      - WDS_SOCKET_PORT=${PORT_SERVER}
       - ENV=${ENV}
     depends_on:
       - nestjs

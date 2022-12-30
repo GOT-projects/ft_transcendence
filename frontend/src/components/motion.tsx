@@ -14,6 +14,7 @@ const MotionRoutes = () => {
 	const location = useLocation();
 	const [profil, setProfil] = useState<GOT.Profile>();
 
+    console.log(process.env)
 	return (
 	   <Routes location={location} key={location.pathname}>
 		  <Route path="/" element={<Login/>}/>
