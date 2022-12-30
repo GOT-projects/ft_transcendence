@@ -46,7 +46,8 @@ const Login = () => {
 			<StyledLogin>
 				<StyledLoginLogo height="200px" width="410px" img={Logo}/>
 				<StyledLoginButton href={Url} >Login Intra</StyledLoginButton>
-				<StyledLoginButton href='/invite' >Invite mode</StyledLoginButton>
+                {process.env.NODE_ENV !== 'production' ?
+				<StyledLoginButton href='/invite' >Invite mode</StyledLoginButton>: <></>}
 				<Footer/>
 			</StyledLogin>
 		)
