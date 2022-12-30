@@ -10,6 +10,7 @@ import { jwtContentComplete } from "src/auth/types";
 import { GameService } from "src/database/services/game.service";
 import { MyTransform } from "src/utils/transform";
 import { AppGateway } from "./app.gateway";
+import { isLogin } from "src/utils/check";
 
 /**
  * Game types
@@ -480,6 +481,11 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		const auth = await this.connectionSecure(client, jwt, true);
 		if (!auth)
 			return ;
+		const test = isLogin(login);
+		if (typeof test === 'string') {
+			client.emit('error_client', test);
+			return ;
+		}
 		if (auth.targetList.game || auth.targetList.spectator || auth.targetList.waitingInvite || auth.targetList.waitingUser){
 			client.emit("error_client", "Cannot add in waiting list");
 			return ;
@@ -539,6 +545,11 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		const auth = await this.connectionSecure(client, jwt, true);
 		if (!auth)
 			return ;
+		const test = isLogin(login);
+		if (typeof test === 'string') {
+			client.emit('error_client', test);
+			return ;
+		}
 		if (auth.targetList.game || auth.targetList.spectator || auth.targetList.waitingInvite || auth.targetList.waitingUser){
 			client.emit("error_client", "Cannot add in waiting list");
 			return ;
@@ -722,7 +733,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		if (!auth)
 			return ;
 		try {
-			if (custom.ball && custom.color) {
+			if (custom?.ball && custom?.color) {
 				const values = Object.values(GOT.EnumBall);
 				if (!(values.includes(custom.ball as unknown as GOT.EnumBall))) {
 					client.emit('error_client', 'Custom information ball is incorrect');

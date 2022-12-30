@@ -9,7 +9,7 @@ import { UserService } from "src/database/services/user.service";
 import { ChatGateway } from "./chat.gateway";
 import { FriendGateway } from "./friend.gateway";
 import { GeneralGateway } from "./general.gateway";
-import { isLogin } from "src/utils/check";
+import { isChanName, isChannel, isLogin, isMessage, isNotifChoice, isPassword } from "src/utils/check";
 
 //@UseGuards(JWTGuardSocket)
 @WebSocketGateway({
@@ -393,7 +393,11 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		if (!auth)
 			return ;
 		if (reply.user) {
-			// FIXME Mark 00
+			const test = isNotifChoice(reply);
+			if (typeof test === 'string') {
+				client.emit('error_client', 'reply_notification' + test);
+				return ;
+			}
 			const ret = await this.friendGateway.replyNotif(auth.user, reply);
 			if (typeof ret === 'string') {
 				client.emit('error_client', 'reply_notification' + ret);
@@ -463,6 +467,11 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
+		const test = isLogin(login);
+		if (typeof test === 'string') {
+			client.emit('error_client', test);
+			return ;
+		}
 		const ret = await this.friendGateway.blockSomebody(auth.user, login);
 		if (typeof ret === 'string') {
 			client.emit('error_client', 'block_somebody' + ret);
@@ -489,6 +498,11 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
+		const test = isLogin(login);
+		if (typeof test === 'string') {
+			client.emit('error_client', test);
+			return ;
+		}
 		const ret = await this.friendGateway.unblockSomebody(auth.user, login);
 		if (typeof ret === 'string') {
 			client.emit('error_client', 'unblock_somebody' + ret);
@@ -520,6 +534,11 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
+		const test = isLogin(login);
+		if (typeof test === 'string') {
+			client.emit('error_client', test);
+			return ;
+		}
 		const ret = await this.chatGateway.getPrivmsg(auth.user, login);
 		if (typeof ret === 'string') {
 			client.emit('error_client', 'privmsg' + ret);
@@ -546,6 +565,16 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
+		const test = isLogin(login);
+		if (typeof test === 'string') {
+			client.emit('error_client', test);
+			return ;
+		}
+		const testMsg = isMessage(msg);
+		if (typeof testMsg === 'string') {
+			client.emit('error_client', testMsg);
+			return ;
+		}
 		const ret = await this.chatGateway.getPrivmsgSend(auth.user, login, msg);
 		if (typeof ret === 'string') {
 			client.emit('error_client', 'privmsg_send' + ret);
@@ -586,6 +615,11 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
+		const test = isChanName(chanName);
+		if (typeof test === 'string') {
+			client.emit('error_client', test);
+			return ;
+		}
 		const ret = await this.chatGateway.getChanmsg(auth.user, chanName);
 		if (typeof ret === 'string') {
 			client.emit('error_client', 'chan_msg' + ret);
@@ -599,6 +633,11 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
+		const test = isChanName(chanName);
+		if (typeof test === 'string') {
+			client.emit('error_client', test);
+			return ;
+		}
 		const ret = await this.chatGateway.getChanUsers(auth.user, chanName);
 		if (typeof ret === 'string') {
 			client.emit('error_client', 'chan_users' + ret);
@@ -625,6 +664,16 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
+		const test = isChanName(chanName);
+		if (typeof test === 'string') {
+			client.emit('error_client', test);
+			return ;
+		}
+		const testMsg = isMessage(msg);
+		if (typeof testMsg === 'string') {
+			client.emit('error_client', testMsg);
+			return ;
+		}
 		const ret = await this.chatGateway.chanmsgSend(auth.user, chanName, msg);
 		if (typeof ret === 'string') {
 			client.emit('error_client', 'chanmsg_send' + ret);
@@ -663,6 +712,16 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
+		const test = isChanName(chanName);
+		if (typeof test === 'string') {
+			client.emit('error_client', test);
+			return ;
+		}
+		const testPass = isPassword(password);
+		if (typeof testPass === 'string') {
+			client.emit('error_client', testPass);
+			return ;
+		}
 		const ret = await this.chatGateway.joinChannel(auth.user, chanName, password);
 		if (typeof ret === 'string') {
 			client.emit('error_client', 'chan_join' + ret);
@@ -692,6 +751,16 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
+		const testChanName = isChanName(chanName);
+		if (typeof testChanName === 'string') {
+			client.emit('error_client', testChanName);
+			return ;
+		}
+		const test = isLogin(loginInvite);
+		if (typeof test === 'string') {
+			client.emit('error_client', test);
+			return ;
+		}
 		const ret = await this.chatGateway.inviteChannel(auth.user, chanName, loginInvite);
 		if (typeof ret === 'string') {
 			client.emit('error_client', 'chan_invite' + ret);
@@ -714,6 +783,11 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
+		const testChannel = isChannel(chan);
+		if (typeof testChannel === 'string') {
+			client.emit('error_client', testChannel);
+			return ;
+		}
 		const ret = await this.chatGateway.createChannel(auth.user, chan);
 		if (typeof ret === 'string') {
 			client.emit('error_client', 'chan_create' + ret);
@@ -744,6 +818,16 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
+		const testChanName = isChanName(chanName);
+		if (typeof testChanName === 'string') {
+			client.emit('error_client', testChanName);
+			return ;
+		}
+		const test = isLogin(loginToBan);
+		if (typeof test === 'string') {
+			client.emit('error_client', test);
+			return ;
+		}
 		const ret = await this.chatGateway.chanBlock(auth.user, chanName, loginToBan);
 		if (typeof ret === 'string') {
 			client.emit('error_client', 'chan_ban_somebody ' + ret);
@@ -784,6 +868,16 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
+		const testChanName = isChanName(chanName);
+		if (typeof testChanName === 'string') {
+			client.emit('error_client', testChanName);
+			return ;
+		}
+		const test = isLogin(loginToUnban);
+		if (typeof test === 'string') {
+			client.emit('error_client', test);
+			return ;
+		}
 		const ret = await this.chatGateway.chanUnblock(auth.user, chanName, loginToUnban);
 		if (typeof ret === 'string') {
 			client.emit('error_client', 'chan_unban_somebody ' + ret);
@@ -826,6 +920,16 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
+		const testChanName = isChanName(chanName);
+		if (typeof testChanName === 'string') {
+			client.emit('error_client', testChanName);
+			return ;
+		}
+		const test = isLogin(loginWhoLeave);
+		if (typeof test === 'string') {
+			client.emit('error_client', test);
+			return ;
+		}
 		const usersOfChannelBegin = await this.chatGateway.getChanUsers(auth.user, chanName);
 		const ret = await this.chatGateway.leaveChan(auth.user, chanName, loginWhoLeave);
 		if (typeof ret === 'string') {
@@ -881,6 +985,11 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
+		const testChannel = isChannel(chan);
+		if (typeof testChannel === 'string') {
+			client.emit('error_client', testChannel);
+			return ;
+		}
 		const ret = await this.chatGateway.changeStatusChannel(auth.user, chan);
 		if (typeof ret === 'string') {
 			client.emit('error_client', 'edit_status' + ret);
@@ -911,6 +1020,16 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
+		const testChanName = isChanName(chanName);
+		if (typeof testChanName === 'string') {
+			client.emit('error_client', testChanName);
+			return ;
+		}
+		const testPass = isPassword(password);
+		if (typeof testPass === 'string') {
+			client.emit('error_client', testPass);
+			return ;
+		}
 		const ret = await this.chatGateway.changePasswordChannel(auth.user, chanName, password);
 		if (typeof ret === 'string') {
 			client.emit('error_client', 'edit_password' + ret);
@@ -924,6 +1043,16 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
+		const testChanName = isChanName(chanName);
+		if (typeof testChanName === 'string') {
+			client.emit('error_client', testChanName);
+			return ;
+		}
+		const testChanName2 = isChanName(newChanName);
+		if (typeof testChanName2 === 'string') {
+			client.emit('error_client', testChanName2);
+			return ;
+		}
 		const ret = await this.chatGateway.changeNameChannel(auth.user, chanName, newChanName);
 		if (typeof ret === 'string') {
 			client.emit('error_client', 'edit_name' + ret);
@@ -954,6 +1083,16 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
+		const testChanName = isChanName(chanName);
+		if (typeof testChanName === 'string') {
+			client.emit('error_client', testChanName);
+			return ;
+		}
+		const testLogin = isLogin(loginToPassAdmin);
+		if (typeof testLogin === 'string') {
+			client.emit('error_client', testLogin);
+			return ;
+		}
 		const ret = await this.chatGateway.chanPassAdmin(auth.user, chanName, loginToPassAdmin);
 		if (typeof ret === 'string') {
 			client.emit('error_client', 'chan_pass_admin ' + ret);
@@ -976,6 +1115,16 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
+		const testChanName = isChanName(chanName);
+		if (typeof testChanName === 'string') {
+			client.emit('error_client', testChanName);
+			return ;
+		}
+		const testLogin = isLogin(loginToPassMember);
+		if (typeof testLogin === 'string') {
+			client.emit('error_client', testLogin);
+			return ;
+		}
 		const ret = await this.chatGateway.chanPassMember(auth.user, chanName, loginToPassMember);
 		if (typeof ret === 'string') {
 			client.emit('error_client', 'chan_pass_member ' + ret);

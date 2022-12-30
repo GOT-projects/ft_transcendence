@@ -39,6 +39,8 @@ export class FriendGateway {
 
 	async demandFriend(user: User, login: string): Promise<UserAndStatus | string> {
 		try {
+			if (user.login === login)
+				return "You can't demand yourself as friend";
 			const userToDemand = await this.userService.findLogin(login);
 			if (userToDemand === null)
 				return `User with login ${login} not found`;
