@@ -1,8 +1,6 @@
-import { BadRequestException, Body, Controller, Get, HttpException, HttpStatus, MaxFileSizeValidator, Param, ParseFilePipe, Patch, Post, Put, Req, Res, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
-import { FileInterceptor } from "@nestjs/platform-express";
+import { Controller, Get, HttpException, HttpStatus, MaxFileSizeValidator, Param, ParseFilePipe, Put, Req, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { Request, Response } from "express";
 import { AppService } from "./app.service";
-import { JWTGuard } from "./auth/guards/jwt.guard";
 import { diskStorage } from "multer";
 import { FileFastifyInterceptor, MulterFile } from "fastify-file-interceptor";
 
@@ -18,7 +16,6 @@ interface MultipartFile {
 }
 
 @Controller()
-//@UseGuards(JWTGuard)
 export class AppController {
 	constructor(
 		private readonly appService: AppService,
@@ -29,9 +26,7 @@ export class AppController {
 		FileFastifyInterceptor("file", {
 			storage: diskStorage({
 				destination: "./images",
-				//filename: editFileName,
 			}),
-			//fileFilter: imageFileFilter,
 		})
 	)
 	async changeProfileImage(@Req() req: Request, @UploadedFile(
@@ -49,7 +44,7 @@ export class AppController {
 	}
 
 	@Get('images/:file')
-	async getProfilImage(@Req() req: Request, @Param('file') file: string/*, @Res() res: Response*/) {
-		return await this.appService.getProfilImage(file/*, res*/);
+	async getProfilImage(@Req() req: Request, @Param('file') file: string) {
+		return await this.appService.getProfilImage(file);
 	}
 }

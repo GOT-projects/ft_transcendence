@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpException, HttpStatus, NotFoundException, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, HttpCode, HttpException, HttpStatus, NotFoundException, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request, Response } from 'express';
 import { User } from 'src/database/entities/user.entity';
@@ -6,6 +6,7 @@ import { UserService } from 'src/database/services/user.service';
 import { AuthService } from './auth.service';
 import { JWTGuard } from './guards/jwt.guard';
 import { jwtContent } from './types';
+import { isLogin } from 'src/utils/check';
 
 @Controller('auth')
 export class AuthController {
@@ -31,8 +32,9 @@ export class AuthController {
 	async invite(@Res() res: Response, @Body('login') login: string) {
 		if (process.env.ENV === 'PROD')
 			throw new NotFoundException();
-		if (!login)
-			throw new HttpException('empty login', HttpStatus.BAD_REQUEST);
+		const test = isLogin(login);
+		if (typeof test === 'string')
+			throw new BadRequestException(test);
 		try {
 			return await this.authService.invite(res, login);
 		} catch (error) {

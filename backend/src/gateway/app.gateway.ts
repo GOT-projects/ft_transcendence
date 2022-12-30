@@ -9,6 +9,7 @@ import { UserService } from "src/database/services/user.service";
 import { ChatGateway } from "./chat.gateway";
 import { FriendGateway } from "./friend.gateway";
 import { GeneralGateway } from "./general.gateway";
+import { isLogin } from "src/utils/check";
 
 //@UseGuards(JWTGuardSocket)
 @WebSocketGateway({
@@ -286,6 +287,11 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
+		const test = isLogin(login);
+		if (typeof test === 'string') {
+			client.emit('error_client', test);
+			return ;
+		}
 		const ret = await this.generalGateway.getProfilLogin(login);
 		if (typeof ret === 'string') {
 			client.emit('error_client', 'profil_login' + ret);
@@ -299,6 +305,11 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
+		const test = isLogin(login);
+		if (typeof test === 'string') {
+			client.emit('error_client', test);
+			return ;
+		}
 		const socks = this.users.get(auth.user.login);
 		const ret = await this.generalGateway.changeLogin(auth.user, login);
 		if (typeof ret === 'string') {
@@ -344,6 +355,11 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		const auth = await this.connectionSecure(client, jwt);
 		if (!auth)
 			return ;
+		const test = isLogin(login);
+		if (typeof test === 'string') {
+			client.emit('error_client', test);
+			return ;
+		}
 		const ret = await this.friendGateway.demandFriend(auth.user, login);
 		if (typeof ret === 'string') {
 			client.emit('error_client', 'demand_friend' + ret);
@@ -377,6 +393,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		if (!auth)
 			return ;
 		if (reply.user) {
+			// FIXME Mark 00
 			const ret = await this.friendGateway.replyNotif(auth.user, reply);
 			if (typeof ret === 'string') {
 				client.emit('error_client', 'reply_notification' + ret);
