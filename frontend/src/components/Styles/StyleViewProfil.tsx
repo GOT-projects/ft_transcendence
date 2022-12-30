@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import tennis from "../../assets/tennis.png"
 import pong from "../../assets/pinpong.png"
 import comet from "../../assets/comet.png"
+const defaultBall = "https://png.pngtree.com/element_our/20190601/ourlarge/pngtree-blue-red-glowing-round-ball-free-button-image_1370443.jpg"
 
 interface BgColor{
 	color:string;
@@ -251,6 +252,17 @@ export const StyledBallComet = styled.div<BgColor>`
 	border-radius: 50%;
 `
 
+export const StyledBallDefault = styled.div<BgColor>`
+	background-size: 50px;
+	width: 100%;
+	margin: 10px;
+	width: 30px;
+	height: 30px;
+	background: url(${defaultBall});
+	background-size: 100% 100%;
+	box-shadow: 0px 0px 3px 3px ${p => p.color};
+	border-radius: 50%;
+`
 export const StyledContaiteSettingGame = styled.div`
 	position: absolute;
 	display: flex;

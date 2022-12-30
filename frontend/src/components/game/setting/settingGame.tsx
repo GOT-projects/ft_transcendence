@@ -1,5 +1,5 @@
 import { Dispatch, FunctionComponent, useContext, useState } from "react";
-import { StyledBallComet, StyledBallPong, StyledBallTennis, StyledButtonP, StyledButtonSetting, StyledContaiteSettingGame, StyledSelectBall } from "../../Styles/StyleViewProfil";
+import { StyledBallComet, StyledBallDefault, StyledBallPong, StyledBallTennis, StyledButtonP, StyledButtonSetting, StyledContaiteSettingGame, StyledSelectBall } from "../../Styles/StyleViewProfil";
 import { SocketContextGame } from "../../../socket/socketPovider";
 import { ColorPicker, useColor } from "react-color-palette";
 import "react-color-palette/lib/css/styles.css";
@@ -25,6 +25,7 @@ const SettingGame:FunctionComponent<IProps> = (props:IProps) =>{
 	const [tennis, setTennis] = useState(false);
 	const [pong, setPong] = useState(false);
 	const [comet, setComet] = useState(false);
+	const [defaultBall, setDefaultBall] = useState(false);
 
 	const handleClose = ( ) => {
 		props.setPopupProfil(false);
@@ -37,6 +38,7 @@ const SettingGame:FunctionComponent<IProps> = (props:IProps) =>{
 			setTennis(true);
 			setPong(false);
 			setComet(false);
+			setDefaultBall(false);
 		}
 	}
 
@@ -47,18 +49,31 @@ const SettingGame:FunctionComponent<IProps> = (props:IProps) =>{
 			setPong(true);
 			setTennis(false);
 			setComet(false);
+			setDefaultBall(false);
 		}
 	}
 
 	const handleComet = () =>{
 		if (comet){
-			setComet(false);
-		}else{
+			setComet(false); 
+        }else{
 			setComet(true);
 			setTennis(false);
 			setPong(false);
+			setDefaultBall(false);
 		}
 	}
+	const handleDefault = () =>{
+		if (defaultBall){
+			setDefaultBall(false);
+        }else{
+			setComet(false);
+			setTennis(false);
+			setPong(false);
+			setDefaultBall(true); 
+		}
+	}
+
 
 	const handleSend = () =>{
 		if (tennis){
@@ -67,6 +82,8 @@ const SettingGame:FunctionComponent<IProps> = (props:IProps) =>{
 			emitGame.emit_custom(socketGame, {ball: EnumBall.PONG, color: color.hex})
 		}else if (comet){
 			emitGame.emit_custom(socketGame, {ball: EnumBall.COMET, color: color.hex})
+		}else if (defaultBall){
+			emitGame.emit_custom(socketGame, {ball: EnumBall.DEFAULT, color: color.hex})
 		}else{
 			emitGame.emit_custom(socketGame, {ball: EnumBall.DEFAULT, color: color.hex})
 		}
@@ -82,6 +99,7 @@ const SettingGame:FunctionComponent<IProps> = (props:IProps) =>{
 				<StyledBallTennis onClick={handleTennis} color={tennis ? color.hex : "transparente"} key={uuid()} className="pongSelect"></StyledBallTennis>
 				<StyledBallPong onClick={handlePong}color={pong ? color.hex : "none"} key={uuid()} className="SelectTennis"></StyledBallPong>
 				<StyledBallComet onClick={handleComet}color={comet ? color.hex : "none"} key={uuid()} className="SelectComet"></StyledBallComet>
+				<StyledBallDefault onClick={handleDefault}color={defaultBall ? color.hex : "none"} key={uuid()} className="SelectDefault"></StyledBallDefault>
 			</StyledSelectBall>
 			<StyledSelectBall>
 				<StyledButtonSetting>
