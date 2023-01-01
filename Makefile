@@ -11,6 +11,9 @@ dev: down
 	${cmd} up --build -d
 	${cmd} logs -f nestjs web
 
+log:
+	${cmd} logs -f nestjs web
+
 up:
 	sed -i -e 's/ENV=DEV/ENV=PROD/g' .env && rm -f .env-e
 	${cmd} up --build -d

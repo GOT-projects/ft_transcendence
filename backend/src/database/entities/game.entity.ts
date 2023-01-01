@@ -41,11 +41,11 @@ export class Game {
 
 
 
-	@ManyToOne(() => User, (user) => user.gamesPlayer1)
+	@ManyToOne(() => User, (user) => user.gamesPlayer1, { onDelete: 'CASCADE' })
 	@JoinColumn({ name: 'user1Id' })
 	user1!: User;
 
-	@ManyToOne(() => User, (user) => user.gamesPlayer2)
+	@ManyToOne(() => User, (user) => user.gamesPlayer2, { onDelete: 'CASCADE' })
 	@JoinColumn({ name: 'user2Id' })
 	user2!: User;
 

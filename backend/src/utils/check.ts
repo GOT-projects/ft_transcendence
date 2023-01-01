@@ -42,7 +42,7 @@ export function isChanName(ChanName: any) {
 export function isPassword(password: any) {
 	if (typeof password !== 'string' && password !== undefined)
 		return 'Channel malformed';
-	if (typeof password !== 'string') {
+	if (typeof password === 'string') {
 		if (password.length < 2)
 			return 'Too short password';
 	}
