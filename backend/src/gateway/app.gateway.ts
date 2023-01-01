@@ -616,14 +616,6 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			client.emit('error_client', 'users' + ret);
 			return ;
 		}
-		const tmpUser = await this.userService.findLogin(login);
-		if (tmpUser) {
-			privUser = await this.chatGateway.getPrivmsgUsers(tmpUser);
-			if (typeof privUser !== 'string') {
-				this.server.to(sock).emit('client_privmsg_users', privUser);
-				return ;
-			}
-		}
 		client.emit('client_users', ret);
 	}
 
