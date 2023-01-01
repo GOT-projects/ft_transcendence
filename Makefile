@@ -4,7 +4,7 @@ COLOR_PURPLE	:=	\033[35m
 cmd				:=	$(shell which docker-compose >/dev/null; RETVAL=$$?; if [ $$RETVAL -eq 0 ]; then echo 'docker-compose'; else echo 'docker compose'; fi)
 
 all: down up
-	${cmd} logs -f nestjs web
+#	${cmd} logs -f nestjs web
 
 dev: down
 	sed -i -e 's/ENV=PROD/ENV=DEV/g' .env && rm -f .env-e
@@ -22,7 +22,8 @@ exec:
 	docker exec -it $(wordlist 1,2,$(MAKECMDGOALS)) bash
 
 purge: down
-	docker system prune -a -f --volumes
+	docker builder prune --all
+	#docker system prune -a -f --volumes
 
 help:
 	@printf "make $(COLOR_PURPLE)all$(COLOR_NORM)\n"
