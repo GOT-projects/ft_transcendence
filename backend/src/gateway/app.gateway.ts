@@ -580,16 +580,29 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 			client.emit('error_client', 'privmsg_send' + ret);
 			return ;
 		}
+		let privUser = await this.chatGateway.getPrivmsgUsers(auth.user);
 		const user = this.users.get(ret.userTo.login);
 		const actu = await this.chatGateway.getPrivmsg(auth.user, login);
 		if (user) {
 			if (typeof actu !== 'string')
 				this.server.to(user).emit('client_privmsg', actu);
+			if (typeof privUser !== 'string')
+				this.server.to(user).emit('client_privmsg_users', privUser);
 			this.server.to(user).emit('info_client', `User with login ${auth.user.login} send you a private message`);
 		}
 		const actuUser = this.users.get(auth.user.login);
-		if (typeof actu !== 'string' && actuUser) {
-			this.server.to(actuUser).emit('client_privmsg', actu);
+		if (actuUser) {
+			try {
+				const tmpUser = await this.userService.findLogin(login);
+				if (tmpUser) {
+					privUser = await this.chatGateway.getPrivmsgUsers(tmpUser);
+					if (typeof privUser !== 'string')
+						this.server.to(actuUser).emit('client_privmsg_users', privUser);
+				}
+			} catch (error) {}
+			if (typeof actu !== 'string') {
+				this.server.to(actuUser).emit('client_privmsg', actu);
+			}
 		}
 	}
 
@@ -602,6 +615,14 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		if (typeof ret === 'string') {
 			client.emit('error_client', 'users' + ret);
 			return ;
+		}
+		const tmpUser = await this.userService.findLogin(login);
+		if (tmpUser) {
+			privUser = await this.chatGateway.getPrivmsgUsers(tmpUser);
+			if (typeof privUser !== 'string') {
+				this.server.to(sock).emit('client_privmsg_users', privUser);
+				return ;
+			}
 		}
 		client.emit('client_users', ret);
 	}
