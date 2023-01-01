@@ -32,7 +32,7 @@ const ChannelMsg:FunctionComponent<IProps> = (props:IProps)=> {
 	}, [socket, setSelectChanMsg, selectChanMsg]);
 
 	useEffect(() =>{
-		if (codeParam.get("code") === "Priv" && !codeParam.get("name")){
+		if (codeParam.get("code") === "Private" && !codeParam.get("name")){
 			setSelectChanMsg(undefined);
 		}
 	}, [codeParam])
@@ -49,7 +49,8 @@ const ChannelMsg:FunctionComponent<IProps> = (props:IProps)=> {
 
 
 	useEffect(() =>{
-        if (codeParam.get("code") === "Private" && codeParam.get("name") !== undefined ){
+        if (codeParam.get("code") !== undefined && codeParam.get("name") !== undefined && codeParam.get("setting") === undefined){
+            console.log("emit channel Msg")
 		    emitSocket.emitChannelMsg(socket, codeParam.get("name"))
         }
 	}, [socket, props.chanName])

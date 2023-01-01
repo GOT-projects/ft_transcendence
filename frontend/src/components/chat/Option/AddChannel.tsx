@@ -53,13 +53,10 @@ const PopupOptionAddChannel = () =>{
 			return;
 		setInputPwd(event.target.value);
 	}	
-/*
-	const handleReturn = () => {
-		navigate("/chat?code=add");
-	}
-*/
+
 	const handleReturnChan = () => {
-		navigate(`/chat?code=Channel&name=${codeParam.get("name")}&Setting=Menu`)
+        console.log("return to add")
+		navigate(`/chat?code=add`)
 	}
 	const handleSelect = (name: string) =>{
 		setSelecte(name);

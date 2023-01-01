@@ -57,6 +57,7 @@ const PriveMsg:FunctionComponent<IProps> = (props:IProps)=> {
 					setSelectUserMsg(tmp);
 				}
 			}else{
+                console.log("emit Private Msg")
 				emitSocket.emitPrivmsgUsers(socket);
 			}
 		})
