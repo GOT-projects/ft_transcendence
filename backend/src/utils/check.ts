@@ -55,6 +55,9 @@ export function isChannel(channel: any) {
 	const test = isPassword(channel?.password);
 	if (typeof test === 'string')
 		return test;
+	const testChanName = isChanName(channel?.name);
+	if (typeof testChanName === 'string')
+		return testChanName;
 	const values = Object.values(GOT.ChannelStatus);
 	if (!(values.includes(channel.status as unknown as GOT.ChannelStatus)))
 		return 'Channel enum status malformed';
