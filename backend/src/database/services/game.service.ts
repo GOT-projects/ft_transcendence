@@ -75,6 +75,12 @@ export class GameService {
 			}
 		}
 		let newMap: Map<number, GOT.StatUser> = new Map<number, GOT.StatUser>([...map].sort((a: any , b: any) => {
+			if (a[1].victory === a[1].defeat && b[1].victory === b[1].defeat && a[1].defeat === b[1].defeat && a[1].defeat === 0)
+				return 0;
+			if (a[1].victory === 0 && a[1].defeat === 0)
+				return 1;
+			if (b[1].victory === 0 && b[1].defeat === 0)
+				return -1;
 			return (b[1].victory - b[1].defeat) - (a[1].victory - a[1].defeat);
 		}));
 		let i: number = 1;
