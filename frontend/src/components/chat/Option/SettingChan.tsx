@@ -47,11 +47,6 @@ const PopupChannelSetting:FunctionComponent<IProps> = (props: IProps) =>{
 
 	return (
 		<StyledContaiteViewAddChan>
-			<motion.div
-			initial={{x: 300, y: 0}}
-			animate={{x:0, y:0}}
-			transition={{duration: 1}}
-			exit={{x: 100, y: 0}}>
 				<StyledContaiteClose onClick={handleClose}>
 						<FaWindowClose size={30} color={Colors.dark1}/>
 				</StyledContaiteClose>
@@ -72,7 +67,6 @@ const PopupChannelSetting:FunctionComponent<IProps> = (props: IProps) =>{
 					<StyledContaiteViewAddP>Leave</StyledContaiteViewAddP>
 					<StyledContaiteViewAddP>{">"}</StyledContaiteViewAddP>
 				</StyledContaiteViewAddOption>
-			</motion.div>
 		</StyledContaiteViewAddChan>
 	)
 }

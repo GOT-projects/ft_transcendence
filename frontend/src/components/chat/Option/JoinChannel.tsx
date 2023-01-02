@@ -24,11 +24,6 @@ const PopupOptionJoinChannel:FunctionComponent<IProps> = (props: IProps) =>{
 	}
 	return (
 		<StyledContaiteViewAddChan>
-			<motion.div
-			initial={{x: 200}}
-			animate={{x:0}}
-			transition={{duration: 1}}
-			>
 			<StyledContaiteClose className="joinChan" onClick={handleClose}>
 					<FaWindowClose size={30} color={Colors.dark1}/>
 					<StyledContaiteViewAddP className="addUserTitle">Channel options</StyledContaiteViewAddP>
@@ -46,7 +41,6 @@ const PopupOptionJoinChannel:FunctionComponent<IProps> = (props: IProps) =>{
 				<StyledContaiteReturnDiv className="joinChan" onClick={handleReturn}>
 					<p>return</p>
 				</StyledContaiteReturnDiv>
-			</motion.div>
 		</StyledContaiteViewAddChan>
 	)
 }

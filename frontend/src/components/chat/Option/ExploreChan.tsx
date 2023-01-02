@@ -97,11 +97,6 @@ const PopupOptionExloreChat:FunctionComponent<IProps> = () =>{
 
 	return (
 		<StyledContaiteViewAddChan>
-			<motion.div
-				initial={{x: 200}}
-				animate={{x:0}}
-				transition={{duration: 1}}
-			>
 				<StyledContaiteClose className="explore" onClick={handleClose}>
 						<FaWindowClose size={30} color={Colors.dark1}/>
 						<StyledContaiteViewAddP className="ExploreTitle">Explore channel</StyledContaiteViewAddP>
@@ -140,7 +135,6 @@ const PopupOptionExloreChat:FunctionComponent<IProps> = () =>{
 																						}}}
 																					value={inputPwd} autoFocus/>
 				</StylePwdProtected> : <></>}
-			</motion.div>
 		</StyledContaiteViewAddChan>
 	)
 }

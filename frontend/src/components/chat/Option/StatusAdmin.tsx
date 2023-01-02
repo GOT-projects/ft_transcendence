@@ -84,12 +84,7 @@ const PopupOptionStatusAdmin:FunctionComponent<IProps> = (props: IProps) =>{
 
 	return (
 		<StyledContaiteViewAddChan>
-			<motion.div
-				initial={{x: 200}}
-				animate={{x:0}}
-				transition={{duration: 1}}
-			>
-				<StyledContaiteClose onClick={handleClose} className="statusAdmin">
+			<StyledContaiteClose onClick={handleClose} className="statusAdmin">
 						<FaWindowClose size={30} color={Colors.dark1}/>
 						<StyledContaiteViewAddP className="addUserTitle">
 								Status admin
@@ -118,7 +113,6 @@ const PopupOptionStatusAdmin:FunctionComponent<IProps> = (props: IProps) =>{
 						<p>return</p>
 					</StyledContaiteReturnDiv>
 				</StyledContaiteReturn>
-			</motion.div>
 		</StyledContaiteViewAddChan>
 	)
 }

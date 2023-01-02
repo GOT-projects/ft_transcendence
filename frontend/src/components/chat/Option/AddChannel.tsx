@@ -136,11 +136,6 @@ const PopupOptionAddChannel = () =>{
 
 	return (
 		<StyledContaiteViewAddChan>
-			<motion.div
-			initial={{x: 200}}
-			animate={{x:0}}
-			transition={{duration: 1}}
-			>
 			<form>
 				<StyledContaiteAddChanDiv>
 					{typeChannel === "change" ? 
@@ -188,7 +183,6 @@ const PopupOptionAddChannel = () =>{
 
 			</form>
 			<Notification notify={notify} setNotify={setNotify}/>
-			</motion.div>
 		</StyledContaiteViewAddChan>
 	)
 }

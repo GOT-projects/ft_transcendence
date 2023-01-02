@@ -88,11 +88,6 @@ const PopupOptionBlock:FunctionComponent<IProps> = (props: IProps) =>{
 	}
 	return (
 		<StyledContaiteViewAddChan>
-			<motion.div
-				initial={{x: 200}}
-				animate={{x:0}}
-				transition={{duration: 1}}
-			>
 				<StyledContaiteClose onClick={handleClose} className="unBlock">
 						<FaWindowClose size={30} color={Colors.dark1}/>
 						<StyledContaiteViewAddP className="removeUser">
@@ -116,7 +111,6 @@ const PopupOptionBlock:FunctionComponent<IProps> = (props: IProps) =>{
 						<p>unBlock users</p>
 					</StyledContaiteReturnDiv>
 				</StyledContaiteReturn>
-			</motion.div>
 		</StyledContaiteViewAddChan>
 	)
 }
