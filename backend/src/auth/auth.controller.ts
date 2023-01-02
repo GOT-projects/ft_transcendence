@@ -136,7 +136,6 @@ export class AuthController {
 				throw new UnauthorizedException();
 		} catch (error) {
 			throw new UnauthorizedException();
-			return false;
 		}
 	}
 }

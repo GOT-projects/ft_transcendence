@@ -46,7 +46,7 @@ const Waiting = () => {
 		}else{
 			navigate('/');
 		}
-	}, [code, navigate, twoFAPop])
+	}, [code, navigate, setTwoFAPop])
 
 	return (
 		<React.Fragment>

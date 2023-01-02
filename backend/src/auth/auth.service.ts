@@ -9,6 +9,7 @@ import { GOT } from 'shared/types';
 import { authenticator } from 'otplib';
 import { toDataURL } from 'qrcode';
 import { jwtContent } from './types';
+import { MyTransform } from 'src/utils/transform';
 
 @Injectable()
 export class AuthService {
@@ -94,7 +95,7 @@ export class AuthService {
 			});
 			const ret: GOT.Login = {
 				access_token: jwt,
-				user:  user
+				user:  MyTransform.userEntityToGot(user)
 			};
 			res.header('Authorization', `Bearer ${ jwt }`);
 			res.send(ret);
