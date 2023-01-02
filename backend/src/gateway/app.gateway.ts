@@ -288,6 +288,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		}
 		if (socks)
 			this.users.set(login, socks);
+		this.sendProfilOfUser(auth.user);
 		this.users.delete(auth.user.login);
 		if (socks) {
 			try {
@@ -300,7 +301,6 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 				})));
 			} catch (error) {}
 		}
-		this.getProfil(client, jwt);
 	}
 
 	@SubscribeMessage('server_leaderboard')
