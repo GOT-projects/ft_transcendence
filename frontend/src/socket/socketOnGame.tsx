@@ -1,14 +1,19 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Socket } from "socket.io-client";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { accountService } from "../services/account.service";
 import { GOT } from "../shared/types";
 
 let error_client = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setNotify:any) => {
+    const navigate = useNavigate();
 	socket.on('error_client', (rep:any) => {
 		console.log('error_client', rep);
 		if (typeof rep === "string")
 			setNotify({isOpen: true, message: `Error: ${rep}`, type:'error'});
+			let regex:RegExp = /^\/game(.*[a-z]= )/
+            if (regex.test("/game"))
+                navigate("/game")
 	})
 }
 
