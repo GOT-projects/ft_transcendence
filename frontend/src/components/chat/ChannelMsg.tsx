@@ -25,7 +25,7 @@ const ChannelMsg:FunctionComponent<IProps> = (props:IProps)=> {
 	const socket = useContext(SocketContext)
 	const codeParam: Map<string, string> = accountService.getParamsPriv();
 
-	const [selectChanMsg, setSelectChanMsg] = useState<GOT.MsgChannel[]>();
+	const [selectChanMsg, setSelectChanMsg] = useState<GOT.MsgChannel[]>([]);
 	useEffect(() => {
 		//  scroll to bottom every time messages change
 		bottomChat.current?.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'start' });
@@ -33,7 +33,7 @@ const ChannelMsg:FunctionComponent<IProps> = (props:IProps)=> {
 
 	useEffect(() =>{
 		if (codeParam.get("code") === "Private" && !codeParam.get("name")){
-			setSelectChanMsg(undefined);
+			setSelectChanMsg([]);
 		}
 	}, [codeParam])
 	

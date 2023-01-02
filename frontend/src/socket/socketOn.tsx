@@ -50,14 +50,14 @@ let client_channels = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, 
 	})
 }
 
-let client_channelMsg = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setMsgChannel:React.Dispatch<React.SetStateAction<GOT.MsgChannel[] | undefined>>, chanName:string) => {
+let client_channelMsg = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setMsgChannel:React.Dispatch<React.SetStateAction<GOT.MsgChannel[]>>, chanName:string) => {
 	socket.on('client_chanmsg', (rep:GOT.MsgChannel[]) => {
 		if (rep &&  rep.length !== 0 && rep[0].channel.name === chanName){
 			for (const msg of rep) {
 				msg.userFrom.urlImg = transformUrlUsers(msg.userFrom.urlImg);
 			}
+			setMsgChannel(rep);
 		}
-		setMsgChannel(rep);
 	})
 }
 
@@ -120,9 +120,9 @@ let client_users = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, set
 	})
 }
 
-let client_privmsg = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setSelectUserMsg:React.Dispatch<React.SetStateAction<GOT.msg[] | undefined>>, user:GOT.User | undefined) => {
+let client_privmsg = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setSelectUserMsg:React.Dispatch<React.SetStateAction<GOT.msg[] | undefined>>, user:GOT.User | undefined, me:GOT.User | undefined) => {
 	socket.on('client_privmsg', (rep:GOT.msg[]) => {
-		if (rep && (rep[0].userFrom.login === user?.login)){
+		if (rep && rep.length !== 0 && ((rep[0].userTo.login === me?.login && rep[0].userFrom.login === user?.login) || (rep[0].userTo.login === user?.login && rep[0].userFrom.login === me?.login))){
 			for (const msg of rep) {
 				msg.userFrom.urlImg = transformUrlUsers(msg.userFrom.urlImg);
 				msg.userTo.urlImg = transformUrlUsers(msg.userTo.urlImg);

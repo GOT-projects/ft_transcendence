@@ -560,7 +560,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 				if (tmpUser) {
 					const privUser = await this.chatGateway.getPrivmsgUsers(tmpUser);
 					if (typeof privUser !== 'string')
-					this.server.to(user).emit('client_privmsg_users', privUser);
+						this.server.to(user).emit('client_privmsg_users', privUser);
 				}
 			} catch (error) {}
 			this.server.to(user).emit('info_client', `User with login ${auth.user.login} send you a private message`);
