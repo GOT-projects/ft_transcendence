@@ -42,6 +42,44 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 		}
 	}
 
+	public async sendProfileToAllFriends(login:string) {
+		try {
+			const user = await this.userService.findLogin(login);
+			if (user) {
+				const friends = await this.friendGateway.getFriends(user);
+				if (typeof friends !== 'string') {
+					for (const friend of friends) {
+						const sock = this.users.get(friend.login);
+						if (sock !== undefined) {
+							const friendUser: User = {
+								id: friend.id,
+								login: friend.login,
+								urlImg: friend.urlImg,
+								wallet: friend.wallet,
+								email: friend.email,
+								ball: friend.ball,
+								color: friend.color,
+								isTwoFactorAuthenticationEnabled: friend.isTwoFactorAuthenticationEnabled,
+								userIdIsBlock: [],
+								users1Friend: [],
+								users2Friend: [],
+								userWhoBlock: [],
+								messageFrom: [],
+								messageTo: [],
+								channelsRel: [],
+								gamesPlayer1: [],
+								gamesPlayer2: []
+							};
+							const tmpProfil = await this.getProfilWithFriends(friendUser);
+							if (typeof tmpProfil !== 'string')
+								this.server.to(sock).emit('client_profil', tmpProfil)
+						}
+					}
+				}
+			}
+		} catch (error) {}
+	}
+
 	private async connectUserBody(client: Socket, jwt: string): Promise<JwtContent | false> {
 		try {
 			if (!jwt) {
@@ -55,41 +93,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 						ids.splice(i, 1);
 					if (ids.length === 0) {
 						this.users.delete(login);
-						try {
-							const user = await this.userService.findLogin(login);
-							if (user) {
-								const friends = await this.friendGateway.getFriends(user);
-								if (typeof friends !== 'string') {
-									for (const friend of friends) {
-										const sock = this.users.get(friend.login);
-										if (sock !== undefined) {
-											const friendUser: User = {
-												id: friend.id,
-												login: friend.login,
-												urlImg: friend.urlImg,
-												wallet: friend.wallet,
-												email: friend.email,
-												ball: friend.ball,
-												color: friend.color,
-												isTwoFactorAuthenticationEnabled: friend.isTwoFactorAuthenticationEnabled,
-												userIdIsBlock: [],
-												users1Friend: [],
-												users2Friend: [],
-												userWhoBlock: [],
-												messageFrom: [],
-												messageTo: [],
-												channelsRel: [],
-												gamesPlayer1: [],
-												gamesPlayer2: []
-											};
-											const tmpProfil = await this.getProfilWithFriends(friendUser);
-											if (typeof tmpProfil !== 'string')
-												this.server.to(sock).emit('client_profil', tmpProfil)
-										}
-									}
-								}
-							}
-						} catch (error) {}
+						await this.sendProfileToAllFriends(login);
 					}
 				}
 				return false;
@@ -148,41 +152,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 					ids.splice(i, 1);
 				if (ids.length === 0) {
 					this.users.delete(login);
-					try {
-						const user = await this.userService.findLogin(login);
-						if (user) {
-							const friends = await this.friendGateway.getFriends(user);
-							if (typeof friends !== 'string') {
-								for (const friend of friends) {
-									const sock = this.users.get(friend.login);
-									if (sock !== undefined) {
-										const friendUser: User = {
-											id: friend.id,
-											login: friend.login,
-											urlImg: friend.urlImg,
-											wallet: friend.wallet,
-											email: friend.email,
-											ball: friend.ball,
-											color: friend.color,
-											isTwoFactorAuthenticationEnabled: friend.isTwoFactorAuthenticationEnabled,
-											userIdIsBlock: [],
-											users1Friend: [],
-											users2Friend: [],
-											userWhoBlock: [],
-											messageFrom: [],
-											messageTo: [],
-											channelsRel: [],
-											gamesPlayer1: [],
-											gamesPlayer2: []
-										};
-										const tmpProfil = await this.getProfilWithFriends(friendUser);
-										if (typeof tmpProfil !== 'string')
-											this.server.to(sock).emit('client_profil', tmpProfil)
-									}
-								}
-							}
-						}
-					} catch (error) {}
+					await this.sendProfileToAllFriends(login);
 				}
 			}
 			client.emit('error_client', error.message);

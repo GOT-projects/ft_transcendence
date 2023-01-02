@@ -149,7 +149,9 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 					else
 						game.game.points2 = -1;
 					game.game.status = gameStatus.FINISH;
-					this.gameService.update(game.game.id, game.game);
+					await this.gameService.update(game.game.id, game.game);
+					this.appGateway.sendProfileToAllFriends(game.game.user1.login);
+					this.appGateway.sendProfileToAllFriends(game.game.user2.login);
 					const users = [...(game.spectators), (client.id === game.socketUser1 ? game.socketUser2 : game.socketUser1)];
 					this.server.to(users).emit('info_client', `User ${client.id === game.socketUser1 ? game.game.user2.login : game.game.user1.login} win the game`);
 				}
@@ -441,6 +443,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 						points1: 0,
 						points2: 0
 					});
+					this.appGateway.sendProfileToAllFriends(completeGame[0].user1.login);
+					this.appGateway.sendProfileToAllFriends(completeGame[0].user2.login);
 					this.algoGame(client, completeGame[0].id);
 				} else {
 					client.emit('error_client', 'Game not created');
@@ -625,6 +629,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 						points1: 0,
 						points2: 0
 					});
+					this.appGateway.sendProfileToAllFriends(demands[0].user1.login);
+					this.appGateway.sendProfileToAllFriends(demands[0].user2.login);
 					this.algoGame(client, demands[0].id);
 				} else
 					client.emit('error_client', `Any demand found`)
