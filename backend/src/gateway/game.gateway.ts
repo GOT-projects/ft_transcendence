@@ -739,6 +739,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		if (!auth)
 			return ;
 		try {
+			console.log('test');
+			
 			if (custom?.ball && custom?.color) {
 				const values = Object.values(GOT.EnumBall);
 				if (!(values.includes(custom.ball as unknown as GOT.EnumBall))) {
@@ -760,7 +762,9 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 					ball: custom.ball,
 					color: custom.color
 				});
-				this.appGateway.sendProfilOfUser(auth.user);
+				const user = await this.userService.findOne(auth.user.id);
+				if (user)
+					this.appGateway.sendProfilOfUser(user);
 			} else
 				client.emit('error_client', 'Custom informations ball or color is not send');
 		} catch (error) {
