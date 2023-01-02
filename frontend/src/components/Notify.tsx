@@ -14,6 +14,9 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
 	const socket = useContext(SocketContext);
 
    const handleClose = () =>{
+		setNotify({...notify, isOpen: false})
+   }
+   const handleClick = () =>{
 		let regex:RegExp = /^User with login (.*[^ ]) send you a private message/
 		if (regex.test(notify.message)){
 			const tab = notify.message.split(" ");
@@ -25,7 +28,7 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
 			navigate(`/chat?code=Channel&name=${tab[2]}`);
 		}
 		setNotify({...notify, isOpen: false})
-   }
+	}
    const handleViewPopup = () =>{
 		const params = (new URL(window.location.href));
 		const code = params.searchParams.get("code");
@@ -81,7 +84,7 @@ export const Notification:React.FC<NotifyInterUse>= (props: NotifyInterUse) => {
 		key={uuid()}
 		 >
 		 {handleViewPopup() ?
-		 <Alert severity={notify.type} onClose={handleClose} onClick={handleClose}
+		 <Alert severity={notify.type} onClose={handleClose} onClick={handleClick}
 				style={{transform: 'translateX(0)', borderRadius: '16px', transition: '0.6s'}}>
 			{notify.message}
 		 </Alert> : <Alert style={{opacity:"0",}}></Alert>}

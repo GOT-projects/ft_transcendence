@@ -37,11 +37,13 @@ const PriveMsg:FunctionComponent<IProps> = (props:IProps)=> {
 
 	useEffect(() => {
 		//receive list message
-		onSocket.client_privmsg(socket, setSelectUserMsg);
+		console.log('props',props.userSelect);
+		
+		onSocket.client_privmsg(socket, setSelectUserMsg, props.userSelect, props.profil?.userInfos);
 		return () => {
 			offSocket.client_privmsg(socket);
 		}
-	},[socket, setSelectUserMsg, selectUserMsg])
+	},[socket, setSelectUserMsg, selectUserMsg, props.userSelect, props.profil?.userInfos])
 
 	useEffect(() => {
 		//receive send
