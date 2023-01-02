@@ -1,13 +1,3 @@
-#FROM postgres:latest
-#COPY docker/init.sql /docker-entrypoint-initdb.d/
-#RUN sed s/'$POSTGRES_USER'/"$POSTGRES_USER"/g /docker-entrypoint-initdb.d/init.sql > /docker-entrypoint-initdb.d/tmp.sql \
-#    && mv /docker-entrypoint-initdb.d/tmp.sql /docker-entrypoint-initdb.d/init.sql \
-#    && sed s/'$POSTGRES_PASSWORD'/"$POSTGRES_PASSWORD"/g /docker-entrypoint-initdb.d/init.sql > /docker-entrypoint-initdb.d/tmp.sql \
-#    && mv /docker-entrypoint-initdb.d/tmp.sql /docker-entrypoint-initdb.d/init.sql \
-#    && sed s/'$POSTGRES_DB'/"$POSTGRES_DB"/g /docker-entrypoint-initdb.d/init.sql > /docker-entrypoint-initdb.d/tmp.sql \
-#    && mv /docker-entrypoint-initdb.d/tmp.sql /docker-entrypoint-initdb.d/init.sql
-#
-#CMD cat /docker-entrypoint-initdb.d/init.sql
 
 # dump build stage
 FROM postgres:latest as dumperPostgres
