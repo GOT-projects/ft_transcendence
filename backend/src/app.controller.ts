@@ -1,5 +1,5 @@
 import { Controller, Get, HttpException, HttpStatus, MaxFileSizeValidator, Param, ParseFilePipe, Put, Req, UploadedFile, UseInterceptors } from "@nestjs/common";
-import { Request, Response } from "express";
+import { Request } from "express";
 import { AppService } from "./app.service";
 import { diskStorage } from "multer";
 import { FileFastifyInterceptor, MulterFile } from "fastify-file-interceptor";
@@ -36,7 +36,6 @@ export class AppController {
 		  ],
 		}),
 	) file: MulterFile) {
-		console.log('file', file)
 		if (!req?.headers?.authorization || !file)
 			throw new HttpException('No authorization header or no file', HttpStatus.BAD_REQUEST);
 		const jwt = req.headers.authorization.split(' ')[1];
