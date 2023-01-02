@@ -1,4 +1,4 @@
-import {Dispatch, FunctionComponent, useRef, useState} from 'react';
+import {Dispatch, FunctionComponent, useEffect, useRef, useState} from 'react';
 import {StyleMenuHeaderAvatarContainte, StyleMenuHeaderLoggout} from "./Styles/StyledHeader"
 import {StyledMenuProfile, StyleMenuHeaderProfilData, StyleMenuHeaderProfilOption} from "./Styles/StyleMenuProfilHeader"
 import { accountService } from "../services/account.service";
@@ -23,7 +23,11 @@ interface IProps {
 const ProfileMenu :FunctionComponent<IProps> = (props:IProps) => {
 	const [changeUsername, setChangeUsername] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
+    const [disable, setDisable] = useState<Boolean>()
 
+    useEffect(() => {
+        setDisable(props.profil?.userInfos.isTwoFactorAuthenticationEnabled);
+    },[setDisable])
 
 	const handleChangeUsername = () => {
 		if (changeUsername === true)
@@ -45,17 +49,21 @@ const ProfileMenu :FunctionComponent<IProps> = (props:IProps) => {
 		event.target.value = null;
 		apiPost.PostUpload(fileObj);
 		props.setProfileMenu(false);
-  };
-
-  const handleOtc= () =>{
-	props.setProfileMenu(false);
-	props.setOtc(true);
-  }
-  const handleSettingGame= () =>{
-	props.setProfileMenu(false);
-	props.setOtc(false);
-	props.setPopupSetting(true);
-  }
+    };
+    
+    const handleOtc= () =>{
+      props.setProfileMenu(false);
+      props.setOtc(true);
+    }
+    const handleDisable = () =>{
+      props.setProfileMenu(false);
+      apiPost.PostDisableOtc();
+    }
+    const handleSettingGame= () =>{
+      props.setProfileMenu(false);
+      props.setOtc(false);
+      props.setPopupSetting(true);
+    }
 
 	return (
 		<StyledMenuProfile
@@ -76,7 +84,9 @@ const ProfileMenu :FunctionComponent<IProps> = (props:IProps) => {
 				<BiUpload size={25} color={Colors.darkText}/>
 			</StyleMenuHeaderAvatarContainte>
 			<StyleMenuHeaderProfilOption onClick={handleSettingGame}><GoSettings color={Colors.Bg2fa} size={20}/> Game</StyleMenuHeaderProfilOption>
-			<StyleMenuHeaderProfilOption onClick={handleOtc}>Setup 2FA</StyleMenuHeaderProfilOption>
+            {disable === false ?
+			<StyleMenuHeaderProfilOption onClick={handleOtc}>Setup 2FA</StyleMenuHeaderProfilOption>:
+			<StyleMenuHeaderProfilOption onClick={handleDisable}>Disable 2FA</StyleMenuHeaderProfilOption>}
 			<StyleMenuHeaderProfilData>
 				victory {props.profil?.stat.victory} rank {props.profil?.stat.rank}
 			</StyleMenuHeaderProfilData>
