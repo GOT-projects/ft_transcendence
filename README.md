@@ -15,13 +15,8 @@ FIXME
 
 ---
 TODO
-- Front
-	- input channel
-	- redirection game quand erreur
-	- game: affischage des score (responsive)
-	- responsive
-- Back
-	- secure
+ - File d'attente / invite
+ - ban (owner admin member)
 
 ___
 
