@@ -71,6 +71,7 @@ const PopupOptionLeave:FunctionComponent<IProps> = (props: IProps) =>{
 	const handleSend = () => {
 		selectUser.map((user) => {
 			emitSocket.emitLeaveChan(socket, props.chanName, user.login);
+			return true;
 		})
 		props.setInvite(false);
 		handleClose();

@@ -1,6 +1,6 @@
 import { StyledChatPrive, StyledChatSep,
 	StyledChatSwith, StyledContact, StyledContaite,
-	StyledChatSwithTile, StyledSettingChan, StyledSettingChanP } from '../components/Styles/StyleChat';
+	StyledChatSwithTile, StyledSettingChan } from '../components/Styles/StyleChat';
 import React, {Dispatch, FunctionComponent, useContext, useEffect, useState } from 'react';
 import BackgroundAnimate from '../components/BackGroundAnimate';
 import Footer from '../components/Footer';

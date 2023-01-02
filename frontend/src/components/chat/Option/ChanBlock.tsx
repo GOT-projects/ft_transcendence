@@ -71,6 +71,7 @@ const PopupOptionBlock:FunctionComponent<IProps> = (props: IProps) =>{
 	const handleSend = () => {
 		selectUser.map((user) => {
 			emitSocket.emitChanUnBlock(socket, props.chanName, user.login);
+			return true;
 		})
 		props.setInvite(false);
 		handleClose();

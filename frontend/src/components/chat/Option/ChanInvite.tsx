@@ -60,6 +60,7 @@ const PopupOptionInvite:FunctionComponent<IProps> = (props: IProps) =>{
 	const handleSend = () => {
 		selectUser.map((user) => {
 			emitSocket.emitInviteSomebody(socket, props.chanName, user.login);
+			return true;
 		})
 		props.setInvite(false);
 	}

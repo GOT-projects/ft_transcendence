@@ -12,7 +12,7 @@ interface IProps {
 const PopupChangeUsername:FunctionComponent<IProps> = (props:IProps) => {
 	const socket = useContext(SocketContext);
 	const [input, setInput] = useState("");
-	const [inputdata, setInputdata] = useState("");
+	//const [inputdata, setInputdata] = useState("");
 
 	useEffect(() => {
 		socket.off('client_change_username').on('client_change_username', (rep: any) => {
@@ -26,7 +26,7 @@ const PopupChangeUsername:FunctionComponent<IProps> = (props:IProps) => {
 		emitSocket.emitChangeUsername(socket, input);
 		props.setChangeUsername(false);
 		props.setNotify({isOpen: true, message: 'Change Username to ' + input , type:'success'});
-		setInputdata(input);
+		//setInputdata(input);
 	}
 	const handleCancel = () => {
 		props.setChangeUsername(false);
