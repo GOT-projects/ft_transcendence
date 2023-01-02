@@ -40,13 +40,13 @@ const PopupOptionAddChannel = () =>{
 		}
 	},[navigate, codeParam]);
 
-	const handleChangeChan = (event: any,) => {
+	const handleChangeChan = (event: any) => {
 		if (inputChan === "" && event.target.value ==="\n")
 			return;
 		setInputChan(event.target.value);
 	}	
 
-	const handleChangePwd = (event: any,) => {
+	const handleChangePwd = (event: any) => {
 		if (inputPwd === "" && event.target.value ==="\n")
 			return;
 		if (selecte === "public" || selecte === "private"  || selecte === "")
@@ -64,25 +64,27 @@ const PopupOptionAddChannel = () =>{
 
 	const handleSend = () =>{
 		let chan:GOT.Channel | undefined = undefined;
+        const sendChan = inputChan.replace(/ /g, '');
+        const sendPwd = inputPwd.replace(/ /g, '');
 		if (selecte === "public"){
 			if (inputChan === ""){
 				setNotify({isOpen: true, message: "Please choose name to your channel", type: "error"})
 			}else{
-				chan = {name:inputChan, status: ChannelStatus.PUBLIC, password:undefined}; 
+				chan = {name:sendChan, status: ChannelStatus.PUBLIC, password:undefined}; 
 			}
 		}else if (selecte === "protected"){
-			if (inputChan === ""){
+			if (sendChan === ""){
 				setNotify({isOpen: true, message: "Please choose name to your channel", type: "error"})
-			}else if (inputPwd === ""){
+			}else if (sendPwd === ""){
 				setNotify({isOpen: true, message: "Please choose password to your channel", type: "error"})
 			}else{
-				chan = {name:inputChan, status: ChannelStatus.PROTECTED, password:inputPwd}; 
+				chan = {name:sendChan, status: ChannelStatus.PROTECTED, password:sendPwd}; 
 			}
 		}else if (selecte === "private"){
-			if (inputChan === ""){
+			if (sendChan === ""){
 				setNotify({isOpen: true, message: "Please choose name to your channel", type: "error"})
 			}else{
-				chan = {name:inputChan, status: ChannelStatus.PRIVATE, password:undefined}; 
+				chan = {name:sendChan, status: ChannelStatus.PRIVATE, password:undefined}; 
 			}
 		}else{
 			setNotify({isOpen: true, message: "Please select type of Channel", type: "error"})

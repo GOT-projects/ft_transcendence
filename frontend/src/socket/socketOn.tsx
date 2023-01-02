@@ -120,9 +120,9 @@ let client_users = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, set
 	})
 }
 
-let client_privmsg = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setSelectUserMsg:React.Dispatch<React.SetStateAction<GOT.msg[] | undefined>>) => {
+let client_privmsg = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setSelectUserMsg:React.Dispatch<React.SetStateAction<GOT.msg[] | undefined>>, user:GOT.User | undefined) => {
 	socket.on('client_privmsg', (rep:GOT.msg[]) => {
-		if (rep){
+		if (rep && (rep[0].userFrom.login === user?.login)){
 			for (const msg of rep) {
 				msg.userFrom.urlImg = transformUrlUsers(msg.userFrom.urlImg);
 				msg.userTo.urlImg = transformUrlUsers(msg.userTo.urlImg);
