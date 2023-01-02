@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { DeleteResult, Repository, UpdateResult } from "typeorm";
+import { DeleteResult, IsNull, Repository, UpdateResult } from "typeorm";
 import { User } from "../entities/user.entity";
 import { PartialType } from "@nestjs/swagger";
 import { GOT } from "shared/types";
@@ -157,5 +157,12 @@ export class UserService {
 				return null;
 		user.isTwoFactorAuthenticationEnabled = true;
 		await this.userRepository.update(id, user);
+	}
+	async turnOffTwoFactorAuthentication(id: number) {
+		const user = await this.userRepository.findOneBy({ id, });
+		if (!user)
+				return null;
+		user.isTwoFactorAuthenticationEnabled = false;
+		await this.userRepository.update(id, {isTwoFactorAuthenticationEnabled: false, twoFactorAuthenticationSecret: undefined });
 	}
 }

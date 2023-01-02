@@ -28,7 +28,6 @@ const Waiting = () => {
 				const response = apiPost.PostConnectIntra(code);
 				response.then((response:any) => {
 					if(response.status === 201){
-						console.log(response.data.user.isTwoFactorAuthenticationEnabled);
 						accountService.saveToken(response.data.access_token);
 						if (response.data.user.isTwoFactorAuthenticationEnabled){
 							setTwoFAPop(true);

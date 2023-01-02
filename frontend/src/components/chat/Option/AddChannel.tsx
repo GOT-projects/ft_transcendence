@@ -55,7 +55,6 @@ const PopupOptionAddChannel = () =>{
 	}	
 
 	const handleReturnChan = () => {
-        console.log("return to add")
 		navigate(`/chat?code=add`)
 	}
 	const handleSelect = (name: string) =>{

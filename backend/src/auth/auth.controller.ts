@@ -92,6 +92,25 @@ export class AuthController {
 		}
 	}
 
+	@Post('2fa/off')
+	@UseGuards(JWTGuard)
+	async turnOffTwoFactorAuthentication(@Req() req: Request) {
+		try {
+			if (!req?.headers?.authorization)
+				throw new HttpException('No authorization header', HttpStatus.BAD_REQUEST);
+			const jwt = req.headers.authorization.split(' ')[1];
+			const data: jwtContent = await this.jwtService.verifyAsync(jwt);
+			const tmpUser: User | null = await this.userService.findUnique(data.userId, data.userLogin);
+			if (!tmpUser)
+				throw new HttpException('No authorization header', HttpStatus.BAD_REQUEST);
+			if (tmpUser.isTwoFactorAuthenticationEnabled)
+				await this.userService.turnOffTwoFactorAuthentication(tmpUser.id);
+			
+		} catch (error) {
+			throw new HttpException(error.message, error.status);
+		}
+	}
+
 	@Post('2fa/authenticate')
 	@HttpCode(200)
 	@UseGuards(JWTGuard)

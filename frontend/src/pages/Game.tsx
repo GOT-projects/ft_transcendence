@@ -117,7 +117,6 @@ const Game:FunctionComponent<IProps> = (props:IProps)=> {
 				emitGame.emit_where_am_I(socketGame, "waiting_invite");
 				emitGame.emitJoinResp(socketGame, id, true);
 			}else if (invite === "refused"){
-				console.log("emit refused", oldurl)
 				setWating(true);
 				setStartGame(false);
 				setGame(false);
