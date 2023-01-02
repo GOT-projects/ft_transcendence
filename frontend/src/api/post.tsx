@@ -18,7 +18,11 @@ const Post2FAGenerate = async () => {
 }
 
 const Post2FAActivate = async (code:string | undefined) => {
-	return await (Axios.post('/auth/2fa/activate', {twoFactorAuthenticationCode:code}));
+	return (Axios.post('/auth/2fa/activate', {twoFactorAuthenticationCode:code}));
+}
+
+const PostDisableOtc = async () => {
+	return await (Axios.post('/auth/2fa/off'));
 }
 
 const Post2FAAuth = async (code:string | undefined) => {
@@ -26,5 +30,5 @@ const Post2FAAuth = async (code:string | undefined) => {
 }
 
 export const apiPost = {
-	PostConnectIntra, PostUpload, Post2FAGenerate, Post2FAActivate, Post2FAAuth
+	PostConnectIntra, PostUpload, Post2FAGenerate, Post2FAActivate, Post2FAAuth, PostDisableOtc
 }

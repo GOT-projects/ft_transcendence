@@ -49,11 +49,7 @@ const PopupAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
 			{
 			add === ""
 				?
-					<motion.div
-					initial={{x: 300, y: 0}}
-					animate={{x:0, y:0}}
-					transition={{duration: 1}}
-					exit={{x: 100, y: 0}}>
+                <>
 					<StyledContaiteClose onClick={handleClose}>
 							<FaWindowClose size={30} color={Colors.dark1}/>
 					</StyledContaiteClose>
@@ -70,7 +66,7 @@ const PopupAddChannel:FunctionComponent<IProps> = (props: IProps) =>{
 						<StyledContaiteViewAddP>Join channel</StyledContaiteViewAddP>
 						<StyledContaiteViewAddP>{">"}</StyledContaiteViewAddP>
 					</StyledContaiteViewAddOption>
-					</motion.div>
+                </>
 				: <></>
 			}
 		</StyledContaiteViewAddChan>

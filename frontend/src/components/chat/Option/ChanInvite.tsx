@@ -75,11 +75,6 @@ const PopupOptionInvite:FunctionComponent<IProps> = (props: IProps) =>{
 
 	return (
 		<StyledContaiteViewAddChan>
-			<motion.div
-				initial={{x: 200}}
-				animate={{x:0}}
-				transition={{duration: 1}}
-			>
 				<StyledContaiteClose onClick={handleClose} className="invite">
 						<FaWindowClose size={30} color={Colors.dark1}/>
 						<StyledContaiteViewAddP className="addUserTitle">
@@ -103,7 +98,6 @@ const PopupOptionInvite:FunctionComponent<IProps> = (props: IProps) =>{
 						<p>Send invitation</p>
 					</StyledContaiteReturnDiv>
 				</StyledContaiteReturn>
-			</motion.div>
 		</StyledContaiteViewAddChan>
 	)
 }

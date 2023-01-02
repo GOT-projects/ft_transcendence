@@ -1,15 +1,19 @@
 import React, { Dispatch, FunctionComponent, useEffect, useState } from "react";
 import { StyledContaite, StyledContaiteDescription, StyledContaiteDescriptionH1, StyledContaiteDescriptionH3, StyledContaiteDescriptionP, StyledContaiteQrcode } from "../Styles/StyleOtc";
 import {apiPost} from "../../api/post"
+import { NotifyInter } from "../interfaces";
+import {Notification} from "../../components/Notify"
 
 interface IProps {
-	setOtc: Dispatch<React.SetStateAction<boolean>>;
+   setOtc: Dispatch<React.SetStateAction<boolean>>;
 }
+
 const SetupOtc:FunctionComponent<IProps> = (props: IProps) => {
 	//todo request post get qrcode
+	const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
 	const [gcode, setGcode] = useState<string>();
 	const [code, setCode] = useState<string>();
-	const [inputOtc, setInputOtc] = useState<string>();
+	const [inputOtc, setInputOtc] = useState<string>("");
 	useEffect(() => {
 		try{
 			const rep = apiPost.Post2FAGenerate();
@@ -36,8 +40,11 @@ const SetupOtc:FunctionComponent<IProps> = (props: IProps) => {
 			const rep = apiPost.Post2FAActivate(inputOtc);
 			if (rep){
 				rep.then((response:any) =>{
-					console.log(response);
-				})
+			        setNotify({isOpen: true, message: `Info: ${response.data.message}`, type:'info'});
+                    props.setOtc(false);
+				}).catch((e)=> {
+			        setNotify({isOpen: true, message: `Error: ${e.response.data.message}`, type:'error'});
+                })
 			}
 			setInputOtc('');
 		}catch(e){
@@ -67,6 +74,7 @@ const SetupOtc:FunctionComponent<IProps> = (props: IProps) => {
 																					if (e.key === 'Enter' && !e.shiftKey){
 																						sendOtc();
 																					}}}/>
+		<Notification notify={notify} setNotify={setNotify}/>
 		</StyledContaite>
 	)
 

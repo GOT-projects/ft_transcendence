@@ -199,7 +199,6 @@ const Header:FunctionComponent<IProps> = (props:IProps)=> {
 			</StyleNav>
 				{otc ? <SetupOtc setOtc={setOtc}/> : <></>}
 				{popUpSetting ? <SettingGame setPopupProfil={setPopUpSetting} profil={props.profil}/> : <> </>}
-
 		</StyledHeader>
 	)
 }
