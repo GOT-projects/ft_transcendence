@@ -95,7 +95,7 @@ const PopupOptionLeave:FunctionComponent<IProps> = (props: IProps) =>{
 				</StyledContaiteClose>
 				<StyledContaiteAddUser>
 					<StyledContaiteDivUser key={uuid()}>
-						{userList?.users.map((user) => (
+						{userList?.users.filter(e => e.status !== 'BAN').map((user) => (
 								handleListUser(user.login) ? 
 								<StyledContaiteDivPUser key={uuid()} onClick={() => {handleSelect(user)}} 
 									color={selectUser.find((select) => select.login === user.login) ? 

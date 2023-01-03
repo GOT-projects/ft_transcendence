@@ -12,6 +12,7 @@ import { onSocket } from "../../../socket/socketOn";
 import { v4 as uuid } from "uuid";
 import { MdToggleOn, MdToggleOff } from 'react-icons/md';
 import { accountService } from "../../../services/account.service";
+import { offSocket } from "../../../socket/socketOff";
 
 enum UserChannelStatus {
 	MEMBER = 'MEMBER',
@@ -44,6 +45,9 @@ const PopupOptionStatusAdmin:FunctionComponent<IProps> = (props: IProps) =>{
 
 	useEffect(() => {
 		onSocket.client_chanmsg_users_not_ban(socket, setUserlist);
+		return () => {
+			offSocket.client_chanmsg_users_not_ban(socket);
+		}
 	}, [socket, setUserlist, userList])
 
 	useEffect(() => {
@@ -91,7 +95,7 @@ const PopupOptionStatusAdmin:FunctionComponent<IProps> = (props: IProps) =>{
 				</StyledContaiteClose>
 				<StyledContaiteAddUser>
 					<StyledContaiteDivUser key={uuid()}>
-						{userList?.users?.map((user) => (
+						{userList?.users?.filter(e => e.status !== 'BAN').map((user) => (
 								handleListUser(user) ? 
 								<StyledContaiteDivPUser className="statusAdmin" key={uuid()} onClick={() => {handleSelect(user)}} 
 									color={Colors.Bg2faIn}>

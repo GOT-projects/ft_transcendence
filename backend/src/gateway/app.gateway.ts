@@ -719,7 +719,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 					sock = [...sock, ...tmp2];
 			}
 			this.server.to(sock).emit('info_client', `Channel ${chanName} have a new member ${auth.user.login}`);
-			this.server.to(sock).emit('server_chan_users', users);
+			this.server.to(sock).emit('client_chan_users', users);
 		}
 		const sock = this.users.get(auth.user.login);
 		if (sock) {
