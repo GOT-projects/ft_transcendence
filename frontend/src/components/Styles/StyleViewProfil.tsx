@@ -366,7 +366,7 @@ export const StyledContaiteMenuSelector = styled.div`
 	display: flex;
 	position: relative;
 	align-items: center;
-	transform: translateX(-8px);
+	transform: translateX(-9px);
 	transition: 0.6s;
     margin-left: 0;
     gap: 0;

@@ -40,7 +40,6 @@ const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
         if (codeTmp === undefined){
 			setNameChan("")
 			setCode("");
-            console.log("fjksdjkfjksdjfjksdjfsdk", code, "jfksdj")
         }else if( code !== undefined  && name !== undefined && code === "Channel"){
 			setNameChan(name)
 		}else if (codeTmp !== undefined){
