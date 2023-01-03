@@ -432,7 +432,7 @@ export class ChatGateway {
 							return true;
 						}
 						else
-							return await this.relUserChannelService.remove(rels[0].id);
+							return await this.relUserChannelService.remove(relsLeave[0].id);
 					} else
 						return `You haven't right to eject user ${loginWhoLeave} of channel ${chanName}`;
 				} else {
