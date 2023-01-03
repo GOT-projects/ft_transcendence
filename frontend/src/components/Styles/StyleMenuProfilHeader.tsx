@@ -10,7 +10,7 @@ export const StyledMenuProfile = styled(motion.div)`
 	top: 3.6rem;
 	right: 0;
 	width: 200px;
-	height: 280px;
+	height: 290px;
 	background: #2c99de;
 	transition: 0.4x;
 	font-family: "Public Pixel";

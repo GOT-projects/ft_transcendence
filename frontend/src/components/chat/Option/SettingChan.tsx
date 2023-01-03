@@ -45,7 +45,7 @@ const PopupChannelSetting:FunctionComponent<IProps> = (props: IProps) =>{
 	}
 
 	return (
-		<StyledContaiteViewAddChan>
+		<StyledContaiteViewAddChan className="channelSetting">
 				<StyledContaiteClose onClick={handleClose}>
 						<FaWindowClose size={30} color={Colors.dark1}/>
 				</StyledContaiteClose>

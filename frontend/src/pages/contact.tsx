@@ -132,7 +132,6 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
 						emitSocket.emitPrivmsg(socket, check[0].login);
 					}
 				}
-				//handleSelectFriend(check[0].login);
 				setChatSwitch("Private");
 				setAdd("");
 			}
@@ -150,14 +149,26 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
 					setChatSwitch(name);
 			}else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "Menu"){
 				setSetting(true);
+				setSettingInvite(false);
+				setSettingAdmin(false);
+				setSettingBlock(false);
 			}else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "Change"){
 				setAdd("addChannel");
 			}else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "Invite"){
 				setSettingInvite(true);
+				setSetting(false);
+				setSettingAdmin(false);
+				setSettingBlock(false);
 			}else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "Block"){
 				setSettingBlock(true);
+				setSettingInvite(false);
+				setSettingAdmin(false);
+				setSetting(false);
 			}else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "Admin"){
 				setSettingAdmin(true);
+				setSettingInvite(false);
+				setSettingBlock(false);
+				setSetting(false);
 			}else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "false"){
 				setSettingInvite(false);
 				setSettingBlock(false);
@@ -165,6 +176,10 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
 				setSetting(false);
 				setAdd("");
 			}
+            if(codeParam.get("setting") === undefined){
+				setSettingInvite(false);
+				setSetting(false);
+            }
 		}
 		else
 			setAdd("");
@@ -221,14 +236,16 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                         </React.Suspense>
                                             : <></>}
 					</StyledChatPrive>
-					{add === "Channel" ? 
+					{add === "Channel"  && codeParam.get("name") !== undefined ? 
                         <StyledSettingChan>
 						<AiFillSetting style={{marginLeft:"10px"}} size={30} color={Colors.grey} title="Channel Setting"
 											onClick={() => {
 											navigate(`/chat?code=Channel&name=${chatSwitch}&Setting=Menu`)
 											}}/>
 						<FcInvite size={30} title="Invite people tot channel"
-											onClick={() => {setInvite(true)}}/>
+											onClick={() => {
+											    navigate(`/chat?code=Channel&name=${chatSwitch}&Setting=Invite`)
+                                                }}/>
 						<HiArrowCircleRight size={30} color={"red"} title="Leave Channel"
 											onClick={() => {
 												emitSocket.emitLeaveChan(socket, chatSwitch, props.profil?.userInfos.login)
@@ -246,7 +263,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                                 </React.Suspense>
                                 : <></>}
 
-				{add === "Channel" ? 
+				{add === "Channel" && codeParam.get("name") !== undefined ? 
                         <React.Suspense fallback='loading...'>
                             <ChannelMsg active={active} profil={props.profil}
 											setProfil={props.setProfil}

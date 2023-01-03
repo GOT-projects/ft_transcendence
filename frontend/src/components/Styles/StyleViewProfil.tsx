@@ -26,6 +26,10 @@ export const StyledContaiteViewAddChan = styled.div`
 	border: 2px solid ${Colors.border};
 	border-radius: 10px;
 	opacity: 0.9;
+    &.channelSetting{
+	    height: 360px;
+
+    }
 `
 export const StyledMotionDiv = styled(motion.div)`
 	@media only screen
@@ -40,10 +44,14 @@ export const StyledMotionDiv = styled(motion.div)`
 		  height: 80%;
 		  transform: translate(80%, 0);
 	  }
-
-
 `
 
+export const StyledMotionPtitle = styled(motion.div)`
+    margin: 10px;
+    margin-left: 0px;
+    font-family: "Public Pixel";
+    font-size: 12px;
+`
 
 export const StyledContaiteReturn = styled.div`
 	&.addUser{
@@ -63,6 +71,8 @@ export const StyledContaiteReturnAddChannel = styled.div`
 
 export const StyledContaiteReturnAddButtonP = styled.p`
 	color: ${Colors.primary};
+    font-size: 12px;
+    font-family: "Public Pixel";
 
 `
 
@@ -172,8 +182,8 @@ export const StyledContaiteViewoptionChan = styled.div`
 
 export const StyledContaiteViewAddP = styled.p`
 	margin: 15px;
-	font-family: "curve";
-	font-size: 20px;
+	font-family: "Public Pixel";
+	font-size: 10px;
 	color: ${Colors.Bg2fa};
 	transition: 0.6s;
 	&.addTitle{
@@ -335,11 +345,14 @@ export const StyledContaiteMenu = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	width: 100px;
+	width: 76px;
 	height: 100%;
 	background: ${Colors.Bg2faIn};
 	transition: 0.6s;
 	overflow: hidden;
+    &.select{
+	    width: 100px;
+    }
 	@media screen and (max-width: 768px){
 	    width: 80px;
 		&.UnActiveMenu{
@@ -353,11 +366,13 @@ export const StyledContaiteMenuSelector = styled.div`
 	display: flex;
 	position: relative;
 	align-items: center;
-	transform: translateX(-2px);
+	transform: translateX(-8px);
 	transition: 0.6s;
+    margin-left: 0;
+    gap: 0;
 	&.select{
 		transition: 0.6s;
-		transform: translateX(10px);
+		transform: translateX(2px);
 	}
 	@media screen and (max-width: 768px){
 	    transform: translateX(-16px);
@@ -372,6 +387,7 @@ export const StyledContaiteMenuSelector = styled.div`
 
 export const StyledSelector = styled.div`
 	margin-left: 0;
+	margin-right: 0;
 	height: 100%;
 	width: 10px;
 	border-radius: 0 10px 0 10px;
@@ -410,7 +426,7 @@ export const StyledChanDiv = styled.div`
 	margin: 10px;
 	margin-top: 5px;
 	margin-right: 10px;
-	margin-left: 20px;
+	margin-left: 8px;
 	align-items: center;
 	justify-content: center;
 	border-radius: 50%;
@@ -458,6 +474,8 @@ export const StyledContaiteAddChanOption = styled.div<Icolor>`
 `
 export const StyledContaiteAddChanOptionP = styled.div<Icolor>`
 	color: ${p => p.color};
+    font-family: "Public Pixel";
+    font-size: 8px;
 `
 
 export const StyledContaiteClose = styled.div`

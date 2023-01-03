@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { GOT } from "../../../shared/types";
-import { StyledContaiteAddChanDiv, StyledContaiteAddChanOption, StyledContaiteAddChanOptionP, StyledContaiteReturnAddButton, StyledContaiteReturnAddButtonP, StyledContaiteReturnAddChannel, StyledContaiteReturnDiv, StyledContaiteViewAddChan } from "../../Styles/StyleViewProfil";
+import { StyledContaiteAddChanDiv, StyledContaiteAddChanOption, StyledContaiteAddChanOptionP, StyledContaiteReturnAddButton, StyledContaiteReturnAddButtonP, StyledContaiteReturnAddChannel, StyledContaiteReturnDiv, StyledContaiteViewAddChan, StyledMotionPtitle } from "../../Styles/StyleViewProfil";
 import { Colors } from "../../Colors";
 import { emitSocket } from "../../../socket/socketEmit";
 import { SocketContext } from "../../../socket/socketPovider";
@@ -137,7 +137,7 @@ const PopupOptionAddChannel = () =>{
 			<form>
 				<StyledContaiteAddChanDiv>
 					{typeChannel === "change" ? 
-					<p>Change Channel</p> : <p>Creation Channel</p> }
+					<StyledMotionPtitle>Change Channel</StyledMotionPtitle> : <StyledMotionPtitle>Creation Channel</StyledMotionPtitle> }
 				</StyledContaiteAddChanDiv>
 				<StyledContaiteAddChanDiv>
 					{typeChannel === "change" ? 
@@ -145,7 +145,7 @@ const PopupOptionAddChannel = () =>{
 					<input type="text" placeholder="Channel name" value={inputChan} onChange={handleChangeChan} autoFocus/>}
 				</StyledContaiteAddChanDiv>
 				<StyledContaiteAddChanDiv>
-					<p>Options Channel:</p>
+					<StyledMotionPtitle>Options Channel:</StyledMotionPtitle>
 				</StyledContaiteAddChanDiv>
 				<StyledContaiteAddChanDiv>
 					<StyledContaiteAddChanOption color={selecte === "private" ? Colors.Bg2faIn : ""} onClick={() => {handleSelect("private")}}>
@@ -159,7 +159,7 @@ const PopupOptionAddChannel = () =>{
 					</StyledContaiteAddChanOption>
 				</StyledContaiteAddChanDiv>
 				<StyledContaiteAddChanDiv>
-					<p>Password:</p>
+					<StyledMotionPtitle>Password:</StyledMotionPtitle>
 				</StyledContaiteAddChanDiv>
 				<StyledContaiteAddChanDiv>
 					<input type="password" placeholder="Channel password" name="password" value={inputPwd} onChange={handleChangePwd} autoComplete="on"/>

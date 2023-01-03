@@ -31,13 +31,17 @@ const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
 	const navigate = useNavigate();
 	const socket = useContext(SocketContext);
 	const codeParam: Map<string, string> = accountService.getParamsPriv();
-	const [code, setCode] = useState<string>();
+	const [code, setCode] = useState<string>("");
 	const [nameChan, setNameChan] = useState<string>();
 
 	useEffect(() => {
 		const name = codeParam.get("name")
 		const codeTmp = codeParam.get("code")
-		if( code !== undefined  && name !== undefined && code === "Channel"){
+        if (codeTmp === undefined){
+			setNameChan("")
+			setCode("");
+            console.log("fjksdjkfjksdjfjksdjfsdk", code, "jfksdj")
+        }else if( code !== undefined  && name !== undefined && code === "Channel"){
 			setNameChan(name)
 		}else if (codeTmp !== undefined){
 			setCode(codeTmp);
@@ -88,7 +92,7 @@ const MenuChat:FunctionComponent<IProps> = (props: IProps) =>{
 		return false;
 	}
 	return (
-		<StyledContaiteMenu>
+		<StyledContaiteMenu className={code !== "" ? "select" : ""}>
 			<StyleNavToggler onClick={navMenu} className={props.active}>
 				<StyleNavTogglerIcon className={props.active}></StyleNavTogglerIcon>
 				<StyleNavTogglerIcon className={props.active}></StyleNavTogglerIcon>

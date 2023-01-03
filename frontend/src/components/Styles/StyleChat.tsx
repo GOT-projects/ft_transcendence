@@ -167,6 +167,7 @@ export const StyledChatPrive = styled.div`
 export const StyledSettingChan = styled.div`
 	display: flex;
 	align-items: center;
+    margin-bottom: 15px;
 	height: 4rem;
 	justify-content: flex-start;
     gap: 20px;

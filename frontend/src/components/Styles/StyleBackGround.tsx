@@ -16,6 +16,9 @@ export const StyledContainer = styled.div`
 	height: 100vh;
 	position: relative;
 	cursor: none;
+    &.game{
+	    cursor: auto;
+    }
 	overflow: hidden;
 	@media screen and (max-width: 768px){
 	    width: 100wh;
