@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import {Colors} from "./Colors"
+import { useState } from 'react';
 import {StyledCursor} from "./Styles/StyleMouse"
 
 const MouseLight = () => {

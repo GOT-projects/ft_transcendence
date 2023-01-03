@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { GOT } from "../../../shared/types";
 import { StyledContaiteAddChanDiv, StyledContaiteAddChanOption, StyledContaiteAddChanOptionP, StyledContaiteReturnAddButton, StyledContaiteReturnAddButtonP, StyledContaiteReturnAddChannel, StyledContaiteReturnDiv, StyledContaiteViewAddChan } from "../../Styles/StyleViewProfil";
-import { motion } from "framer-motion";
 import { Colors } from "../../Colors";
 import { emitSocket } from "../../../socket/socketEmit";
 import { SocketContext } from "../../../socket/socketPovider";

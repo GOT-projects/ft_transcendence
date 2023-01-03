@@ -3,7 +3,6 @@ import { FaWindowClose } from "react-icons/fa";
 import { GOT } from "../../shared/types";
 import { Colors } from "../Colors";
 import {StyledContaiteClose, StyledContaiteViewAddChan, StyledContaiteViewAddOption, StyledContaiteViewAddP } from "../Styles/StyleViewProfil";
-import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { SocketContext } from "../../socket/socketPovider";
 import { emitSocket } from "../../socket/socketEmit";

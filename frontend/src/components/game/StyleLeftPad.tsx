@@ -1,8 +1,5 @@
 import styled from 'styled-components';
 
-
-
-
 interface mousePos {
 	y: string;
 }
