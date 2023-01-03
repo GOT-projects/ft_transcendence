@@ -166,16 +166,16 @@ const PopupOptionAddChannel = () =>{
 				</StyledContaiteAddChanDiv>
 				<StyledContaiteReturnAddChannel>
 					<StyledContaiteReturnDiv >
+						<StyledContaiteReturnAddButton onClick={handleReturnChan}>
+							<StyledContaiteReturnAddButtonP>back</StyledContaiteReturnAddButtonP>
+						</StyledContaiteReturnAddButton>
 						{typeChannel === "change" ?
 						<StyledContaiteReturnAddButton onClick={handleSendChange}>
 							<StyledContaiteReturnAddButtonP>send</StyledContaiteReturnAddButtonP>
 						</StyledContaiteReturnAddButton> : 
-						<StyledContaiteReturnAddButton onClick={handleReturnChan}>
+						<StyledContaiteReturnAddButton onClick={handleSend}>
 							<StyledContaiteReturnAddButtonP>send</StyledContaiteReturnAddButtonP>
 						</StyledContaiteReturnAddButton> }
-						<StyledContaiteReturnAddButton onClick={handleSend}>
-							<StyledContaiteReturnAddButtonP>return</StyledContaiteReturnAddButtonP>
-						</StyledContaiteReturnAddButton>
 					</StyledContaiteReturnDiv>
 				</StyledContaiteReturnAddChannel>
 

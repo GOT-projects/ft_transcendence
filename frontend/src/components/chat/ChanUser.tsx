@@ -39,6 +39,7 @@ const ChanUserMenu:FunctionComponent<IProps> = (props: IProps) => {
 	useEffect(() => {
 		emitSocket.emitChannelsIn(socket);
 	}, [socket])
+
 	const handleViewProfil = (name: string) =>{
 		if (props.setLogin && props.setPopupProfil){
 			props.setLogin(name);
@@ -61,7 +62,7 @@ const ChanUserMenu:FunctionComponent<IProps> = (props: IProps) => {
 		return () => {
 			offSocket.client_chanmsg_users_not_ban(socket);
 		}
-	}, [socket, setUserlist, userList, props.profil?.userInfos.login])
+	}, [socket, setUserlist, userList, props.profil?.userInfos.login, setMyStatus])
 
 	useEffect(() => {
 		emitSocket.emitFriends(socket);
