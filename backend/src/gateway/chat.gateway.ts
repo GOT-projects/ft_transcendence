@@ -416,6 +416,7 @@ export class ChatGateway {
 
 	async leaveChan(user: User, chanName: string, loginWhoLeave: string) {
 		try {
+            console.log(chanName, user.login, loginWhoLeave);
 			const channel = await this.channelService.findChanName(chanName);
 			if (channel === null)
 				return 'Channel not found';

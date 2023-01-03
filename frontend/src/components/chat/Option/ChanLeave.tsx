@@ -44,7 +44,9 @@ const PopupOptionLeave:FunctionComponent<IProps> = (props: IProps) =>{
 	}
 
 	useEffect(() => {
-		onSocket.client_chanmsg_users_not_ban(socket, setUserlist);
+        if (codeParam.get("setting") === "Leave"){
+		    onSocket.client_chanmsg_users_not_ban(socket, setUserlist);
+        }
 		return () => {
 			offSocket.client_chanmsg_users_not_ban(socket);
 		}
@@ -68,7 +70,9 @@ const PopupOptionLeave:FunctionComponent<IProps> = (props: IProps) =>{
 	}	
 
 	const handleSend = () => {
+        console.log("send:", selectUser)
 		selectUser.map((user) => {
+            console.log("send:", user)
 			emitSocket.emitLeaveChan(socket, props.chanName, user.login);
 			return true;
 		})

@@ -44,7 +44,9 @@ const PopupOptionStatusAdmin:FunctionComponent<IProps> = (props: IProps) =>{
 	}
 
 	useEffect(() => {
-		onSocket.client_chanmsg_users_not_ban(socket, setUserlist);
+        if (codeParam.get("setting") === "Admin"){
+		    onSocket.client_chanmsg_users_not_ban(socket, setUserlist);
+        }
 		return () => {
 			offSocket.client_chanmsg_users_not_ban(socket);
 		}
