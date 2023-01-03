@@ -11,6 +11,7 @@ import { onSocket } from "../../../socket/socketOn";
 import { v4 as uuid } from "uuid";
 import { offSocket } from "../../../socket/socketOff";
 import { accountService } from "../../../services/account.service";
+import { useNavigate } from "react-router-dom";
 
 interface IProps {
 	listUser:GOT.User[] | undefined;
@@ -27,9 +28,11 @@ const PopupOptionInvite:FunctionComponent<IProps> = (props: IProps) =>{
 	const [selectUser, setSelectUser] = useState<GOT.User[]>([]);
 	const [userList, setUserlist] = useState<GOT.ChannelUsers>();
 	const codeParam: Map<string, string> = accountService.getParamsPriv();
+	const navigate = useNavigate();
 
 	const handleClose = () => {
 		props.setInvite(false);
+		navigate(`/chat?code=Channel&name=${props.chanName}`)
 	}
 
 	useEffect(() => {

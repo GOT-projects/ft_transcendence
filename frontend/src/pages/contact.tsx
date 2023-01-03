@@ -54,6 +54,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
 
 	const [add, setAdd] =  useState("");
 	const [invite, setInvite] =  useState(false);
+	const [leave, setLeave] =  useState(false);
 	const [setting, setSetting] =  useState(false);
 	const [settingInvite, setSettingInvite] =  useState(false);
 	const [settingBlock, setSettingBlock] =  useState(false);
@@ -152,28 +153,39 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
 				setSettingInvite(false);
 				setSettingAdmin(false);
 				setSettingBlock(false);
+                setLeave(false);
 			}else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "Change"){
 				setAdd("addChannel");
 			}else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "Invite"){
 				setSettingInvite(true);
 				setSetting(false);
+                setLeave(false);
 				setSettingAdmin(false);
 				setSettingBlock(false);
 			}else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "Block"){
 				setSettingBlock(true);
 				setSettingInvite(false);
 				setSettingAdmin(false);
+                setLeave(false);
 				setSetting(false);
 			}else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "Admin"){
 				setSettingAdmin(true);
 				setSettingInvite(false);
 				setSettingBlock(false);
 				setSetting(false);
+                setLeave(false);
+			}else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "Leave"){
+				setSettingAdmin(false);
+				setSettingInvite(false);
+				setSettingBlock(false);
+				setSetting(false);
+                setLeave(true);
 			}else if(codeParam.get("code") === "Channel" && codeParam.get("name") === chatSwitch && codeParam.get("setting") === "false"){
 				setSettingInvite(false);
 				setSettingBlock(false);
 				setSettingAdmin(false);
 				setSetting(false);
+                setLeave(false);
 				setAdd("");
 			}
             if(codeParam.get("setting") === undefined){
@@ -287,11 +299,11 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
 										setFriends={setFriends} /> 
                         </React.Suspense>
                                         : <></>}
-			{invite ? 
+			{leave ? 
                         <React.Suspense fallback='loading...'>
-                            <PopupOptionInvite profil={props.profil} friends={friends}
+                            <PopupOptionLeave profil={props.profil} friends={friends}
 										listUser={usersList} setAdd={setAdd}
-										setInvite={setInvite}
+										setInvite={setLeave}
 										setFriends={setFriends} chanName={chatSwitch}/> 
                         </React.Suspense>
                                         : <></>}
@@ -306,7 +318,7 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
                                         : <></>}
 			{settingInvite ? 
                         <React.Suspense fallback='loading...'>
-                            <PopupOptionLeave profil={props.profil} friends={friends}
+                            <PopupOptionInvite profil={props.profil} friends={friends}
 										listUser={usersList} setAdd={setAdd}
 										setInvite={setSettingInvite}
 										setFriends={setFriends} chanName={chatSwitch}/> 

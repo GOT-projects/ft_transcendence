@@ -25,9 +25,9 @@ const PopupChannelSetting:FunctionComponent<IProps> = (props: IProps) =>{
 		navigate(`/chat?code=Channel&name=${props.chanName}`);
 	}
 
-	const handleSettingInvite = () => {
+	const handleSettingLeave = () => {
 		props.setSetting(false);
-		navigate(`/chat?code=Channel&name=${props.chanName}&Setting=Invite`);
+		navigate(`/chat?code=Channel&name=${props.chanName}&Setting=Leave`);
 	}
 
 	const handleSettingChannel = () => {
@@ -62,7 +62,7 @@ const PopupChannelSetting:FunctionComponent<IProps> = (props: IProps) =>{
 					<StyledContaiteViewAddP>UnBlock Users</StyledContaiteViewAddP>
 					<StyledContaiteViewAddP>{">"}</StyledContaiteViewAddP>
 				</StyledContaiteViewAddOption>
-				<StyledContaiteViewAddOption onClick={() => {handleSettingInvite()}}>
+				<StyledContaiteViewAddOption onClick={() => {handleSettingLeave()}}>
 					<StyledContaiteViewAddP>Leave</StyledContaiteViewAddP>
 					<StyledContaiteViewAddP>{">"}</StyledContaiteViewAddP>
 				</StyledContaiteViewAddOption>
