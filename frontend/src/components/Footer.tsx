@@ -21,7 +21,6 @@ const Footer = () => {
 				<StyleFooterGithub href="https://github.com/valktaelen/ft_transcendence" target="_blank">
 			<BsGithub size={25}/>
 		 </StyleFooterGithub>
-
 		</StyledFooter>
 	)
 }

@@ -1,8 +1,10 @@
-import React, { Dispatch, FunctionComponent, useEffect, useState } from "react";
+import React, { Dispatch, FunctionComponent, useContext, useEffect, useState } from "react";
 import { StyledContaite, StyledContaiteDescription, StyledContaiteDescriptionH1, StyledContaiteDescriptionH3, StyledContaiteDescriptionP, StyledContaiteQrcode } from "../Styles/StyleOtc";
 import {apiPost} from "../../api/post"
 import { NotifyInter } from "../interfaces";
 import {Notification} from "../../components/Notify"
+import { emitSocket } from "../../socket/socketEmit";
+import { SocketContext } from "../../socket/socketPovider";
 
 interface IProps {
    setOtc: Dispatch<React.SetStateAction<boolean>>;
@@ -10,6 +12,7 @@ interface IProps {
 
 const SetupOtc:FunctionComponent<IProps> = (props: IProps) => {
 	//todo request post get qrcode
+	const socket = useContext(SocketContext);
 	const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});
 	const [gcode, setGcode] = useState<string>();
 	const [code, setCode] = useState<string>();
@@ -42,6 +45,7 @@ const SetupOtc:FunctionComponent<IProps> = (props: IProps) => {
 				rep.then((response:any) =>{
 			        setNotify({isOpen: true, message: `Info: ${response.data.message}`, type:'info'});
                     props.setOtc(false);
+                    emitSocket.emitProfil(socket)
 				}).catch((e)=> {
 			        setNotify({isOpen: true, message: `Error: ${e.response.data.message}`, type:'error'});
                 })

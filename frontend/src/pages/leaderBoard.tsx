@@ -1,6 +1,3 @@
-import BackgroundAnimate from "../components/BackGroundAnimate";
-import Footer from "../components/Footer";
-import Header from "../components/Header"
 import {Colors} from "../components/Colors"
 import React, { Dispatch, FunctionComponent } from 'react'
 import { useContext, useState, useEffect } from 'react';
@@ -10,9 +7,12 @@ import { v4 as uuid } from 'uuid';
 import { GOT } from "../shared/types";
 import { SocketContext, SocketContextGame } from "../socket/socketPovider";
 import { emitSocket } from "../socket/socketEmit";
-import ProfilView from '../components/popup/ProfilView';
 import { GiRetroController } from 'react-icons/gi';
 import { emitGame } from "../socket/socketEmitGame";
+const Footer = React.lazy(() => import("../components/Footer"))
+const Header = React.lazy(() => import("../components/Header"))
+const ProfilView = React.lazy(() => import('../components/popup/ProfilView'))
+const BackgroundAnimate = React.lazy(() => import("../components/BackGroundAnimate"))
 
 
 interface IProps {
@@ -60,6 +60,7 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 	return (
 		<React.Fragment>
 			<BackgroundAnimate name="LeaderBoard"/>
+            <React.Suspense fallback='loading...'>
 			<Header colorHome={Colors.MenuDisable}
 					colorGame={Colors.MenuDisable}
 					colorLeadBoard={Colors.MenuActive}
@@ -69,6 +70,7 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 					profil={props.profil}
 					setProfil={props.setProfil}
 					/>
+            </React.Suspense>
 			<StyledLead>
 				<StyledTile>LeaderBoard</StyledTile>
 				<StyledSep/>
@@ -102,8 +104,15 @@ const LeaderBoard:FunctionComponent<IProps> = (props:IProps)=> {
 				</tbody>
 				</StyledLeadTileRank>
 			</StyledLead>
-			{popuProfil ? <ProfilView login={login} setPopupProfil={setPopupProfil} profil={props.profil}/> : <> </>}
-			<Footer/>
+			{
+            popuProfil ?
+            <React.Suspense fallback='loading...'>
+                <ProfilView login={login} setPopupProfil={setPopupProfil} profil={props.profil}/> 
+            </React.Suspense>
+            : <> </>}
+            <React.Suspense fallback='loading...'>
+			    <Footer/>
+            </React.Suspense>
 		</React.Fragment>
 	)
 }

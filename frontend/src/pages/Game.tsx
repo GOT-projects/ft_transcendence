@@ -1,9 +1,6 @@
 import React, { Dispatch, FunctionComponent, useContext, useEffect, useState } from 'react';
 import BackgroundAnimate from '../components/BackGroundAnimate';
-import Footer from '../components/Footer';
-import Header from '../components/Header';
 import {Colors} from "../components/Colors"
-import MousePadLeft from '../components/LeftPad';
 import { NotifyInter} from "../components/interfaces"
 import {Notification} from "../components/Notify"
 import { StyledContenteGame, StyledLoginButton, StyledWaitingContente, StyledWaitingTitle } from '../components/Styles/StylesLogin';
@@ -13,6 +10,9 @@ import { onSocketGame } from '../socket/socketOnGame';
 import {  emitGame } from '../socket/socketEmitGame';
 import { offSocketGame } from '../socket/socketOffGame';
 import { SocketContextGame } from '../socket/socketPovider';
+const Footer = React.lazy(() => import("../components/Footer"))
+const Header = React.lazy(() => import("../components/Header"))
+const MousePadLeft  = React.lazy(() => import('../components/LeftPad'))
 
 interface IProps {
    profil: GOT.Profile | undefined;

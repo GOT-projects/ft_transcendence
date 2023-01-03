@@ -1,7 +1,8 @@
 import { SnackbarProvider } from 'notistack';
+import React from 'react';
 import {BrowserRouter as Router} from 'react-router-dom'
-import MotionRoutes from "./components/motion"
 import { SocketContext, socket, SocketContextGame, socketGame } from './socket/socketPovider';
+const MotionRoutes  = React.lazy(() => import("./components/motion"))
 
 function App() {
 	return (

@@ -2,41 +2,42 @@ import { StyledChatPrive, StyledChatSep,
 	StyledChatSwith, StyledContact, StyledContaite,
 	StyledChatSwithTile, StyledSettingChan } from '../components/Styles/StyleChat';
 import React, {Dispatch, FunctionComponent, useContext, useEffect, useState } from 'react';
-import BackgroundAnimate from '../components/BackGroundAnimate';
-import Footer from '../components/Footer';
-import Header from '../components/Header';
 import {Colors} from "../components/Colors"
 import {NotifyInter} from "../components/interfaces"
 import {Notification} from "../components/Notify"
 import { SocketContext, SocketContextGame } from '../socket/socketPovider';
 import { emitSocket } from '../socket/socketEmit';
-import ProfilView from '../components/popup/ProfilView';
 import { GOT } from '../shared/types';
 
-import PriveMsg from '../components/chat/PrivMsg';
-import PriveUserMenu from '../components/chat/PrivUsers';
 import { accountService } from '../services/account.service';
-import MenuChat from '../components/chat/Menu';
 import { onSocket } from '../socket/socketOn';
 import { offSocket } from '../socket/socketOff';
-import PopupAddChannel from '../components/chat/AddChannel';
-import PopupOptionAddUser from '../components/chat/Option/AddUser';
-import PopupOptionAddChannel from '../components/chat/Option/AddChannel';
-import PopupOptionJoinChannel from '../components/chat/Option/JoinChannel';
-import PopupOptionExloreChat from '../components/chat/Option/ExploreChan';
-import PopupOptionPrivateChan from '../components/chat/Option/AddChannelPriv';
-import ChannelMsg from '../components/chat/ChannelMsg';
-import ChanUserMenu from '../components/chat/ChanUser';
-import PopupChannelSetting from '../components/chat/Option/SettingChan';
 import { HiArrowCircleRight } from 'react-icons/hi';
 import { FcInvite } from 'react-icons/fc';
 import { AiFillSetting } from 'react-icons/ai';
-import PopupOptionInvite from '../components/chat/Option/ChanInvite';
 import { useNavigate } from 'react-router-dom';
-import PopupOptionLeave from '../components/chat/Option/ChanLeave';
-import PopupOptionBlock from '../components/chat/Option/ChanBlock';
-import PopupOptionStatusAdmin from '../components/chat/Option/StatusAdmin';
 import { emitGame } from '../socket/socketEmitGame';
+
+const BackgroundAnimate = React.lazy(() => import("../components/BackGroundAnimate"))
+const MenuChat = React.lazy(() => import('../components/chat/Menu'))
+const PopupOptionInvite = React.lazy(() => import('../components/chat/Option/ChanInvite'))
+const PopupOptionLeave = React.lazy(() => import('../components/chat/Option/ChanLeave'))
+const PopupOptionBlock = React.lazy(() => import('../components/chat/Option/ChanBlock'))
+const PopupOptionStatusAdmin = React.lazy(() => import('../components/chat/Option/StatusAdmin'))
+const Footer = React.lazy(() => import("../components/Footer"))
+const Header = React.lazy(() => import("../components/Header"))
+const ProfilView = React.lazy(() => import('../components/popup/ProfilView'))
+const PriveMsg = React.lazy(() => import('../components/chat/PrivMsg'))
+const PriveUserMenu = React.lazy(() => import('../components/chat/PrivUsers'))
+const PopupAddChannel = React.lazy(() => import('../components/chat/AddChannel'))
+const PopupOptionAddUser = React.lazy(() => import('../components/chat/Option/AddUser'))
+const PopupOptionAddChannel = React.lazy(() => import('../components/chat/Option/AddChannel'))
+const PopupOptionJoinChannel = React.lazy(() => import('../components/chat/Option/JoinChannel'))
+const PopupOptionExloreChat = React.lazy(() => import('../components/chat/Option/ExploreChan'))
+const PopupOptionPrivateChan = React.lazy(() => import('../components/chat/Option/AddChannelPriv'))
+const ChannelMsg  = React.lazy(() => import('../components/chat/ChannelMsg'))
+const ChanUserMenu = React.lazy(() => import('../components/chat/ChanUser'))
+const PopupChannelSetting = React.lazy(() => import('../components/chat/Option/SettingChan'))
 
 interface IProps {
    profil: GOT.Profile | undefined;
@@ -171,8 +172,11 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
 
 	return (
 		<React.Fragment>
-			<BackgroundAnimate name="contact"/>
-			<Header colorHome={Colors.MenuDisable}
+            <React.Suspense fallback='loading...'>
+			    <BackgroundAnimate name="contact"/>
+            </React.Suspense>
+            <React.Suspense fallback='loading...'>
+			    <Header colorHome={Colors.MenuDisable}
 					colorGame={Colors.MenuDisable}
 					colorLeadBoard={Colors.MenuDisable}
 					colorChat={Colors.MenuActive}
@@ -181,32 +185,44 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
 					profil={props.profil}
 					setProfil={props.setProfil}
 			 />
+            </React.Suspense>
 
 			<StyledContaite>
+            <React.Suspense fallback='loading...'>
 				<MenuChat  friends={friends} profil={props.profil} setFriends={setFriends}
 						   setProfil={props.setProfil}
 						   chatSwitch={chatSwitch} setChatSwitch={setChatSwitch}
 						   active={active} setActive={setActive} channelIn={channelIn}
 						   listUser={usersList} add={add} setAdd={setAdd}/>
+            </React.Suspense>
 				<StyledContact className={active}>
 					<StyledChatSwith>
 						<StyledChatSwithTile>{chatSwitch}</StyledChatSwithTile>
 					</StyledChatSwith>
 					<StyledChatSep/>
 					<StyledChatPrive className={add}>
-					{add === "Private" ? <PriveUserMenu friends={friends}
+					{add === "Private" ? 
+                        <React.Suspense fallback='loading...'>
+                        <PriveUserMenu friends={friends}
 											setFriends={setFriends} selectUser={selectUser}
 											setActive={setActive} profil={props.profil}
 											setSelectUser={setSelectUser} userFriend={lstFriends}
 											setLogin={setLogin}
 											setPopupProfil={setPopupProfil}
-											popuProfil={popuProfil}/> : <></>}
-					{add === "Channel" ? <ChanUserMenu profil={props.profil}
+											popuProfil={popuProfil}/> 
+                        </React.Suspense>
+                                            : <></>}
+					{add === "Channel" ? 
+                        <React.Suspense fallback='loading...'>
+                        <ChanUserMenu profil={props.profil}
 											setPopupProfil={setPopupProfil} chanName={chatSwitch}
 											popuProfil={popuProfil} setActive={setActive}
-											setLogin={setLogin}/> : <></>}
+											setLogin={setLogin}/> 
+                        </React.Suspense>
+                                            : <></>}
 					</StyledChatPrive>
-					{add === "Channel" ? <StyledSettingChan>
+					{add === "Channel" ? 
+                        <StyledSettingChan>
 						<AiFillSetting style={{marginLeft:"10px"}} size={30} color={Colors.grey} title="Channel Setting"
 											onClick={() => {
 											navigate(`/chat?code=Channel&name=${chatSwitch}&Setting=Menu`)
@@ -218,58 +234,117 @@ const Chat:FunctionComponent<IProps> = (props:IProps)=> {
 												emitSocket.emitLeaveChan(socket, chatSwitch, props.profil?.userInfos.login)
 												setChatSwitch("")
 												navigate("/chat")}}/>
-					</StyledSettingChan> : <></>}
+					</StyledSettingChan> 
+                    : <></>}
 				</StyledContact>
 
-				{add === "Private" ? <PriveMsg active={active} profil={props.profil}
+				{add === "Private" ? 
+                                <React.Suspense fallback='loading...'>
+                                    <PriveMsg active={active} profil={props.profil}
 											setProfil={props.setProfil}
-											userSelect={selectUser}/> : <></>}
+											userSelect={selectUser}/> 
+                                </React.Suspense>
+                                : <></>}
 
-				{add === "Channel" ? <ChannelMsg active={active} profil={props.profil}
+				{add === "Channel" ? 
+                        <React.Suspense fallback='loading...'>
+                            <ChannelMsg active={active} profil={props.profil}
 											setProfil={props.setProfil}
-											chanName={chatSwitch}/> : <></>}
+											chanName={chatSwitch}/> 
+                        </React.Suspense>
+                                            : <></>}
 			</StyledContaite>
 
-			{add === "add" ? <PopupAddChannel friends={friends} setFriends={setFriends}
+			{add === "add" ? 
+                        <React.Suspense fallback='loading...'>
+                            <PopupAddChannel friends={friends} setFriends={setFriends}
 											profil={props.profil} setProfil={props.setProfil}
-											setAction={setAdd} listUser={usersList}/> : <></>}
+											setAction={setAdd} listUser={usersList}/> 
+                        </React.Suspense>
+                                            : <></>}
 
-			{add === "addUser" ? <PopupOptionAddUser profil={props.profil} friends={friends}
+			{add === "addUser" ? 
+                        <React.Suspense fallback='loading...'>
+                            <PopupOptionAddUser profil={props.profil} friends={friends}
 										listUser={usersList} setAdd={setAdd}
-										setFriends={setFriends} /> : <></>}
-			{invite ? <PopupOptionInvite profil={props.profil} friends={friends}
+										setFriends={setFriends} /> 
+                        </React.Suspense>
+                                        : <></>}
+			{invite ? 
+                        <React.Suspense fallback='loading...'>
+                            <PopupOptionInvite profil={props.profil} friends={friends}
 										listUser={usersList} setAdd={setAdd}
 										setInvite={setInvite}
-										setFriends={setFriends} chanName={chatSwitch}/> : <></>}
+										setFriends={setFriends} chanName={chatSwitch}/> 
+                        </React.Suspense>
+                                        : <></>}
 
-			{setting ? <PopupChannelSetting profil={props.profil} listUser={usersList}
+			{setting ? 
+                        <React.Suspense fallback='loading...'>
+                            <PopupChannelSetting profil={props.profil} listUser={usersList}
 										setProfil={props.setProfil} setAction={setAdd}
 										setFriends={setFriends} friends={friends}
-										chanName={chatSwitch} setSetting={setSetting}/>: <></>}
-			{settingInvite ? <PopupOptionLeave profil={props.profil} friends={friends}
+										chanName={chatSwitch} setSetting={setSetting}/>
+                        </React.Suspense>
+                                        : <></>}
+			{settingInvite ? 
+                        <React.Suspense fallback='loading...'>
+                            <PopupOptionLeave profil={props.profil} friends={friends}
 										listUser={usersList} setAdd={setAdd}
 										setInvite={setSettingInvite}
-										setFriends={setFriends} chanName={chatSwitch}/> : <></>}
-			{settingAdmin ? <PopupOptionStatusAdmin profil={props.profil} friends={friends}
+										setFriends={setFriends} chanName={chatSwitch}/> 
+                        </React.Suspense>
+                                        : <></>}
+			{settingAdmin ? 
+                        <React.Suspense fallback='loading...'>
+                            <PopupOptionStatusAdmin profil={props.profil} friends={friends}
 										listUser={usersList} setAdd={setAdd}
 										setInvite={setSettingAdmin}
-										setFriends={setFriends} chanName={chatSwitch}/> : <></>}
-			{settingBlock ? <PopupOptionBlock profil={props.profil} friends={friends}
+										setFriends={setFriends} chanName={chatSwitch}/> 
+                        </React.Suspense>
+                                        : <></>}
+			{settingBlock ? 
+                    <React.Suspense fallback='loading...'>
+                        <PopupOptionBlock profil={props.profil} friends={friends}
 										listUser={usersList} setAdd={setAdd}
 										setInvite={setSettingBlock}
-										setFriends={setFriends} chanName={chatSwitch}/> : <></>}
-			{add === "addChannel" ? <PopupOptionAddChannel /> : <></>}
+										setFriends={setFriends} chanName={chatSwitch}/> 
+                        </React.Suspense>
+                                        : <></>}
+			{add === "addChannel" ? 
+                    <React.Suspense fallback='loading...'>
+                        <PopupOptionAddChannel /> 
+                    </React.Suspense>
+                    : <></>}
 
-			{add === "joinChannel" ? <PopupOptionJoinChannel /> : <></>}
+			{add === "joinChannel" ? 
+                    <React.Suspense fallback='loading...'>
+                        <PopupOptionJoinChannel /> 
+                    </React.Suspense>
+                    : <></>}
 
-			{add === "explore" ? <PopupOptionExloreChat channelIn={channelIn}/> : <></>}
+			{add === "explore" ? 
+                    <React.Suspense fallback='loading...'>
+                        <PopupOptionExloreChat channelIn={channelIn}/> 
+                    </React.Suspense>
+                    : <></>}
 
-			{add === "privateChan" ? <PopupOptionPrivateChan /> : <></>}
+			{add === "privateChan" ? 
+                    <React.Suspense fallback='loading...'>
+                        <PopupOptionPrivateChan />
+                    </React.Suspense>
+            : <></>}
 
 
-			{popuProfil ? <ProfilView login={login} setPopupProfil={setPopupProfil} profil={props.profil}/> : <> </>}
-			<Notification notify={notify} setNotify={setNotify}/>
-		   <Footer/>
+			{popuProfil ? 
+             <React.Suspense fallback='loading...'>
+                 <ProfilView login={login} setPopupProfil={setPopupProfil} profil={props.profil}/> 
+             </React.Suspense>
+            : <> </>}
+			    <Notification notify={notify} setNotify={setNotify}/>
+             <React.Suspense fallback='loading...'>
+		        <Footer/>
+             </React.Suspense>
 		</React.Fragment>
 	)
 }

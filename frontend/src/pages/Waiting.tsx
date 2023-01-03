@@ -4,12 +4,12 @@ import Footer from "../components/Footer";
 import { accountService } from '../services/account.service';
 import { apiPost } from '../api/post';
 import { useNavigate } from 'react-router-dom';
-import Popup2FA from '../components/popup/Popup2FA';
 import { StyledWaitingContente, StyledWaitingTitle } from '../components/Styles/StylesLogin';
-import { Notification } from '../components/Notify';
-import { NotifyInter } from '../components/interfaces';
 import { SocketContextGame } from '../socket/socketPovider';
 import { emitGame } from '../socket/socketEmitGame';
+import { Notification } from '../components/Notify';
+import { NotifyInter } from '../components/interfaces';
+const Popup2FA = React.lazy(() => import('../components/popup/Popup2FA'))
 
 const Waiting = () => {
 	const [notify, setNotify] = useState<NotifyInter>({isOpen: false, message:'', type:''});

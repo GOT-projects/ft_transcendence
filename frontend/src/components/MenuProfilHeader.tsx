@@ -1,4 +1,4 @@
-import {Dispatch, FunctionComponent, useEffect, useRef, useState} from 'react';
+import {Dispatch, FunctionComponent, useContext, useEffect, useRef, useState} from 'react';
 import {StyleMenuHeaderAvatarContainte, StyleMenuHeaderLoggout} from "./Styles/StyledHeader"
 import {StyledMenuProfile, StyleMenuHeaderProfilData, StyleMenuHeaderProfilOption} from "./Styles/StyleMenuProfilHeader"
 import { accountService } from "../services/account.service";
@@ -10,6 +10,8 @@ import { BiUpload } from 'react-icons/bi';
 import { Colors } from './Colors';
 import { apiPost } from '../api/post';
 import { GoSettings } from 'react-icons/go';
+import { emitSocket } from '../socket/socketEmit';
+import { SocketContext } from '../socket/socketPovider';
 
 interface IProps {
    notify: NotifyInter;
@@ -21,6 +23,7 @@ interface IProps {
 }
 
 const ProfileMenu :FunctionComponent<IProps> = (props:IProps) => {
+	const socket = useContext(SocketContext);
 	const [changeUsername, setChangeUsername] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
     const [disable, setDisable] = useState<Boolean>()
@@ -57,7 +60,9 @@ const ProfileMenu :FunctionComponent<IProps> = (props:IProps) => {
     }
     const handleDisable = () =>{
       props.setProfileMenu(false);
-      apiPost.PostDisableOtc();
+      apiPost.PostDisableOtc().then(()=>{
+        emitSocket.emitProfil(socket)
+      });
     }
     const handleSettingGame= () =>{
       props.setProfileMenu(false);

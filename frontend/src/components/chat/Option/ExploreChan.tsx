@@ -65,7 +65,7 @@ const PopupOptionExloreChat:FunctionComponent<IProps> = () =>{
 				setPopopsPwd(true);
 			}else{
 				emitSocket.emitChannelJoin(socket, selectUser, undefined);
-				navigate(`/chat?code=chan&name=${selectUser[0]}`);
+				navigate(`/chat?code=chan&name=${selectUser}`);
 			}
 		}
 	}
@@ -90,7 +90,7 @@ const PopupOptionExloreChat:FunctionComponent<IProps> = () =>{
 				emitSocket.emitChannelJoin(socket, selectUser, inputPwd);
 			}
 			setPopopsPwd(false);
-			navigate(`/chat?code=chan&name=${selectUser[0]}`);
+			navigate(`/chat?code=chan&name=${selectUser}`);
 		}
 	}
 
