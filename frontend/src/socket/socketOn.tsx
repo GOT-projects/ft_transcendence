@@ -13,7 +13,6 @@ export function transformUrlUsers(url: string) {
 
 let profil_login = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setHisto:React.Dispatch<React.SetStateAction<GOT.HistoryParties | undefined>>) => {
 	socket.on("client_profil_login", (e: GOT.HistoryParties) => {
-		console.log('client_profil_login', e);
 		if (e){
 			e.userInfos.urlImg = transformUrlUsers(e.userInfos.urlImg);
 			for (const party of e.parties) {
@@ -63,7 +62,6 @@ let client_channelMsg = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>
 
 let client_chanmsg_users_not_ban = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setUser:React.Dispatch<React.SetStateAction<GOT.ChannelUsers | undefined>>) => {
 	socket.on('client_chan_users', (rep:GOT.ChannelUsers) => {
-        console.log("client_chan_users", rep)
 		if (rep){
 			for (const user of rep.users) {
 				user.urlImg = transformUrlUsers(user.urlImg);
@@ -75,7 +73,6 @@ let client_chanmsg_users_not_ban = async (socket:Socket<DefaultEventsMap, Defaul
 
 let client_jwt = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>) => {
 	socket.on('client_jwt', (rep:string) => {
-		console.log("new jwt")
 		if (rep){
 			accountService.saveToken(rep);
 		}
@@ -92,7 +89,6 @@ let client_channels_in = async (socket:Socket<DefaultEventsMap, DefaultEventsMap
 
 let client_profil = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setProfil:React.Dispatch<React.SetStateAction<GOT.Profile | undefined>> | undefined) => {
 	socket.on('client_profil', (rep:GOT.Profile) =>{
-		console.warn('client_profil', rep);
 		if (rep && setProfil){
 			rep.userInfos.urlImg = transformUrlUsers(rep.userInfos.urlImg);
 			for (const friend of rep.friends) {
@@ -134,7 +130,6 @@ let client_privmsg = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, s
 
 let error_client = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setNotify:any) => {
 	socket.on('error_client', (rep:any) => {
-		console.log('error_client', rep);
 		if (typeof rep === "string")
 			setNotify({isOpen: true, message: `Error: ${rep}`, type:'error'});
 	})
@@ -142,7 +137,6 @@ let error_client = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, set
 
 let warning_client = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setNotify:any) => {
 	socket.on('warning_client', (rep:any) => {
-		console.log('warning_client', rep);
 		if (typeof rep === "string")
 			setNotify({isOpen: true, message: `Warning: ${rep}`, type:'warning'});
 	})
@@ -150,7 +144,6 @@ let warning_client = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, s
 
 let info_client = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, setNotify:any) => {
 	socket.on('info_client', (rep:any) => {
-		console.log('info_client', rep);
 		if (typeof rep === "string"){
 			let regex:RegExp = /^User with login (.*[a-z]) send you a private message/
 			if (regex.test(rep)){

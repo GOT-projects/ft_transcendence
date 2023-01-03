@@ -50,7 +50,6 @@ const ChannelMsg:FunctionComponent<IProps> = (props:IProps)=> {
 
 	useEffect(() =>{
         if (codeParam.get("code") !== undefined && codeParam.get("name") !== undefined && codeParam.get("setting") === undefined){
-            console.log("emit channel Msg")
 		    emitSocket.emitChannelMsg(socket, codeParam.get("name"))
         }
 	}, [socket, props.chanName])

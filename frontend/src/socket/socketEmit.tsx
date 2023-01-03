@@ -60,7 +60,6 @@ let emitChannelsIn = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>) =
 }
 
 let emitChannelMsg = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, channelName: string | undefined) => {
-    console.log("emit server chan msg: ", channelName)
 	socket.emit('server_chanmsg', {Authorization: accountService.getToken(), chanName: channelName})
 }
 
@@ -69,7 +68,6 @@ let emitChannelMsg_send = async (socket:Socket<DefaultEventsMap, DefaultEventsMa
 }
 
 let emitChanUserNotBan = async (socket:Socket<DefaultEventsMap, DefaultEventsMap>, chanName: string | undefined) => {
-    console.log("emit server emitChanUserNotBan: ", chanName)
 	socket.emit('server_chan_users', {Authorization: accountService.getToken(), chanName: chanName})
 }
 
