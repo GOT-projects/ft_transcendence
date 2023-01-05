@@ -7,18 +7,6 @@
 
 [draw](https://excalidraw.com/#room=abaf3fe998bb25b4e653,leo5BnA3X1O4sU7JC70sTA)
 
-___
-FIXME
-
- - Front
- - Back
-
----
-TODO
- - File d'attente / invite
- - ban (owner admin member)
-
-___
 
 ### TS
 
